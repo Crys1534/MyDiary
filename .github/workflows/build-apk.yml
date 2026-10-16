@@ -21,12 +21,21 @@ jobs:
       # This runs before Java 8 is selected because the SDK manager itself needs a newer Java.
       - name: Install the old Android SDK pieces
         run: |
+          exec > >(tee -a setup.log) 2>&1
+          echo "ANDROID_HOME=$ANDROID_HOME JAVA_HOME=$JAVA_HOME"
+          ls "$ANDROID_HOME" "$ANDROID_HOME/cmdline-tools" || true
           sudo dpkg --add-architecture i386 || true
           sudo apt-get update -y || true
           sudo apt-get install -y lib32z1 lib32stdc++6 || true
-          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          SDKM=$(ls "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager 2>/dev/null | head -n 1)
+          echo "sdkmanager: $SDKM"
           yes | sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" --licenses > /dev/null || true
-          sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "platforms;android-25" "build-tools;25.0.1" "platform-tools" "tools"
+          # These two are required.
+          sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "platforms;android-25" "build-tools;25.0.1"
+          # These are optional, so a failure here must not stop the build.
+          sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "platform-tools" || true
+          sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "tools" || true
+          sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" --list_installed || true
 
       - uses: actions/setup-java@v4
         with:
@@ -65,6 +74,7 @@ jobs:
         continue-on-error: true
         run: |
           mkdir -p /tmp/ci
+          if [ -f setup.log ]; then tail -n 400 setup.log > /tmp/ci/setup.log; else echo "no setup.log" > /tmp/ci/setup.log; fi
           if [ -f build.log ]; then
             tail -n 2500 build.log > /tmp/ci/build.log
           else
@@ -75,7 +85,7 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git checkout --orphan ci-logs
           git rm -rf --quiet .
-          cp /tmp/ci/build.log /tmp/ci/status.txt .
-          git add -f build.log status.txt
+          cp /tmp/ci/build.log /tmp/ci/setup.log /tmp/ci/status.txt .
+          git add -f build.log setup.log status.txt
           git commit --quiet -m "Build log for run ${{ github.run_number }}"
           git push --force origin ci-logs
