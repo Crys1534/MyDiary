@@ -52,6 +52,14 @@ jobs:
           APK=$(find app/build/outputs -name '*debug*.apk' | head -n 1)
           echo "APK found: $APK"
           cp "$APK" MyDiary-debug.apk
+          # Report of what Android will see: package id, SDK versions, CPU types and signature.
+          BT="$ANDROID_HOME/build-tools/26.0.2"
+          {
+            ls -l MyDiary-debug.apk
+            "$BT/aapt" dump badging MyDiary-debug.apk | grep -E "^package|sdkVersion|targetSdkVersion|native-code|application-label:" || true
+            "$BT/apksigner" verify --verbose --print-certs MyDiary-debug.apk || true
+          } > apk-info.txt 2>&1 || true
+          cat apk-info.txt
 
       - name: Save the APK as a workflow artifact
         uses: actions/upload-artifact@v4
@@ -74,6 +82,7 @@ jobs:
         run: |
           mkdir -p /tmp/ci
           if [ -f setup.log ]; then tail -n 400 setup.log > /tmp/ci/setup.log; else echo "no setup.log" > /tmp/ci/setup.log; fi
+          if [ -f apk-info.txt ]; then cp apk-info.txt /tmp/ci/apk-info.txt; fi
           if [ -f build.log ]; then
             tail -n 2500 build.log > /tmp/ci/build.log
           else
@@ -85,6 +94,7 @@ jobs:
           git checkout --orphan ci-logs
           git rm -rf --quiet .
           cp /tmp/ci/build.log /tmp/ci/setup.log /tmp/ci/status.txt .
+          if [ -f /tmp/ci/apk-info.txt ]; then cp /tmp/ci/apk-info.txt .; git add -f apk-info.txt; fi
           git add -f build.log setup.log status.txt
           git commit --quiet -m "Build log for run ${{ github.run_number }}"
           git push --force origin ci-logs

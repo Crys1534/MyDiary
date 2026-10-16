@@ -26,6 +26,11 @@ android {
         }
     }
     buildTypes {
+        debug {
+            // Installs next to any other MyDiary (for example the Google Play one)
+            // instead of clashing with it. The app name is changed in src/debug/res.
+            applicationIdSuffix '.fotos'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
