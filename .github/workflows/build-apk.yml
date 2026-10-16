@@ -1,0 +1,81 @@
+name: Build APK
+
+# Builds the debug APK on GitHub's servers and publishes it as a release,
+# so it can be downloaded and installed on an Android phone.
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      # The project is from 2017, so it needs the old SDK pieces it was written for.
+      # This runs before Java 8 is selected because the SDK manager itself needs a newer Java.
+      - name: Install the old Android SDK pieces
+        run: |
+          sudo dpkg --add-architecture i386 || true
+          sudo apt-get update -y || true
+          sudo apt-get install -y lib32z1 lib32stdc++6 || true
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" --licenses > /dev/null || true
+          sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "platforms;android-25" "build-tools;25.0.1" "platform-tools" "tools"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Build the debug APK
+        run: |
+          set -o pipefail
+          chmod +x gradlew
+          ./gradlew --no-daemon --stacktrace assembleDebug 2>&1 | tee build.log
+
+      - name: Collect the APK
+        run: |
+          APK=$(find app/build/outputs -name '*debug*.apk' | head -n 1)
+          echo "APK found: $APK"
+          cp "$APK" MyDiary-debug.apk
+
+      - name: Save the APK as a workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MyDiary-debug-apk
+          path: MyDiary-debug.apk
+
+      - name: Publish the APK as a release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: APK build ${{ github.run_number }}
+          prerelease: true
+          files: MyDiary-debug.apk
+
+      # Keeps the end of the build log on its own branch, so a failed build can be diagnosed.
+      - name: Publish the build log
+        if: always()
+        continue-on-error: true
+        run: |
+          mkdir -p /tmp/ci
+          if [ -f build.log ]; then
+            tail -n 2500 build.log > /tmp/ci/build.log
+          else
+            echo "No build.log: the job stopped before the Gradle build." > /tmp/ci/build.log
+          fi
+          echo "result=${{ job.status }} run=${{ github.run_number }} commit=${{ github.sha }}" > /tmp/ci/status.txt
+          git config user.name "github-actions"
+          git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan ci-logs
+          git rm -rf --quiet .
+          cp /tmp/ci/build.log /tmp/ci/status.txt .
+          git add -f build.log status.txt
+          git commit --quiet -m "Build log for run ${{ github.run_number }}"
+          git push --force origin ci-logs

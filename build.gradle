@@ -2,6 +2,9 @@
 
 buildscript {
     repositories {
+        // Google's Maven hosts the Android plugin and the old support libraries.
+        maven { url 'https://maven.google.com' }
+        mavenCentral()
         jcenter()
     }
     dependencies {
@@ -14,6 +17,8 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url 'https://maven.google.com' }
+        mavenCentral()
         jcenter()
         maven { url 'https://jitpack.io' }
     }
