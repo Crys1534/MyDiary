@@ -17,7 +17,8 @@ import java.util.Observable;
 
 public class DiaryItemHelper extends Observable {
 
-    public final static int MAX_PHOTO_COUNT = 7;
+    //Original limit was 7 photos per diary; removed so a diary can hold unlimited photos.
+    public final static int MAX_PHOTO_COUNT = Integer.MAX_VALUE;
 
 
     //For test to Public
