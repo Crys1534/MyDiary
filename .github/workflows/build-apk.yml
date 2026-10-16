@@ -31,10 +31,9 @@ jobs:
           echo "sdkmanager: $SDKM"
           yes | sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" --licenses > /dev/null || true
           # These two are required.
-          sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "platforms;android-25" "build-tools;25.0.1"
-          # These are optional, so a failure here must not stop the build.
+          sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "platforms;android-25" "build-tools;25.0.1" "build-tools;26.0.2"
+          # This one is optional, so a failure here must not stop the build.
           sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "platform-tools" || true
-          sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "tools" || true
           sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" --list_installed || true
 
       - uses: actions/setup-java@v4
