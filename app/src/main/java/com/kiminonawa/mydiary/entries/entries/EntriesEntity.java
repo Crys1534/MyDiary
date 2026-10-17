@@ -20,6 +20,8 @@ public class EntriesEntity implements Comparable<CalendarDay> {
     private int weatherId;
     private int moodId;
     private boolean hasAttachment;
+    //Full path of the first photo of the diary, null when it has no photo
+    private String thumbnailPath;
 
 
     public EntriesEntity(long id, Date createDate, String title,
@@ -34,6 +36,14 @@ public class EntriesEntity implements Comparable<CalendarDay> {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getThumbnailPath() {
+        return thumbnailPath;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
     }
 
     public long getId() {

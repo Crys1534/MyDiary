@@ -1,5 +1,6 @@
 package com.kiminonawa.mydiary.entries.entries;
 
+import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,9 +10,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.common.RotationOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.entries.diary.DiaryInfoHelper;
 import com.kiminonawa.mydiary.shared.EditMode;
+import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 
 import java.text.DateFormat;
@@ -34,12 +42,15 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
     private ThemeManager themeManager;
 
     private boolean isEditMode = false;
+    //The thumbnail is 56dp
+    private int thumbnailSizePx;
 
     public EntriesAdapter(EntriesFragment fragment, List<EntriesEntity> topicList) {
         this.mFragment = fragment;
         this.entriesList = topicList;
         this.daysSimpleName = mFragment.getResources().getStringArray(R.array.days_simple_name);
         this.themeManager = ThemeManager.getInstance();
+        this.thumbnailSizePx = (int) (56 * mFragment.getResources().getDisplayMetrics().density);
     }
 
 
@@ -76,6 +87,24 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
 
         holder.getIVWeather().setImageResource(DiaryInfoHelper.getWeatherResourceId(entriesList.get(position).getWeatherId()));
         holder.getIVMood().setImageResource(DiaryInfoHelper.getMoodResourceId(entriesList.get(position).getMoodId()));
+
+        //Small picture of the first photo
+        String thumbnailPath = entriesList.get(position).getThumbnailPath();
+        if (thumbnailPath != null) {
+            holder.getSDVThumbnail().setVisibility(View.VISIBLE);
+            ImageRequest request = ImageRequestBuilder
+                    .newBuilderWithSource(Uri.parse(FileManager.FILE_HEADER + thumbnailPath))
+                    .setResizeOptions(new ResizeOptions(thumbnailSizePx, thumbnailSizePx))
+                    .setRotationOptions(RotationOptions.autoRotate())
+                    .build();
+            holder.getSDVThumbnail().setController(Fresco.newDraweeControllerBuilder()
+                    .setOldController(holder.getSDVThumbnail().getController())
+                    .setImageRequest(request)
+                    .build());
+        } else {
+            holder.getSDVThumbnail().setController(null);
+            holder.getSDVThumbnail().setVisibility(View.GONE);
+        }
 
         if (entriesList.get(position).hasAttachment()) {
             holder.getIVAttachment().setVisibility(View.VISIBLE);
@@ -125,6 +154,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
         private ImageView IV_entries_item_weather, IV_entries_item_mood, IV_entries_item_bookmark, IV_entries_item_attachment;
 
         private RelativeLayout RL_entries_item_content;
+        private SimpleDraweeView SDV_entries_item_thumbnail;
 
         protected EntriesViewHolder(View rootView, @ColorInt int color) {
             super(rootView);
@@ -142,6 +172,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
             this.IV_entries_item_attachment = (ImageView) rootView.findViewById(R.id.IV_entries_item_attachment);
 
             this.RL_entries_item_content = (RelativeLayout) rootView.findViewById(R.id.RL_entries_item_content);
+            this.SDV_entries_item_thumbnail = (SimpleDraweeView) rootView.findViewById(R.id.SDV_entries_item_thumbnail);
             this.itemView.setOnClickListener(this);
             this.itemView.setOnLongClickListener(this);
 
@@ -200,6 +231,10 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
 
         public ImageView getIVAttachment() {
             return IV_entries_item_attachment;
+        }
+
+        public SimpleDraweeView getSDVThumbnail() {
+            return SDV_entries_item_thumbnail;
         }
 
         public RelativeLayout getRLContent() {

@@ -24,6 +24,7 @@ import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.entries.calendar.CalendarFragment;
 import com.kiminonawa.mydiary.entries.diary.DiaryFragment;
 import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
+import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.entries.entries.EntriesEntity;
 import com.kiminonawa.mydiary.entries.entries.EntriesFragment;
 import com.kiminonawa.mydiary.shared.ThemeManager;
@@ -146,6 +147,17 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
             //select first diary content
             Cursor diaryContentCursor = dbManager.selectDiaryContentByDiaryId(entity.getId());
             if (diaryContentCursor != null && diaryContentCursor.getCount() > 0) {
+                //Look for the first photo of the diary: it is the small picture of the entry
+                for (int j = 0; j < diaryContentCursor.getCount(); j++) {
+                    diaryContentCursor.moveToPosition(j);
+                    if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_PHOTO) {
+                        entity.setThumbnailPath(
+                                new FileManager(this, getTopicId(), entity.getId()).getDirAbsolutePath()
+                                        + "/" + diaryContentCursor.getString(3));
+                        break;
+                    }
+                }
+                diaryContentCursor.moveToFirst();
                 String summary = "";
                 //Check content Type
                 if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_PHOTO) {
