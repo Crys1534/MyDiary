@@ -45,7 +45,7 @@ jobs:
         run: |
           set -o pipefail
           chmod +x gradlew
-          ./gradlew --no-daemon --stacktrace assembleDebug 2>&1 | tee build.log
+          ./gradlew --no-daemon --stacktrace -PbuildNumber=${{ github.run_number }} assembleDebug 2>&1 | tee build.log
 
       - name: Collect the APK
         run: |

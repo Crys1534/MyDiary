@@ -82,19 +82,28 @@ public class CopyPhotoTask extends AsyncTask<Void, Void, String> {
         try {
             //1.Create bitmap
             //2.Get uri exif
+            Bitmap bitmap;
             if (isAddPicture) {
-                returnFileName = savePhotoToTemp(
-                        ExifUtil.rotateBitmap(srcFileName,
-                                BitmapHelper.getBitmapFromTempFileSrc(srcFileName, reqWidth, reqHeight)));
+                bitmap = BitmapHelper.getBitmapFromTempFileSrc(srcFileName, reqWidth, reqHeight);
+                if (bitmap != null) {
+                    returnFileName = savePhotoToTemp(ExifUtil.rotateBitmap(srcFileName, bitmap));
+                }
             } else {
                 //rotateBitmap && resize
-                returnFileName = savePhotoToTemp(
-                        ExifUtil.rotateBitmap(mContext, uri,
-                                BitmapHelper.getBitmapFromReturnedImage(mContext, uri, reqWidth, reqHeight)));
+                bitmap = BitmapHelper.getBitmapFromReturnedImage(mContext, uri, reqWidth, reqHeight);
+                if (bitmap != null) {
+                    returnFileName = savePhotoToTemp(ExifUtil.rotateBitmap(mContext, uri, bitmap));
+                }
             }
+            //bitmap == null means that Android could not read the file as a picture
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("CopyPhotoTask", e.toString());
+            returnFileName = null;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            Log.e("CopyPhotoTask", e.toString());
+            returnFileName = null;
         }
         return returnFileName;
     }
@@ -102,13 +111,21 @@ public class CopyPhotoTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String fileName) {
         super.onPostExecute(fileName);
-        progressDialog.dismiss();
+        try {
+            progressDialog.dismiss();
+        } catch (Exception e) {
+            //The screen was closed or rotated while the picture was loading
+            e.printStackTrace();
+        }
+        //fileName is null when the picture could not be loaded
         callBack.onCopyCompiled(fileName);
     }
 
 
     private String savePhotoToTemp(Bitmap bitmap) throws Exception {
-
+        if (bitmap == null) {
+            throw new IOException("No bitmap to save");
+        }
         FileOutputStream out = null;
         String fileName = FileManager.createRandomFileName();
         try {

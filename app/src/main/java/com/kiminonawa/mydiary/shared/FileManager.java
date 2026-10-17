@@ -197,14 +197,23 @@ public class FileManager {
 
     public static String getFileNameByUri(Context context, Uri uri) {
         String displayName = "";
-        if (uri.getScheme().toString().startsWith("content")) {
-            Cursor cursor = context.getContentResolver()
-                    .query(uri, null, null, null, null, null);
+        if (uri == null || uri.getScheme() == null) {
+            return displayName;
+        }
+        if (uri.getScheme().startsWith("content")) {
+            Cursor cursor = null;
             try {
+                cursor = context.getContentResolver()
+                        .query(uri, null, null, null, null, null);
                 if (cursor != null && cursor.moveToFirst()) {
-                    displayName = cursor.getString(
-                            cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                    cursor.close();
+                    int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    //Some gallery apps give no name at all, so it can be missing.
+                    if (index >= 0) {
+                        String name = cursor.getString(index);
+                        if (name != null) {
+                            displayName = name;
+                        }
+                    }
                 }
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
@@ -215,7 +224,7 @@ public class FileManager {
                 }
             }
 
-        } else if (uri.getScheme().toString().startsWith("file")) {
+        } else if (uri.getScheme().startsWith("file")) {
             try {
                 File file = new File(new URI(uri.toString()));
                 if (file.exists()) {
@@ -245,6 +254,24 @@ public class FileManager {
         }
     }
 
+    /**
+     * Opens the gallery so that several pictures can be chosen at once
+     * (the gallery app has to support it; Android 4.3 and newer).
+     */
+    public static void startBrowseMultipleImageFiles(Fragment fragment, int requestCode) {
+        try {
+            Intent intentImage = new Intent();
+            intentImage.setType("image/*");
+            intentImage.setAction(Intent.ACTION_GET_CONTENT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                intentImage.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            }
+            fragment.startActivityForResult(Intent.createChooser(intentImage, "Select Picture"), requestCode);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Log.e(TAG, ex.toString());
+        }
+    }
+
     public static void startBrowseImageFile(Activity activity, int requestCode) {
         try {
             Intent intentImage = new Intent();
@@ -261,8 +288,19 @@ public class FileManager {
     }
 
 
+    /**
+     * Only a quick guess from the file name. The real check is done when the picture is decoded
+     * (see CopyPhotoTask), because many gallery apps give names without an extension
+     * (or formats like webp / heic) and those pictures are perfectly fine.
+     */
     public static boolean isImage(String fileName) {
-        return fileName.toLowerCase().endsWith(".jpeg") || fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".png");
+        if (fileName == null) {
+            return false;
+        }
+        String name = fileName.toLowerCase();
+        return name.endsWith(".jpeg") || name.endsWith(".jpg") || name.endsWith(".png")
+                || name.endsWith(".webp") || name.endsWith(".gif") || name.endsWith(".bmp")
+                || name.endsWith(".heic") || name.endsWith(".heif");
     }
 
     public static void copy(File src, File dst) throws IOException {

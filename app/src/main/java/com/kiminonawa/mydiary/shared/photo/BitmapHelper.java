@@ -18,6 +18,9 @@ public class BitmapHelper {
 
     public static Bitmap getBitmapFromReturnedImage(Context context, Uri selectedImage, int reqWidth, int reqHeight) throws IOException {
         InputStream inputStream = context.getContentResolver().openInputStream(selectedImage);
+        if (inputStream == null) {
+            throw new IOException("Can't open " + selectedImage);
+        }
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -37,6 +40,9 @@ public class BitmapHelper {
 
         // reopen the input stream
         inputStream = context.getContentResolver().openInputStream(selectedImage);
+        if (inputStream == null) {
+            throw new IOException("Can't open " + selectedImage);
+        }
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;

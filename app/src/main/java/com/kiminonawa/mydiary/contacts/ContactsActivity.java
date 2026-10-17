@@ -39,14 +39,7 @@ public class ContactsActivity extends FragmentActivity implements View.OnClickLi
      * Sort
      */
 
-    private String EN;
-    private String JA;
-    private String ZH_TW;
     private String ZH_CN;
-    private String KO;
-    private String TH_TH;
-    private String FR;
-    private String ES;
 
     /**
      * UI
@@ -128,16 +121,8 @@ public class ContactsActivity extends FragmentActivity implements View.OnClickLi
     }
 
     private void initLanguageStr() {
-        EN = Locale.ENGLISH.getLanguage();
-        JA = Locale.JAPANESE.getLanguage();
-        ZH_TW = Locale.TAIWAN.getLanguage()
-                + "-" + Locale.TAIWAN.getCountry();
         ZH_CN = Locale.CHINA.getLanguage()
                 + "-" + Locale.CHINA.getCountry();
-        KO = Locale.KOREAN.getLanguage();
-        TH_TH = new Locale("th", "").getLanguage();
-        FR = Locale.FRENCH.getLanguage();
-        ES = new Locale("es", "").getLanguage();
     }
 
     private void initTopbar() {
@@ -247,52 +232,18 @@ public class ContactsActivity extends FragmentActivity implements View.OnClickLi
      * This code is from array
      * System = 0
      * English = 1
-     * 日本語 = 2
-     * 繁體中文 = 3
-     * 简体中文= 4
-     * 한국어 = 5
-     * ภาษาไทย = 6
-     * Français = 7
-     * Español = 8
+     * Español = 2
      */
 
     private String checkLanguage() {
-        String language;
+        //Only the system language can be Chinese (it needs the pinyin sort)
         switch (SPFManager.getLocalLanguageCode(this)) {
-            //default = 0 = system
-            default:
-                language = getResources().getConfiguration().locale.getLanguage() +
-                        "-" + getResources().getConfiguration().locale.getCountry();
-                break;
             case 1:
-                language = EN;
-                break;
             case 2:
-                // JAPANESE;
-                language = JA;
-                break;
-            case 3:
-                //TRADITIONAL_CHINESE;
-                language = ZH_TW;
-                break;
-            case 4:
-                // SIMPLIFIED_CHINESE;
-                language = ZH_CN;
-                break;
-            case 5:
-                // SIMPLIFIED_CHINESE;
-                language = KO;
-                break;
-            case 6:
-                language = TH_TH;
-                break;
-            case 7:
-                language = FR;
-                break;
-            case 8:
-                language = ES;
-                break;
+                return Locale.ENGLISH.getLanguage();
+            default:
+                return getResources().getConfiguration().locale.getLanguage() +
+                        "-" + getResources().getConfiguration().locale.getCountry();
         }
-        return language;
     }
 }

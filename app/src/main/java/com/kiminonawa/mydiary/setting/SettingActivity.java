@@ -12,8 +12,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kiminonawa.mydiary.BuildConfig;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.shared.ColorTools;
 import com.kiminonawa.mydiary.shared.FileManager;
@@ -44,6 +46,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private ThemeManager themeManager;
     //For spinner first run
     private boolean isThemeFirstRun = true;
+    private static final String UPDATE_URL = "https://github.com/Crys1534/MyDiary/releases";
     private boolean isLanguageFirstRun = true;
     //Because the default profile bg is color ,
     //so we should keep main color for replace when main color was changed.
@@ -66,6 +69,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private ImageView IV_setting_profile_bg, IV_setting_theme_main_color, IV_setting_theme_dark_color;
     private Button But_setting_theme_default_bg, But_setting_theme_default, But_setting_theme_apply;
     private Button But_setting_fix_photo_17_dir;
+    private Button But_setting_check_update;
 
 
     @Override
@@ -94,6 +98,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         But_setting_fix_photo_17_dir = (Button) findViewById(R.id.But_setting_fix_photo_17_dir);
         But_setting_fix_photo_17_dir.setOnClickListener(this);
+
+        But_setting_check_update = (Button) findViewById(R.id.But_setting_check_update);
+        But_setting_check_update.setOnClickListener(this);
+        ((TextView) findViewById(R.id.TV_setting_update_hint)).setText(
+                getString(R.string.setting_update_hint, BuildConfig.BUILD_NUMBER));
 
         initSpinner();
         initTheme(themeManager.getCurrentTheme());
@@ -315,6 +324,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 SettingColorPickerFragment secColorPickerFragment =
                         SettingColorPickerFragment.newInstance(themeManager.getThemeDarkColor(this), R.id.IV_setting_theme_dark_color);
                 secColorPickerFragment.show(getSupportFragmentManager(), "secColorPickerFragment");
+                break;
+            case R.id.But_setting_check_update:
+                //The new versions are published as releases of this GitHub project
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(UPDATE_URL)));
+                } catch (android.content.ActivityNotFoundException e) {
+                    Toast.makeText(this, getString(R.string.toast_update_no_browser), Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.But_setting_fix_photo_17_dir:
                 //The new diary dir was updated in version 17

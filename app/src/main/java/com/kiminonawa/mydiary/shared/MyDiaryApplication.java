@@ -61,24 +61,6 @@ public class MyDiaryApplication extends Application {
                 locale = Locale.ENGLISH;
                 break;
             case 2:
-                locale = Locale.JAPANESE;
-                break;
-            case 3:
-                locale = Locale.TRADITIONAL_CHINESE;
-                break;
-            case 4:
-                locale = Locale.SIMPLIFIED_CHINESE;
-                break;
-            case 5:
-                locale = Locale.KOREAN;
-                break;
-            case 6:
-                locale = new Locale("th", "");
-                break;
-            case 7:
-                locale = Locale.FRENCH;
-                break;
-            case 8:
                 locale = new Locale("es", "");
                 break;
             // 0 = default = language of system

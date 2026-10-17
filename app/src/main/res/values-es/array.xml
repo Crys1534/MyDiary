@@ -20,20 +20,20 @@
         <item>Dom.</item>
         <item>Lun.</item>
         <item>Mar.</item>
-        <item>Mie.</item>
+        <item>Mié.</item>
         <item>Jue.</item>
         <item>Vie.</item>
-        <item>Sab.</item>
+        <item>Sáb.</item>
     </array>
 
     <array name="days_full_name">
         <item>Domingo</item>
         <item>Lunes</item>
         <item>Martes</item>
-        <item>Miercoles</item>
+        <item>Miércoles</item>
         <item>Jueves</item>
         <item>Viernes</item>
-        <item>Sabado</item>
+        <item>Sábado</item>
     </array>
 
     <array name="topic_type">
@@ -55,18 +55,16 @@
         <item>lluvioso</item>
         <item>nevado</item>
         <item>brumoso</item>
+        <item>parcialmente nublado</item>
+        <item>tormentoso</item>
+        <item>noche despejada</item>
+        <item>caluroso</item>
     </array>
 
     <array name="language_list">
         <item>Sistema</item>
-        <item>English(100%)</item>
-        <item>日本語(80%)</item>
-        <item>繁體中文(100%)</item>
-        <item>简体中文(100%)</item>
-        <item>한국어(80%)</item>
-        <item>ภาษาไทย(99%)</item>
-        <item>Français(99%)</item>
-        <item>Español(80%)</item>
+        <item>English</item>
+        <item>Español</item>
     </array>
 
 </resources>

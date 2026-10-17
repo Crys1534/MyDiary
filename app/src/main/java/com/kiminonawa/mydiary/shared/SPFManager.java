@@ -17,7 +17,11 @@ public class SPFManager {
      */
     private static final String SPF_CONFIG = "CONFIG";
     //Local language
-    private static final String CONFIG_LOCAL_LANGUAGE = "CONFIG_LOCAL_LANGUAGE";
+    //Old numbering (before only English and Spanish were left): 0 system, 1 English, 2 Japanese,
+    //3 Traditional Chinese, 4 Simplified Chinese, 5 Korean, 6 Thai, 7 French, 8 Spanish
+    private static final String CONFIG_LOCAL_LANGUAGE_OLD = "CONFIG_LOCAL_LANGUAGE";
+    //New numbering: 0 system, 1 English, 2 Spanish
+    private static final String CONFIG_LOCAL_LANGUAGE = "CONFIG_LOCAL_LANGUAGE_EN_ES";
     /**
      * profile
      */
@@ -66,6 +70,18 @@ public class SPFManager {
     public static int getLocalLanguageCode(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
         //default is 0 , follow the system
+        if (!settings.contains(CONFIG_LOCAL_LANGUAGE)) {
+            //Keep the old choice when it still exists: English stays English, Spanish becomes 2,
+            //the removed languages go back to "system"
+            int oldCode = settings.getInt(CONFIG_LOCAL_LANGUAGE_OLD, 0);
+            int newCode = 0;
+            if (oldCode == 1) {
+                newCode = 1;
+            } else if (oldCode == 8) {
+                newCode = 2;
+            }
+            settings.edit().putInt(CONFIG_LOCAL_LANGUAGE, newCode).commit();
+        }
         return settings.getInt(CONFIG_LOCAL_LANGUAGE, 0);
     }
 

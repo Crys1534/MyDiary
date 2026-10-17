@@ -10,6 +10,7 @@ import android.net.Uri;
 import com.kiminonawa.mydiary.shared.FileManager;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by daxia on 2016/11/22.
@@ -31,11 +32,42 @@ public class ExifUtil {
     }
 
     public static Bitmap rotateBitmap(Context context, Uri uri, Bitmap bitmap) {
-        String path = FileManager.getRealPathFromURI(context, uri);
-        if (path == null) {
-            return bitmap;
+        if (bitmap == null) {
+            return null;
         }
-        return rotateBitmap(path, bitmap);
+        //1. Read the orientation straight from the picture (works with any gallery app)
+        InputStream inputStream = null;
+        try {
+            inputStream = context.getContentResolver().openInputStream(uri);
+            if (inputStream != null) {
+                android.support.media.ExifInterface exifInterface =
+                        new android.support.media.ExifInterface(inputStream);
+                int orientation = exifInterface.getAttributeInt(
+                        android.support.media.ExifInterface.TAG_ORIENTATION,
+                        android.support.media.ExifInterface.ORIENTATION_NORMAL);
+                return rotate(bitmap, orientation);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        //2. Old way: look for the real file of the picture
+        try {
+            String path = FileManager.getRealPathFromURI(context, uri);
+            if (path != null) {
+                return rotateBitmap(path, bitmap);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 
     private static Bitmap rotate(Bitmap bitmap, int orientation) {

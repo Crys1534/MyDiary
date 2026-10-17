@@ -1,6 +1,7 @@
 package com.kiminonawa.mydiary.entries.diary;
 
 import android.app.Dialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -22,6 +23,8 @@ import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -35,6 +38,11 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
         void addPhoto(String fileName);
 
         void selectPhoto(Uri uri);
+
+        /**
+         * One or more pictures chosen from the gallery, to be added in order.
+         */
+        void selectPhotos(List<Uri> uris);
     }
 
     private RelativeLayout RL_diary_photo_dialog;
@@ -108,9 +116,25 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
             dismiss();
         } else if (requestCode == REQUEST_SELECT_IMAGE_CODE) {
             if (resultCode == RESULT_OK) {
+                //Several pictures come in the ClipData, a single one may come in getData()
+                List<Uri> uris = new ArrayList<>();
+                if (data != null) {
+                    ClipData clipData = data.getClipData();
+                    if (clipData != null) {
+                        for (int i = 0; i < clipData.getItemCount(); i++) {
+                            Uri itemUri = clipData.getItemAt(i).getUri();
+                            if (itemUri != null) {
+                                uris.add(itemUri);
+                            }
+                        }
+                    }
+                    if (uris.isEmpty() && data.getData() != null) {
+                        uris.add(data.getData());
+                    }
+                }
                 //fix the ZenPhone C & HTC 626 crash issues
-                if (data != null && data.getData() != null && callBack != null) {
-                    callBack.selectPhoto(data.getData());
+                if (!uris.isEmpty() && callBack != null) {
+                    callBack.selectPhotos(uris);
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.toast_photo_intent_error), Toast.LENGTH_LONG).show();
                 }
@@ -139,7 +163,7 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
                 startActivityForResult(intent, REQUEST_START_CAMERA_CODE);
                 break;
             case R.id.IV_diary_photo_select_a_photo:
-                FileManager.startBrowseImageFile(this, REQUEST_SELECT_IMAGE_CODE);
+                FileManager.startBrowseMultipleImageFiles(this, REQUEST_SELECT_IMAGE_CODE);
                 break;
         }
     }

@@ -64,6 +64,7 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
@@ -126,6 +127,11 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
      * File
      */
     private FileManager diaryTempFileManager;
+    /**
+     * Pictures picked from the gallery that are waiting to be copied (one at a time, in order).
+     */
+    private final LinkedList<Uri> pendingPhotoUris = new LinkedList<>();
+    private boolean isCopyingPhoto = false;
 
     /**
      * Google Place API
@@ -615,16 +621,30 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
 
     @Override
     public void selectPhoto(Uri uri) {
-        if (FileManager.isImage(
-                FileManager.getFileNameByUri(getActivity(), uri))) {
-            //1.Copy bitmap to temp for rotating & resize
-            //2.Then Load bitmap call back ;
-            new CopyPhotoTask(getActivity(), uri,
-                    DiaryItemHelper.getVisibleWidth(getActivity()), DiaryItemHelper.getVisibleHeight(getActivity()),
-                    diaryTempFileManager, this).execute();
-        } else {
-            Toast.makeText(getActivity(), getString(R.string.toast_not_image), Toast.LENGTH_LONG).show();
+        List<Uri> uris = new ArrayList<>();
+        uris.add(uri);
+        selectPhotos(uris);
+    }
+
+    @Override
+    public void selectPhotos(List<Uri> uris) {
+        //The check "is it really a picture" is done while decoding (see CopyPhotoTask),
+        //because the file name can't tell it reliably.
+        pendingPhotoUris.addAll(uris);
+        copyNextPendingPhoto();
+    }
+
+    private void copyNextPendingPhoto() {
+        if (isCopyingPhoto || pendingPhotoUris.isEmpty() || getActivity() == null) {
+            return;
         }
+        isCopyingPhoto = true;
+        Uri uri = pendingPhotoUris.poll();
+        //1.Copy bitmap to temp for rotating & resize
+        //2.Then Load bitmap call back ;
+        new CopyPhotoTask(getActivity(), uri,
+                DiaryItemHelper.getVisibleWidth(getActivity()), DiaryItemHelper.getVisibleHeight(getActivity()),
+                diaryTempFileManager, this).execute();
     }
 
     @Override
@@ -638,7 +658,18 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
 
     @Override
     public void onCopyCompiled(String fileName) {
-        loadFileFromTemp(fileName);
+        isCopyingPhoto = false;
+        if (getActivity() == null) {
+            pendingPhotoUris.clear();
+            return;
+        }
+        if (fileName != null) {
+            loadFileFromTemp(fileName);
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.toast_photo_load_failed), Toast.LENGTH_LONG).show();
+        }
+        //Next picture of the selection, if there is one
+        copyNextPendingPhoto();
     }
 
 

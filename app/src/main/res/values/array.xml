@@ -55,18 +55,16 @@
         <item>rainy</item>
         <item>snowy</item>
         <item>foggy</item>
+        <item>partly cloudy</item>
+        <item>stormy</item>
+        <item>clear night</item>
+        <item>hot</item>
     </array>
 
     <array name="language_list">
         <item>System</item>
-        <item>English(100%)</item>
-        <item>日本語(80%)</item>
-        <item>繁體中文(100%)</item>
-        <item>简体中文(100%)</item>
-        <item>한국어(80%)</item>
-        <item>ภาษาไทย(99%)</item>
-        <item>Français(99%)</item>
-        <item>Español(80%)</item>
+        <item>English</item>
+        <item>Español</item>
     </array>
 
 </resources>
