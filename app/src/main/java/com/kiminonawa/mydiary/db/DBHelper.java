@@ -24,6 +24,9 @@ import static com.kiminonawa.mydiary.db.DBStructure.TopicOrderEntry;
 public class DBHelper extends SQLiteOpenHelper {
 
     /**
+     * Version 8 (this fork)
+     * Add tags in diary_entry_v2
+     * -------------
      * Version 7 by Daxia
      * Add new table for topic order
      * -------------
@@ -49,7 +52,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * Version 1 by Daxia：
      * First DB
      */
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 8;
     public static final String DATABASE_NAME = "mydiary.db";
 
     private static final String TEXT_TYPE = " TEXT";
@@ -103,6 +106,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     DiaryEntry_V2.COLUMN_ATTACHMENT + INTEGER_TYPE + COMMA_SEP +
                     DiaryEntry_V2.COLUMN_REF_TOPIC__ID + INTEGER_TYPE + COMMA_SEP +
                     DiaryEntry_V2.COLUMN_LOCATION + TEXT_TYPE + COMMA_SEP +
+                    DiaryEntry_V2.COLUMN_TAGS + TEXT_TYPE + COMMA_SEP +
                     FOREIGN + " (" + DiaryEntry.COLUMN_REF_TOPIC__ID + ")" + REFERENCES + TopicEntry.TABLE_NAME + "(" + TopicEntry._ID + ")" +
                     " )";
 
@@ -210,6 +214,14 @@ public class DBHelper extends SQLiteOpenHelper {
                     db.execSQL(SQL_CREATE_TOPIC_ORDER);
                     version7AddTopicOrder(db);
                 }
+                //Tags of the diary (this fork)
+                if (oldVersion < 8) {
+                    //The table made in step 4 above already has the column
+                    if (!hasColumn(db, DiaryEntry_V2.TABLE_NAME, DiaryEntry_V2.COLUMN_TAGS)) {
+                        db.execSQL("ALTER TABLE " + DiaryEntry_V2.TABLE_NAME + " ADD COLUMN "
+                                + DiaryEntry_V2.COLUMN_TAGS + TEXT_TYPE);
+                    }
+                }
 
                 //Check update success
                 db.setTransactionSuccessful();
@@ -225,6 +237,21 @@ public class DBHelper extends SQLiteOpenHelper {
         onUpgrade(db, oldVersion, newVersion);
     }
 
+
+    private boolean hasColumn(SQLiteDatabase db, String table, String column) {
+        Cursor cursor = db.rawQuery("PRAGMA table_info(" + table + ")", null);
+        try {
+            int nameIndex = cursor.getColumnIndex("name");
+            while (cursor.moveToNext()) {
+                if (column.equals(cursor.getString(nameIndex))) {
+                    return true;
+                }
+            }
+        } finally {
+            cursor.close();
+        }
+        return false;
+    }
 
     private void version5AddTextColor(SQLiteDatabase db) {
         ContentValues values = new ContentValues();

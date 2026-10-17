@@ -30,6 +30,8 @@ public class DBStructure {
         public static final String COLUMN_ATTACHMENT = "diary_attachment";
         public static final String COLUMN_REF_TOPIC__ID = "diary_ref_topic_id";
         public static final String COLUMN_LOCATION = "diary_location";
+        //Added in db version 8: ",school,trip," (see TagHelper)
+        public static final String COLUMN_TAGS = "diary_tags";
     }
 
     /**

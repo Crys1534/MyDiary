@@ -260,6 +260,27 @@
 
                 </LinearLayout>
 
+                <!-- Tags like #school #trip (edit: the box, view: the text) -->
+                <EditText
+                    android:id="@+id/EDT_diary_tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/diary_tags_hint"
+                    android:inputType="text|textNoSuggestions"
+                    android:maxLines="1"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/edittext_hint"
+                    android:textSize="16dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/TV_diary_tags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    android:visibility="gone" />
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"

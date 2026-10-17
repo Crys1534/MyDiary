@@ -182,11 +182,19 @@ public class DBManager {
     public long insertDiaryInfo(long time, String title,
                                 int mood, int weather, boolean attachment,
                                 long refTopicId, String locationName) {
+        return insertDiaryInfo(time, title, mood, weather, attachment, refTopicId, locationName, "");
+    }
+
+    public long insertDiaryInfo(long time, String title,
+                                int mood, int weather, boolean attachment,
+                                long refTopicId, String locationName, String tags) {
+        ContentValues values = this.createDiaryInfoCV(time, title,
+                mood, weather, attachment, refTopicId, locationName);
+        values.put(DiaryEntry_V2.COLUMN_TAGS, tags == null ? "" : tags);
         return db.insert(
                 DiaryEntry_V2.TABLE_NAME,
                 null,
-                this.createDiaryInfoCV(time, title,
-                        mood, weather, attachment, refTopicId, locationName));
+                values);
     }
 
     public long insertDiaryContent(int type, int position, String content, long diaryId) {
@@ -197,8 +205,9 @@ public class DBManager {
     }
 
     public long updateDiary(long diaryId, long time, String title,
-                            int mood, int weather, String location, boolean attachment) {
+                            int mood, int weather, String location, boolean attachment, String tags) {
         ContentValues values = new ContentValues();
+        values.put(DiaryEntry_V2.COLUMN_TAGS, tags == null ? "" : tags);
         values.put(DiaryEntry_V2.COLUMN_TIME, time);
         values.put(DiaryEntry_V2.COLUMN_TITLE, title);
         values.put(DiaryEntry_V2.COLUMN_MOOD, mood);

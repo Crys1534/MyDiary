@@ -38,8 +38,25 @@
             android:layout_toRightOf="@id/IV_entries_edit"
             android:src="@drawable/ic_photo_white_24dp" />
 
+        <!-- Filter by tag: shows "#" or the tag that is being filtered -->
         <TextView
-            android:id="@+id/TV_entries_count"
+            android:id="@+id/TV_entries_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="25dp"
+            android:layout_toLeftOf="@+id/TV_entries_count"
+            android:layout_toRightOf="@id/IV_entries_photo"
+            android:ellipsize="end"
+            android:gravity="left"
+            android:maxLines="1"
+            android:text="#"
+            android:textColor="@android:color/white"
+            android:textSize="24dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@id/TV_entries_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

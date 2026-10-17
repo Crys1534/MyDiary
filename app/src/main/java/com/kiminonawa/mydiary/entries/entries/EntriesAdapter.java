@@ -18,6 +18,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.entries.diary.DiaryInfoHelper;
+import com.kiminonawa.mydiary.entries.diary.TagHelper;
 import com.kiminonawa.mydiary.shared.EditMode;
 import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.shared.ThemeManager;
@@ -81,7 +82,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
 
         holder.getTVDate().setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
         holder.getTVDay().setText(daysSimpleName[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
-        holder.getTVTime().setText(String.valueOf(dateFormat.format(calendar.getTime())));
+        String tagsText = TagHelper.toDisplay(entriesList.get(position).getTags());
+        holder.getTVTime().setText(String.valueOf(dateFormat.format(calendar.getTime()))
+                + (tagsText.length() > 0 ? "   " + tagsText : ""));
         holder.getTVTitle().setText(entriesList.get(position).getTitle());
         holder.getTVSummary().setText(entriesList.get(position).getSummary());
 

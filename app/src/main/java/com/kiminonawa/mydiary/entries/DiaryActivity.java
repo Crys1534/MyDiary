@@ -23,6 +23,7 @@ import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.entries.calendar.CalendarFragment;
 import com.kiminonawa.mydiary.entries.diary.DiaryFragment;
+import com.kiminonawa.mydiary.db.DBStructure;
 import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
 import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.entries.entries.EntriesEntity;
@@ -143,6 +144,11 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
                     title.substring(0, Math.min(MAX_TEXT_LENGTH, title.length())),
                     diaryCursor.getInt(4), diaryCursor.getInt(3),
                     diaryCursor.getInt(5) > 0 ? true : false);
+
+            int tagsColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_TAGS);
+            if (tagsColumn >= 0) {
+                entity.setTags(diaryCursor.getString(tagsColumn));
+            }
 
             //select first diary content
             Cursor diaryContentCursor = dbManager.selectDiaryContentByDiaryId(entity.getId());

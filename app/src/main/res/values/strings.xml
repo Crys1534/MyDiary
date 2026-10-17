@@ -92,6 +92,10 @@
     <string name="diary_clear_message">do you want to delete it?</string>
 
     <string name="diary_no_title">No Title</string>
+    <string name="diary_tags_hint">Tags: #school #trip</string>
+    <string name="tags_filter_title">Filter by tag</string>
+    <string name="tags_filter_all">All entries</string>
+    <string name="tags_filter_none">There are no tags yet. Add them when you write an entry, for example: #school #trip</string>
 
 
     <string name="toast_diary_empty">Diary is empty</string>

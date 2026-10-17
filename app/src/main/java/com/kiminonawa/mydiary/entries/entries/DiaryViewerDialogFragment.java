@@ -45,6 +45,8 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.db.DBManager;
+import com.kiminonawa.mydiary.db.DBStructure;
+import com.kiminonawa.mydiary.entries.diary.TagHelper;
 import com.kiminonawa.mydiary.entries.DiaryActivity;
 import com.kiminonawa.mydiary.entries.EditDiaryBackDialogFragment;
 import com.kiminonawa.mydiary.entries.diary.CopyPhotoTask;
@@ -120,7 +122,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     private Spinner SP_diary_weather, SP_diary_mood;
 
     private TextView TV_diary_title_content;
-    private EditText EDT_diary_title;
+    private EditText EDT_diary_title, EDT_diary_tags;
+    private TextView TV_diary_tags;
 
     private LinearLayout LL_diary_item_content;
     private ImageView IV_diary_close_dialog, IV_diary_location, IV_diary_photo,
@@ -235,6 +238,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         PB_diary_item_content_hint = (ProgressBar) rootView.findViewById(R.id.PB_diary_item_content_hint);
 
         EDT_diary_title = (EditText) rootView.findViewById(R.id.EDT_diary_title);
+        EDT_diary_tags = (EditText) rootView.findViewById(R.id.EDT_diary_tags);
+        TV_diary_tags = (TextView) rootView.findViewById(R.id.TV_diary_tags);
 
         TV_diary_month = (TextView) rootView.findViewById(R.id.TV_diary_month);
         TV_diary_date = (TextView) rootView.findViewById(R.id.TV_diary_date);
@@ -409,16 +414,24 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         timeTools = TimeTools.getInstance(getActivity().getApplicationContext());
         sdf = new SimpleDateFormat("HH:mm");
         setDiaryTime();
+        int tagsColumn = diaryInfoCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_TAGS);
+        String tagsText = tagsColumn >= 0 ? TagHelper.toDisplay(diaryInfoCursor.getString(tagsColumn)) : "";
         if (isEditMode) {
             //Allow to edit diary
             LL_diary_time_information.setOnClickListener(this);
             EDT_diary_title.setText(diaryInfoCursor.getString(2));
+            EDT_diary_tags.setText(tagsText.length() > 0 ? tagsText + " " : "");
         } else {
             String diaryTitleStr = diaryInfoCursor.getString(2);
             if (diaryTitleStr == null || diaryTitleStr.equals("")) {
                 diaryTitleStr = getString(R.string.diary_no_title);
             }
             TV_diary_title_content.setText(diaryTitleStr);
+            if (tagsText.length() > 0) {
+                TV_diary_tags.setText(tagsText);
+                TV_diary_tags.setTextColor(ThemeManager.getInstance().getThemeDarkColor(getActivity()));
+                TV_diary_tags.setVisibility(View.VISIBLE);
+            }
         }
         //load location
         String locationName = diaryInfoCursor.getString(7);
@@ -452,6 +465,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             //For hidden hint
             EDT_diary_title.setText(" ");
             EDT_diary_title.getBackground().mutate().setColorFilter(ThemeManager.getInstance().getThemeMainColor(getActivity()),
+                    PorterDuff.Mode.SRC_ATOP);
+            EDT_diary_tags.setVisibility(View.VISIBLE);
+            EDT_diary_tags.getBackground().mutate().setColorFilter(ThemeManager.getInstance().getThemeMainColor(getActivity()),
                     PorterDuff.Mode.SRC_ATOP);
 
             initMoodSpinner();
@@ -711,7 +727,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         }
         new UpdateDiaryTask(getActivity(), calendar.getTimeInMillis(), EDT_diary_title.getText().toString(),
                 SP_diary_mood.getSelectedItemPosition(), SP_diary_weather.getSelectedItemPosition(),
-                locationName,
+                locationName, TagHelper.normalize(EDT_diary_tags.getText().toString()),
                 //Check  attachment
                 diaryItemHelper.getNowPhotoCount() > 0 ? true : false,
                 diaryItemHelper, diaryFileManager, this).execute(((DiaryActivity) getActivity()).getTopicId(), diaryId);

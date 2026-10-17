@@ -126,6 +126,8 @@
                         android:id="@+id/TV_entries_item_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
                         android:textSize="14dp" />
 
                     <TextView

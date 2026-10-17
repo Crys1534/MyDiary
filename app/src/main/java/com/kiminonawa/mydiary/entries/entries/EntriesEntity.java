@@ -2,9 +2,11 @@ package com.kiminonawa.mydiary.entries.entries;
 
 import android.support.annotation.NonNull;
 
+import com.kiminonawa.mydiary.entries.diary.TagHelper;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Date;
 
 /**
@@ -22,6 +24,8 @@ public class EntriesEntity implements Comparable<CalendarDay> {
     private boolean hasAttachment;
     //Full path of the first photo of the diary, null when it has no photo
     private String thumbnailPath;
+    //Tags like ",school,trip," (see TagHelper)
+    private String tags = "";
 
 
     public EntriesEntity(long id, Date createDate, String title,
@@ -36,6 +40,18 @@ public class EntriesEntity implements Comparable<CalendarDay> {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags == null ? "" : tags;
+    }
+
+    public List<String> getTagList() {
+        return TagHelper.toList(tags);
     }
 
     public String getThumbnailPath() {

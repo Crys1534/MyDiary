@@ -35,6 +35,7 @@ public class UpdateDiaryTask extends AsyncTask<Long, Void, Integer> {
     private String title;
     private int moodPosition, weatherPosition;
     private String location;
+    private String tags;
     private boolean attachment;
     private DiaryItemHelper diaryItemHelper;
     private FileManager editCrashFileManager, diaryFileManager;
@@ -44,7 +45,7 @@ public class UpdateDiaryTask extends AsyncTask<Long, Void, Integer> {
 
 
     public UpdateDiaryTask(Context context, long time, String title,
-                           int moodPosition, int weatherPosition, String location,
+                           int moodPosition, int weatherPosition, String location, String tags,
                            boolean attachment, DiaryItemHelper diaryItemHelper,
                            FileManager fileManager, UpdateDiaryCallBack callBack) {
 
@@ -54,6 +55,7 @@ public class UpdateDiaryTask extends AsyncTask<Long, Void, Integer> {
         this.title = title;
         this.moodPosition = moodPosition;
         this.location = location;
+        this.tags = tags;
         this.weatherPosition = weatherPosition;
         this.attachment = attachment;
         this.diaryItemHelper = diaryItemHelper;
@@ -83,7 +85,7 @@ public class UpdateDiaryTask extends AsyncTask<Long, Void, Integer> {
             diaryFileManager = new FileManager(mContext, topicId, diaryId);
             diaryFileManager.clearDir();
             //Update Diary
-            dbManager.updateDiary(diaryId, time, title, moodPosition, weatherPosition, location, attachment);
+            dbManager.updateDiary(diaryId, time, title, moodPosition, weatherPosition, location, attachment, tags);
             for (int i = 0; i < diaryItemHelper.getItemSize(); i++) {
                 //Copy photo from temp to diary dir
                 if (diaryItemHelper.get(i).getType() == IDairyRow.TYPE_PHOTO) {

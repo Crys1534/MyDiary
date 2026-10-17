@@ -36,6 +36,7 @@ public class SaveDiaryTask extends AsyncTask<Long, Void, Integer> {
     private int moodPosition, weatherPosition;
     private boolean attachment;
     private String locationName;
+    private String tags;
     private DiaryItemHelper diaryItemHelper;
     private FileManager tempFileManager, diaryFileManager;
     private ProgressDialog progressDialog;
@@ -45,7 +46,7 @@ public class SaveDiaryTask extends AsyncTask<Long, Void, Integer> {
 
     public SaveDiaryTask(Context context, long time, String title,
                          int moodPosition, int weatherPosition,
-                         boolean attachment, String locationName,
+                         boolean attachment, String locationName, String tags,
                          DiaryItemHelper diaryItemHelper, long topicId, SaveDiaryCallBack callBack) {
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage(context.getString(R.string.process_dialog_saving));
@@ -60,6 +61,7 @@ public class SaveDiaryTask extends AsyncTask<Long, Void, Integer> {
         this.weatherPosition = weatherPosition;
         this.attachment = attachment;
         this.locationName = locationName;
+        this.tags = tags;
         this.diaryItemHelper = diaryItemHelper;
         this.tempFileManager = new FileManager(context, topicId);
         this.callBack = callBack;
@@ -78,7 +80,7 @@ public class SaveDiaryTask extends AsyncTask<Long, Void, Integer> {
             //Save info
             long diaryId = dbManager.insertDiaryInfo(time,
                     title, moodPosition, weatherPosition,
-                    attachment, topicId, locationName);
+                    attachment, topicId, locationName, tags);
             //Save content
             diaryFileManager = new FileManager(mContext, topicId, diaryId);
             //Check no any garbage in this diary.

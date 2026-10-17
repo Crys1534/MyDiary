@@ -101,7 +101,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     private TextView TV_diary_month, TV_diary_date, TV_diary_day, TV_diary_time, TV_diary_location;
 
     private Spinner SP_diary_weather, SP_diary_mood;
-    private EditText EDT_diary_title;
+    private EditText EDT_diary_title, EDT_diary_tags;
     private ImageView IV_diary_menu, IV_diary_location, IV_diary_photo, IV_diary_delete, IV_diary_clear, IV_diary_save;
     private TextView TV_diary_item_content_hint;
 
@@ -187,6 +187,11 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
 
         EDT_diary_title = (EditText) rootView.findViewById(R.id.EDT_diary_title);
         EDT_diary_title.getBackground().mutate().setColorFilter(ThemeManager.getInstance().getThemeMainColor(getActivity()),
+                PorterDuff.Mode.SRC_ATOP);
+
+        EDT_diary_tags = (EditText) rootView.findViewById(R.id.EDT_diary_tags);
+        EDT_diary_tags.setVisibility(View.VISIBLE);
+        EDT_diary_tags.getBackground().mutate().setColorFilter(ThemeManager.getInstance().getThemeMainColor(getActivity()),
                 PorterDuff.Mode.SRC_ATOP);
 
         TV_diary_item_content_hint = (TextView) rootView.findViewById(R.id.TV_diary_item_content_hint);
@@ -411,6 +416,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         SP_diary_mood.setSelection(0);
         SP_diary_weather.setSelection(0);
         EDT_diary_title.setText("");
+        EDT_diary_tags.setText("");
         diaryItemHelper.initDiary();
     }
 
@@ -441,7 +447,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                     SP_diary_mood.getSelectedItemPosition(),
                     SP_diary_weather.getSelectedItemPosition(),
                     diaryItemHelper.getNowPhotoCount() > 0 ? true : false,
-                    locationName, diaryItemItemList);
+                    locationName, TagHelper.normalize(EDT_diary_tags.getText().toString()), diaryItemItemList);
             SPFManager.setDiaryAutoSave(getActivity(), getTopicId(), new Gson().toJson(autoSaveDiary));
         }
     }
@@ -457,6 +463,8 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                         SPFManager.getDiaryAutoSave(getActivity(), getTopicId()), BUDiaryEntries.class);
                 //Title
                 EDT_diary_title.setText(autoSaveDiary.getDiaryEntriesTitle());
+                //Tags
+                EDT_diary_tags.setText(TagHelper.toDisplay(autoSaveDiary.getDiaryEntriesTags()));
 
                 //load location
                 String locationName = autoSaveDiary.getDiaryEntriesLocation();
@@ -519,7 +527,8 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 SP_diary_mood.getSelectedItemPosition(), SP_diary_weather.getSelectedItemPosition(),
                 //Check  attachment
                 diaryItemHelper.getNowPhotoCount() > 0 ? true : false,
-                locationName, diaryItemHelper, getTopicId(), this).execute(getTopicId());
+                locationName, TagHelper.normalize(EDT_diary_tags.getText().toString()),
+                diaryItemHelper, getTopicId(), this).execute(getTopicId());
     }
 
     private void startGetLocation() {

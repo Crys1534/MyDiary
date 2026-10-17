@@ -15,6 +15,7 @@ import com.kiminonawa.mydiary.backup.obj.BUDiaryEntries;
 import com.kiminonawa.mydiary.backup.obj.BUDiaryItem;
 import com.kiminonawa.mydiary.backup.obj.BUMemoEntries;
 import com.kiminonawa.mydiary.db.DBManager;
+import com.kiminonawa.mydiary.db.DBStructure.DiaryEntry_V2;
 import com.kiminonawa.mydiary.main.topic.ITopic;
 import com.kiminonawa.mydiary.shared.FileManager;
 
@@ -201,7 +202,9 @@ public class ExportAsyncTask extends AsyncTask<Void, Void, Boolean> {
                                     diaryEntriesCursor.getLong(1), diaryEntriesCursor.getString(2),
                                     diaryEntriesCursor.getInt(3), diaryEntriesCursor.getInt(4),
                                     diaryEntriesCursor.getInt(5) > 0 ? true : false,
-                                    diaryEntriesCursor.getString(7), diaryItemItemList));
+                                    diaryEntriesCursor.getString(7),
+                                    diaryEntriesCursor.getString(diaryEntriesCursor.getColumnIndex(DiaryEntry_V2.COLUMN_TAGS)),
+                                    diaryItemItemList));
                     diaryEntriesCursor.moveToNext();
                 }
                 diaryEntriesCursor.close();
