@@ -19,6 +19,21 @@ def show(label, full=False):
         log("   [%s] text=%r desc=%r %s click=%s @%d,%d" % (n["rid"].split("/")[-1], n["text"][:60], n["desc"][:40], n["cls"].split(".")[-1], n["clickable"], n["cx"], n["cy"]))
 
 
+def keyboard_shown():
+    out = adb("shell", "dumpsys", "input_method")
+    return "mInputShown=true" in out
+
+
+def close_keyboard():
+    """Presses BACK only while the keyboard is open (a BACK without keyboard would leave the diary)."""
+    for _ in range(3):
+        if not keyboard_shown():
+            return True
+        key(4)
+        sleep(0.7)
+    return not keyboard_shown()
+
+
 def dismiss_intro():
     """Closes the first-run dialogs (compat warning, release note, showcase 'Next')."""
     for _ in range(10):
@@ -116,7 +131,7 @@ def write_entry():
     # tags
     if tap(rid="EDT_diary_tags"):
         type_text("\\#escuela \\#viaje")
-    key(4)  # close keyboard
+    close_keyboard()
     show("title_tags_typed")
     # first text box
     tap(rid="LL_diary_item_content")
@@ -132,7 +147,8 @@ def write_entry():
         adb("shell", "input", "swipe", str(x), str(n["cy"]), str(x), str(n["cy"]), "900")
         sleep(1)
         show("word_selected")
-        key(4)  # the keyboard covers the edit bar: close it (the word must stay marked)
+        # the keyboard covers the edit bar: close it (the word must stay marked)
+        log("   keyboard closed: %s" % close_keyboard())
         sleep(1)
         show("word_selected_keyboard_closed")
         tap(rid="IV_diary_bold")
@@ -142,7 +158,7 @@ def write_entry():
         sleep(1)
         show("italic_done")
     # checklist (keyboard closed first, the edit bar is under it)
-    key(4)
+    close_keyboard()
     sleep(1)
     tap(rid="IV_diary_checklist")
     sleep(1)
@@ -150,7 +166,7 @@ def write_entry():
     key(66)  # enter -> next line
     type_text("llamar a mama")
     show("checklist_typed", full=True)
-    key(4)
+    close_keyboard()
     sleep(1)
     show("keyboard_closed", full=True)
     photos_test()
@@ -187,7 +203,7 @@ def make_png(path, w, h, base):
 
 def audio_test():
     """The audio button: paste a link, the audio appears with a play button, play it for a few seconds."""
-    key(4)
+    close_keyboard()
     sleep(1)
     if not tap(rid="IV_diary_audio"):
         show("no_audio_button", full=True)
@@ -208,8 +224,10 @@ def audio_test():
         show("audio_paused")
 
 
-def pick_photo(name):
-    """Adds one picture from the phone gallery to the diary that is open."""
+def pick_photo(name, index=1):
+    """Adds one picture from the phone gallery to the diary that is open.
+    The Android photo picker has no file names: the pictures are chosen by their place in the grid
+    (newest first; place 0 is a screenshot, 1 and 2 are the test pictures)."""
     if not tap(rid="IV_diary_photo"):
         return False
     sleep(2)
@@ -230,9 +248,21 @@ def pick_photo(name):
         tap_xy(n["cx"], n["cy"])
         sleep(3)
     show("photo_picker_%s" % name, full=True)
-    if not tap(text=name):
-        # maybe it is in another folder: open the side menu and go to Downloads / Pictures
+    thumbs = [n for n in nodes() if n["rid"].endswith("icon_thumbnail")]
+    log("   picker thumbnails: %d" % len(thumbs))
+    if thumbs:
+        pick = thumbs[min(index, len(thumbs) - 1)]
+        tap_xy(pick["cx"], pick["cy"])
+        sleep(2)
+        # the picker may ask to confirm the choice
+        for label in ("Add", "Select", "Done"):
+            n = find(text=label, contains=False)
+            if n:
+                tap_xy(n["cx"], n["cy"])
+                break
+    elif not tap(text=name):
         show("photo_picker_notfound_%s" % name, full=True)
+        key(4)
         return False
     sleep(5)
     show("photo_added_%s" % name, full=True)
@@ -250,8 +280,8 @@ def photos_test():
         adb("shell", "am", "broadcast", "-a", "android.intent.action.MEDIA_SCANNER_SCAN_FILE",
             "-d", "file:///sdcard/Pictures/%s" % name)
     sleep(4)
-    pick_photo("foto_ancha")
-    pick_photo("foto_alta")
+    pick_photo("foto_ancha", 2)
+    pick_photo("foto_alta", 1)
     stars = [n for n in nodes() if n["rid"].endswith("IV_diary_photo_thumbnail")]
     log("   stars found: %d" % len(stars))
     show("photos_in_diary", full=True)
@@ -446,7 +476,11 @@ def seed_db():
         log("   seed: could not copy the database")
         return False
     con = sqlite3.connect(path)
-    topic = con.execute("select _id from topic_entry where topic_type = 1 order by _id limit 1").fetchone()
+    # the topic that already has the sample entry is the one called DIARY (the one the steps open)
+    topic = con.execute("select diary_ref_topic_id from diary_entry_v2 order by _id limit 1").fetchone()
+    log("   seed: topics = %s" % con.execute("select _id, topic_name, topic_type from topic_entry").fetchall())
+    if not topic:
+        topic = con.execute("select _id from topic_entry where topic_type = 1 order by _id limit 1").fetchone()
     if not topic:
         log("   seed: no diary topic")
         return False
