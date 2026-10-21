@@ -52,6 +52,57 @@ def launch():
     show("main")
 
 
+def restart():
+    adb("shell", "am", "force-stop", PKG)
+    adb("shell", "am", "start", "-n", PKG + "/com.kiminonawa.mydiary.init.InitActivity")
+    sleep(7)
+    dismiss_intro()
+    sleep(1)
+
+
+def alive(label):
+    pid = adb("shell", "pidof", PKG).strip()
+    log("   APP %s after '%s'" % ("ALIVE (pid %s)" % pid if pid else "IS DEAD", label))
+    return bool(pid)
+
+
+def search_test():
+    """Typing in the search box of the main page must not close the app."""
+    restart()
+    if not tap(rid="EDT_main_topic_search"):
+        show("no_search_box", full=True)
+        return
+    type_text("a")
+    sleep(2)
+    show("search_a", full=True)
+    alive("search a")
+    type_text("bc")
+    sleep(2)
+    show("search_abc")
+    alive("search abc")
+    for _ in range(3):
+        key(67)  # delete
+    sleep(2)
+    show("search_cleared")
+    alive("search cleared")
+
+
+def drag_test():
+    """Long press + drag a topic to another place."""
+    restart()
+    topics = [n for n in nodes() if n["rid"].endswith("TV_topic_title")]
+    log("   topics found: %s" % [t["text"] for t in topics])
+    if len(topics) < 3:
+        show("no_topics", full=True)
+        return
+    a, b = topics[0], topics[2]
+    show("before_drag")
+    adb("shell", "input", "draganddrop", str(a["cx"]), str(a["cy"]), str(b["cx"]), str(b["cy"] + 40), "1500")
+    sleep(3)
+    show("after_drag", full=True)
+    alive("drag")
+
+
 def write_entry():
     tap(text="DIARY")
     sleep(3)
@@ -238,6 +289,9 @@ def backup_test():
 
 
 step("launch", launch)
+step("search", search_test)
+step("drag topics", drag_test)
+step("relaunch", restart)
 step("write an entry", write_entry)
 step("open the entries", open_entries)
 step("settings", settings)
