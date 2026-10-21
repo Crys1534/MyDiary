@@ -79,10 +79,15 @@ def write_entry():
         adb("shell", "input", "swipe", str(n["cx"]), str(n["cy"]), str(n["cx"]), str(n["cy"]), "900")
         sleep(1)
         show("word_selected")
+        key(4)  # the keyboard covers the edit bar: close it (the selection stays)
+        sleep(1)
+        show("word_selected_keyboard_closed")
         tap(rid="IV_diary_bold")
         sleep(1)
         show("bold_done")
-    # checklist
+    # checklist (keyboard closed first, the edit bar is under it)
+    key(4)
+    sleep(1)
     tap(rid="IV_diary_checklist")
     sleep(1)
     type_text("comprar pan")
@@ -195,7 +200,7 @@ def picker_save():
         if n:
             tap_xy(n["cx"], n["cy"])
             return True
-    return tap(text="Save", contains=False)
+    return tap(text="save")
 
 
 def backup_test():
