@@ -120,14 +120,8 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Run the app in the emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 34
-          arch: x86_64
-          target: google_apis
-          profile: pixel_6
-          disable-animations: true
-          script: bash smoke/run.sh
+        continue-on-error: true
+        run: bash smoke/emulator.sh
 
       - name: Publish the smoke test results
         if: always()
@@ -140,6 +134,7 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git checkout --orphan smoke-logs
           git rm -rf --quiet .
+          git clean -fdxq
           cp -r /tmp/smoke/. .
           git add -f .
           git commit --quiet -m "Smoke test for ${{ github.sha }}"
