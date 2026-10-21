@@ -40,11 +40,11 @@ public class ExifUtil {
         try {
             inputStream = context.getContentResolver().openInputStream(uri);
             if (inputStream != null) {
-                android.support.media.ExifInterface exifInterface =
-                        new android.support.media.ExifInterface(inputStream);
+                androidx.exifinterface.media.ExifInterface exifInterface =
+                        new androidx.exifinterface.media.ExifInterface(inputStream);
                 int orientation = exifInterface.getAttributeInt(
-                        android.support.media.ExifInterface.TAG_ORIENTATION,
-                        android.support.media.ExifInterface.ORIENTATION_NORMAL);
+                        androidx.exifinterface.media.ExifInterface.TAG_ORIENTATION,
+                        androidx.exifinterface.media.ExifInterface.ORIENTATION_NORMAL);
                 return rotate(bitmap, orientation);
             }
         } catch (Exception e) {

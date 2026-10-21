@@ -1,40 +1,15 @@
 apply plugin: 'com.android.library'
 
-dependencies {
-
-    testCompile "junit:junit:4.12"
-    testCompile "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-    testCompile("org.robolectric:robolectric:${ROBOLECTRIC_VERSION}") {
-        exclude group: 'commons-logging', module: 'commons-logging'
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-    }
-}
-
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    namespace 'com.facebook.samples.gestures'
+    compileSdk 35
 
-    packagingOptions {
-        exclude 'NOTICE'
-        exclude 'LICENSE'
-        exclude 'LICENSE.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/NOTICE.txt'
+    defaultConfig {
+        minSdk 21
     }
 
-    sourceSets {
-        test {
-            java {
-                srcDir 'src'
-                exclude '**/MultiPointerGestureDetectorTest.java'
-            }
-        }
-    }
-
-    lintOptions {
-        abortOnError false
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-

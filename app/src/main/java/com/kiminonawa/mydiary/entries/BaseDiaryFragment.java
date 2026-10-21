@@ -1,7 +1,7 @@
 package com.kiminonawa.mydiary.entries;
 
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.kiminonawa.mydiary.entries.entries.EntriesEntity;
 

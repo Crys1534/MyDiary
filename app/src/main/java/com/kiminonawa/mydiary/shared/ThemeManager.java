@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
-import android.support.v4.media.RatingCompat;
 
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.main.topic.ITopic;
@@ -452,9 +451,7 @@ public class ThemeManager {
     }
 
 
-    public
-    @RatingCompat.Style
-    int getPickerStyle() {
+    public int getPickerStyle() {
         int style;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             style = AlertDialog.THEME_HOLO_LIGHT;

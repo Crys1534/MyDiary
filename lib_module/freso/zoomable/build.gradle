@@ -1,31 +1,26 @@
 apply plugin: 'com.android.library'
 
-dependencies {
-    compile "com.nineoldandroids:library:${NINEOLDANDROID_VERSION}"
-    provided "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-    provided "com.android.support:support-core-utils:${SUPPORT_LIB_VERSION}"
-    provided "com.google.code.findbugs:jsr305:${JSR_305_VERSION}"
-    compile 'com.facebook.fresco:drawee:1.2.0'
-    compile 'com.facebook.fresco:fbcore:1.2.0'
-    compile 'com.facebook.fresco:imagepipeline:1.2.0'
-    compile project(':gestures')
+android {
+    namespace 'com.facebook.samples.zoomable'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 21
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
-android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.1'
-
-    packagingOptions {
-        exclude 'NOTICE'
-        exclude 'LICENSE'
-        exclude 'LICENSE.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/NOTICE.txt'
-    }
-
-    lintOptions {
-        abortOnError false
-    }
+dependencies {
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'androidx.annotation:annotation:1.9.1'
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.facebook.fresco:drawee:1.2.0'
+    implementation 'com.facebook.fresco:fbcore:1.2.0'
+    implementation 'com.facebook.fresco:imagepipeline:1.2.0'
+    api project(':gestures')
 }

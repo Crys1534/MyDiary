@@ -1,6 +1,6 @@
 package com.kiminonawa.mydiary.main.topic;
 
-import android.support.annotation.DrawableRes;
+import androidx.annotation.DrawableRes;
 
 /**
  * Created by daxia on 2016/10/17.

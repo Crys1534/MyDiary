@@ -73,7 +73,7 @@
         android:layout_height="@dimen/shadow_height_3dp"
         android:background="@drawable/view_bottom_shadow" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/FAB_calendar_change_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

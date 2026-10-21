@@ -3,7 +3,7 @@ package com.kiminonawa.mydiary.entries.diary.item;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.v7.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.KeyEvent;

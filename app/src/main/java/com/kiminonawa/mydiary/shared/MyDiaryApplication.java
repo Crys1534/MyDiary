@@ -2,7 +2,7 @@ package com.kiminonawa.mydiary.shared;
 
 import android.app.Application;
 import android.content.res.Configuration;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;

@@ -2,7 +2,7 @@ package com.kiminonawa.mydiary.shared.statusbar;
 
 import android.app.Activity;
 import android.os.Build;
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

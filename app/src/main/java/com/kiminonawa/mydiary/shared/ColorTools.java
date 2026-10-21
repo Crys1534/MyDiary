@@ -3,7 +3,7 @@ package com.kiminonawa.mydiary.shared;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Build;
-import android.support.annotation.ColorRes;
+import androidx.annotation.ColorRes;
 
 /**
  * Created by daxia on 2016/10/24.

@@ -3,8 +3,8 @@ package com.kiminonawa.mydiary.entries.photo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +15,6 @@ import com.facebook.samples.zoomable.DoubleTapGestureListener;
 import com.facebook.samples.zoomable.ZoomableDraweeView;
 import com.kiminonawa.mydiary.R;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
  * Created by daxia on 2017/4/12.
  */
@@ -26,9 +22,7 @@ import butterknife.Unbinder;
 public class PhotoDetailViewerFragment extends Fragment {
 
 
-    @BindView(R.id.zdv_photo_detail)
     public ZoomableDraweeView zdvPhotoDetail;
-    public Unbinder unbinder;
 
     private Uri photoUri;
 
@@ -44,7 +38,7 @@ public class PhotoDetailViewerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_diary_photo_detail_viewer, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        zdvPhotoDetail = (ZoomableDraweeView) view.findViewById(R.id.zdv_photo_detail);
         photoUri = getArguments().getParcelable("photoUri");
         return view;
     }
@@ -59,7 +53,7 @@ public class PhotoDetailViewerFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        zdvPhotoDetail = null;
     }
 
     private void initZoomableDraweeView() {

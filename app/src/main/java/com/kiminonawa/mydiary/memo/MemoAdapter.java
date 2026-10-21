@@ -1,9 +1,9 @@
 package com.kiminonawa.mydiary.memo;
 
 import android.graphics.Color;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.FragmentActivity;
+import androidx.core.view.MotionEventCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;

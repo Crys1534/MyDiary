@@ -3,9 +3,9 @@ package com.kiminonawa.mydiary.entries.photo;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -17,8 +17,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static com.kiminonawa.mydiary.shared.FileManager.DIARY_ROOT_DIR;
 
@@ -36,9 +34,7 @@ public class PhotoOverviewActivity extends AppCompatActivity {
     /**
      * GUI
      */
-    @BindView(R.id.RV_diary_photo_overview)
     RecyclerView RVDiaryPhotoOverview;
-    @BindView(R.id.RL_diary_photo_overview_no_images)
     RelativeLayout RLDiaryPhotoOverviewNoImages;
 
     /**
@@ -51,7 +47,8 @@ public class PhotoOverviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary_phoho_overview);
-        ButterKnife.bind(this);
+        RVDiaryPhotoOverview = (RecyclerView) findViewById(R.id.RV_diary_photo_overview);
+        RLDiaryPhotoOverviewNoImages = (RelativeLayout) findViewById(R.id.RL_diary_photo_overview_no_images);
         //get topic id
         long topicId = getIntent().getLongExtra(PHOTO_OVERVIEW_TOPIC_ID, -1);
         //get topic fail , close this activity

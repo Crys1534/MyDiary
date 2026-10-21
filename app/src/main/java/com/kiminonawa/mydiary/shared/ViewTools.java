@@ -4,8 +4,8 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.DrawableRes;
-import android.support.v4.view.ViewCompat;
+import androidx.annotation.DrawableRes;
+import androidx.core.view.ViewCompat;
 import android.view.View;
 import android.widget.ScrollView;
 

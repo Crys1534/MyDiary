@@ -5,8 +5,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -16,8 +16,6 @@ import com.kiminonawa.mydiary.shared.ScreenHelper;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by daxia on 2017/4/12.
@@ -32,7 +30,6 @@ public class PhotoDetailViewerActivity extends AppCompatActivity {
     /**
      * GUI
      */
-    @BindView(R.id.VP_diary_photo_detail)
     ViewPager VPDiaryPhotoDetail;
 
 
@@ -55,7 +52,7 @@ public class PhotoDetailViewerActivity extends AppCompatActivity {
 
         //Set the layout
         setContentView(R.layout.activity_diary_photo_detail_viewer);
-        ButterKnife.bind(this);
+        VPDiaryPhotoDetail = (ViewPager) findViewById(R.id.VP_diary_photo_detail);
 
         //Modify the status bar color
         diaryPhotoFileList = getIntent().getParcelableArrayListExtra(DIARY_PHOTO_FILE_LIST);

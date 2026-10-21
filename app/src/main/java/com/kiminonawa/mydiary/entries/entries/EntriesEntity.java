@@ -1,6 +1,6 @@
 package com.kiminonawa.mydiary.entries.entries;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.kiminonawa.mydiary.entries.diary.TagHelper;
 import com.prolificinteractive.materialcalendarview.CalendarDay;

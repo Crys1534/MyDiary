@@ -7,7 +7,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.WindowManager;

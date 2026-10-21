@@ -17,21 +17,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # The project is from 2017, so it needs the old SDK pieces it was written for.
-      # This runs before Java 8 is selected because the SDK manager itself needs a newer Java.
+      # The Android SDK pieces the build needs.
+      # This runs before the Java of the build is selected because the SDK manager has its own Java.
       - name: Install the old Android SDK pieces
         run: |
           exec > >(tee -a setup.log) 2>&1
           echo "ANDROID_HOME=$ANDROID_HOME JAVA_HOME=$JAVA_HOME"
           ls "$ANDROID_HOME" "$ANDROID_HOME/cmdline-tools" || true
-          sudo dpkg --add-architecture i386 || true
-          sudo apt-get update -y || true
-          sudo apt-get install -y lib32z1 lib32stdc++6 || true
           SDKM=$(ls "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager 2>/dev/null | head -n 1)
           echo "sdkmanager: $SDKM"
           yes | sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" --licenses > /dev/null || true
           # These two are required.
-          sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "platforms;android-25" "build-tools;25.0.1" "build-tools;26.0.2"
+          sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "platforms;android-35" "build-tools;35.0.0"
           # This one is optional, so a failure here must not stop the build.
           sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "platform-tools" || true
           sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" --list_installed || true
@@ -39,7 +36,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '8'
+          java-version: '17'
 
       - name: Build the debug APK
         run: |
@@ -53,7 +50,7 @@ jobs:
           echo "APK found: $APK"
           cp "$APK" MyDiary-debug.apk
           # Report of what Android will see: package id, SDK versions, CPU types and signature.
-          BT="$ANDROID_HOME/build-tools/26.0.2"
+          BT="$ANDROID_HOME/build-tools/35.0.0"
           {
             ls -l MyDiary-debug.apk
             "$BT/aapt" dump badging MyDiary-debug.apk | grep -E "^package|sdkVersion|targetSdkVersion|native-code|application-label:" || true
