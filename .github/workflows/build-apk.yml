@@ -65,6 +65,8 @@ jobs:
           path: MyDiary-debug.apk
 
       - name: Publish the APK as a release
+        # A commit with [no-release] in its message only tests things and is not published.
+        if: ${{ !contains(github.event.head_commit.message, '[no-release]') }}
         uses: softprops/action-gh-release@v2
         with:
           tag_name: apk-${{ github.run_number }}
@@ -95,3 +97,50 @@ jobs:
           git add -f build.log setup.log status.txt
           git commit --quiet -m "Build log for run ${{ github.run_number }}"
           git push --force origin ci-logs
+
+  # Optional: starts the app in an Android emulator and takes screenshots.
+  # It only runs when the commit message contains [smoke].
+  smoke:
+    needs: build
+    if: contains(github.event.head_commit.message, '[smoke]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: MyDiary-debug-apk
+          path: apk
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run the app in the emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          profile: pixel_6
+          disable-animations: true
+          script: bash smoke/run.sh
+
+      - name: Publish the smoke test results
+        if: always()
+        continue-on-error: true
+        run: |
+          mkdir -p /tmp/smoke
+          cp -r smoke-out/. /tmp/smoke/ 2>/dev/null || echo "no smoke-out" > /tmp/smoke/none.txt
+          echo "result=${{ job.status }} commit=${{ github.sha }}" > /tmp/smoke/status.txt
+          git config user.name "github-actions"
+          git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan smoke-logs
+          git rm -rf --quiet .
+          cp -r /tmp/smoke/. .
+          git add -f .
+          git commit --quiet -m "Smoke test for ${{ github.sha }}"
+          git push --force origin smoke-logs
