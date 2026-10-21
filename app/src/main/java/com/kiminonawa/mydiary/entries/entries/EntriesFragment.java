@@ -24,6 +24,7 @@ import com.kiminonawa.mydiary.shared.ThemeManager;
 import com.kiminonawa.mydiary.shared.ViewTools;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,8 @@ public class EntriesFragment extends BaseDiaryFragment implements
     private TextView TV_entries_edit_msg;
     private ImageView IV_entries_edit, IV_entries_photo;
     private TextView TV_entries_tag;
+    //Chip with the year (only when the entries on the screen are not from this year)
+    private TextView TV_entries_year;
 
     /**
      * Tag filter: the list that is shown is the diary list without the entries that don't have the tag
@@ -69,6 +72,7 @@ public class EntriesFragment extends BaseDiaryFragment implements
         IV_entries_photo.setOnClickListener(this);
         TV_entries_tag = (TextView) rootView.findViewById(R.id.TV_entries_tag);
         TV_entries_tag.setOnClickListener(this);
+        TV_entries_year = (TextView) rootView.findViewById(R.id.TV_entries_year);
         TV_entries_edit_msg = (TextView) rootView.findViewById(R.id.TV_entries_edit_msg);
         TV_entries_edit_msg.setTextColor(ThemeManager.getInstance().getThemeMainColor(getActivity()));
 
@@ -116,15 +120,59 @@ public class EntriesFragment extends BaseDiaryFragment implements
         applyTagFilter();
         entriesAdapter = new EntriesAdapter(EntriesFragment.this, shownList);
         RecyclerView_entries.setAdapter(entriesAdapter);
+        RecyclerView_entries.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                updateYearChip();
+            }
+        });
+        RecyclerView_entries.post(new Runnable() {
+            @Override
+            public void run() {
+                updateYearChip();
+            }
+        });
         //true for close all view
         setEditModeUI(true);
     }
 
 
+    /**
+     * Shows the year at the top (centered) when the first entry on the screen is not from this year.
+     */
+    private void updateYearChip() {
+        if (TV_entries_year == null || RecyclerView_entries == null || !isAdded()) {
+            return;
+        }
+        RecyclerView.LayoutManager lm = RecyclerView_entries.getLayoutManager();
+        int first = lm instanceof LinearLayoutManager
+                ? ((LinearLayoutManager) lm).findFirstVisibleItemPosition() : -1;
+        if (first < 0 || first >= shownList.size()) {
+            TV_entries_year.setVisibility(View.GONE);
+            return;
+        }
+        Calendar entryDate = Calendar.getInstance();
+        entryDate.setTime(shownList.get(first).getCreateDate());
+        int year = entryDate.get(Calendar.YEAR);
+        if (year != Calendar.getInstance().get(Calendar.YEAR)) {
+            TV_entries_year.setText(String.valueOf(year));
+            TV_entries_year.setVisibility(View.VISIBLE);
+        } else {
+            TV_entries_year.setVisibility(View.GONE);
+        }
+    }
+
     private void countEntries() {
         TV_entries_count.setText(
                 getResources().getQuantityString(R.plurals.entries_count,
                         shownList.size(), shownList.size()));
+        //The list changed: the year chip may have to change too
+        RecyclerView_entries.post(new Runnable() {
+            @Override
+            public void run() {
+                updateYearChip();
+            }
+        });
     }
 
     public void setEditModeUI(boolean isEditMode) {
@@ -174,7 +222,8 @@ public class EntriesFragment extends BaseDiaryFragment implements
                 shownList.add(entity);
             }
         }
-        TV_entries_tag.setText(tagFilter == null ? "#" : "#" + tagFilter);
+        //"#" is the button; while a tag is chosen the tag is shown (without #)
+        TV_entries_tag.setText(tagFilter == null ? "#" : tagFilter);
     }
 
     private void showTagFilterDialog() {
@@ -197,7 +246,7 @@ public class EntriesFragment extends BaseDiaryFragment implements
             String[] rows = new String[tags.size() + 1];
             rows[0] = getString(R.string.tags_filter_all);
             for (int i = 0; i < tags.size(); i++) {
-                rows[i + 1] = "#" + tags.get(i) + "  (" + tagCount.get(tags.get(i)) + ")";
+                rows[i + 1] = tags.get(i) + "  (" + tagCount.get(tags.get(i)) + ")";
             }
             builder.setItems(rows, new DialogInterface.OnClickListener() {
                 @Override
@@ -217,6 +266,12 @@ public class EntriesFragment extends BaseDiaryFragment implements
         applyTagFilter();
         entriesAdapter.notifyDataSetChanged();
         countEntries();
+        RecyclerView_entries.post(new Runnable() {
+            @Override
+            public void run() {
+                updateYearChip();
+            }
+        });
         ((DiaryActivity) getActivity()).callCalendarRefresh();
     }
 

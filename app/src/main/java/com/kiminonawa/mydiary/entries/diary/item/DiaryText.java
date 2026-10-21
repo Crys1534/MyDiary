@@ -25,7 +25,7 @@ public class DiaryText implements IDairyRow {
     }
 
     private void createEditText(Context context) {
-        EDT_diary_text = new EditText(context);
+        EDT_diary_text = new FormatEditText(context);
         EDT_diary_text.setTextColor(Color.BLACK);
         EDT_diary_text.setBackgroundColor(Color.TRANSPARENT);
         EDT_diary_text.setGravity(Gravity.TOP | Gravity.LEFT);

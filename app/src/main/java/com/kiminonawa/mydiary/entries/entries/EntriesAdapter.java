@@ -2,6 +2,7 @@ package com.kiminonawa.mydiary.entries.entries;
 
 import android.net.Uri;
 import androidx.annotation.ColorInt;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +23,13 @@ import com.kiminonawa.mydiary.entries.diary.TagHelper;
 import com.kiminonawa.mydiary.shared.EditMode;
 import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.shared.ThemeManager;
+import com.kiminonawa.mydiary.shared.TimeTools;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by daxia on 2016/10/17.
@@ -38,8 +40,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
 
     private List<EntriesEntity> entriesList;
     private EntriesFragment mFragment;
-    private DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-    private String[] daysSimpleName;
+    //Only the month and the day, like "Oct 21" or "21 oct" (the hour is not shown any more)
+    private SimpleDateFormat dateFormat;
+    private String[] monthsFullName;
     private ThemeManager themeManager;
 
     private boolean isEditMode = false;
@@ -49,7 +52,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
     public EntriesAdapter(EntriesFragment fragment, List<EntriesEntity> topicList) {
         this.mFragment = fragment;
         this.entriesList = topicList;
-        this.daysSimpleName = mFragment.getResources().getStringArray(R.array.days_simple_name);
+        this.monthsFullName = TimeTools.getInstance(mFragment.getActivity().getApplicationContext()).getMonthsFullName();
+        this.dateFormat = new SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(Locale.getDefault(), "MMMd"),
+                Locale.getDefault());
         this.themeManager = ThemeManager.getInstance();
         this.thumbnailSizePx = (int) (56 * mFragment.getResources().getDisplayMetrics().density);
     }
@@ -75,18 +80,16 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
 
         if (showHeader(position)) {
             holder.getHeader().setVisibility(View.VISIBLE);
-            holder.getHeader().setText(String.valueOf(calendar.get(Calendar.MONTH) + 1));
+            holder.getHeader().setText(monthsFullName[calendar.get(Calendar.MONTH)]);
         } else {
             holder.getHeader().setVisibility(View.GONE);
         }
 
-        holder.getTVDate().setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
-        holder.getTVDay().setText(daysSimpleName[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
+        //Month and day, then the tags (without #)
         String tagsText = TagHelper.toDisplay(entriesList.get(position).getTags());
-        holder.getTVTime().setText(String.valueOf(dateFormat.format(calendar.getTime()))
+        holder.getTVTime().setText(dateFormat.format(calendar.getTime())
                 + (tagsText.length() > 0 ? "   " + tagsText : ""));
         holder.getTVTitle().setText(entriesList.get(position).getTitle());
-        holder.getTVSummary().setText(entriesList.get(position).getSummary());
 
         holder.getIVWeather().setImageResource(DiaryInfoHelper.getWeatherResourceId(entriesList.get(position).getWeatherId()));
         holder.getIVMood().setImageResource(DiaryInfoHelper.getMoodResourceId(entriesList.get(position).getMoodId()));
@@ -151,9 +154,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
     protected class EntriesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         private TextView TV_entries_item_header;
-        private TextView TV_entries_item_date, TV_entries_item_day, TV_entries_item_time,
-                TV_entries_item_title, TV_entries_item_summary;
+        private TextView TV_entries_item_time, TV_entries_item_title;
 
+        private ImageView IV_entries_item_thumbnail_placeholder;
         private ImageView IV_entries_item_weather, IV_entries_item_mood, IV_entries_item_bookmark, IV_entries_item_attachment;
 
         private RelativeLayout RL_entries_item_content;
@@ -163,11 +166,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
             super(rootView);
             this.TV_entries_item_header = (TextView) rootView.findViewById(R.id.TV_entries_item_header);
 
-            this.TV_entries_item_date = (TextView) rootView.findViewById(R.id.TV_entries_item_date);
-            this.TV_entries_item_day = (TextView) rootView.findViewById(R.id.TV_entries_item_day);
             this.TV_entries_item_time = (TextView) rootView.findViewById(R.id.TV_entries_item_time);
             this.TV_entries_item_title = (TextView) rootView.findViewById(R.id.TV_entries_item_title);
-            this.TV_entries_item_summary = (TextView) rootView.findViewById(R.id.TV_entries_item_summary);
+            this.IV_entries_item_thumbnail_placeholder = (ImageView) rootView.findViewById(R.id.IV_entries_item_thumbnail_placeholder);
 
             this.IV_entries_item_weather = (ImageView) rootView.findViewById(R.id.IV_entries_item_weather);
             this.IV_entries_item_mood = (ImageView) rootView.findViewById(R.id.IV_entries_item_mood);
@@ -183,11 +184,10 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
         }
 
         private void initThemeColor(@ColorInt int color) {
-            this.TV_entries_item_date.setTextColor(color);
-            this.TV_entries_item_day.setTextColor(color);
             this.TV_entries_item_time.setTextColor(color);
             this.TV_entries_item_title.setTextColor(color);
-            this.TV_entries_item_summary.setTextColor(color);
+            //Soft square in the color of the theme
+            this.IV_entries_item_thumbnail_placeholder.setColorFilter(ColorUtils.setAlphaComponent(color, 40));
 
             this.IV_entries_item_weather.setColorFilter(color);
             this.IV_entries_item_mood.setColorFilter(color);
@@ -212,24 +212,12 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
             return TV_entries_item_header;
         }
 
-        public TextView getTVDate() {
-            return TV_entries_item_date;
-        }
-
-        public TextView getTVDay() {
-            return TV_entries_item_day;
-        }
-
         public TextView getTVTime() {
             return TV_entries_item_time;
         }
 
         public TextView getTVTitle() {
             return TV_entries_item_title;
-        }
-
-        public TextView getTVSummary() {
-            return TV_entries_item_summary;
         }
 
         public ImageView getIVAttachment() {

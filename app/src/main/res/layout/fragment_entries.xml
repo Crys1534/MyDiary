@@ -84,6 +84,24 @@
         android:paddingRight="10dp" />
 
 
+    <!-- The year of the entries that are on the screen (only when it is not the current year) -->
+    <TextView
+        android:id="@+id/TV_entries_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/entries_year_chip_bg"
+        android:paddingBottom="4dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="4dp"
+        android:textColor="@android:color/white"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/TV_entries_edit_msg"
         android:layout_width="match_parent"

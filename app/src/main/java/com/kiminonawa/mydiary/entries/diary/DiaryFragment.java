@@ -97,7 +97,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     private Spinner SP_diary_weather, SP_diary_mood;
     private EditText EDT_diary_title, EDT_diary_tags;
     private ImageView IV_diary_menu, IV_diary_location, IV_diary_photo, IV_diary_delete, IV_diary_clear, IV_diary_save;
-    private ImageView IV_diary_bold, IV_diary_checklist;
+    private ImageView IV_diary_bold, IV_diary_italic, IV_diary_checklist;
     private TextView TV_diary_item_content_hint;
 
 
@@ -202,6 +202,9 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         IV_diary_bold = (ImageView) rootView.findViewById(R.id.IV_diary_bold);
         IV_diary_bold.setVisibility(View.VISIBLE);
         IV_diary_bold.setOnClickListener(this);
+        IV_diary_italic = (ImageView) rootView.findViewById(R.id.IV_diary_italic);
+        IV_diary_italic.setVisibility(View.VISIBLE);
+        IV_diary_italic.setOnClickListener(this);
         IV_diary_checklist = (ImageView) rootView.findViewById(R.id.IV_diary_checklist);
         IV_diary_checklist.setVisibility(View.VISIBLE);
         IV_diary_checklist.setOnClickListener(this);
@@ -741,10 +744,8 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         //Since JellyBean, the onDateSet() method of the DatePicker class is called twice
         if (view.isShown()) {
             calendar.set(year, monthOfYear, dayOfMonth);
+            //Only the day is chosen: the hour and the minute are not asked any more
             setCurrentTime(false);
-            TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(calendar.getTimeInMillis());
-            timePickerFragment.setOnTimeSetListener(this);
-            timePickerFragment.show(getFragmentManager(), "timePickerFragment");
         }
     }
 
@@ -794,6 +795,11 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 break;
             case R.id.IV_diary_bold:
                 if (!diaryItemHelper.toggleBoldAtFocus(getActivity().getCurrentFocus())) {
+                    Toast.makeText(getActivity(), getString(R.string.toast_format_select_text), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.IV_diary_italic:
+                if (!diaryItemHelper.toggleItalicAtFocus(getActivity().getCurrentFocus())) {
                     Toast.makeText(getActivity(), getString(R.string.toast_format_select_text), Toast.LENGTH_SHORT).show();
                 }
                 break;

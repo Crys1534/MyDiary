@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, sys
+import os, sys, subprocess
 sys.path.insert(0, os.path.dirname(__file__))
 from ui import *
 
@@ -124,18 +124,23 @@ def write_entry():
     type_text("hola mundo bonito")
     show("text_typed", full=True)
     report_edit_bar("with keyboard")
-    # long press on a word to select it, then bold
+    # long press on the first word to select it, close the keyboard (the word must stay marked),
+    # then bold + italic with the buttons
     n = find(text="hola mundo bonito")
     if n:
-        adb("shell", "input", "swipe", str(n["cx"]), str(n["cy"]), str(n["cx"]), str(n["cy"]), "900")
+        x = n["b"][0] + 70
+        adb("shell", "input", "swipe", str(x), str(n["cy"]), str(x), str(n["cy"]), "900")
         sleep(1)
         show("word_selected")
-        key(4)  # the keyboard covers the edit bar: close it (the selection stays)
+        key(4)  # the keyboard covers the edit bar: close it (the word must stay marked)
         sleep(1)
         show("word_selected_keyboard_closed")
         tap(rid="IV_diary_bold")
         sleep(1)
         show("bold_done")
+        tap(rid="IV_diary_italic")
+        sleep(1)
+        show("italic_done")
     # checklist (keyboard closed first, the edit bar is under it)
     key(4)
     sleep(1)
@@ -152,6 +157,24 @@ def write_entry():
     tap(rid="IV_diary_save")
     sleep(3)
     show("after_save")
+    db_check()
+
+
+def db_check():
+    """Copies the database of the app (debug build) and prints the saved entries, to see the saved formats."""
+    import sqlite3
+    path = "%s/mydiary.db" % OUT
+    with open(path, "wb") as f:
+        r = subprocess.run(["adb", "exec-out", "run-as", PKG, "cat", "databases/mydiary.db"], capture_output=True)
+        f.write(r.stdout)
+    try:
+        con = sqlite3.connect(path)
+        for row in con.execute("select item_ref_diary_id, diary_item_type, diary_item_content from diary_item_entry_v2 order by item_ref_diary_id, diary_item_position"):
+            log("   DB item: %r" % (row,))
+        for row in con.execute("select diary_title, diary_tags, diary_location from diary_entry_v2"):
+            log("   DB entry: %r" % (row,))
+    except Exception as e:
+        log("   DB check failed: %r" % (e,))
 
 
 def report_edit_bar(label):

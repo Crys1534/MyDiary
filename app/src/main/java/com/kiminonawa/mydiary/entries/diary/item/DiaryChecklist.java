@@ -61,7 +61,7 @@ public class DiaryChecklist implements IDairyRow {
         rowLayout.addView(checkBox, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-        editText = new EditText(context);
+        editText = new FormatEditText(context);
         editText.setTextColor(Color.BLACK);
         editText.setBackgroundColor(Color.TRANSPARENT);
         editText.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);

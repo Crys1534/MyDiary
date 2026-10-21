@@ -134,16 +134,31 @@ public class DiaryItemHelper extends Observable {
      * @return false when there was no text selected.
      */
     public boolean toggleBoldAtFocus(View focusView) {
-        if (findRowByEditText(focusView) < 0) {
+        return toggleStyleAtFocus(focusView, false);
+    }
+
+    /**
+     * The I button: same as the B button, but italic (it can be combined with bold).
+     */
+    public boolean toggleItalicAtFocus(View focusView) {
+        return toggleStyleAtFocus(focusView, true);
+    }
+
+    private boolean toggleStyleAtFocus(View focusView, boolean italic) {
+        if (findRowByEditText(focusView) < 0 || !(focusView instanceof FormatEditText)) {
             return false;
         }
-        EditText editText = (EditText) focusView;
-        int start = editText.getSelectionStart();
-        int end = editText.getSelectionEnd();
-        if (start < 0 || end < 0 || start == end) {
+        FormatEditText editText = (FormatEditText) focusView;
+        //The selected text, or the text that was selected before the keyboard was closed
+        int[] range = editText.getFormatRange();
+        if (range == null) {
             return false;
         }
-        RichText.toggleBold(editText.getText(), start, end);
+        if (italic) {
+            RichText.toggleItalic(editText.getText(), range[0], range[1]);
+        } else {
+            RichText.toggleBold(editText.getText(), range[0], range[1]);
+        }
         return true;
     }
 

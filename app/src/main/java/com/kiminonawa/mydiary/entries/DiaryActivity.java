@@ -131,7 +131,8 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
             }
             EntriesEntity entity = new EntriesEntity(diaryCursor.getLong(0),
                     new Date(diaryCursor.getLong(1)),
-                    title.substring(0, Math.min(MAX_TEXT_LENGTH, title.length())),
+                    //The whole title: the list cuts it with "..." when it is too long
+                    title,
                     diaryCursor.getInt(4), diaryCursor.getInt(3),
                     diaryCursor.getInt(5) > 0 ? true : false);
 

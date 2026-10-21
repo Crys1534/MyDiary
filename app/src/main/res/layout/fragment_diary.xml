@@ -45,6 +45,14 @@
             android:visibility="gone" />
 
         <ImageView
+            android:id="@+id/IV_diary_italic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/ic_format_italic_white_24dp"
+            android:visibility="gone" />
+
+        <ImageView
             android:id="@+id/IV_diary_checklist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -137,6 +145,7 @@
 
                         <TextView
                             android:id="@+id/TV_diary_time"
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"

@@ -91,11 +91,11 @@
     <string name="diary_clear_message">¿Quieres eliminarlo?</string>
 
     <string name="diary_no_title">Sin título</string>
-    <string name="diary_tags_hint">Etiquetas: #escuela #viaje</string>
+    <string name="diary_tags_hint">Etiquetas: escuela viaje</string>
     <string name="tags_filter_title">Filtrar por etiqueta</string>
     <string name="tags_filter_all">Todas las entradas</string>
-    <string name="tags_filter_none">Todavía no hay etiquetas. Agrégalas al escribir una entrada, por ejemplo: #escuela #viaje</string>
-    <string name="toast_format_select_text">Primero selecciona un texto de la entrada y luego toca B</string>
+    <string name="tags_filter_none">Todavía no hay etiquetas. Agrégalas al escribir una entrada, por ejemplo: escuela viaje</string>
+    <string name="toast_format_select_text">Primero selecciona un texto de la entrada y luego toca B (negrita) o I (cursiva)</string>
 
     <!--Memories-->
     <string name="memories_title_one">Hace un año escribiste esto</string>

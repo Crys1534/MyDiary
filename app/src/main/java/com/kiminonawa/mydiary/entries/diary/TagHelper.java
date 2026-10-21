@@ -9,7 +9,7 @@ import java.util.Locale;
  * <p>
  * What the person writes: "#School  trip, #fun"
  * What is saved in the database: ",school,trip,fun," (always lower case, no #, no repeated tags)
- * What is shown: "#school #trip #fun"
+ * What is shown: "school trip fun" (no #)
  */
 public class TagHelper {
 
@@ -52,7 +52,7 @@ public class TagHelper {
     }
 
     /**
-     * Text saved in the database -> "#school #trip" ("" when there are no tags).
+     * Text saved in the database -> "school trip" ("" when there are no tags).
      */
     public static String toDisplay(String saved) {
         StringBuilder sb = new StringBuilder();
@@ -60,7 +60,7 @@ public class TagHelper {
             if (sb.length() > 0) {
                 sb.append(" ");
             }
-            sb.append("#").append(tag);
+            sb.append(tag);
         }
         return sb.toString();
     }

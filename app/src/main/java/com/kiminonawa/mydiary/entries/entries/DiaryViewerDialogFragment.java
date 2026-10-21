@@ -121,7 +121,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
     private LinearLayout LL_diary_item_content;
     private ImageView IV_diary_close_dialog, IV_diary_location, IV_diary_photo,
-            IV_diary_delete, IV_diary_clear, IV_diary_save, IV_diary_bold, IV_diary_checklist;
+            IV_diary_delete, IV_diary_clear, IV_diary_save, IV_diary_bold, IV_diary_italic, IV_diary_checklist;
     private boolean isEditMode;
 
     /**
@@ -255,6 +255,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         IV_diary_clear = (ImageView) rootView.findViewById(R.id.IV_diary_clear);
         IV_diary_save = (ImageView) rootView.findViewById(R.id.IV_diary_save);
         IV_diary_bold = (ImageView) rootView.findViewById(R.id.IV_diary_bold);
+        IV_diary_italic = (ImageView) rootView.findViewById(R.id.IV_diary_italic);
         IV_diary_checklist = (ImageView) rootView.findViewById(R.id.IV_diary_checklist);
 
         initView(rootView);
@@ -468,6 +469,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
             IV_diary_bold.setVisibility(View.VISIBLE);
             IV_diary_bold.setOnClickListener(this);
+            IV_diary_italic.setVisibility(View.VISIBLE);
+            IV_diary_italic.setOnClickListener(this);
             IV_diary_checklist.setVisibility(View.VISIBLE);
             IV_diary_checklist.setOnClickListener(this);
         } else {
@@ -882,10 +885,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         //Since JellyBean, the onDateSet() method of the DatePicker class is called twice
         if (view.isShown()) {
             calendar.set(year, monthOfYear, dayOfMonth);
+            //Only the day is chosen: the hour and the minute are not asked any more
             setDiaryTime();
-            TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(calendar.getTimeInMillis());
-            timePickerFragment.setOnTimeSetListener(this);
-            timePickerFragment.show(getFragmentManager(), "timePickerFragment");
         }
     }
 
@@ -945,6 +946,11 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 break;
             case R.id.IV_diary_bold:
                 if (!diaryItemHelper.toggleBoldAtFocus(getDialog().getCurrentFocus())) {
+                    Toast.makeText(getActivity(), getString(R.string.toast_format_select_text), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.IV_diary_italic:
+                if (!diaryItemHelper.toggleItalicAtFocus(getDialog().getCurrentFocus())) {
                     Toast.makeText(getActivity(), getString(R.string.toast_format_select_text), Toast.LENGTH_SHORT).show();
                 }
                 break;
