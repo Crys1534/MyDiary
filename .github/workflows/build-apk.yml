@@ -64,16 +64,6 @@ jobs:
           name: MyDiary-debug-apk
           path: MyDiary-debug.apk
 
-      - name: Publish the APK as a release
-        # A commit with [no-release] in its message only tests things and is not published.
-        if: ${{ !contains(github.event.head_commit.message, '[no-release]') }}
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: apk-${{ github.run_number }}
-          name: APK build ${{ github.run_number }}
-          prerelease: true
-          files: MyDiary-debug.apk
-
       # Keeps the end of the build log on its own branch, so a failed build can be diagnosed.
       - name: Publish the build log
         if: always()
@@ -139,3 +129,34 @@ jobs:
           git add -f .
           git commit --quiet -m "Smoke test for ${{ github.sha }}"
           git push --force origin smoke-logs
+
+      # The release only goes out when the app did not crash in the emulator.
+      - name: Fail if the app crashed
+        run: |
+          if grep -q "Process: com.kiminonawa.mydiary" /tmp/smoke/new/crash-buffer.txt 2>/dev/null; then
+            echo "The app crashed in the emulator test."
+            exit 1
+          fi
+          if [ ! -f /tmp/smoke/new/steps-output.txt ]; then
+            echo "The emulator test did not run."
+            exit 1
+          fi
+
+  # Publishes the APK as a release (after the emulator test, when the commit asked for it).
+  release:
+    needs: [build, smoke]
+    if: ${{ always() && needs.build.result == 'success' && (needs.smoke.result == 'success' || needs.smoke.result == 'skipped') && !contains(github.event.head_commit.message, '[no-release]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: MyDiary-debug-apk
+          path: apk
+
+      - name: Publish the APK as a release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: APK build ${{ github.run_number }}
+          prerelease: true
+          files: apk/MyDiary-debug.apk

@@ -23,8 +23,7 @@ import android.widget.Toast;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.Target;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
-import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
-import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager;
@@ -351,7 +350,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mWrappedAdapter = mRecyclerViewSwipeManager.createWrappedAdapter(mainTopicAdapter);
 
 
-        final GeneralItemAnimator animator = new DraggableItemAnimator();
+        //The animator of the old list library needs a class that Android does not have any more
+        //(the app closed when a topic was moved or the search changed the list).
+        final DefaultItemAnimator animator = new DefaultItemAnimator();
 
         // Change animations are enabled by default since support-v7-recyclerview v22.
         // Disable the change animation in order to make turning back animation of swiped item works properly.
