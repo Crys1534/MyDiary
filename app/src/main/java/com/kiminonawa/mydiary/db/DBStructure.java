@@ -32,6 +32,8 @@ public class DBStructure {
         public static final String COLUMN_LOCATION = "diary_location";
         //Added in db version 8: ",school,trip," (see TagHelper)
         public static final String COLUMN_TAGS = "diary_tags";
+        //Added in db version 9: file name of the photo chosen as the cover / small picture ("" = the first photo)
+        public static final String COLUMN_THUMBNAIL = "diary_thumbnail";
     }
 
     /**

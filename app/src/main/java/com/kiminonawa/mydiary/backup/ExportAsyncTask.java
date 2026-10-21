@@ -218,6 +218,7 @@ public class ExportAsyncTask extends AsyncTask<Void, Void, Boolean> {
                                     diaryEntriesCursor.getInt(5) > 0 ? true : false,
                                     diaryEntriesCursor.getString(7),
                                     diaryEntriesCursor.getString(diaryEntriesCursor.getColumnIndex(DiaryEntry_V2.COLUMN_TAGS)),
+                                    diaryEntriesCursor.getString(diaryEntriesCursor.getColumnIndex(DiaryEntry_V2.COLUMN_THUMBNAIL)),
                                     diaryItemItemList));
                     diaryEntriesCursor.moveToNext();
                 }

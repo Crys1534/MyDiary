@@ -85,7 +85,8 @@ public class UpdateDiaryTask extends AsyncTask<Long, Void, Integer> {
             diaryFileManager = new FileManager(mContext, topicId, diaryId);
             diaryFileManager.clearDir();
             //Update Diary
-            dbManager.updateDiary(diaryId, time, title, moodPosition, weatherPosition, location, attachment, tags);
+            dbManager.updateDiary(diaryId, time, title, moodPosition, weatherPosition, location, attachment, tags,
+                    diaryItemHelper.getChosenThumbnail());
             for (int i = 0; i < diaryItemHelper.getItemSize(); i++) {
                 //Copy photo from temp to diary dir
                 if (diaryItemHelper.get(i).getType() == IDairyRow.TYPE_PHOTO) {

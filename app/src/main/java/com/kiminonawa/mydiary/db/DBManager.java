@@ -188,9 +188,16 @@ public class DBManager {
     public long insertDiaryInfo(long time, String title,
                                 int mood, int weather, boolean attachment,
                                 long refTopicId, String locationName, String tags) {
+        return insertDiaryInfo(time, title, mood, weather, attachment, refTopicId, locationName, tags, "");
+    }
+
+    public long insertDiaryInfo(long time, String title,
+                                int mood, int weather, boolean attachment,
+                                long refTopicId, String locationName, String tags, String thumbnail) {
         ContentValues values = this.createDiaryInfoCV(time, title,
                 mood, weather, attachment, refTopicId, locationName);
         values.put(DiaryEntry_V2.COLUMN_TAGS, tags == null ? "" : tags);
+        values.put(DiaryEntry_V2.COLUMN_THUMBNAIL, thumbnail == null ? "" : thumbnail);
         return db.insert(
                 DiaryEntry_V2.TABLE_NAME,
                 null,
@@ -204,9 +211,29 @@ public class DBManager {
                 this.createDiaryContentCV(type, position, content, diaryId));
     }
 
+    /**
+     * Changes only the tags of a diary (the "add tags" button of the cover).
+     */
+    public long updateDiaryTags(long diaryId, String tags) {
+        ContentValues values = new ContentValues();
+        values.put(DiaryEntry_V2.COLUMN_TAGS, tags == null ? "" : tags);
+        return db.update(
+                DiaryEntry_V2.TABLE_NAME,
+                values,
+                DiaryEntry_V2._ID + " = ?",
+                new String[]{String.valueOf(diaryId)});
+    }
+
     public long updateDiary(long diaryId, long time, String title,
                             int mood, int weather, String location, boolean attachment, String tags) {
+        return updateDiary(diaryId, time, title, mood, weather, location, attachment, tags, "");
+    }
+
+    public long updateDiary(long diaryId, long time, String title,
+                            int mood, int weather, String location, boolean attachment, String tags,
+                            String thumbnail) {
         ContentValues values = new ContentValues();
+        values.put(DiaryEntry_V2.COLUMN_THUMBNAIL, thumbnail == null ? "" : thumbnail);
         values.put(DiaryEntry_V2.COLUMN_TAGS, tags == null ? "" : tags);
         values.put(DiaryEntry_V2.COLUMN_TIME, time);
         values.put(DiaryEntry_V2.COLUMN_TITLE, title);
@@ -280,6 +307,30 @@ public class DBManager {
                         + " JOIN " + TopicEntry.TABLE_NAME
                         + " ON " + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + " = " + TopicEntry.TABLE_NAME + "." + TopicEntry._ID
                         + " ORDER BY " + DiaryEntry_V2.COLUMN_TIME + " DESC",
+                null);
+        if (c != null) {
+            c.moveToFirst();
+        }
+        return c;
+    }
+
+    /**
+     * Every written line (text and checklist) of every diary, with the info of the diary and of its topic,
+     * for the search of the main page. A diary without lines comes once with empty line columns.
+     * Columns: 0 diary id, 1 time, 2 title, 3 topic id, 4 topic name, 5 tags, 6 line type, 7 line content.
+     */
+    public Cursor selectDiaryTextForSearch() {
+        Cursor c = db.rawQuery("SELECT d." + DiaryEntry_V2._ID + ", d." + DiaryEntry_V2.COLUMN_TIME + ", d."
+                        + DiaryEntry_V2.COLUMN_TITLE + ", d." + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + ", t."
+                        + TopicEntry.COLUMN_NAME + ", d." + DiaryEntry_V2.COLUMN_TAGS + ", i."
+                        + DiaryItemEntry_V2.COLUMN_TYPE + ", i." + DiaryItemEntry_V2.COLUMN_CONTENT
+                        + " FROM " + DiaryEntry_V2.TABLE_NAME + " d"
+                        + " JOIN " + TopicEntry.TABLE_NAME + " t ON d." + DiaryEntry_V2.COLUMN_REF_TOPIC__ID
+                        + " = t." + TopicEntry._ID
+                        + " LEFT JOIN " + DiaryItemEntry_V2.TABLE_NAME + " i ON i." + DiaryItemEntry_V2.COLUMN_REF_DIARY__ID
+                        + " = d." + DiaryEntry_V2._ID + " AND i." + DiaryItemEntry_V2.COLUMN_TYPE + " IN (0, 3)"
+                        + " ORDER BY d." + DiaryEntry_V2.COLUMN_TIME + " DESC, d." + DiaryEntry_V2._ID
+                        + " DESC, i." + DiaryItemEntry_V2.COLUMN_POSITION + " ASC",
                 null);
         if (c != null) {
             c.moveToFirst();

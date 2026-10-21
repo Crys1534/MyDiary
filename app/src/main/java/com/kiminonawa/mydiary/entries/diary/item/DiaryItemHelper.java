@@ -29,6 +29,8 @@ public class DiaryItemHelper extends Observable {
     private List<IDairyRow> diaryItemList;
     private LinearLayout itemContentLayout;
     private int nowPhotoCount = 0;
+    //File name of the photo that the person chose as the cover ("" = nothing chosen: the first photo)
+    private String thumbnailFileName = "";
 
 
     public DiaryItemHelper(LinearLayout itemContentLayout) {
@@ -68,6 +70,7 @@ public class DiaryItemHelper extends Observable {
         itemContentLayout.removeAllViews();
         diaryItemList.clear();
         nowPhotoCount = 0;
+        thumbnailFileName = "";
         setChanged();
         notifyObservers();
     }
@@ -98,6 +101,78 @@ public class DiaryItemHelper extends Observable {
 
     }
 
+
+    /**
+     * The photo that the person chose as the cover (the file name saved in the database).
+     */
+    public void setThumbnailFileName(String fileName) {
+        this.thumbnailFileName = fileName == null ? "" : fileName;
+    }
+
+    /**
+     * What has to be saved as the chosen cover: the chosen file if it is still in the diary, else "".
+     */
+    public String getChosenThumbnail() {
+        if (thumbnailFileName.length() > 0) {
+            for (IDairyRow row : diaryItemList) {
+                if (row instanceof DiaryPhoto && thumbnailFileName.equals(row.getContent())) {
+                    return thumbnailFileName;
+                }
+            }
+        }
+        return "";
+    }
+
+    /**
+     * The photo that is the cover now: the chosen one, or the first photo of the diary.
+     *
+     * @return the photo row, or null when the diary has no photos
+     */
+    public DiaryPhoto getThumbnailPhoto() {
+        String chosen = getChosenThumbnail();
+        DiaryPhoto first = null;
+        for (IDairyRow row : diaryItemList) {
+            if (row instanceof DiaryPhoto) {
+                if (first == null) {
+                    first = (DiaryPhoto) row;
+                }
+                if (chosen.length() > 0 && chosen.equals(row.getContent())) {
+                    return (DiaryPhoto) row;
+                }
+            }
+        }
+        return first;
+    }
+
+    /**
+     * Address of the photo that is the cover now, or null when the diary has no photos.
+     */
+    public String getThumbnailUriString() {
+        DiaryPhoto photo = getThumbnailPhoto();
+        return photo == null ? null : photo.getPhotoUriString();
+    }
+
+    /**
+     * The star of a photo was pressed: that photo is the cover now.
+     */
+    public void chooseThumbnailAt(int position) {
+        if (position >= 0 && position < diaryItemList.size() && diaryItemList.get(position) instanceof DiaryPhoto) {
+            thumbnailFileName = diaryItemList.get(position).getContent();
+        }
+        refreshThumbnailMarks();
+    }
+
+    /**
+     * Fills the star of the photo that is the cover (the others are empty).
+     */
+    public void refreshThumbnailMarks() {
+        DiaryPhoto current = getThumbnailPhoto();
+        for (IDairyRow row : diaryItemList) {
+            if (row instanceof DiaryPhoto) {
+                ((DiaryPhoto) row).setThumbnailSelected(row == current);
+            }
+        }
+    }
 
     public int getNowPhotoCount() {
         return nowPhotoCount;
@@ -299,6 +374,70 @@ public class DiaryItemHelper extends Observable {
                 focusAndShowKeyboard((EditText) previous.getView(), true);
             } else if (previous instanceof DiaryChecklist) {
                 focusAndShowKeyboard(((DiaryChecklist) previous).getEditText(), true);
+            }
+        }
+    }
+
+    /**
+     * The audio button: puts an audio (a link) where the cursor is.
+     * The text after the cursor goes below the audio. After the audio there is always a text box.
+     *
+     * @param focusView the view that has the focus (the text box with the cursor), can be null
+     */
+    public DiaryAudio insertAudioAtFocus(View focusView, String link, View.OnClickListener deleteListener) {
+        Context context = itemContentLayout.getContext();
+        int rowIndex = findRowByEditText(focusView);
+        DiaryAudio audio = new DiaryAudio(context);
+        audio.setContent(link);
+        audio.setEditMode(true);
+        audio.setDeleteClickListener(deleteListener);
+        String rest = "";
+        int insertAt;
+
+        if (rowIndex >= 0 && diaryItemList.get(rowIndex) instanceof DiaryText) {
+            EditText editText = (EditText) focusView;
+            Editable text = editText.getText();
+            int index = Math.max(0, Math.min(editText.getSelectionStart(), text.length()));
+            rest = RichText.toMarkup(text.subSequence(index, text.length()));
+            text.delete(index, text.length());
+            insertAt = rowIndex + 1;
+            if (text.length() == 0) {
+                //The empty text box would stay as a blank line, the audio takes its place
+                removeRowAndView(rowIndex);
+                insertAt = rowIndex;
+            }
+        } else if (rowIndex >= 0) {
+            //In a checklist line: the audio goes below it
+            insertAt = rowIndex + 1;
+        } else {
+            insertAt = diaryItemList.size();
+        }
+        createItem(audio, insertAt);
+        DiaryText after = new DiaryText(context);
+        after.setContent(rest);
+        createItem(after, insertAt + 1);
+        resortPosition();
+        return audio;
+    }
+
+    /**
+     * Stops every audio and frees the players (the page goes away).
+     */
+    public void releaseAudio() {
+        for (IDairyRow row : diaryItemList) {
+            if (row instanceof DiaryAudio) {
+                ((DiaryAudio) row).release();
+            }
+        }
+    }
+
+    /**
+     * Pauses every audio (the screen goes to the background).
+     */
+    public void pauseAudio() {
+        for (IDairyRow row : diaryItemList) {
+            if (row instanceof DiaryAudio) {
+                ((DiaryAudio) row).pause();
             }
         }
     }

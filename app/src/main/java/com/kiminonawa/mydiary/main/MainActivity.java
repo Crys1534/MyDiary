@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -98,6 +99,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout LL_main_profile;
     private TextView TV_main_profile_username;
     private EditText EDT_main_topic_search;
+    //Notes with the searched word (of every topic), shown over the topics
+    private RecyclerView RecyclerView_search_results;
+    private SearchResultsAdapter searchResultsAdapter;
+    private final Handler searchHandler = new Handler();
+    private Runnable searchRunnable;
     private ImageView IV_main_setting;
 
 
@@ -119,6 +125,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         EDT_main_topic_search = (EditText) findViewById(R.id.EDT_main_topic_search);
         EDT_main_topic_search.addTextChangedListener(this);
+        RecyclerView_search_results = (RecyclerView) findViewById(R.id.RecyclerView_search_results);
+        RecyclerView_search_results.setLayoutManager(new LinearLayoutManager(this));
+        searchResultsAdapter = new SearchResultsAdapter(this);
+        RecyclerView_search_results.setAdapter(searchResultsAdapter);
 
         IV_main_setting = (ImageView) findViewById(R.id.IV_main_setting);
         IV_main_setting.setOnClickListener(this);
@@ -211,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onDestroy() {
+        searchHandler.removeCallbacksAndMessages(null);
 
         if (mRecyclerViewDragDropManager != null) {
             mRecyclerViewDragDropManager.release();
@@ -669,6 +680,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mainTopicAdapter.getFilter().filter(s);
+        scheduleNoteSearch(s.toString());
+    }
+
+    /**
+     * Looks for the written word in the title and in the text of the notes of ALL the topics.
+     * It waits a moment after the last letter and works away from the screen thread.
+     */
+    private void scheduleNoteSearch(final String query) {
+        if (searchRunnable != null) {
+            searchHandler.removeCallbacks(searchRunnable);
+            searchRunnable = null;
+        }
+        if (query.trim().length() == 0) {
+            RecyclerView_search_results.setVisibility(View.GONE);
+            return;
+        }
+        searchRunnable = new Runnable() {
+            @Override
+            public void run() {
+                final String folded = NoteSearch.fold(query.trim());
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<NoteSearch.Result> found;
+                        try {
+                            found = NoteSearch.search(MainActivity.this, query);
+                        } catch (Exception e) {
+                            found = new ArrayList<>();
+                        }
+                        final List<NoteSearch.Result> notes = found;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //The person kept writing: this answer is old
+                                if (isFinishing() || !folded.equals(NoteSearch.fold(
+                                        EDT_main_topic_search.getText().toString().trim()))) {
+                                    return;
+                                }
+                                List<ITopic> topics = new ArrayList<>();
+                                for (ITopic topic : topicList) {
+                                    if (NoteSearch.fold(topic.getTitle()).contains(folded)) {
+                                        topics.add(topic);
+                                    }
+                                }
+                                searchResultsAdapter.setResults(topics, notes);
+                                RecyclerView_search_results.scrollToPosition(0);
+                                RecyclerView_search_results.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
+                }).start();
+            }
+        };
+        searchHandler.postDelayed(searchRunnable, 300);
     }
 
     @Override

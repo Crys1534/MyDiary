@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
@@ -39,6 +41,7 @@ import com.kiminonawa.mydiary.backup.obj.BUDiaryItem;
 import com.kiminonawa.mydiary.entries.BaseDiaryFragment;
 import com.kiminonawa.mydiary.entries.DiaryActivity;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryItemHelper;
+import com.kiminonawa.mydiary.entries.diary.item.DiaryAudio;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryChecklist;
 import com.kiminonawa.mydiary.entries.diary.item.RichText;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryPhoto;
@@ -97,8 +100,10 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     private Spinner SP_diary_weather, SP_diary_mood;
     private EditText EDT_diary_title, EDT_diary_tags;
     private ImageView IV_diary_menu, IV_diary_location, IV_diary_photo, IV_diary_delete, IV_diary_clear, IV_diary_save;
-    private ImageView IV_diary_bold, IV_diary_italic, IV_diary_checklist;
+    private ImageView IV_diary_bold, IV_diary_italic, IV_diary_checklist, IV_diary_audio;
     private TextView TV_diary_item_content_hint;
+    //The cover (thumbnail, date, title, tags)
+    private DiaryCover diaryCover;
 
 
     /**
@@ -183,7 +188,46 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         EDT_diary_title.getBackground().mutate().setColorFilter(ThemeManager.getInstance().getThemeMainColor(getActivity()),
                 PorterDuff.Mode.SRC_ATOP);
 
+        diaryCover = new DiaryCover(rootView, new DiaryCover.Listener() {
+            @Override
+            public void onEditTagsRequested() {
+                //The pencil: write the tags in the tags box
+                EDT_diary_tags.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(EDT_diary_tags, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+        //The cover shows the title while it is written
+        EDT_diary_title.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                diaryCover.setTitle(s.toString());
+            }
+        });
+
         EDT_diary_tags = (EditText) rootView.findViewById(R.id.EDT_diary_tags);
+        EDT_diary_tags.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                diaryCover.setTags(TagHelper.normalize(s.toString()));
+            }
+        });
         EDT_diary_tags.setVisibility(View.VISIBLE);
         EDT_diary_tags.getBackground().mutate().setColorFilter(ThemeManager.getInstance().getThemeMainColor(getActivity()),
                 PorterDuff.Mode.SRC_ATOP);
@@ -205,6 +249,9 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         IV_diary_italic = (ImageView) rootView.findViewById(R.id.IV_diary_italic);
         IV_diary_italic.setVisibility(View.VISIBLE);
         IV_diary_italic.setOnClickListener(this);
+        IV_diary_audio = (ImageView) rootView.findViewById(R.id.IV_diary_audio);
+        IV_diary_audio.setVisibility(View.VISIBLE);
+        IV_diary_audio.setOnClickListener(this);
         IV_diary_checklist = (ImageView) rootView.findViewById(R.id.IV_diary_checklist);
         IV_diary_checklist.setVisibility(View.VISIBLE);
         IV_diary_checklist.setOnClickListener(this);
@@ -268,6 +315,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         super.onStop();
         //Release the resource
         diaryItemHelper.deleteObserver(this);
+        diaryItemHelper.releaseAudio();
 
         if (locationManager != null) {
             try {
@@ -329,11 +377,13 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 //Add photo
                 diaryPhoto.setPosition(tag.getPositionTag() + 1);
                 diaryPhoto.setDeleteClickListener(this);
+                diaryPhoto.setThumbnailClickListener(this);
                 diaryItemHelper.createItem(diaryPhoto, tag.getPositionTag() + 1);
             } else {
                 //Add photo
                 diaryPhoto.setPosition(diaryItemHelper.getItemSize());
                 diaryPhoto.setDeleteClickListener(this);
+                diaryPhoto.setThumbnailClickListener(this);
                 diaryItemHelper.createItem(diaryPhoto);
                 //Add new edittext
                 DiaryText diaryText = new DiaryText(getActivity());
@@ -349,6 +399,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
             Toast.makeText(getActivity(), getString(R.string.toast_photo_path_error), Toast.LENGTH_LONG).show();
         } finally {
             diaryItemHelper.resortPosition();
+            updateCover();
         }
     }
 
@@ -358,9 +409,21 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
             calendar.setTimeInMillis(System.currentTimeMillis());
         }
         TV_diary_month.setText(timeTools.getMonthsFullName()[calendar.get(Calendar.MONTH)]);
-        TV_diary_date.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
+        //Only the month and the day
+        diaryCover.setDate(calendar);
         TV_diary_day.setText(timeTools.getDaysFullName()[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
         TV_diary_time.setText(sdf.format(calendar.getTime()));
+    }
+
+    /**
+     * The cover shows the photo that is the thumbnail (chosen with the star, or the first photo).
+     */
+    private void updateCover() {
+        if (diaryCover == null || diaryItemHelper == null) {
+            return;
+        }
+        diaryItemHelper.refreshThumbnailMarks();
+        diaryCover.setCover(diaryItemHelper.getThumbnailUriString());
     }
 
     private void initLocationManager() {
@@ -405,6 +468,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         EDT_diary_title.setText("");
         EDT_diary_tags.setText("");
         diaryItemHelper.initDiary();
+        updateCover();
     }
 
     /**
@@ -434,7 +498,8 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                     SP_diary_mood.getSelectedItemPosition(),
                     SP_diary_weather.getSelectedItemPosition(),
                     diaryItemHelper.getNowPhotoCount() > 0 ? true : false,
-                    locationName, TagHelper.normalize(EDT_diary_tags.getText().toString()), diaryItemItemList);
+                    locationName, TagHelper.normalize(EDT_diary_tags.getText().toString()),
+                    diaryItemHelper.getChosenThumbnail(), diaryItemItemList);
             SPFManager.setDiaryAutoSave(getActivity(), getTopicId(), new Gson().toJson(autoSaveDiary));
         }
     }
@@ -464,6 +529,8 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 initLocationIcon();
                 setIcon(autoSaveDiary.getDiaryEntriesMood(), autoSaveDiary.getDiaryEntriesWeather());
                 loadDiaryItemContent(autoSaveDiary);
+                diaryItemHelper.setThumbnailFileName(autoSaveDiary.getDiaryEntriesThumbnail());
+                updateCover();
             } catch (Exception e) {
                 Log.e(TAG, "Load auto save fail", e);
             }
@@ -488,12 +555,17 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                         diaryTempFileManager.getDirAbsolutePath() + "/" +
                         autoSaveDiary.getDiaryItemList().get(i).getDiaryItemContent();
                 ((DiaryPhoto) diaryItem).setDeleteClickListener(this);
+                ((DiaryPhoto) diaryItem).setThumbnailClickListener(this);
                 //For get the right file name
                 ((DiaryPhoto) diaryItem).setPhotoFileName(
                         autoSaveDiary.getDiaryItemList().get(i).getDiaryItemContent());
             } else if (autoSaveDiary.getDiaryItemList().get(i).getDiaryItemType() == IDairyRow.TYPE_TEXT) {
                 diaryItem = new DiaryText(getActivity());
                 content = autoSaveDiary.getDiaryItemList().get(i).getDiaryItemContent();
+            } else if (autoSaveDiary.getDiaryItemList().get(i).getDiaryItemType() == IDairyRow.TYPE_AUDIO) {
+                diaryItem = new DiaryAudio(getActivity());
+                content = autoSaveDiary.getDiaryItemList().get(i).getDiaryItemContent();
+                ((DiaryAudio) diaryItem).setDeleteClickListener(this);
             } else if (autoSaveDiary.getDiaryItemList().get(i).getDiaryItemType() == IDairyRow.TYPE_CHECKLIST) {
                 diaryItem = new DiaryChecklist(getActivity(), diaryItemHelper);
                 content = autoSaveDiary.getDiaryItemList().get(i).getDiaryItemContent();
@@ -806,12 +878,36 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
             case R.id.IV_diary_checklist:
                 diaryItemHelper.insertChecklistAtFocus(getActivity().getCurrentFocus());
                 break;
+            case R.id.IV_diary_audio:
+                AudioLinkDialog.show(getActivity(), new AudioLinkDialog.Callback() {
+                    @Override
+                    public void onAudioLink(String link) {
+                        diaryItemHelper.insertAudioAtFocus(getActivity().getCurrentFocus(), link, DiaryFragment.this);
+                    }
+                });
+                break;
+            case R.id.IV_diary_audio_delete:
+                int audioPosition = (int) v.getTag();
+                if (diaryItemHelper.get(audioPosition) instanceof DiaryAudio) {
+                    ((DiaryAudio) diaryItemHelper.get(audioPosition)).release();
+                }
+                diaryItemHelper.remove(audioPosition);
+                LL_diary_item_content.removeViewAt(audioPosition);
+                diaryItemHelper.mergerAdjacentText(audioPosition);
+                diaryItemHelper.resortPosition();
+                break;
             case R.id.IV_diary_photo_delete:
                 int position = (int) v.getTag();
                 diaryItemHelper.remove(position);
                 LL_diary_item_content.removeViewAt(position);
                 diaryItemHelper.mergerAdjacentText(position);
                 diaryItemHelper.resortPosition();
+                updateCover();
+                break;
+            case R.id.IV_diary_photo_thumbnail:
+                diaryItemHelper.chooseThumbnailAt((int) v.getTag());
+                updateCover();
+                Toast.makeText(getActivity(), getString(R.string.cover_thumbnail_chosen), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.TV_diary_location:
                 editLocationByHand();

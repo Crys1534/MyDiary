@@ -187,7 +187,7 @@ public class ImportAsyncTask extends AsyncTask<Void, Void, Boolean> {
                                 dbManager.insertDiaryInfo(diary.getDiaryEntriesTime(), diary.getDiaryEntriesTitle(),
                                         diary.getDiaryEntriesMood(), diary.getDiaryEntriesWeather(),
                                         diary.isDiaryEntriesAttachment(), newTopicId, diary.getDiaryEntriesLocation(),
-                                        diary.getDiaryEntriesTags());
+                                        diary.getDiaryEntriesTags(), diary.getDiaryEntriesThumbnail());
                         //Write the diary item
                         for (int yi = 0; yi < diary.getDiaryItemList().size(); yi++) {
                             BUDiaryItem diaryItem = diary.getDiaryItemList().get(yi);

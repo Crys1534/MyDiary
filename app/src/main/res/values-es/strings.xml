@@ -91,6 +91,21 @@
     <string name="diary_clear_message">¿Quieres eliminarlo?</string>
 
     <string name="diary_no_title">Sin título</string>
+    <string name="search_section_topics">Temas</string>
+    <string name="search_section_notes">Notas</string>
+    <string name="search_no_results">No se encontró nada</string>
+    <string name="audio_button_title">Agregar audio</string>
+    <string name="audio_dialog_message">Pega el enlace del audio. Si está en Google Drive, el archivo debe estar compartido como «Cualquier persona con el enlace» y conviene que sea pequeño (unos pocos MB).</string>
+    <string name="audio_dialog_hint">https://drive.google.com/file/d/…</string>
+    <string name="audio_name">Audio · %1$s</string>
+    <string name="audio_tap_to_play">Toca ▶ para escuchar</string>
+    <string name="audio_loading">Cargando…</string>
+    <string name="audio_error_short">No se pudo reproducir. Prueba el botón de la derecha para abrirlo.</string>
+    <string name="audio_error_play">No se pudo reproducir el audio. Revisa que el archivo esté compartido como «Cualquier persona con el enlace» y que sea pequeño; un archivo grande de Google Drive solo se puede abrir fuera de la app.</string>
+    <string name="audio_error_link">Eso no es un enlace (debe empezar con https://)</string>
+    <string name="cover_tags_title">Etiquetas</string>
+    <string name="cover_tags_edit">Editar</string>
+    <string name="cover_thumbnail_chosen">Esta foto ahora es la portada de la nota</string>
     <string name="diary_tags_hint">Etiquetas: escuela viaje</string>
     <string name="tags_filter_title">Filtrar por etiqueta</string>
     <string name="tags_filter_all">Todas las entradas</string>

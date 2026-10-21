@@ -80,7 +80,7 @@ public class SaveDiaryTask extends AsyncTask<Long, Void, Integer> {
             //Save info
             long diaryId = dbManager.insertDiaryInfo(time,
                     title, moodPosition, weatherPosition,
-                    attachment, topicId, locationName, tags);
+                    attachment, topicId, locationName, tags, diaryItemHelper.getChosenThumbnail());
             //Save content
             diaryFileManager = new FileManager(mContext, topicId, diaryId);
             //Check no any garbage in this diary.

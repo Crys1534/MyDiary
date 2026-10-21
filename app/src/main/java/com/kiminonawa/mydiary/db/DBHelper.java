@@ -24,6 +24,9 @@ import static com.kiminonawa.mydiary.db.DBStructure.TopicOrderEntry;
 public class DBHelper extends SQLiteOpenHelper {
 
     /**
+     * Version 9 (this fork)
+     * Add thumbnail (the photo chosen as the cover of the diary) in diary_entry_v2
+     * -------------
      * Version 8 (this fork)
      * Add tags in diary_entry_v2
      * -------------
@@ -52,7 +55,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * Version 1 by Daxia：
      * First DB
      */
-    public static final int DATABASE_VERSION = 8;
+    public static final int DATABASE_VERSION = 9;
     public static final String DATABASE_NAME = "mydiary.db";
 
     private static final String TEXT_TYPE = " TEXT";
@@ -107,6 +110,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     DiaryEntry_V2.COLUMN_REF_TOPIC__ID + INTEGER_TYPE + COMMA_SEP +
                     DiaryEntry_V2.COLUMN_LOCATION + TEXT_TYPE + COMMA_SEP +
                     DiaryEntry_V2.COLUMN_TAGS + TEXT_TYPE + COMMA_SEP +
+                    DiaryEntry_V2.COLUMN_THUMBNAIL + TEXT_TYPE + COMMA_SEP +
                     FOREIGN + " (" + DiaryEntry.COLUMN_REF_TOPIC__ID + ")" + REFERENCES + TopicEntry.TABLE_NAME + "(" + TopicEntry._ID + ")" +
                     " )";
 
@@ -220,6 +224,14 @@ public class DBHelper extends SQLiteOpenHelper {
                     if (!hasColumn(db, DiaryEntry_V2.TABLE_NAME, DiaryEntry_V2.COLUMN_TAGS)) {
                         db.execSQL("ALTER TABLE " + DiaryEntry_V2.TABLE_NAME + " ADD COLUMN "
                                 + DiaryEntry_V2.COLUMN_TAGS + TEXT_TYPE);
+                    }
+                }
+
+                //Cover photo of the diary (this fork)
+                if (oldVersion < 9) {
+                    if (!hasColumn(db, DiaryEntry_V2.TABLE_NAME, DiaryEntry_V2.COLUMN_THUMBNAIL)) {
+                        db.execSQL("ALTER TABLE " + DiaryEntry_V2.TABLE_NAME + " ADD COLUMN "
+                                + DiaryEntry_V2.COLUMN_THUMBNAIL + TEXT_TYPE);
                     }
                 }
 

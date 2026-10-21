@@ -144,15 +144,32 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
             //select first diary content
             Cursor diaryContentCursor = dbManager.selectDiaryContentByDiaryId(entity.getId());
             if (diaryContentCursor != null && diaryContentCursor.getCount() > 0) {
-                //Look for the first photo of the diary: it is the small picture of the entry
+                //The small picture of the entry: the photo that the person chose, or else the first photo
+                int thumbnailColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_THUMBNAIL);
+                String chosenThumbnail = thumbnailColumn >= 0 ? diaryCursor.getString(thumbnailColumn) : null;
+                String firstPhoto = null;
+                String thumbnailFile = null;
                 for (int j = 0; j < diaryContentCursor.getCount(); j++) {
                     diaryContentCursor.moveToPosition(j);
                     if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_PHOTO) {
-                        entity.setThumbnailPath(
-                                new FileManager(this, getTopicId(), entity.getId()).getDirAbsolutePath()
-                                        + "/" + diaryContentCursor.getString(3));
-                        break;
+                        String photoFile = diaryContentCursor.getString(3);
+                        if (firstPhoto == null) {
+                            firstPhoto = photoFile;
+                        }
+                        if (chosenThumbnail != null && chosenThumbnail.length() > 0
+                                && chosenThumbnail.equals(photoFile)) {
+                            thumbnailFile = photoFile;
+                            break;
+                        }
                     }
+                }
+                if (thumbnailFile == null) {
+                    thumbnailFile = firstPhoto;
+                }
+                if (thumbnailFile != null) {
+                    entity.setThumbnailPath(
+                            new FileManager(this, getTopicId(), entity.getId()).getDirAbsolutePath()
+                                    + "/" + thumbnailFile);
                 }
                 diaryContentCursor.moveToFirst();
                 String summary = "";

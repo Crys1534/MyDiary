@@ -1,0 +1,329 @@
+package com.kiminonawa.mydiary.entries.diary.item;
+
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.GradientDrawable;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.kiminonawa.mydiary.R;
+import com.kiminonawa.mydiary.shared.AudioLink;
+import com.kiminonawa.mydiary.shared.ScreenHelper;
+import com.kiminonawa.mydiary.shared.ThemeManager;
+
+import java.util.Locale;
+
+/**
+ * An audio inside a diary: a link (for example of Google Drive) with a play / pause button and a bar.
+ * Only one audio plays at a time. The audio is not copied to the phone: it is played from the link.
+ */
+public class DiaryAudio implements IDairyRow {
+
+    //The audio that is playing now (only one at a time)
+    private static DiaryAudio current = null;
+
+    private final Context context;
+    private final View root;
+    private final ImageView IV_play, IV_open, IV_delete;
+    private final SeekBar SB_audio;
+    private final TextView TV_name, TV_time;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
+    private String link = "";
+    private int position;
+    private MediaPlayer player = null;
+    private boolean prepared = false;
+    private boolean preparing = false;
+    private boolean userSeeking = false;
+
+    private final Runnable progressUpdater = new Runnable() {
+        @Override
+        public void run() {
+            updateProgress();
+            if (player != null && prepared && isPlaying()) {
+                handler.postDelayed(this, 400);
+            }
+        }
+    };
+
+    public DiaryAudio(Context context) {
+        this.context = context;
+        root = LayoutInflater.from(context).inflate(R.layout.layout_diary_audio, null, false);
+        android.widget.LinearLayout.LayoutParams params = new android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT);
+        int margin = ScreenHelper.dpToPixel(context.getResources(), 6);
+        params.topMargin = margin;
+        params.bottomMargin = margin;
+        root.setLayoutParams(params);
+        IV_play = (ImageView) root.findViewById(R.id.IV_diary_audio_play);
+        IV_open = (ImageView) root.findViewById(R.id.IV_diary_audio_open);
+        IV_delete = (ImageView) root.findViewById(R.id.IV_diary_audio_delete);
+        SB_audio = (SeekBar) root.findViewById(R.id.SB_diary_audio);
+        TV_name = (TextView) root.findViewById(R.id.TV_diary_audio_name);
+        TV_time = (TextView) root.findViewById(R.id.TV_diary_audio_time);
+
+        int color = ThemeManager.getInstance().getThemeMainColor(context);
+        GradientDrawable circle = new GradientDrawable();
+        circle.setShape(GradientDrawable.OVAL);
+        circle.setColor(color);
+        IV_play.setBackground(circle);
+        IV_open.setColorFilter(color);
+        SB_audio.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        SB_audio.getThumb().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+
+        IV_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePlay();
+            }
+        });
+        IV_open.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openOutside();
+            }
+        });
+        SB_audio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser && player != null && prepared) {
+                    TV_time.setText(timeText((int) ((long) player.getDuration() * progress / seekBar.getMax()),
+                            player.getDuration()));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                userSeeking = true;
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                userSeeking = false;
+                if (player != null && prepared) {
+                    player.seekTo((int) ((long) player.getDuration() * seekBar.getProgress() / seekBar.getMax()));
+                }
+            }
+        });
+        setEditMode(false);
+    }
+
+    /**
+     * Edit mode: the delete button.
+     */
+    public void setDeleteClickListener(View.OnClickListener listener) {
+        IV_delete.setOnClickListener(listener);
+    }
+
+    private boolean isPlaying() {
+        try {
+            return player != null && prepared && player.isPlaying();
+        } catch (IllegalStateException e) {
+            return false;
+        }
+    }
+
+    private void togglePlay() {
+        if (isPlaying()) {
+            player.pause();
+            IV_play.setImageResource(R.drawable.ic_play_arrow_24dp);
+            return;
+        }
+        if (preparing) {
+            return;
+        }
+        if (player != null && prepared) {
+            startPlaying();
+            return;
+        }
+        prepare();
+    }
+
+    private void prepare() {
+        if (!AudioLink.isValid(link)) {
+            Toast.makeText(context, R.string.audio_error_link, Toast.LENGTH_LONG).show();
+            return;
+        }
+        release();
+        player = new MediaPlayer();
+        preparing = true;
+        TV_time.setText(R.string.audio_loading);
+        try {
+            player.setAudioAttributes(new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build());
+            player.setDataSource(AudioLink.toPlayableUrl(link));
+            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    preparing = false;
+                    prepared = true;
+                    startPlaying();
+                }
+            });
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    IV_play.setImageResource(R.drawable.ic_play_arrow_24dp);
+                    SB_audio.setProgress(0);
+                    TV_time.setText(timeText(0, mp.getDuration()));
+                    try {
+                        mp.seekTo(0);
+                    } catch (IllegalStateException ignored) {
+                    }
+                }
+            });
+            player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    release();
+                    TV_time.setText(R.string.audio_error_short);
+                    Toast.makeText(context, R.string.audio_error_play, Toast.LENGTH_LONG).show();
+                    return true;
+                }
+            });
+            player.prepareAsync();
+        } catch (Exception e) {
+            release();
+            TV_time.setText(R.string.audio_error_short);
+            Toast.makeText(context, R.string.audio_error_play, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void startPlaying() {
+        if (current != null && current != this) {
+            current.pause();
+        }
+        current = this;
+        try {
+            player.start();
+        } catch (IllegalStateException e) {
+            release();
+            return;
+        }
+        IV_play.setImageResource(R.drawable.ic_pause_24dp);
+        handler.removeCallbacks(progressUpdater);
+        handler.post(progressUpdater);
+    }
+
+    /**
+     * Stops the sound but keeps the place (another audio started, or the screen goes away).
+     */
+    public void pause() {
+        if (isPlaying()) {
+            try {
+                player.pause();
+            } catch (IllegalStateException ignored) {
+            }
+        }
+        IV_play.setImageResource(R.drawable.ic_play_arrow_24dp);
+    }
+
+    private void updateProgress() {
+        if (player == null || !prepared) {
+            return;
+        }
+        try {
+            int duration = player.getDuration();
+            int now = player.getCurrentPosition();
+            if (duration > 0 && !userSeeking) {
+                SB_audio.setProgress((int) ((long) now * SB_audio.getMax() / duration));
+                TV_time.setText(timeText(now, duration));
+            }
+        } catch (IllegalStateException ignored) {
+        }
+    }
+
+    private static String timeText(int nowMs, int durationMs) {
+        return clock(nowMs) + " / " + clock(durationMs);
+    }
+
+    private static String clock(int ms) {
+        int total = Math.max(0, ms / 1000);
+        return String.format(Locale.US, "%d:%02d", total / 60, total % 60);
+    }
+
+    /**
+     * Opens the link in the browser / Google Drive app (when it can't be played inside the diary).
+     */
+    private void openOutside() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link.trim()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, R.string.audio_error_link, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Frees the player (call it when the diary page goes away).
+     */
+    public void release() {
+        handler.removeCallbacks(progressUpdater);
+        if (player != null) {
+            try {
+                player.release();
+            } catch (Exception ignored) {
+            }
+            player = null;
+        }
+        prepared = false;
+        preparing = false;
+        if (current == this) {
+            current = null;
+        }
+        IV_play.setImageResource(R.drawable.ic_play_arrow_24dp);
+        SB_audio.setProgress(0);
+    }
+
+    @Override
+    public void setContent(String content) {
+        link = content == null ? "" : content.trim();
+        TV_name.setText(context.getString(R.string.audio_name, AudioLink.displayName(link)));
+        TV_time.setText(R.string.audio_tap_to_play);
+    }
+
+    @Override
+    public String getContent() {
+        return link;
+    }
+
+    @Override
+    public int getType() {
+        return TYPE_AUDIO;
+    }
+
+    @Override
+    public View getView() {
+        return root;
+    }
+
+    @Override
+    public void setEditMode(boolean isEditMode) {
+        IV_delete.setVisibility(isEditMode ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setPosition(int position) {
+        this.position = position;
+        IV_delete.setTag(position);
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+}

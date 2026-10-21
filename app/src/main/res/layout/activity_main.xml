@@ -85,6 +85,17 @@
         android:paddingBottom="10dp"
         android:paddingTop="10dp" />
 
+    <!-- Appears over the topics while something is written in the search box -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RecyclerView_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/RL_main_bottom_bar"
+        android:layout_below="@id/LL_main_profile"
+        android:background="@android:color/white"
+        android:paddingBottom="10dp"
+        android:visibility="gone" />
+
     <View
         android:id="@+id/profile_shadow"
         android:layout_width="match_parent"

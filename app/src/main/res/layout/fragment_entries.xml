@@ -84,6 +84,13 @@
         android:paddingRight="10dp" />
 
 
+    <!-- Handle to jump through the list, with the month and the year (like Google Photos) -->
+    <com.kiminonawa.mydiary.entries.entries.FastScrollerView
+        android:id="@+id/FastScroller_entries"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/RL_entries_edit_bar" />
+
     <!-- The year of the entries that are on the screen (only when it is not the current year) -->
     <TextView
         android:id="@+id/TV_entries_year"

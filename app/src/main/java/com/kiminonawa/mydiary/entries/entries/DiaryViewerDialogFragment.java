@@ -15,6 +15,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.appcompat.app.AlertDialog;
@@ -41,10 +44,13 @@ import com.kiminonawa.mydiary.db.DBStructure;
 import com.kiminonawa.mydiary.entries.diary.TagHelper;
 import com.kiminonawa.mydiary.entries.DiaryActivity;
 import com.kiminonawa.mydiary.entries.EditDiaryBackDialogFragment;
+import com.kiminonawa.mydiary.entries.diary.AudioLinkDialog;
 import com.kiminonawa.mydiary.entries.diary.CopyPhotoTask;
+import com.kiminonawa.mydiary.entries.diary.DiaryCover;
 import com.kiminonawa.mydiary.entries.diary.DiaryInfoHelper;
 import com.kiminonawa.mydiary.entries.diary.DiaryPhotoBottomSheet;
 import com.kiminonawa.mydiary.entries.diary.ImageArrayAdapter;
+import com.kiminonawa.mydiary.entries.diary.item.DiaryAudio;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryChecklist;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryItemHelper;
 import com.kiminonawa.mydiary.entries.diary.item.RichText;
@@ -119,9 +125,14 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     private EditText EDT_diary_title, EDT_diary_tags;
     private TextView TV_diary_tags;
 
+    //The cover (thumbnail, date, title, tags)
+    private DiaryCover diaryCover;
+    //Tags of the diary as they are in the database (",school,trip,")
+    private String savedTags = "";
+
     private LinearLayout LL_diary_item_content;
     private ImageView IV_diary_close_dialog, IV_diary_location, IV_diary_photo,
-            IV_diary_delete, IV_diary_clear, IV_diary_save, IV_diary_bold, IV_diary_italic, IV_diary_checklist;
+            IV_diary_delete, IV_diary_clear, IV_diary_save, IV_diary_bold, IV_diary_italic, IV_diary_checklist, IV_diary_audio;
     private boolean isEditMode;
 
     /**
@@ -224,6 +235,13 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
         RL_diary_info = (RelativeLayout) rootView.findViewById(R.id.RL_diary_info);
         RL_diary_info.setBackground(ThemeManager.getInstance().createDiaryViewerInfoBg(getActivity()));
+        diaryCover = new DiaryCover(rootView, new DiaryCover.Listener() {
+            @Override
+            public void onEditTagsRequested() {
+                onCoverEditTags();
+            }
+        });
+        diaryCover.setTopCornerRadius(ScreenHelper.dpToPixel(getResources(), 10));
 
         LinearLayout LL_diary_edit_bar = (LinearLayout) rootView.findViewById(R.id.LL_diary_edit_bar);
         LL_diary_edit_bar.setBackground(ThemeManager.getInstance().createDiaryViewerEditBarBg(getActivity()));
@@ -257,6 +275,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         IV_diary_bold = (ImageView) rootView.findViewById(R.id.IV_diary_bold);
         IV_diary_italic = (ImageView) rootView.findViewById(R.id.IV_diary_italic);
         IV_diary_checklist = (ImageView) rootView.findViewById(R.id.IV_diary_checklist);
+        IV_diary_audio = (ImageView) rootView.findViewById(R.id.IV_diary_audio);
 
         initView(rootView);
         diaryItemHelper = new DiaryItemHelper(LL_diary_item_content);
@@ -360,6 +379,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     @Override
     public void onStop() {
         super.onStop();
+        if (diaryItemHelper != null) {
+            diaryItemHelper.releaseAudio();
+        }
         if (initHandlerOrTaskIsRunning) {
             if (loadDiaryHandler != null) {
                 loadDiaryHandler.removeCallbacksAndMessages(null);
@@ -402,23 +424,20 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         setDiaryTime();
         int tagsColumn = diaryInfoCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_TAGS);
         String tagsText = tagsColumn >= 0 ? TagHelper.toDisplay(diaryInfoCursor.getString(tagsColumn)) : "";
+        savedTags = tagsColumn >= 0 && diaryInfoCursor.getString(tagsColumn) != null
+                ? diaryInfoCursor.getString(tagsColumn) : "";
+        diaryCover.setTags(savedTags);
         if (isEditMode) {
             //Allow to edit diary
             LL_diary_time_information.setOnClickListener(this);
             EDT_diary_title.setText(diaryInfoCursor.getString(2));
             EDT_diary_tags.setText(tagsText.length() > 0 ? tagsText + " " : "");
         } else {
-            String diaryTitleStr = diaryInfoCursor.getString(2);
-            if (diaryTitleStr == null || diaryTitleStr.equals("")) {
-                diaryTitleStr = getString(R.string.diary_no_title);
-            }
-            TV_diary_title_content.setText(diaryTitleStr);
-            if (tagsText.length() > 0) {
-                TV_diary_tags.setText(tagsText);
-                TV_diary_tags.setTextColor(ThemeManager.getInstance().getThemeDarkColor(getActivity()));
-                TV_diary_tags.setVisibility(View.VISIBLE);
-            }
+            //The title is on the cover
+            diaryCover.setTitle(diaryInfoCursor.getString(2));
         }
+        int thumbnailColumn = diaryInfoCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_THUMBNAIL);
+        String chosenThumbnail = thumbnailColumn >= 0 ? diaryInfoCursor.getString(thumbnailColumn) : "";
         //load location
         String locationName = diaryInfoCursor.getString(7);
         if (locationName != null && !"".equals(locationName)) {
@@ -434,7 +453,81 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         diaryInfoCursor.close();
         //Get diary detail
         loadDiaryItemContent(dbManager);
+        diaryItemHelper.setThumbnailFileName(chosenThumbnail);
+        updateCover();
         dbManager.closeDB();
+    }
+
+    /**
+     * The cover shows the photo that is the thumbnail (chosen with the star, or the first photo).
+     */
+    private void updateCover() {
+        if (diaryCover == null || diaryItemHelper == null) {
+            return;
+        }
+        diaryItemHelper.refreshThumbnailMarks();
+        diaryCover.setCover(diaryItemHelper.getThumbnailUriString());
+    }
+
+    /**
+     * The pencil / "Edit" of the tags on the cover.
+     */
+    private void onCoverEditTags() {
+        if (isEditMode) {
+            //Editing: write the tags in the tags box
+            EDT_diary_tags.requestFocus();
+            android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager)
+                    getActivity().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(EDT_diary_tags, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
+            return;
+        }
+        //Only reading: a small window to write the tags, they are saved right away
+        final EditText input = new EditText(getActivity());
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        input.setSingleLine(true);
+        input.setHint(R.string.diary_tags_hint);
+        String current = TagHelper.toDisplay(savedTags);
+        input.setText(current.length() > 0 ? current + " " : "");
+        input.setSelection(input.getText().length());
+        int margin = ScreenHelper.dpToPixel(getResources(), 20);
+        android.widget.FrameLayout container = new android.widget.FrameLayout(getActivity());
+        android.widget.FrameLayout.LayoutParams params = new android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.WRAP_CONTENT);
+        params.leftMargin = margin;
+        params.rightMargin = margin;
+        container.addView(input, params);
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.cover_tags_title)
+                .setView(container)
+                .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        saveTagsOnly(TagHelper.normalize(input.getText().toString()));
+                    }
+                })
+                .setNegativeButton(R.string.dialog_button_cancel, null)
+                .create();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
+        dialog.show();
+    }
+
+    private void saveTagsOnly(String newTags) {
+        try {
+            DBManager dbManager = new DBManager(getActivity());
+            dbManager.opeDB();
+            dbManager.updateDiaryTags(diaryId, newTags);
+            dbManager.closeDB();
+            savedTags = newTags;
+            diaryCover.setTags(savedTags);
+            //The list of entries shows the tags too
+            if (callback != null) {
+                callback.updateDiary();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "save tags fail", e);
+        }
     }
 
     private void initView(View rootView) {
@@ -452,6 +545,34 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             EDT_diary_title.setText(" ");
             EDT_diary_title.getBackground().mutate().setColorFilter(ThemeManager.getInstance().getThemeMainColor(getActivity()),
                     PorterDuff.Mode.SRC_ATOP);
+            EDT_diary_title.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    diaryCover.setTitle(s.toString());
+                }
+            });
+            EDT_diary_tags.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    diaryCover.setTags(TagHelper.normalize(s.toString()));
+                }
+            });
             EDT_diary_tags.setVisibility(View.VISIBLE);
             EDT_diary_tags.getBackground().mutate().setColorFilter(ThemeManager.getInstance().getThemeMainColor(getActivity()),
                     PorterDuff.Mode.SRC_ATOP);
@@ -473,6 +594,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             IV_diary_italic.setOnClickListener(this);
             IV_diary_checklist.setVisibility(View.VISIBLE);
             IV_diary_checklist.setOnClickListener(this);
+            IV_diary_audio.setVisibility(View.VISIBLE);
+            IV_diary_audio.setOnClickListener(this);
         } else {
             EDT_diary_title.setVisibility(View.GONE);
             RL_diary_weather = (RelativeLayout) rootView.findViewById(R.id.RL_diary_weather);
@@ -487,9 +610,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
             IV_diary_location_name_icon.setVisibility(View.VISIBLE);
 
+            //The title is on the cover now
             TV_diary_title_content = (TextView) rootView.findViewById(R.id.TV_diary_title_content);
-            TV_diary_title_content.setVisibility(View.VISIBLE);
-            TV_diary_title_content.setTextColor(ThemeManager.getInstance().getThemeMainColor(getActivity()));
+            TV_diary_title_content.setVisibility(View.GONE);
 
             IV_diary_delete.setOnClickListener(this);
             IV_diary_clear.setVisibility(View.GONE);
@@ -525,6 +648,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 if (isEditMode) {
                     diaryItem.setEditMode(true);
                     ((DiaryPhoto) diaryItem).setDeleteClickListener(this);
+                    ((DiaryPhoto) diaryItem).setThumbnailClickListener(this);
                     //For get the right file name
                     ((DiaryPhoto) diaryItem).setPhotoFileName(diaryContentCursor.getString(3));
                 } else {
@@ -538,6 +662,15 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 diaryItem = new DiaryText(getActivity());
                 content = diaryContentCursor.getString(3);
                 if (!isEditMode) {
+                    diaryItem.setEditMode(false);
+                }
+            } else if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_AUDIO) {
+                diaryItem = new DiaryAudio(getActivity());
+                content = diaryContentCursor.getString(3);
+                if (isEditMode) {
+                    diaryItem.setEditMode(true);
+                    ((DiaryAudio) diaryItem).setDeleteClickListener(this);
+                } else {
                     diaryItem.setEditMode(false);
                 }
             } else if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_CHECKLIST) {
@@ -714,7 +847,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
     private void setDiaryTime() {
         TV_diary_month.setText(timeTools.getMonthsFullName()[calendar.get(Calendar.MONTH)]);
-        TV_diary_date.setText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)));
+        //Only the month and the day
+        diaryCover.setDate(calendar);
         TV_diary_day.setText(timeTools.getDaysFullName()[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
         TV_diary_time.setText(sdf.format(calendar.getTime()));
     }
@@ -746,11 +880,13 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 //Add photo
                 diaryPhoto.setPosition(tag.getPositionTag() + 1);
                 diaryPhoto.setDeleteClickListener(this);
+                diaryPhoto.setThumbnailClickListener(this);
                 diaryItemHelper.createItem(diaryPhoto, tag.getPositionTag() + 1);
             } else {
                 //Add photo
                 diaryPhoto.setPosition(diaryItemHelper.getItemSize());
                 diaryPhoto.setDeleteClickListener(this);
+                diaryPhoto.setThumbnailClickListener(this);
                 diaryItemHelper.createItem(diaryPhoto);
                 //Add new edittext
                 DiaryText diaryText = new DiaryText(getActivity());
@@ -763,6 +899,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             Toast.makeText(getActivity(), getString(R.string.toast_photo_path_error), Toast.LENGTH_LONG).show();
         } finally {
             diaryItemHelper.resortPosition();
+            updateCover();
         }
     }
 
@@ -957,6 +1094,25 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             case R.id.IV_diary_checklist:
                 diaryItemHelper.insertChecklistAtFocus(getDialog().getCurrentFocus());
                 break;
+            case R.id.IV_diary_audio:
+                AudioLinkDialog.show(getActivity(), new AudioLinkDialog.Callback() {
+                    @Override
+                    public void onAudioLink(String link) {
+                        diaryItemHelper.insertAudioAtFocus(getDialog().getCurrentFocus(), link,
+                                DiaryViewerDialogFragment.this);
+                    }
+                });
+                break;
+            case R.id.IV_diary_audio_delete:
+                int audioPosition = (int) v.getTag();
+                if (diaryItemHelper.get(audioPosition) instanceof DiaryAudio) {
+                    ((DiaryAudio) diaryItemHelper.get(audioPosition)).release();
+                }
+                diaryItemHelper.remove(audioPosition);
+                LL_diary_item_content.removeViewAt(audioPosition);
+                diaryItemHelper.mergerAdjacentText(audioPosition);
+                diaryItemHelper.resortPosition();
+                break;
             case R.id.IV_diary_photo_delete:
                 int deletePosition = (int) v.getTag();
                 Log.e("test", "deletePosition = " + deletePosition);
@@ -964,6 +1120,12 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 LL_diary_item_content.removeViewAt(deletePosition);
                 diaryItemHelper.mergerAdjacentText(deletePosition);
                 diaryItemHelper.resortPosition();
+                updateCover();
+                break;
+            case R.id.IV_diary_photo_thumbnail:
+                diaryItemHelper.chooseThumbnailAt((int) v.getTag());
+                updateCover();
+                Toast.makeText(getActivity(), getString(R.string.cover_thumbnail_chosen), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.SDV_diary_new_photo:
                 int draweeViewPosition = (int) v.getTag();

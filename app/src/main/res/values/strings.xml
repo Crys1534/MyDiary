@@ -92,6 +92,21 @@
     <string name="diary_clear_message">do you want to delete it?</string>
 
     <string name="diary_no_title">No Title</string>
+    <string name="search_section_topics">Topics</string>
+    <string name="search_section_notes">Notes</string>
+    <string name="search_no_results">Nothing found</string>
+    <string name="audio_button_title">Add audio</string>
+    <string name="audio_dialog_message">Paste the link of the audio. If it is in Google Drive, the file has to be shared as \"Anyone with the link\" and it should be small (a few MB).</string>
+    <string name="audio_dialog_hint">https://drive.google.com/file/d/…</string>
+    <string name="audio_name">Audio · %1$s</string>
+    <string name="audio_tap_to_play">Tap play to listen</string>
+    <string name="audio_loading">Loading…</string>
+    <string name="audio_error_short">It could not be played. Try the button on the right to open it.</string>
+    <string name="audio_error_play">The audio could not be played. Check that the file is shared as \"Anyone with the link\" and that it is small; a big file of Google Drive can only be opened outside the app.</string>
+    <string name="audio_error_link">That is not a link (it has to start with https://)</string>
+    <string name="cover_tags_title">Tags</string>
+    <string name="cover_tags_edit">Edit</string>
+    <string name="cover_thumbnail_chosen">This photo is now the cover of the entry</string>
     <string name="diary_tags_hint">Tags: school trip</string>
     <string name="tags_filter_title">Filter by tag</string>
     <string name="tags_filter_all">All entries</string>

@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- A photo inside a diary: cut to 4:3 here, the complete photo is seen when it is opened -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/diary_photo_bg">
+    android:layout_marginBottom="4dp"
+    android:layout_marginTop="4dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/SDV_diary_new_photo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        fresco:actualImageScaleType="centerInside" />
+        android:layout_height="wrap_content"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:viewAspectRatio="1.3333" />
+
+    <ImageView
+        android:id="@+id/IV_diary_photo_thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/diary_photo_star_bg"
+        android:padding="6dp"
+        android:src="@drawable/ic_star_border_white_24dp"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/IV_diary_photo_delete"
@@ -17,8 +33,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
         android:background="@color/diary_photo_layout_delete_bg"
         android:src="@drawable/ic_delete_white_24dp" />

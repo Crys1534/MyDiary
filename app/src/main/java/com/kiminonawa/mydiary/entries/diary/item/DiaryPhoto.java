@@ -50,6 +50,24 @@ public class DiaryPhoto implements IDairyRow {
     }
 
 
+    /**
+     * Edit mode: the star that makes this photo the cover of the diary.
+     */
+    public void setThumbnailClickListener(View.OnClickListener clickListener) {
+        diaryPhotoLayout.setThumbnailOnClick(clickListener);
+    }
+
+    public void setThumbnailSelected(boolean selected) {
+        diaryPhotoLayout.setThumbnailSelected(selected);
+    }
+
+    /**
+     * @return complete address of the photo ("file:///..."), or null when it is not known yet
+     */
+    public String getPhotoUriString() {
+        return photoUri == null ? null : photoUri.toString();
+    }
+
     public void setPhoto(Uri photoUri, String photoFileName) {
         this.photoUri = photoUri;
         this.photoFileName = photoFileName;
@@ -63,7 +81,8 @@ public class DiaryPhoto implements IDairyRow {
 
     @Override
     public void setContent(String content) {
-        diaryPhotoLayout.setPhotoUri(Uri.parse(content));
+        this.photoUri = Uri.parse(content);
+        diaryPhotoLayout.setPhotoUri(photoUri);
     }
 
     @Override

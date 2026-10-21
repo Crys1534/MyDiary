@@ -43,6 +43,8 @@ public class EntriesFragment extends BaseDiaryFragment implements
     private TextView TV_entries_tag;
     //Chip with the year (only when the entries on the screen are not from this year)
     private TextView TV_entries_year;
+    //Handle to jump to another month / year
+    private FastScrollerView FastScroller_entries;
 
     /**
      * Tag filter: the list that is shown is the diary list without the entries that don't have the tag
@@ -73,6 +75,7 @@ public class EntriesFragment extends BaseDiaryFragment implements
         TV_entries_tag = (TextView) rootView.findViewById(R.id.TV_entries_tag);
         TV_entries_tag.setOnClickListener(this);
         TV_entries_year = (TextView) rootView.findViewById(R.id.TV_entries_year);
+        FastScroller_entries = (FastScrollerView) rootView.findViewById(R.id.FastScroller_entries);
         TV_entries_edit_msg = (TextView) rootView.findViewById(R.id.TV_entries_edit_msg);
         TV_entries_edit_msg.setTextColor(ThemeManager.getInstance().getThemeMainColor(getActivity()));
 
@@ -130,6 +133,26 @@ public class EntriesFragment extends BaseDiaryFragment implements
             @Override
             public void run() {
                 updateYearChip();
+            }
+        });
+        FastScroller_entries.setColor(ThemeManager.getInstance().getThemeMainColor(getActivity()));
+        FastScroller_entries.attach(RecyclerView_entries, new FastScrollerView.Callback() {
+            @Override
+            public int getItemCount() {
+                return shownList.size();
+            }
+
+            @Override
+            public String getLabel(int index) {
+                if (index < 0 || index >= shownList.size()) {
+                    return "";
+                }
+                Calendar date = Calendar.getInstance();
+                date.setTime(shownList.get(index).getCreateDate());
+                String pattern = android.text.format.DateFormat.getBestDateTimePattern(
+                        java.util.Locale.getDefault(), "MMMMyyyy");
+                String text = new java.text.SimpleDateFormat(pattern, java.util.Locale.getDefault()).format(date.getTime());
+                return text.length() > 0 ? text.substring(0, 1).toUpperCase(java.util.Locale.getDefault()) + text.substring(1) : text;
             }
         });
         //true for close all view

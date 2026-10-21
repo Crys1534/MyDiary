@@ -153,6 +153,8 @@ def write_entry():
     key(4)
     sleep(1)
     show("keyboard_closed", full=True)
+    photos_test()
+    audio_test()
     location_test()
     tap(rid="IV_diary_save")
     sleep(3)
@@ -160,19 +162,136 @@ def write_entry():
     db_check()
 
 
-def db_check():
-    """Copies the database of the app (debug build) and prints the saved entries, to see the saved formats."""
-    import sqlite3
-    path = "%s/mydiary.db" % OUT
+def make_png(path, w, h, base):
+    """A plain picture with a big colored frame and stripes, to see how it is cut (no extra libraries)."""
+    import zlib, struct
+    raw = bytearray()
+    for y in range(h):
+        raw.append(0)
+        for x in range(w):
+            if x < 30 or y < 30 or x >= w - 30 or y >= h - 30:
+                raw.extend(b"\x00\x00\x00")  # black frame: if it is cut, the frame disappears
+            else:
+                stripe = (x * 6 // w)
+                r, g, b = base
+                raw.extend(bytes([(r + stripe * 30) % 256, (g + (y * 255 // h)) % 256, (b + stripe * 10) % 256]))
+
+    def chunk(t, d):
+        c = struct.pack(">I", len(d)) + t + d
+        return c + struct.pack(">I", zlib.crc32(t + d) & 0xffffffff)
+    png = (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0))
+           + chunk(b"IDAT", zlib.compress(bytes(raw), 6)) + chunk(b"IEND", b""))
     with open(path, "wb") as f:
-        r = subprocess.run(["adb", "exec-out", "run-as", PKG, "cat", "databases/mydiary.db"], capture_output=True)
-        f.write(r.stdout)
+        f.write(png)
+
+
+def audio_test():
+    """The audio button: paste a link, the audio appears with a play button, play it for a few seconds."""
+    key(4)
+    sleep(1)
+    if not tap(rid="IV_diary_audio"):
+        show("no_audio_button", full=True)
+        return
+    sleep(2)
+    show("audio_dialog", full=True)
+    type_text("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
+    show("audio_link_typed")
+    tap(rid="android:id/button1")
+    sleep(2)
+    show("audio_added", full=True)
+    if tap(rid="IV_diary_audio_play"):
+        sleep(7)
+        show("audio_playing", full=True)
+        alive("audio playing")
+        tap(rid="IV_diary_audio_play")  # pause
+        sleep(1)
+        show("audio_paused")
+
+
+def pick_photo(name):
+    """Adds one picture from the phone gallery to the diary that is open."""
+    if not tap(rid="IV_diary_photo"):
+        return False
+    sleep(2)
+    show("photo_sheet_%s" % name, full=True)
+    if not tap(rid="IV_diary_photo_select_a_photo"):
+        return False
+    sleep(3)
+    show("photo_chooser_%s" % name, full=True)
+    for label in ("Files", "Documents", "Photos"):
+        n = find(text=label, contains=False)
+        if n:
+            tap_xy(n["cx"], n["cy"])
+            sleep(3)
+            break
+    # the "Always / Just once" question of the system
+    n = find(text="Just once", contains=False)
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(3)
+    show("photo_picker_%s" % name, full=True)
+    if not tap(text=name):
+        # maybe it is in another folder: open the side menu and go to Downloads / Pictures
+        show("photo_picker_notfound_%s" % name, full=True)
+        return False
+    sleep(5)
+    show("photo_added_%s" % name, full=True)
+    return True
+
+
+def photos_test():
+    """Two pictures (one wide, one tall) go into the diary; the second one becomes the cover with its star."""
+    os.makedirs("%s/img" % OUT, exist_ok=True)
+    make_png("%s/img/foto_ancha.png" % OUT, 900, 600, (200, 30, 30))
+    make_png("%s/img/foto_alta.png" % OUT, 600, 900, (20, 60, 200))
+    adb("shell", "mkdir", "-p", "/sdcard/Pictures")
+    for name in ("foto_ancha.png", "foto_alta.png"):
+        subprocess.run(["adb", "push", "%s/img/%s" % (OUT, name), "/sdcard/Pictures/%s" % name], capture_output=True)
+        adb("shell", "am", "broadcast", "-a", "android.intent.action.MEDIA_SCANNER_SCAN_FILE",
+            "-d", "file:///sdcard/Pictures/%s" % name)
+    sleep(4)
+    pick_photo("foto_ancha")
+    pick_photo("foto_alta")
+    stars = [n for n in nodes() if n["rid"].endswith("IV_diary_photo_thumbnail")]
+    log("   stars found: %d" % len(stars))
+    show("photos_in_diary", full=True)
+    if len(stars) >= 2:
+        tap_xy(stars[1]["cx"], stars[1]["cy"])
+        sleep(2)
+        show("second_star_pressed")
+    # scroll to the top to see the cover
+    adb("shell", "input", "swipe", "540", "500", "540", "1900", "300")
+    sleep(1)
+    show("cover_with_photo", full=True)
+
+
+def pull_db(dest_dir):
+    """Copies the database of the app (debug build) to the computer, with its -wal / -shm files."""
+    os.makedirs(dest_dir, exist_ok=True)
+    got = []
+    for name in ("mydiary.db", "mydiary.db-wal", "mydiary.db-shm"):
+        r = subprocess.run(["adb", "exec-out", "run-as", PKG, "cat", "databases/" + name], capture_output=True)
+        if r.stdout:
+            with open("%s/%s" % (dest_dir, name), "wb") as f:
+                f.write(r.stdout)
+            got.append(name)
+    return "%s/mydiary.db" % dest_dir if "mydiary.db" in got else None
+
+
+def db_check():
+    """Prints the saved entries (to see the saved formats, the tags and the chosen cover photo)."""
+    import sqlite3
+    path = pull_db("%s/db" % OUT)
+    if not path:
+        log("   DB check: could not copy the database")
+        return
     try:
         con = sqlite3.connect(path)
         for row in con.execute("select item_ref_diary_id, diary_item_type, diary_item_content from diary_item_entry_v2 order by item_ref_diary_id, diary_item_position"):
             log("   DB item: %r" % (row,))
-        for row in con.execute("select diary_title, diary_tags, diary_location from diary_entry_v2"):
+        for row in con.execute("select _id, diary_title, diary_tags, diary_location, diary_thumbnail from diary_entry_v2"):
             log("   DB entry: %r" % (row,))
+        con.close()
     except Exception as e:
         log("   DB check failed: %r" % (e,))
 
@@ -317,6 +436,119 @@ step("drag topics", drag_test)
 step("relaunch", restart)
 step("write an entry", write_entry)
 step("open the entries", open_entries)
+def seed_db():
+    """Adds many entries (2024-2026) to the diary topic, straight into the database, to try the scroll bar."""
+    import sqlite3, datetime
+    adb("shell", "am", "force-stop", PKG)
+    sleep(2)
+    path = pull_db("%s/seed" % OUT)
+    if not path:
+        log("   seed: could not copy the database")
+        return False
+    con = sqlite3.connect(path)
+    topic = con.execute("select _id from topic_entry where topic_type = 1 order by _id limit 1").fetchone()
+    if not topic:
+        log("   seed: no diary topic")
+        return False
+    topic_id = topic[0]
+    start = datetime.datetime(2024, 1, 5, 12, 0)
+    for i in range(60):
+        when = start + datetime.timedelta(days=i * 17)
+        title = "Nota de prueba %d" % (i + 1)
+        text = "Texto numero %d de la prueba" % (i + 1)
+        if i == 16:
+            text = "Hoy vi una mariposa muy bonita en el jardin"
+        if i == 33:
+            title = "Mariposa azul"
+        if i == 45:
+            text = "La CANCION favorita de la ma\u00f1ana"
+        cur = con.execute("insert into diary_entry_v2 (diary_time, diary_title, diary_mood, diary_weather, diary_attachment, diary_ref_topic_id, diary_location, diary_tags, diary_thumbnail) values (?,?,?,?,?,?,?,?,?)",
+                          (int(when.timestamp() * 1000), title, 0, 0, 0, topic_id, "", ",prueba," if i % 3 == 0 else "", ""))
+        con.execute("insert into diary_item_entry_v2 (diary_item_type, diary_item_position, diary_item_content, item_ref_diary_id) values (0, 0, ?, ?)", (text, cur.lastrowid))
+    con.commit()
+    con.execute("pragma wal_checkpoint(truncate)")
+    con.execute("pragma journal_mode=delete")
+    con.commit()
+    con.close()
+    # put it back: one single file, no -wal / -shm
+    adb("shell", "run-as", PKG, "rm", "-f", "databases/mydiary.db-wal", "databases/mydiary.db-shm")
+    with open(path, "rb") as f:
+        subprocess.run(["adb", "shell", "run-as", PKG, "sh", "-c", "cat > databases/mydiary.db"], stdin=f, capture_output=True)
+    log("   seed: 60 entries added to topic %s" % topic_id)
+    return True
+
+
+def seed_and_scroll():
+    """The list of entries with many entries: month names, the year chip and the scroll bar with its label."""
+    if not seed_db():
+        return
+    restart()
+    n = find(text="DIARY")
+    if not n:
+        show("seed_no_diary_topic", full=True)
+        return
+    tap_xy(n["cx"], n["cy"])
+    sleep(3)
+    dismiss_intro()
+    tap(rid="But_diary_topbar_entries")
+    sleep(2)
+    show("seed_entries_list", full=True)
+    alive("seed list")
+    rv = find(rid="RecyclerView_entries")
+    if not rv:
+        return
+    x1, y1, x2, y2 = rv["b"]
+    # a small scroll: the handle of the scroll bar appears on the right side
+    adb("shell", "input", "swipe", str(x2 // 2), str(y2 - 200), str(x2 // 2), str(y2 - 500), "250")
+    sleep(0.3)
+    show("seed_scrolled_handle")
+    # drag the handle (at the right edge, near the top) down along the edge
+    proc = subprocess.Popen(["adb", "shell", "input", "swipe", str(x2 - 12), str(y1 + 45), str(x2 - 12), str(y1 + (y2 - y1) // 2), "2500"])
+    sleep(1.5)
+    show("seed_dragging_handle")
+    proc.wait()
+    sleep(1)
+    show("seed_after_drag")
+    alive("seed drag")
+
+
+def global_search_test():
+    """Search in the main page: a word that is in the text of a note and a word that is in a title."""
+    restart()
+    for word in ("mariposa", "cancion"):
+        if not tap(rid="EDT_main_topic_search"):
+            return
+        type_text(word)
+        sleep(3)
+        show("search_notes_%s" % word, full=True)
+        alive("search %s" % word)
+        if word == "mariposa":
+            n = find(text="Mariposa azul") or find(text="mariposa")
+            if n:
+                tap_xy(n["cx"], n["cy"])
+                sleep(4)
+                show("search_opened_note", full=True)
+                alive("search open note")
+                key(4)
+                sleep(1)
+                key(4)
+                sleep(2)
+        # clear the box
+        tap(rid="EDT_main_topic_search")
+        for _ in range(len(word) + 1):
+            key(67)
+        sleep(1)
+    # leave the app inside the topic, like the steps that follow expect
+    restart()
+    n = find(text="DIARY")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(3)
+        dismiss_intro()
+
+
+step("seed and scroll", seed_and_scroll)
+step("global search", global_search_test)
 step("settings", settings)
 step("backup", backup_test)
 
