@@ -399,8 +399,16 @@ def open_entries():
         tap_xy(n["cx"], n["cy"])
         sleep(3)
         show("viewer", full=True)
-        # tick the first checkbox if visible
-        c = find(rid="CheckBox") or None
+        alive("viewer")
+        # open the first photo: the complete picture must be seen (no cut)
+        photo = find(rid="SDV_diary_new_photo")
+        if photo:
+            tap_xy(photo["cx"], photo["cy"])
+            sleep(4)
+            show("photo_opened", full=True)
+            alive("photo opened")
+            key(4)
+            sleep(2)
         key(4)
         sleep(1)
 

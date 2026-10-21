@@ -645,12 +645,12 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 diaryItem = new DiaryPhoto(getActivity());
                 content = FileManager.FILE_HEADER +
                         diaryFileManager.getDirAbsolutePath() + "/" + diaryContentCursor.getString(3);
+                //For get the right file name (also when only reading: the cover is found by it)
+                ((DiaryPhoto) diaryItem).setPhotoFileName(diaryContentCursor.getString(3));
                 if (isEditMode) {
                     diaryItem.setEditMode(true);
                     ((DiaryPhoto) diaryItem).setDeleteClickListener(this);
                     ((DiaryPhoto) diaryItem).setThumbnailClickListener(this);
-                    //For get the right file name
-                    ((DiaryPhoto) diaryItem).setPhotoFileName(diaryContentCursor.getString(3));
                 } else {
                     diaryItem.setEditMode(false);
                     ((DiaryPhoto) diaryItem).setDraweeViewClickListener(this);
