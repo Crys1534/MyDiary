@@ -255,8 +255,9 @@ def pick_photo(name, index=1):
         tap_xy(pick["cx"], pick["cy"])
         sleep(2)
         # the picker may ask to confirm the choice
-        for label in ("Add", "Select", "Done"):
-            n = find(text=label, contains=False)
+        # the button says "Add (1)" in the Android photo picker
+        for label in ("Add (", "Add", "Select", "Done"):
+            n = find(text=label, contains=label == "Add (")
             if n:
                 tap_xy(n["cx"], n["cy"])
                 break
@@ -506,8 +507,13 @@ def seed_db():
     con.close()
     # put it back: one single file, no -wal / -shm
     adb("shell", "run-as", PKG, "rm", "-f", "databases/mydiary.db-wal", "databases/mydiary.db-shm")
+    # one single string for the phone shell (otherwise the quotes of sh -c are lost and nothing is written)
     with open(path, "rb") as f:
-        subprocess.run(["adb", "shell", "run-as", PKG, "sh", "-c", "cat > databases/mydiary.db"], stdin=f, capture_output=True)
+        r = subprocess.run(["adb", "shell", "run-as %s sh -c 'cat > databases/mydiary.db'" % PKG],
+                           stdin=f, capture_output=True, text=True)
+    log("   seed push: rc=%s err=%r" % (r.returncode, (r.stderr or "")[:200]))
+    size = adb("shell", "run-as", PKG, "ls", "-l", "databases/").strip()
+    log("   seed: databases/ = %s" % size.replace("\n", " | ")[:300])
     log("   seed: 60 entries added to topic %s" % topic_id)
     return True
 
