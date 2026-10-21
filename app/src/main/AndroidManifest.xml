@@ -64,7 +64,7 @@
         <activity
             android:name=".entries.DiaryActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".entries.photo.PhotoOverviewActivity"
             android:screenOrientation="portrait"

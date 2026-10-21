@@ -93,7 +93,6 @@ def write_entry():
     sleep(1)
     show("keyboard_closed", full=True)
     location_test()
-    camera_test()
     tap(rid="IV_diary_save")
     sleep(3)
     show("after_save")
@@ -150,7 +149,19 @@ def camera_test():
         sleep(1)
 
 
+def calendar_test():
+    """The calendar page (page-curl effect) draws and can be flipped."""
+    if not tap(rid="But_diary_topbar_calendar"):
+        return
+    sleep(2)
+    show("calendar", full=True)
+    adb("shell", "input", "swipe", "900", "1100", "150", "1100", "400")
+    sleep(2)
+    show("calendar_flipped")
+
+
 def open_entries():
+    calendar_test()
     tap(rid="But_diary_topbar_entries")
     sleep(2)
     show("entries")
@@ -226,4 +237,23 @@ step("write an entry", write_entry)
 step("open the entries", open_entries)
 step("settings", settings)
 step("backup", backup_test)
+
+
+def camera_last():
+    """Back to the main screen -> topic -> new diary -> camera button (the emulator has no real camera app)."""
+    for _ in range(3):
+        key(4)
+        sleep(1)
+    dismiss_intro()
+    launch_n = find(text="DIARY")
+    if launch_n:
+        tap_xy(launch_n["cx"], launch_n["cy"])
+        sleep(3)
+        dismiss_intro()
+        tap(rid="But_diary_topbar_diary")
+        sleep(2)
+        camera_test()
+
+
+step("camera", camera_last)
 log("== done")
