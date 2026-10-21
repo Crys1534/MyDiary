@@ -5,7 +5,8 @@ import subprocess
 import time
 import xml.etree.ElementTree as ET
 
-OUT = "smoke-out"
+import os
+OUT = os.environ.get("SMOKE_OUT", "smoke-out")
 PKG = "com.kiminonawa.mydiary.fotos"
 _counter = [0]
 

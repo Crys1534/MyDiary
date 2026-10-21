@@ -86,12 +86,26 @@ adb shell settings put global window_animation_scale 0
 adb shell settings put global transition_animation_scale 0
 adb shell settings put global animator_duration_scale 0
 adb shell getprop ro.build.version.release > smoke-out/android-version.txt
+PKG=com.kiminonawa.mydiary.fotos
+
+run_steps() {
+  # $1 = apk file, $2 = output folder
+  export SMOKE_OUT="$2"
+  mkdir -p "$SMOKE_OUT"
+  adb uninstall "$PKG" > /dev/null 2>&1
+  adb install -r "$1" 2>&1 | tee "$SMOKE_OUT/install.txt"
+  adb logcat -c
+  python3 smoke/steps.py 2>&1 | tee "$SMOKE_OUT/steps-output.txt"
+  adb logcat -b crash -d -v time > "$SMOKE_OUT/crash-buffer.txt"
+  adb logcat -d -v time | grep -E "kiminonawa|AndroidRuntime|FATAL|StrictMode" | tail -n 400 > "$SMOKE_OUT/logcat-app.txt"
+}
+
 APK=$(ls apk/*.apk | head -n 1)
-adb install -r "$APK" 2>&1 | tee smoke-out/install.txt
-adb logcat -c
-python3 smoke/steps.py 2>&1 | tee smoke-out/steps-output.txt
-adb logcat -d -v time > smoke-out/logcat-full.txt
-grep -E "FATAL EXCEPTION|AndroidRuntime|ANR in|UnsatisfiedLink|NoClassDefFound|NoSuchMethod|ClassNotFound|InflateException" -A 14 smoke-out/logcat-full.txt | head -300 > smoke-out/crashes.txt
-tail -n 3000 smoke-out/logcat-full.txt > smoke-out/logcat-tail.txt
-rm -f smoke-out/logcat-full.txt
+run_steps "$APK" smoke-out/new
+
+# Optional: also run the same steps with an older build to compare (url in smoke/baseline-url.txt)
+BASE_URL=$(cat smoke/baseline-url.txt 2>/dev/null | tr -d '\r\n ')
+if [ -n "$BASE_URL" ]; then
+  curl -sL -o /tmp/baseline.apk "$BASE_URL" && run_steps /tmp/baseline.apk smoke-out/base
+fi
 exit 0
