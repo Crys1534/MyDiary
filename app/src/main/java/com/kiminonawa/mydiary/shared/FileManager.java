@@ -303,6 +303,44 @@ public class FileManager {
                 || name.endsWith(".heic") || name.endsWith(".heif");
     }
 
+    /**
+     * Copies a picture that the person chose (content://...) into a private file of the app
+     * and gives the address of the file. The cropper then does not depend on the permission
+     * of the gallery app. Returns null when the picture can't be read.
+     */
+    public static Uri copyUriToTempFile(Context context, Uri source, File dir) {
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = context.getContentResolver().openInputStream(source);
+            if (in == null) {
+                return null;
+            }
+            File dst = new File(dir, "src_" + createRandomFileName());
+            out = new FileOutputStream(dst);
+            byte[] buf = new byte[8192];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            out.flush();
+            return Uri.fromFile(dst);
+        } catch (Exception e) {
+            Log.e(TAG, "can't copy the picture", e);
+            return null;
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException ignored) {
+            }
+        }
+    }
+
     public static void copy(File src, File dst) throws IOException {
         InputStream in = new FileInputStream(src);
         OutputStream out = new FileOutputStream(dst);
@@ -430,7 +468,14 @@ public class FileManager {
      */
     public static long getSDCardFreeSize() {
         File path = Environment.getExternalStorageDirectory();
-        StatFs sf = new StatFs(path.getPath());
+        StatFs sf;
+        try {
+            sf = new StatFs(path.getPath());
+        } catch (Exception e) {
+            //Android did not let us look: don't stop the person from using the app
+            Log.e(TAG, "can't read the free space", e);
+            return Long.MAX_VALUE / 4;
+        }
         long blockSize, freeBlocks;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
             blockSize = sf.getBlockSize();

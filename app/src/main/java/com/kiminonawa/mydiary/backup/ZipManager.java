@@ -11,11 +11,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by daxia on 2017/2/16.
@@ -23,6 +24,7 @@ import static android.content.ContentValues.TAG;
 
 public class ZipManager {
 
+    private static final String TAG = "ZipManager";
     private FileManager diaryFileManager;
     private final int BUFFER_SIZE = 2048;
 
@@ -32,14 +34,17 @@ public class ZipManager {
         diaryFileManager = new FileManager(context, FileManager.DIARY_ROOT_DIR);
     }
 
-    public boolean zipFileAtPath(String backupJsonFilePath, String toLocation) {
+    /**
+     * Writes the backup (all the diary files + the json file) into the given stream.
+     * The stream is always closed.
+     */
+    public boolean zipFileAtPath(String backupJsonFilePath, OutputStream destination) {
 
         File sourceFile = diaryFileManager.getDir();
         try {
             BufferedInputStream origin = null;
-            FileOutputStream dest = new FileOutputStream(toLocation);
             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
-                    dest));
+                    destination));
             if (sourceFile.isDirectory()) {
                 zipSubFolder(out, sourceFile, sourceFile.getParent().length());
             } else {
@@ -52,13 +57,18 @@ public class ZipManager {
                 while ((count = origin.read(data, 0, BUFFER_SIZE)) != -1) {
                     out.write(data, 0, count);
                 }
+                origin.close();
             }
             //Zip the json file
             zipBackupJsonFile(backupJsonFilePath, out);
 
             out.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "zip fail", e);
+            try {
+                destination.close();
+            } catch (IOException ignored) {
+            }
             return false;
         }
         return true;
@@ -106,60 +116,63 @@ public class ZipManager {
         }
     }
 
-    public void unzip(String backupZieFilePath, String location) throws IOException {
+    /**
+     * Unzips the backup read from the stream into the folder "location".
+     * The stream is always closed.
+     */
+    public void unzip(InputStream backupZipStream, String location) throws IOException {
         int size;
         byte[] buffer = new byte[BUFFER_SIZE];
 
+        if (!location.endsWith("/")) {
+            location += "/";
+        }
+        File locationDir = new File(location);
+        if (!locationDir.isDirectory()) {
+            locationDir.mkdirs();
+        }
+        String locationCanonicalPath = locationDir.getCanonicalPath() + File.separator;
+        ZipInputStream zin = new ZipInputStream(
+                new BufferedInputStream(backupZipStream, BUFFER_SIZE));
         try {
-            if (!location.endsWith("/")) {
-                location += "/";
-            }
-            File f = new File(location);
-            if (!f.isDirectory()) {
-                f.mkdirs();
-            }
-            ZipInputStream zin = new ZipInputStream(
-                    new BufferedInputStream(
-                            new FileInputStream(backupZieFilePath), BUFFER_SIZE));
-            try {
-                ZipEntry ze = null;
-                while ((ze = zin.getNextEntry()) != null) {
-                    String path = location + ze.getName();
-                    File unzipFile = new File(path);
+            ZipEntry ze;
+            while ((ze = zin.getNextEntry()) != null) {
+                File unzipFile = new File(location + ze.getName());
+                //A file that wants to leave the backup folder (for example "../x") is not safe
+                if (!unzipFile.getCanonicalPath().startsWith(locationCanonicalPath)) {
+                    throw new IOException("Unsafe file name in the backup: " + ze.getName());
+                }
 
-                    if (ze.isDirectory()) {
-                        if (!unzipFile.isDirectory()) {
-                            unzipFile.mkdirs();
-                        }
-                    } else {
-                        // check for and create parent directories if they don't exist
-                        File parentDir = unzipFile.getParentFile();
-                        if (null != parentDir) {
-                            if (!parentDir.isDirectory()) {
-                                parentDir.mkdirs();
-                            }
-                        }
-
-                        // unzip the file
-                        FileOutputStream out = new FileOutputStream(unzipFile, false);
-                        BufferedOutputStream fout = new BufferedOutputStream(out, BUFFER_SIZE);
-                        try {
-                            while ((size = zin.read(buffer, 0, BUFFER_SIZE)) != -1) {
-                                fout.write(buffer, 0, size);
-                            }
-
-                            zin.closeEntry();
-                        } finally {
-                            fout.flush();
-                            fout.close();
+                if (ze.isDirectory()) {
+                    if (!unzipFile.isDirectory()) {
+                        unzipFile.mkdirs();
+                    }
+                } else {
+                    // check for and create parent directories if they don't exist
+                    File parentDir = unzipFile.getParentFile();
+                    if (null != parentDir) {
+                        if (!parentDir.isDirectory()) {
+                            parentDir.mkdirs();
                         }
                     }
+
+                    // unzip the file
+                    FileOutputStream out = new FileOutputStream(unzipFile, false);
+                    BufferedOutputStream fout = new BufferedOutputStream(out, BUFFER_SIZE);
+                    try {
+                        while ((size = zin.read(buffer, 0, BUFFER_SIZE)) != -1) {
+                            fout.write(buffer, 0, size);
+                        }
+
+                        zin.closeEntry();
+                    } finally {
+                        fout.flush();
+                        fout.close();
+                    }
                 }
-            } finally {
-                zin.close();
             }
-        } catch (Exception e) {
-            Log.e(TAG, "Unzip exception", e);
+        } finally {
+            zin.close();
         }
     }
 }

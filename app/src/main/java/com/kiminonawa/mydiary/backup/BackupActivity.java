@@ -2,12 +2,11 @@ package com.kiminonawa.mydiary.backup;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import androidx.core.content.FileProvider;
+import android.provider.OpenableColumns;
 import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,15 +14,18 @@ import android.widget.Toast;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.main.MainActivity;
 import com.kiminonawa.mydiary.shared.gui.MyDiaryButton;
-import com.nononsenseapps.filepicker.FilePickerActivity;
 
-import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by daxia on 2017/2/14.
+ * <p>
+ * The backup file is chosen with the file picker of Android itself (it works with the phone
+ * storage, Google Drive, etc. and does not need any storage permission).
  */
 
 public class BackupActivity extends AppCompatActivity implements View.OnClickListener,
@@ -37,6 +39,12 @@ public class BackupActivity extends AppCompatActivity implements View.OnClickLis
      */
     private TextView TV_backup_export_src, TV_backup_import_src;
     private MyDiaryButton But_backup_export, But_backup_import;
+
+    /*
+     * The files the person chose
+     */
+    private Uri exportUri, importUri;
+    private String exportFileName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,64 +67,85 @@ public class BackupActivity extends AppCompatActivity implements View.OnClickLis
         But_backup_import.setEnabled(false);
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == EXPORT_SRC_PICKER_CODE && resultCode == Activity.RESULT_OK) {
-            Uri uri = intent.getData();
-            if (uri != null) {
-                File file = com.nononsenseapps.filepicker.Utils.getFileForUri(uri);
-                if (file.canWrite()) {
-
-                    TV_backup_export_src.setText(file.getAbsolutePath());
-                    But_backup_export.setEnabled(true);
-                } else {
-                    Toast.makeText(this, getString(R.string.backup_export_can_not_write),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        } else if (requestCode == IMPORT_SRC_PICKER_CODE && resultCode == Activity.RESULT_OK) {
-            Uri uri = intent.getData();
-            if (uri != null) {
-                File file = com.nononsenseapps.filepicker.Utils.getFileForUri(uri);
-                if (file.canRead()) {
-                    TV_backup_import_src.setText(file.getAbsolutePath());
-                    But_backup_import.setEnabled(true);
-                } else {
-                    Toast.makeText(this, getString(R.string.backup_import_can_not_read),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode != Activity.RESULT_OK || intent == null || intent.getData() == null) {
+            return;
+        }
+        Uri uri = intent.getData();
+        if (requestCode == EXPORT_SRC_PICKER_CODE) {
+            exportUri = uri;
+            exportFileName = getDisplayName(uri);
+            TV_backup_export_src.setText(exportFileName);
+            But_backup_export.setEnabled(true);
+        } else if (requestCode == IMPORT_SRC_PICKER_CODE) {
+            importUri = uri;
+            TV_backup_import_src.setText(getDisplayName(uri));
+            But_backup_import.setEnabled(true);
         }
     }
 
+    /**
+     * The name of the file the person chose.
+     */
+    private String getDisplayName(Uri uri) {
+        String name = null;
+        Cursor cursor = null;
+        try {
+            cursor = getContentResolver().query(uri, new String[]{OpenableColumns.DISPLAY_NAME}, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                name = cursor.getString(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        if (name == null || name.length() == 0) {
+            name = uri.getLastPathSegment();
+        }
+        return name;
+    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.TV_backup_export_src:
-                Intent exportIntent = new Intent(this, DirectoryPickerActivity.class);
-
-                exportIntent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-                exportIntent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, true);
-                exportIntent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_DIR);
-                exportIntent.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
-                startActivityForResult(exportIntent, EXPORT_SRC_PICKER_CODE);
+                //"Save as": the person chooses the place and the name of the new file
+                Intent exportIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                exportIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                exportIntent.setType("application/zip");
+                exportIntent.putExtra(Intent.EXTRA_TITLE, BackupManager.BACKUP_ZIP_FILE_HEADER
+                        + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())
+                        + BackupManager.BACKUP_ZIP_FILE_SUB_FILE_NAME);
+                try {
+                    startActivityForResult(exportIntent, EXPORT_SRC_PICKER_CODE);
+                } catch (android.content.ActivityNotFoundException e) {
+                    Toast.makeText(this, getString(R.string.backup_export_can_not_write), Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.TV_backup_import_src:
-                Intent importIntent = new Intent(this, DirectoryPickerActivity.class);
-
-                importIntent.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-                importIntent.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-                importIntent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
-                importIntent.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
-                startActivityForResult(importIntent, IMPORT_SRC_PICKER_CODE);
+                Intent importIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                importIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                importIntent.setType("*/*");
+                try {
+                    startActivityForResult(importIntent, IMPORT_SRC_PICKER_CODE);
+                } catch (android.content.ActivityNotFoundException e) {
+                    Toast.makeText(this, getString(R.string.backup_import_can_not_read), Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.But_backup_export:
-                new ExportAsyncTask(this, this, TV_backup_export_src.getText().toString())
-                        .execute();
+                if (exportUri != null) {
+                    new ExportAsyncTask(this, this, exportUri, exportFileName).execute();
+                }
                 break;
             case R.id.But_backup_import:
-                new ImportAsyncTask(this, this, TV_backup_import_src.getText().toString())
-                        .execute();
+                if (importUri != null) {
+                    new ImportAsyncTask(this, this, importUri).execute();
+                }
                 break;
         }
     }
@@ -131,23 +160,12 @@ public class BackupActivity extends AppCompatActivity implements View.OnClickLis
 
 
     @Override
-    public void onExportCompiled(String backupZipFilePath) {
-        //Opne the shared file intent
-        try {
-            Intent sendIntent = new Intent();
-            if (backupZipFilePath != null) {
-                File backupFile = new File(backupZipFilePath);
-                Uri backupFileUri = FileProvider.getUriForFile(this,
-                        this.getApplicationContext().getPackageName() + ".provider",
-                        backupFile);
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_STREAM, backupFileUri);
-                sendIntent.setType("application/zip");
-                startActivity(Intent.createChooser(sendIntent,
-                        getResources().getText(R.string.backup_export_share_title)));
-            }
-        } catch (Exception e) {
-            Log.e("Backup", "export share fail", e);
+    public void onExportCompiled(boolean exportSuccessful) {
+        //The file is already where the person chose to save it. Nothing else to do.
+        if (exportSuccessful) {
+            But_backup_export.setEnabled(false);
+            TV_backup_export_src.setText(R.string.backup_export_path_hint);
+            exportUri = null;
         }
     }
 }

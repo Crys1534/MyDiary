@@ -2,6 +2,7 @@ package com.kiminonawa.mydiary.backup;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -43,7 +45,7 @@ public class ImportAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private BackupManager backupManager;
     private FileManager backupFileManager, diartFileManager;
     private String backupJsonFilePath;
-    private String backupZieFilePath;
+    private Uri backupZipSource;
     /*
      * DB
      */
@@ -57,13 +59,16 @@ public class ImportAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private ProgressDialog progressDialog;
     private ImportCallBack callBack;
 
-    public ImportAsyncTask(Context context, ImportCallBack callBack, String backupZieFilePath) {
+    /**
+     * @param backupZipSource the backup file chosen by the person (system file picker)
+     */
+    public ImportAsyncTask(Context context, ImportCallBack callBack, Uri backupZipSource) {
         this.mContext = context;
         this.dbManager = new DBManager(context);
         FileManager backFM = new FileManager(context, FileManager.BACKUP_DIR);
         this.backupJsonFilePath = backFM.getDirAbsolutePath() + "/"
                 + BackupManager.BACKUP_JSON_FILE_NAME;
-        this.backupZieFilePath = backupZieFilePath;
+        this.backupZipSource = backupZipSource;
 
         this.backupFileManager = new FileManager(mContext, FileManager.BACKUP_DIR);
         this.diartFileManager = new FileManager(mContext, FileManager.DIARY_ROOT_DIR);
@@ -85,8 +90,11 @@ public class ImportAsyncTask extends AsyncTask<Void, Void, Boolean> {
             ZipManager zipManager = new ZipManager(mContext);
 
             FileManager zipBackupFM = new FileManager(mContext, FileManager.BACKUP_DIR);
-            zipManager.unzip(backupZieFilePath,
-                    zipBackupFM.getDirAbsolutePath() + "/");
+            InputStream source = mContext.getContentResolver().openInputStream(backupZipSource);
+            if (source == null) {
+                throw new IOException("Can't read " + backupZipSource);
+            }
+            zipManager.unzip(source, zipBackupFM.getDirAbsolutePath() + "/");
             loadBackupJsonFileIntoManager();
             importSuccessful = importTopic();
         } catch (Exception e) {

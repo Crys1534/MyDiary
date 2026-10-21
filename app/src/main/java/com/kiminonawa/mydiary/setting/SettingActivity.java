@@ -120,7 +120,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     UCrop.Options options = new UCrop.Options();
                     options.setToolbarColor(ThemeManager.getInstance().getThemeMainColor(this));
                     options.setStatusBarColor(ThemeManager.getInstance().getThemeDarkColor(this));
-                    UCrop.of(data.getData(), Uri.fromFile(new File(tempFileManager.getDir() + "/" + FileManager.createRandomFileName())))
+                    Uri localSource = FileManager.copyUriToTempFile(this, data.getData(),
+                            new File(tempFileManager.getDirAbsolutePath()));
+                    if (localSource == null) {
+                        Toast.makeText(this, getString(R.string.toast_photo_intent_error), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    UCrop.of(localSource, Uri.fromFile(new File(tempFileManager.getDir() + "/" + FileManager.createRandomFileName())))
                             .withMaxResultSize(bgWidth, bgHeight)
                             .withOptions(options)
                             .withAspectRatio(bgWidth, bgHeight)

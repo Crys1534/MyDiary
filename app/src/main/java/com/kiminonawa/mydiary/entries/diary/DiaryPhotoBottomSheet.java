@@ -160,7 +160,12 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
                             getActivity().getApplicationContext().getPackageName() + ".provider", tmpFile);
                 }
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-                startActivityForResult(intent, REQUEST_START_CAMERA_CODE);
+                try {
+                    startActivityForResult(intent, REQUEST_START_CAMERA_CODE);
+                } catch (android.content.ActivityNotFoundException e) {
+                    //No camera app in the phone
+                    Toast.makeText(getActivity(), getString(R.string.toast_photo_intent_error), Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.IV_diary_photo_select_a_photo:
                 FileManager.startBrowseMultipleImageFiles(this, REQUEST_SELECT_IMAGE_CODE);

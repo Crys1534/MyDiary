@@ -188,18 +188,14 @@
     <!--Back event-->
     <string name="main_activity_exit_app">Toca atrás otra vez para cerrar</string>
 
-    <!--Backup overwrite string-->
-    <string name="nnf_select_something_first">Primero selecciona algo</string>
-    <string name="nnf_permission_external_write_denied">Se necesita permiso para acceder a los archivos</string>
-
     <!--Backup-->
     <string name="backup_title">Respaldo</string>
     <string name="backup_export_title">Exportar</string>
     <string name="backup_export_hint">Exporta todos los datos (sin incluir el perfil)</string>
-    <string name="backup_export_path_hint">Toca para elegir la carpeta de exportación</string>
+    <string name="backup_export_path_hint">Toca para elegir dónde guardar el respaldo</string>
     <string name="backup_export_button">exportar</string>
     <string name="backup_export_share_title">Compartir con</string>
-    <string name="backup_export_can_not_write">No se puede escribir en esta ruta, elige otra</string>
+    <string name="backup_export_can_not_write">No se pudo abrir el selector de archivos del teléfono</string>
 
     <string name="toast_export_successful">%1$s\nexportado con éxito</string>
     <string name="toast_export_fail">falló la exportación&#8230; revisa los permisos o el almacenamiento</string>
@@ -208,7 +204,7 @@
     <string name="backup_import_hint">Importa un archivo existente (sin incluir el perfil)</string>
     <string name="backup_import_path_hint">Toca para elegir el archivo a importar</string>
     <string name="backup_import_button">importar</string>
-    <string name="backup_import_can_not_read">No se puede leer este archivo, elige otro</string>
+    <string name="backup_import_can_not_read">No se pudo abrir el selector de archivos del teléfono</string>
 
     <string name="toast_import_successful">importado con éxito</string>
     <string name="toast_import_fail">falló la importación&#8230; revisa el archivo</string>

@@ -1,17 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Location: the place where the diary was written (the person can allow only the approximate one) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- No camera and no storage permissions: the photos are taken by the camera app of the phone
+         and chosen with the picker of Android, and everything is saved in the private folder of the app. -->
 
-    <uses-feature android:name="android.hardware.location.network" />
-    <uses-feature android:name="android.hardware.location.gps" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
+
+    <!-- Apps that this app asks Android to open (Android 11+ only lets an app see the ones listed here) -->
+    <queries>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.GET_CONTENT" />
+            <data android:mimeType="image/*" />
+        </intent>
+    </queries>
 
     <application
         android:name=".shared.MyDiaryApplication"
@@ -24,6 +44,7 @@
 
         <activity
             android:name=".init.InitActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme_NoActionBar_FullScreen">
             <intent-filter>
@@ -43,7 +64,7 @@
         <activity
             android:name=".entries.DiaryActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".entries.photo.PhotoOverviewActivity"
             android:screenOrientation="portrait"
@@ -77,17 +98,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
-        <!--Start For NoNonsense-FilePicker-->
-        <activity
-            android:name=".backup.DirectoryPickerActivity"
-            android:theme="@style/FilePickerTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.GET_CONTENT" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <!--This is for Android N-->
+        <!--To give the picture file to the camera app-->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -95,9 +106,8 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/nnf_provider_paths" />
+                android:resource="@xml/provider_paths" />
         </provider>
-        <!--End For NoNonsense-FilePicker-->
 
     </application>
 

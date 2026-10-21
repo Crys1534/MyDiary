@@ -3,7 +3,9 @@ package com.kiminonawa.mydiary.backup;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.DocumentsContract;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,14 +23,11 @@ import com.kiminonawa.mydiary.shared.FileManager;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static com.kiminonawa.mydiary.backup.BackupManager.BACKUP_ZIP_FILE_HEADER;
-import static com.kiminonawa.mydiary.backup.BackupManager.BACKUP_ZIP_FILE_SUB_FILE_NAME;
 
 /**
  * Created by daxia on 2017/2/16.
@@ -37,7 +36,7 @@ import static com.kiminonawa.mydiary.backup.BackupManager.BACKUP_ZIP_FILE_SUB_FI
 public class ExportAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     public interface ExportCallBack {
-        void onExportCompiled(String backupZipFilePath);
+        void onExportCompiled(boolean exportSuccessful);
     }
 
     private final static String TAG = "ExportAsyncTask";
@@ -47,9 +46,8 @@ public class ExportAsyncTask extends AsyncTask<Void, Void, Boolean> {
      * Backup
      */
     private BackupManager backupManager;
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
     private String backupJsonFilePath;
-    private String backupZipRootPath;
+    private Uri backupDestination;
     private String backupZipFileName;
     /*
      * DB
@@ -64,7 +62,11 @@ public class ExportAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private ProgressDialog progressDialog;
     private ExportCallBack callBack;
 
-    public ExportAsyncTask(Context context, ExportCallBack callBack, String backupZipRootPath) {
+    /**
+     * @param backupDestination the file chosen by the person (system file picker)
+     * @param backupZipFileName the name of that file, only to show it
+     */
+    public ExportAsyncTask(Context context, ExportCallBack callBack, Uri backupDestination, String backupZipFileName) {
 
         this.mContext = context;
         this.backupManager = new BackupManager();
@@ -74,8 +76,8 @@ public class ExportAsyncTask extends AsyncTask<Void, Void, Boolean> {
         FileManager backupFM = new FileManager(context, FileManager.BACKUP_DIR);
         this.backupJsonFilePath = backupFM.getDirAbsolutePath() + "/"
                 + BackupManager.BACKUP_JSON_FILE_NAME;
-        this.backupZipRootPath = backupZipRootPath;
-        this.backupZipFileName = BACKUP_ZIP_FILE_HEADER + sdf.format(new Date()) + BACKUP_ZIP_FILE_SUB_FILE_NAME;
+        this.backupDestination = backupDestination;
+        this.backupZipFileName = backupZipFileName;
         this.callBack = callBack;
         this.progressDialog = new ProgressDialog(context);
 
@@ -114,10 +116,16 @@ public class ExportAsyncTask extends AsyncTask<Void, Void, Boolean> {
             Toast.makeText(mContext,
                     String.format(mContext.getResources().getString(R.string.toast_export_successful), backupZipFileName)
                     , Toast.LENGTH_LONG).show();
-            callBack.onExportCompiled(backupZipRootPath + "/" + backupZipFileName);
         } else {
             Toast.makeText(mContext, mContext.getString(R.string.toast_export_fail), Toast.LENGTH_LONG).show();
+            //The empty file that was created would only confuse
+            try {
+                DocumentsContract.deleteDocument(mContext.getContentResolver(), backupDestination);
+            } catch (Exception e) {
+                Log.e(TAG, "can't delete the failed backup file", e);
+            }
         }
+        callBack.onExportCompiled(exportSuccessful);
     }
 
 
@@ -132,9 +140,15 @@ public class ExportAsyncTask extends AsyncTask<Void, Void, Boolean> {
         writer.close();
     }
 
-    private boolean zipBackupFile() throws IOException {
+    private void zipBackupFile() throws IOException {
+        OutputStream destination = mContext.getContentResolver().openOutputStream(backupDestination);
+        if (destination == null) {
+            throw new IOException("Can't write into " + backupDestination);
+        }
         ZipManager zipManager = new ZipManager(mContext);
-        return zipManager.zipFileAtPath(backupJsonFilePath, backupZipRootPath + "/" + backupZipFileName);
+        if (!zipManager.zipFileAtPath(backupJsonFilePath, destination)) {
+            throw new IOException("Zip fail");
+        }
     }
 
 

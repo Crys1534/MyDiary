@@ -298,7 +298,15 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
-        if (requestCode == PermissionHelper.REQUEST_CAMERA_AND_WRITE_ES_PERMISSION) {
+        if (requestCode == PermissionHelper.REQUEST_ACCESS_FINE_LOCATION_PERMISSION) {
+            //The exact or the approximate location are both fine
+            if (grantResults.length > 0
+                    && PermissionHelper.checkAnyPermissionResult(grantResults)) {
+                firstAllowLocationPermission = true;
+            } else {
+                PermissionHelper.showAccessDialog(getActivity());
+            }
+        } else if (requestCode == PermissionHelper.REQUEST_CAMERA_AND_WRITE_ES_PERMISSION) {
             if (grantResults.length > 0
                     && PermissionHelper.checkAllPermissionResult(grantResults)) {
                 firstAllowCameraPermission = true;
@@ -645,17 +653,28 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
     private void openGPSListener() {
         progressDialog.show();
-        try {
-            if (locationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        boolean started = false;
+        List<String> providers = locationManager.getAllProviders();
+        String[] kinds = {LocationManager.NETWORK_PROVIDER, LocationManager.GPS_PROVIDER};
+        for (String kind : kinds) {
+            if (providers.contains(kind)) {
+                try {
+                    locationManager.requestLocationUpdates(kind, 0, 0, locationListener);
+                    started = true;
+                } catch (SecurityException e) {
+                    //This kind of location is not allowed (for example, the person allowed only the approximate one)
+                    e.printStackTrace();
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
             }
-            if (locationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER)) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-            }
-            //Waiting gps max timeout is 20s
+        }
+        if (started) {
+            //Waiting for the location: max timeout
             diaryViewerHandler.sendEmptyMessageDelayed(0, 20000);
-        } catch (SecurityException e) {
-            //do nothing
+        } else {
+            progressDialog.dismiss();
+            Toast.makeText(getActivity(), getString(R.string.toast_location_not_open), Toast.LENGTH_LONG).show();
         }
     }
 

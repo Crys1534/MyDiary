@@ -143,7 +143,13 @@ public class YourNameDialogFragment extends DialogFragment implements View.OnCli
                     UCrop.Options options = new UCrop.Options();
                     options.setToolbarColor(ThemeManager.getInstance().getThemeMainColor(getActivity()));
                     options.setStatusBarColor(ThemeManager.getInstance().getThemeDarkColor(getActivity()));
-                    UCrop.of(data.getData(), Uri.fromFile(
+                    Uri localSource = FileManager.copyUriToTempFile(getActivity(), data.getData(),
+                            new File(tempFileManager.getDirAbsolutePath()));
+                    if (localSource == null) {
+                        Toast.makeText(getActivity(), getString(R.string.toast_photo_intent_error), Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    UCrop.of(localSource, Uri.fromFile(
                             new File(tempFileManager.getDir() + "/" + FileManager.createRandomFileName())))
                             .withMaxResultSize(photoSize, photoSize)
                             .withAspectRatio(1, 1)

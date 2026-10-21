@@ -287,8 +287,9 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
             case REQUEST_ACCESS_FINE_LOCATION_PERMISSION:
+                //The exact or the approximate location are both fine
                 if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        && PermissionHelper.checkAnyPermissionResult(grantResults)) {
                     firstAllowLocationPermission = true;
                 } else {
                     PermissionHelper.showAccessDialog(getActivity());
@@ -576,19 +577,29 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
 
     private void openGPSListener() {
         progressDialog.show();
-        try {
-            if (locationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        boolean started = false;
+        List<String> providers = locationManager.getAllProviders();
+        String[] kinds = {LocationManager.NETWORK_PROVIDER, LocationManager.GPS_PROVIDER};
+        for (String kind : kinds) {
+            if (providers.contains(kind)) {
+                try {
+                    locationManager.requestLocationUpdates(kind, 0, 0, locationListener);
+                    started = true;
+                } catch (SecurityException e) {
+                    //This kind of location is not allowed (for example, the person allowed only the approximate one)
+                    e.printStackTrace();
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
             }
-            if (locationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER)) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-            }
-            //Waiting gps max timeout is 20s
-            diaryHandler.sendEmptyMessageDelayed(0, GPS_TIMEOUT);
-        } catch (SecurityException e) {
-            //do nothing
         }
-
+        if (started) {
+            //Waiting for the location: max timeout
+            diaryHandler.sendEmptyMessageDelayed(0, GPS_TIMEOUT);
+        } else {
+            progressDialog.dismiss();
+            Toast.makeText(getActivity(), getString(R.string.toast_location_not_open), Toast.LENGTH_LONG).show();
+        }
     }
 
     private LocationListener locationListener = new LocationListener() {
