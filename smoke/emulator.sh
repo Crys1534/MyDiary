@@ -16,7 +16,56 @@ echo "== install emulator + image $IMG"
 sudo env "JAVA_HOME=$JAVA_HOME" "$SDKM" "emulator" "platform-tools" "$IMG" 2>&1 | tail -n 15
 ls "$SDK/emulator" | head
 echo "== create avd"
-echo no | env "JAVA_HOME=$JAVA_HOME" "$AVDM" create avd -n test -k "$IMG" -d pixel_6 --force
+echo no | env "JAVA_HOME=$JAVA_HOME" "$AVDM" create avd -n test -k "$IMG" -d pixel_6 --force -v 2>&1 | tail -n 30
+if [ ! -f "$HOME/.android/avd/test.ini" ]; then
+  echo "avdmanager did not create the AVD: writing it by hand"
+  mkdir -p "$HOME/.android/avd/test.avd"
+  cat > "$HOME/.android/avd/test.ini" <<INI
+avd.ini.encoding=UTF-8
+path=$HOME/.android/avd/test.avd
+path.rel=avd/test.avd
+target=android-${API}
+INI
+  cat > "$HOME/.android/avd/test.avd/config.ini" <<INI
+AvdId=test
+PlayStore.enabled=false
+abi.type=x86_64
+avd.ini.displayname=test
+avd.ini.encoding=UTF-8
+disk.dataPartition.size=4G
+fastboot.forceColdBoot=yes
+hw.accelerometer=yes
+hw.audioInput=no
+hw.audioOutput=no
+hw.battery=yes
+hw.camera.back=none
+hw.camera.front=none
+hw.cpu.arch=x86_64
+hw.cpu.ncore=4
+hw.dPad=no
+hw.device.name=pixel_6
+hw.gps=yes
+hw.gpu.enabled=yes
+hw.gpu.mode=swiftshader_indirect
+hw.keyboard=yes
+hw.lcd.density=420
+hw.lcd.height=2400
+hw.lcd.width=1080
+hw.mainKeys=no
+hw.ramSize=3072
+hw.sdCard=no
+hw.sensors.orientation=yes
+hw.sensors.proximity=yes
+hw.trackBall=no
+image.sysdir.1=system-images/android-${API}/google_apis/x86_64/
+runtime.network.latency=none
+runtime.network.speed=full
+tag.display=Google APIs
+tag.id=google_apis
+vm.heapSize=256
+INI
+fi
+ls -la "$HOME/.android/avd" || true
 echo "== start emulator"
 nohup "$SDK/emulator/emulator" -avd test -no-window -no-audio -no-boot-anim -no-snapshot \
   -gpu swiftshader_indirect -accel on > smoke-out/emulator.log 2>&1 &
