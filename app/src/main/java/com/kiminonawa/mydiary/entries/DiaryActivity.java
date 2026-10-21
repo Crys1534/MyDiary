@@ -25,6 +25,7 @@ import com.kiminonawa.mydiary.entries.calendar.CalendarFragment;
 import com.kiminonawa.mydiary.entries.diary.DiaryFragment;
 import com.kiminonawa.mydiary.db.DBStructure;
 import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
+import com.kiminonawa.mydiary.entries.diary.item.RichText;
 import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.entries.entries.EntriesEntity;
 import com.kiminonawa.mydiary.entries.entries.EntriesFragment;
@@ -176,8 +177,17 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
                 if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_PHOTO) {
                     summary = getString(R.string.entries_summary_photo);
                 } else if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_TEXT) {
-                    summary = diaryContentCursor.getString(3)
-                            .substring(0, Math.min(MAX_TEXT_LENGTH, diaryContentCursor.getString(3).length()));
+                    //Without the invisible marks of the bold text
+                    String firstText = RichText.strip(diaryContentCursor.getString(3));
+                    summary = firstText.substring(0, Math.min(MAX_TEXT_LENGTH, firstText.length()));
+                } else if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_CHECKLIST) {
+                    //Checklist line: first char is "1" (done) or "0" (not done)
+                    String line = diaryContentCursor.getString(3);
+                    if (line != null && line.length() > 0) {
+                        String lineText = RichText.strip(line.substring(1));
+                        summary = (line.charAt(0) == '1' ? "[x] " : "[ ] ")
+                                + lineText.substring(0, Math.min(MAX_TEXT_LENGTH, lineText.length()));
+                    }
                 }
                 entity.setSummary(summary);
                 diaryContentCursor.close();

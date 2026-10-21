@@ -53,7 +53,9 @@ import com.kiminonawa.mydiary.entries.diary.CopyPhotoTask;
 import com.kiminonawa.mydiary.entries.diary.DiaryInfoHelper;
 import com.kiminonawa.mydiary.entries.diary.DiaryPhotoBottomSheet;
 import com.kiminonawa.mydiary.entries.diary.ImageArrayAdapter;
+import com.kiminonawa.mydiary.entries.diary.item.DiaryChecklist;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryItemHelper;
+import com.kiminonawa.mydiary.entries.diary.item.RichText;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryPhoto;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryText;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryTextTag;
@@ -127,7 +129,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
     private LinearLayout LL_diary_item_content;
     private ImageView IV_diary_close_dialog, IV_diary_location, IV_diary_photo,
-            IV_diary_delete, IV_diary_clear, IV_diary_save;
+            IV_diary_delete, IV_diary_clear, IV_diary_save, IV_diary_bold, IV_diary_checklist;
     private boolean isEditMode;
 
     /**
@@ -261,6 +263,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         IV_diary_delete = (ImageView) rootView.findViewById(R.id.IV_diary_delete);
         IV_diary_clear = (ImageView) rootView.findViewById(R.id.IV_diary_clear);
         IV_diary_save = (ImageView) rootView.findViewById(R.id.IV_diary_save);
+        IV_diary_bold = (ImageView) rootView.findViewById(R.id.IV_diary_bold);
+        IV_diary_checklist = (ImageView) rootView.findViewById(R.id.IV_diary_checklist);
 
         initView(rootView);
         diaryItemHelper = new DiaryItemHelper(LL_diary_item_content);
@@ -479,6 +483,11 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
             IV_diary_photo.setImageResource(R.drawable.ic_photo_camera_white_24dp);
             IV_diary_photo.setOnClickListener(this);
+
+            IV_diary_bold.setVisibility(View.VISIBLE);
+            IV_diary_bold.setOnClickListener(this);
+            IV_diary_checklist.setVisibility(View.VISIBLE);
+            IV_diary_checklist.setOnClickListener(this);
         } else {
             EDT_diary_title.setVisibility(View.GONE);
             RL_diary_weather = (RelativeLayout) rootView.findViewById(R.id.RL_diary_weather);
@@ -546,6 +555,23 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 if (!isEditMode) {
                     diaryItem.setEditMode(false);
                 }
+            } else if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_CHECKLIST) {
+                diaryItem = new DiaryChecklist(getActivity(), diaryItemHelper);
+                content = diaryContentCursor.getString(3);
+                if (!isEditMode) {
+                    //Not editing: the text can't be changed, but the boxes can be ticked (saved right away)
+                    diaryItem.setEditMode(false);
+                    ((DiaryChecklist) diaryItem).setToggleListener(new DiaryChecklist.ToggleListener() {
+                        @Override
+                        public void onToggled(DiaryChecklist item) {
+                            saveChecklistState(item);
+                        }
+                    });
+                }
+            } else {
+                //Unknown kind of item: skip it
+                diaryContentCursor.moveToNext();
+                continue;
             }
             diaryItem.setContent(content);
             diaryItem.setPosition(i);
@@ -553,6 +579,20 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             diaryContentCursor.moveToNext();
         }
         diaryContentCursor.close();
+    }
+
+    /**
+     * Ticking a box while reading a diary is saved right away.
+     */
+    private void saveChecklistState(DiaryChecklist item) {
+        try {
+            DBManager dbManager = new DBManager(getActivity());
+            dbManager.opeDB();
+            dbManager.updateDiaryItemContent(diaryId, item.getPosition(), item.getContent());
+            dbManager.closeDB();
+        } catch (Exception e) {
+            Log.e(TAG, "save checklist fail", e);
+        }
     }
 
     private void initProgressDialog() {
@@ -707,11 +747,14 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 focusView.getTag() instanceof DiaryTextTag) {
             EditText currentEditText = (EditText) focusView;
             tag = (DiaryTextTag) focusView.getTag();
+            //Forget the text of a previous photo, or it would be added again
+            tag.setNextEditTextStr(null);
             if (currentEditText.getText().toString().length() > 0) {
                 int index = currentEditText.getSelectionStart();
-                String nextEditTextStr = currentEditText.getText().toString()
-                        .substring(index, currentEditText.getText().toString().length());
-                currentEditText.getText().delete(index, currentEditText.getText().toString().length());
+                //Keep the bold of the text that goes to the next text box
+                String nextEditTextStr = RichText.toMarkup(currentEditText.getText()
+                        .subSequence(index, currentEditText.getText().length()));
+                currentEditText.getText().delete(index, currentEditText.getText().length());
                 tag.setNextEditTextStr(nextEditTextStr);
             }
         }
@@ -873,6 +916,14 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
                     }
                 }
+                break;
+            case R.id.IV_diary_bold:
+                if (!diaryItemHelper.toggleBoldAtFocus(getDialog().getCurrentFocus())) {
+                    Toast.makeText(getActivity(), getString(R.string.toast_format_select_text), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.IV_diary_checklist:
+                diaryItemHelper.insertChecklistAtFocus(getDialog().getCurrentFocus());
                 break;
             case R.id.IV_diary_photo_delete:
                 int deletePosition = (int) v.getTag();

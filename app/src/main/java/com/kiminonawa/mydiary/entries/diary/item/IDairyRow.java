@@ -11,6 +11,8 @@ public interface IDairyRow {
     int TYPE_TEXT = 0;
     int TYPE_PHOTO = 1;
     int TYPE_WEB_BLOCK = 2;
+    //A line of a checklist: "1" (done) or "0" (not done) followed by the text
+    int TYPE_CHECKLIST = 3;
 
     void setContent(String content);
 

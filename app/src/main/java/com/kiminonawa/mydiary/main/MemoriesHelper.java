@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
+import com.kiminonawa.mydiary.entries.diary.item.RichText;
 
 import java.util.Calendar;
 
@@ -84,7 +85,7 @@ public class MemoriesHelper {
             for (int i = 0; i < content.getCount(); i++) {
                 content.moveToPosition(i);
                 if (content.getInt(1) == IDairyRow.TYPE_TEXT) {
-                    String text = content.getString(3);
+                    String text = RichText.strip(content.getString(3));
                     if (text != null && text.trim().length() > 0) {
                         text = text.trim();
                         summary = text.substring(0, Math.min(MAX_SUMMARY_LENGTH, text.length()));

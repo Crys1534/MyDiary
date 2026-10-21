@@ -24,7 +24,7 @@
             android:id="@+id/IV_diary_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="16dp"
             android:clickable="false"
             android:src="@drawable/ic_location_off_white_24dp" />
 
@@ -32,29 +32,45 @@
             android:id="@+id/IV_diary_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="16dp"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_photo_camera_white_24dp" />
+
+        <ImageView
+            android:id="@+id/IV_diary_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/ic_format_bold_white_24dp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/IV_diary_checklist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:src="@drawable/ic_checklist_white_24dp"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/IV_diary_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="16dp"
             android:src="@drawable/ic_delete_white_24dp" />
 
         <ImageView
             android:id="@+id/IV_diary_clear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="16dp"
             android:src="@drawable/ic_clear_white_24dp" />
 
         <ImageView
             android:id="@+id/IV_diary_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="16dp"
             android:src="@drawable/ic_save_white_24dp" />
 
 

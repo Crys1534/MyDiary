@@ -222,6 +222,19 @@ public class DBManager {
                 new String[]{String.valueOf(diaryId)});
     }
 
+    /**
+     * Changes the saved content of one item of a diary (used when a checklist box is ticked).
+     */
+    public long updateDiaryItemContent(long diaryId, int position, String content) {
+        ContentValues values = new ContentValues();
+        values.put(DiaryItemEntry_V2.COLUMN_CONTENT, content);
+        return db.update(
+                DiaryItemEntry_V2.TABLE_NAME,
+                values,
+                DiaryItemEntry_V2.COLUMN_REF_DIARY__ID + " = ? AND " + DiaryItemEntry_V2.COLUMN_POSITION + " = ?",
+                new String[]{String.valueOf(diaryId), String.valueOf(position)});
+    }
+
     public long delDiary(long diaryId) {
         return db.delete(
                 DiaryEntry_V2.TABLE_NAME,

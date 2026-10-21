@@ -47,6 +47,8 @@ import com.kiminonawa.mydiary.backup.obj.BUDiaryItem;
 import com.kiminonawa.mydiary.entries.BaseDiaryFragment;
 import com.kiminonawa.mydiary.entries.DiaryActivity;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryItemHelper;
+import com.kiminonawa.mydiary.entries.diary.item.DiaryChecklist;
+import com.kiminonawa.mydiary.entries.diary.item.RichText;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryPhoto;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryText;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryTextTag;
@@ -103,6 +105,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     private Spinner SP_diary_weather, SP_diary_mood;
     private EditText EDT_diary_title, EDT_diary_tags;
     private ImageView IV_diary_menu, IV_diary_location, IV_diary_photo, IV_diary_delete, IV_diary_clear, IV_diary_save;
+    private ImageView IV_diary_bold, IV_diary_checklist;
     private TextView TV_diary_item_content_hint;
 
 
@@ -204,6 +207,12 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         IV_diary_location.setOnClickListener(this);
         IV_diary_photo = (ImageView) rootView.findViewById(R.id.IV_diary_photo);
         IV_diary_photo.setOnClickListener(this);
+        IV_diary_bold = (ImageView) rootView.findViewById(R.id.IV_diary_bold);
+        IV_diary_bold.setVisibility(View.VISIBLE);
+        IV_diary_bold.setOnClickListener(this);
+        IV_diary_checklist = (ImageView) rootView.findViewById(R.id.IV_diary_checklist);
+        IV_diary_checklist.setVisibility(View.VISIBLE);
+        IV_diary_checklist.setOnClickListener(this);
         IV_diary_delete = (ImageView) rootView.findViewById(R.id.IV_diary_delete);
         IV_diary_delete.setVisibility(View.GONE);
         IV_diary_clear = (ImageView) rootView.findViewById(R.id.IV_diary_clear);
@@ -507,6 +516,12 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
             } else if (autoSaveDiary.getDiaryItemList().get(i).getDiaryItemType() == IDairyRow.TYPE_TEXT) {
                 diaryItem = new DiaryText(getActivity());
                 content = autoSaveDiary.getDiaryItemList().get(i).getDiaryItemContent();
+            } else if (autoSaveDiary.getDiaryItemList().get(i).getDiaryItemType() == IDairyRow.TYPE_CHECKLIST) {
+                diaryItem = new DiaryChecklist(getActivity(), diaryItemHelper);
+                content = autoSaveDiary.getDiaryItemList().get(i).getDiaryItemContent();
+            } else {
+                //Unknown kind of item: skip it
+                continue;
             }
             //In this page , it always is  edit mode.
             diaryItem.setEditMode(true);
@@ -616,11 +631,14 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 focusView.getTag() instanceof DiaryTextTag) {
             EditText currentEditText = (EditText) focusView;
             tag = (DiaryTextTag) focusView.getTag();
+            //Forget the text of a previous photo, or it would be added again
+            tag.setNextEditTextStr(null);
             if (currentEditText.getText().toString().length() > 0) {
                 int index = currentEditText.getSelectionStart();
-                String nextEditTextStr = currentEditText.getText().toString()
-                        .substring(index, currentEditText.getText().toString().length());
-                currentEditText.getText().delete(index, currentEditText.getText().toString().length());
+                //Keep the bold of the text that goes to the next text box
+                String nextEditTextStr = RichText.toMarkup(currentEditText.getText()
+                        .subSequence(index, currentEditText.getText().length()));
+                currentEditText.getText().delete(index, currentEditText.getText().length());
                 tag.setNextEditTextStr(nextEditTextStr);
             }
         }
@@ -759,6 +777,14 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.showSoftInput(diaryItemHelper.get(diaryItemHelper.getItemSize() - 1).getView(), InputMethodManager.SHOW_IMPLICIT);
                 }
+                break;
+            case R.id.IV_diary_bold:
+                if (!diaryItemHelper.toggleBoldAtFocus(getActivity().getCurrentFocus())) {
+                    Toast.makeText(getActivity(), getString(R.string.toast_format_select_text), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.IV_diary_checklist:
+                diaryItemHelper.insertChecklistAtFocus(getActivity().getCurrentFocus());
                 break;
             case R.id.IV_diary_photo_delete:
                 int position = (int) v.getTag();

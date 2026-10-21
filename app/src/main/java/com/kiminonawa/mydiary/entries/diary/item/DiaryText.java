@@ -33,14 +33,18 @@ public class DiaryText implements IDairyRow {
         int padding = ScreenHelper.dpToPixel(context.getResources(), 2);
         EDT_diary_text.setPadding(padding, padding, padding, padding);
     }
+    /**
+     * @param text saved text (it can have bold marks, see RichText)
+     */
     public void insertText(String text){
-        EDT_diary_text.getText().insert(EDT_diary_text.getText().length(), text);
+        EDT_diary_text.getText().append(RichText.toSpannable(text));
 
     }
 
     @Override
     public void setContent(String content) {
-        EDT_diary_text.setText(content);
+        //The saved text can have bold marks
+        EDT_diary_text.setText(RichText.toSpannable(content));
     }
 
     @Override
@@ -86,6 +90,6 @@ public class DiaryText implements IDairyRow {
 
     @Override
     public String getContent() {
-        return EDT_diary_text.getText().toString();
+        return RichText.toMarkup(EDT_diary_text.getText());
     }
 }
