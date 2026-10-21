@@ -324,6 +324,19 @@ public class PageEffectView extends View {
 
     }
 
+    /**
+     * Keeps only the part of the canvas that is OUTSIDE of the path.
+     * Android 9+ does not accept the old Region.Op.XOR any more (the app closed when the
+     * calendar was drawn), so the new function is used when the phone has it.
+     */
+    private static void clipOutside(Canvas canvas, Path path) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            canvas.clipOutPath(path);
+        } else {
+            canvas.clipPath(path, Region.Op.XOR);
+        }
+    }
+
     private void drawCurrentPageArea(Canvas canvas, Bitmap bitmap, Path path) {
         mPath0.reset();
         mPath0.moveTo(mBezierStart1.x, mBezierStart1.y);
@@ -337,7 +350,7 @@ public class PageEffectView extends View {
         mPath0.close();
 
         canvas.save();
-        canvas.clipPath(path, Region.Op.XOR);
+        clipOutside(canvas, path);
         canvas.drawBitmap(bitmap, 0, 0, null);
         canvas.restore();
     }
@@ -466,7 +479,7 @@ public class PageEffectView extends View {
         float rotateDegrees;
         canvas.save();
 
-        canvas.clipPath(mPath0, Region.Op.XOR);
+        clipOutside(canvas, mPath0);
         canvas.clipPath(mPath1, Region.Op.INTERSECT);
         int leftx;
         int rightx;
@@ -497,7 +510,7 @@ public class PageEffectView extends View {
         mPath1.lineTo(mBezierStart2.x, mBezierStart2.y);
         mPath1.close();
         canvas.save();
-        canvas.clipPath(mPath0, Region.Op.XOR);
+        clipOutside(canvas, mPath0);
         canvas.clipPath(mPath1, Region.Op.INTERSECT);
         canvas.clipRect(calendarRect);
         if (mIsRTandLB) {
