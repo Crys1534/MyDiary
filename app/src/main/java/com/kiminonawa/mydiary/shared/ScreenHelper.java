@@ -3,6 +3,7 @@ package com.kiminonawa.mydiary.shared;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.os.Build;
 import android.util.DisplayMetrics;
@@ -30,16 +31,29 @@ public class ScreenHelper {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
 
+    /**
+     * The context may be an Activity, or something that wraps it (the context of a dialog,
+     * a themed context...). A plain cast to Activity crashed with those.
+     */
+    private static DisplayMetrics getMetrics(Context context) {
+        Context current = context;
+        while (current instanceof ContextWrapper) {
+            if (current instanceof Activity) {
+                DisplayMetrics metrics = new DisplayMetrics();
+                ((Activity) current).getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                return metrics;
+            }
+            current = ((ContextWrapper) current).getBaseContext();
+        }
+        return context.getResources().getDisplayMetrics();
+    }
+
     public static int getScreenHeight(Context context) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        return metrics.heightPixels;
+        return getMetrics(context).heightPixels;
     }
 
     public static int getScreenWidth(Context context) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        return metrics.widthPixels;
+        return getMetrics(context).widthPixels;
     }
 
     public static int getStatusBarHeight(Context context) {
