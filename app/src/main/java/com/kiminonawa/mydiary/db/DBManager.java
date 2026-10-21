@@ -253,6 +253,27 @@ public class DBManager {
         return c;
     }
 
+    /**
+     * All diaries of every diary topic (id, time, title, topic id, topic name), newest first.
+     * Used to look for the memories of this day in past years.
+     */
+    public Cursor selectDiaryMemoryCandidates() {
+        Cursor c = db.rawQuery("SELECT " + DiaryEntry_V2.TABLE_NAME + "." + DiaryEntry_V2._ID + ", "
+                        + DiaryEntry_V2.COLUMN_TIME + ", "
+                        + DiaryEntry_V2.COLUMN_TITLE + ", "
+                        + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + ", "
+                        + TopicEntry.COLUMN_NAME
+                        + " FROM " + DiaryEntry_V2.TABLE_NAME
+                        + " JOIN " + TopicEntry.TABLE_NAME
+                        + " ON " + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + " = " + TopicEntry.TABLE_NAME + "." + TopicEntry._ID
+                        + " ORDER BY " + DiaryEntry_V2.COLUMN_TIME + " DESC",
+                null);
+        if (c != null) {
+            c.moveToFirst();
+        }
+        return c;
+    }
+
     public Cursor selectDiaryInfoByDiaryId(long diaryId) {
         Cursor c = db.query(DiaryEntry_V2.TABLE_NAME, null, DiaryEntry_V2._ID + " = ?", new String[]{String.valueOf(diaryId)},
                 null, null, null);

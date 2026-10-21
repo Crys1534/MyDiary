@@ -4,6 +4,7 @@ package com.kiminonawa.mydiary.entries.entries;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -83,6 +84,24 @@ public class EntriesFragment extends BaseDiaryFragment implements
         super.onActivityCreated(savedInstanceState);
         initRecyclerView();
         countEntries();
+        //Open a diary right away when the app asked for it (memories)
+        final long openDiaryId = ((DiaryActivity) getActivity()).consumeOpenDiaryId();
+        if (openDiaryId != -1) {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAdded()) {
+                        openDiary(openDiaryId);
+                    }
+                }
+            });
+        }
+    }
+
+    private void openDiary(long diaryId) {
+        DiaryViewerDialogFragment diaryViewerDialog = DiaryViewerDialogFragment.newInstance(diaryId, false);
+        diaryViewerDialog.setTargetFragment(this, 0);
+        diaryViewerDialog.show(getFragmentManager(), "diaryViewerDialog");
     }
 
     @Override

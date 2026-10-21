@@ -97,6 +97,12 @@
     <string name="tags_filter_all">All entries</string>
     <string name="tags_filter_none">There are no tags yet. Add them when you write an entry, for example: #school #trip</string>
 
+    <!--Memories-->
+    <string name="memories_title_one">A year ago you wrote this</string>
+    <string name="memories_title_many">%1$d years ago you wrote this</string>
+    <string name="memories_open">Open</string>
+    <string name="memories_close">Close</string>
+
 
     <string name="toast_diary_empty">Diary is empty</string>
 

@@ -96,6 +96,12 @@
     <string name="tags_filter_all">Todas las entradas</string>
     <string name="tags_filter_none">Todavía no hay etiquetas. Agrégalas al escribir una entrada, por ejemplo: #escuela #viaje</string>
 
+    <!--Memories-->
+    <string name="memories_title_one">Hace un año escribiste esto</string>
+    <string name="memories_title_many">Hace %1$d años escribiste esto</string>
+    <string name="memories_open">Abrir</string>
+    <string name="memories_close">Cerrar</string>
+
 
     <string name="toast_diary_empty">El diario está vacío</string>
 

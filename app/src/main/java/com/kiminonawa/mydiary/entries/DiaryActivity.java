@@ -72,6 +72,12 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
     private List<EntriesEntity> entriesList = new ArrayList<>();
     private final static int MAX_TEXT_LENGTH = 18;
 
+    /**
+     * Optional: open this diary right after the page is shown (used by "a year ago you wrote this")
+     */
+    public final static String EXTRA_OPEN_DIARY_ID = "open_diary_id";
+    private long openDiaryId = -1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +88,7 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
 
         topicId = getIntent().getLongExtra("topicId", -1);
         hasEntries = getIntent().getBooleanExtra("has_entries", true);
+        openDiaryId = getIntent().getLongExtra(EXTRA_OPEN_DIARY_ID, -1);
         if (topicId == -1) {
             finish();
         }
@@ -223,6 +230,15 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
 
     public long getTopicId() {
         return topicId;
+    }
+
+    /**
+     * The diary that has to be opened when the entries page is ready (-1 = none). It is given only once.
+     */
+    public long consumeOpenDiaryId() {
+        long id = openDiaryId;
+        openDiaryId = -1;
+        return id;
     }
 
     public void gotoPage(int position) {

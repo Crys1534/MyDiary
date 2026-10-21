@@ -1,8 +1,11 @@
 package com.kiminonawa.mydiary.main;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +37,7 @@ import com.kiminonawa.mydiary.main.topic.ITopic;
 import com.kiminonawa.mydiary.main.topic.Memo;
 import com.kiminonawa.mydiary.oobe.CustomViewTarget;
 import com.kiminonawa.mydiary.shared.FileManager;
+import com.kiminonawa.mydiary.entries.DiaryActivity;
 import com.kiminonawa.mydiary.shared.SPFManager;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 import com.kiminonawa.mydiary.shared.gui.MyDiaryButton;
@@ -141,7 +145,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (getIntent().getBooleanExtra("showReleaseNote", false)) {
             ReleaseNoteDialogFragment releaseNoteDialogFragment = new ReleaseNoteDialogFragment();
             releaseNoteDialogFragment.show(getSupportFragmentManager(), "releaseNoteDialogFragment");
+        } else if (savedInstanceState == null) {
+            showMemoryOfToday();
         }
+    }
+
+    /**
+     * "A year ago you wrote this": a diary written on this same day in a past year.
+     * It is shown once a day, when the app is opened.
+     */
+    private void showMemoryOfToday() {
+        String today = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.US).format(new java.util.Date());
+        if (today.equals(SPFManager.getMemoryShownDay(this))) {
+            return;
+        }
+        final MemoriesHelper.Memory memory = MemoriesHelper.findTodayMemory(this);
+        if (memory == null) {
+            return;
+        }
+        SPFManager.setMemoryShownDay(this, today);
+
+        String title = memory.yearsAgo == 1
+                ? getString(R.string.memories_title_one)
+                : getString(R.string.memories_title_many, memory.yearsAgo);
+        String diaryTitle = memory.title == null || memory.title.trim().length() == 0
+                ? getString(R.string.diary_no_title) : memory.title.trim();
+        StringBuilder message = new StringBuilder();
+        message.append(java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG)
+                .format(new java.util.Date(memory.time)));
+        message.append("  \u2022  ").append(memory.topicName);
+        message.append("\n\n").append(diaryTitle);
+        if (memory.summary != null && memory.summary.length() > 0) {
+            message.append("\n").append(memory.summary);
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message.toString())
+                .setPositiveButton(R.string.memories_open, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent goEntriesPageIntent = new Intent(MainActivity.this, DiaryActivity.class);
+                        goEntriesPageIntent.putExtra("topicId", memory.topicId);
+                        goEntriesPageIntent.putExtra("diaryTitle", memory.topicName);
+                        goEntriesPageIntent.putExtra("has_entries", true);
+                        //DiaryActivity opens this diary right away
+                        goEntriesPageIntent.putExtra(DiaryActivity.EXTRA_OPEN_DIARY_ID, memory.diaryId);
+                        startActivity(goEntriesPageIntent);
+                    }
+                })
+                .setNegativeButton(R.string.memories_close, null)
+                .show();
     }
 
     @Override

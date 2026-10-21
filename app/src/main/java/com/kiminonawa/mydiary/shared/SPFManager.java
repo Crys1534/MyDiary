@@ -93,6 +93,19 @@ public class SPFManager {
     }
 
     /**
+     * Memories ("a year ago you wrote this"): the day it was shown last, so it is only shown once a day
+     */
+    public static String getMemoryShownDay(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
+        return settings.getString("CONFIG_MEMORY_SHOWN_DAY", "");
+    }
+
+    public static void setMemoryShownDay(Context context, String day) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
+        settings.edit().putString("CONFIG_MEMORY_SHOWN_DAY", day).commit();
+    }
+
+    /**
      * Profile method
      */
 
