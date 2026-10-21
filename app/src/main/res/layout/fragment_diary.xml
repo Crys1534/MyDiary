@@ -185,6 +185,8 @@
                             android:layout_marginLeft="2dp"
                             android:includeFontPadding="false"
                             android:maxLines="1"
+                            android:paddingBottom="6dp"
+                            android:paddingTop="6dp"
                             android:textColor="@android:color/white"
                             android:textSize="10dp" />
 

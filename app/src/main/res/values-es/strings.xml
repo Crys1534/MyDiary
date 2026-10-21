@@ -168,11 +168,12 @@
     <string name="toast_update_no_browser">No hay ninguna app para abrir el enlace</string>
 
     <!--Google service API-->
-    <string name="toast_google_service_not_work">Tu servicio de Google no funciona o necesita ser actualizado</string>
 
     <!--Diary Geocoder & Location  -->
     <string name="toast_location_not_open">Tu ubicación está desactivada</string>
-    <string name="toast_geocoder_fail">No se pudo convertir la dirección</string>
+    <string name="toast_geocoder_fail">No se encontró el nombre del lugar, así que se guardaron las coordenadas. Toca el lugar para escribirlo tú.</string>
+    <string name="location_edit_title">Lugar</string>
+    <string name="location_edit_hint">Escribe el nombre del lugar</string>
     <string name="toast_location_timeout">Se agotó el tiempo para obtener la ubicación</string>
     <!--Password-->
     <string name="password_create_pwd">Crear contraseña</string>

@@ -16,9 +16,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.entries.calendar.CalendarFragment;
@@ -38,8 +35,7 @@ import java.util.List;
 
 import info.hoang8f.android.segmented.SegmentedGroup;
 
-public class DiaryActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class DiaryActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener {
 
 
     /**
@@ -65,7 +61,6 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
     /**
      * Google API
      */
-    private GoogleApiClient mGoogleApiClient;
 
     /**
      * The diary list for every fragment
@@ -113,22 +108,9 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
         TV_diary_topbar_title.setText(diaryTitle);
         //After SegmentedGroup was created
         initViewPager();
-        initGoogleAPi();
 
         //Load the all entries from db.
         loadEntries();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mGoogleApiClient.disconnect();
     }
 
 
@@ -224,16 +206,6 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
             //Set Default Checked Item
             But_diary_topbar_entries.setChecked(true);
         }
-    }
-
-    private void initGoogleAPi() {
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
     }
 
 
@@ -362,19 +334,6 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
 
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 
 
 }

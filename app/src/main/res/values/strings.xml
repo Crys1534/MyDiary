@@ -169,11 +169,12 @@
     <string name="toast_update_no_browser">No app was found to open the link</string>
 
     <!--Google service API-->
-    <string name="toast_google_service_not_work">Your Google Services doesn\'t work or needs to update</string>
 
     <!--Diary Geocoder & Location  -->
     <string name="toast_location_not_open">Your location is disable</string>
-    <string name="toast_geocoder_fail">Can\'t transform address</string>
+    <string name="toast_geocoder_fail">Couldn\'t find the name of the place, so the coordinates were saved. Tap the place to type it yourself.</string>
+    <string name="location_edit_title">Place</string>
+    <string name="location_edit_hint">Type the name of the place</string>
     <string name="toast_location_timeout">get location timeout</string>
 
     <!--Password-->

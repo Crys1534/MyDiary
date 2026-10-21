@@ -96,9 +96,5 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 
-    //Google Lib
-    compile 'com.google.android.gms:play-services-places:10.2.1'
-
-
     compile project(path: ':zoomable')
 }

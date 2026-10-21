@@ -8,8 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -34,12 +32,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.backup.obj.BUDiaryEntries;
@@ -56,6 +48,7 @@ import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
 import com.kiminonawa.mydiary.entries.diary.picker.DatePickerFragment;
 import com.kiminonawa.mydiary.entries.diary.picker.TimePickerFragment;
 import com.kiminonawa.mydiary.shared.FileManager;
+import com.kiminonawa.mydiary.shared.LocationHelper;
 import com.kiminonawa.mydiary.shared.PermissionHelper;
 import com.kiminonawa.mydiary.shared.SPFManager;
 import com.kiminonawa.mydiary.shared.ThemeManager;
@@ -72,7 +65,6 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
-import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LOCATION_SERVICE;
 import static com.kiminonawa.mydiary.R.id.IV_diary_location_name_icon;
 import static com.kiminonawa.mydiary.backup.obj.BUDiaryEntries.NO_BU_DIARY_ID;
@@ -139,7 +131,6 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     /**
      * Google Place API
      */
-    private int PLACE_PICKER_REQUEST = 1;
     /**
      * Location
      */
@@ -205,6 +196,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         IV_diary_menu = (ImageView) rootView.findViewById(R.id.IV_diary_menu);
         IV_diary_location = (ImageView) rootView.findViewById(R.id.IV_diary_location);
         IV_diary_location.setOnClickListener(this);
+        TV_diary_location.setOnClickListener(this);
         IV_diary_photo = (ImageView) rootView.findViewById(R.id.IV_diary_photo);
         IV_diary_photo.setOnClickListener(this);
         IV_diary_bold = (ImageView) rootView.findViewById(R.id.IV_diary_bold);
@@ -288,24 +280,6 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(getActivity(), data);
-                if (place.getName() != null || !place.getName().equals("")) {
-                    //try to spilt the string if it is a local
-                    TV_diary_location.setText(place.getName());
-                    isLocation = true;
-                } else {
-                    isLocation = false;
-                }
-                initLocationIcon();
-            }
-            progressDialog.dismiss();
-        }
     }
 
     @Override
@@ -547,28 +521,57 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     }
 
     private void startGetLocation() {
-        //Open Google App or use geoCoder
-        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext()) == ConnectionResult.SUCCESS) {
-            openGooglePlacePicker();
-        } else {
-            openGPSListener();
-        }
+        openGPSListener();
     }
 
-    private void openGooglePlacePicker() {
+    /**
+     * The tap on the place text: the person types the place by hand.
+     */
+    private void editLocationByHand() {
+        String current = isLocation ? TV_diary_location.getText().toString() : "";
+        LocationHelper.showEditDialog(getActivity(), current, new LocationHelper.TextCallback() {
+            @Override
+            public void onText(String text) {
+                TV_diary_location.setText(text);
+                isLocation = text.length() > 0;
+                initLocationIcon();
+            }
+        });
+    }
+
+    /**
+     * Called (main thread) when the phone found where it is, or when the waiting time ended.
+     */
+    private void onLocationFixed() {
         try {
-            progressDialog.show();
-            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-            startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesRepairableException e) {
+            locationManager.removeUpdates(locationListener);
+        } catch (SecurityException e) {
             e.printStackTrace();
-            Toast.makeText(getActivity(), getString(R.string.toast_google_service_not_work), Toast.LENGTH_LONG).show();
-            progressDialog.dismiss();
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-            Toast.makeText(getActivity(), getString(R.string.toast_google_service_not_work), Toast.LENGTH_LONG).show();
-            progressDialog.dismiss();
         }
+        final Location location = diaryLocations;
+        diaryLocations = null;
+        if (location == null) {
+            Toast.makeText(getActivity(), getString(R.string.toast_location_timeout), Toast.LENGTH_LONG).show();
+            progressDialog.dismiss();
+            isLocation = false;
+            initLocationIcon();
+            return;
+        }
+        LocationHelper.findPlaceName(getActivity(), location, new LocationHelper.NameCallback() {
+            @Override
+            public void onName(String name, boolean isAddress) {
+                progressDialog.dismiss();
+                if (!isAdded()) {
+                    return;
+                }
+                if (!isAddress) {
+                    Toast.makeText(getActivity(), getString(R.string.toast_geocoder_fail), Toast.LENGTH_LONG).show();
+                }
+                TV_diary_location.setText(name);
+                isLocation = true;
+                initLocationIcon();
+            }
+        });
     }
 
     private void openGPSListener() {
@@ -793,6 +796,9 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 diaryItemHelper.mergerAdjacentText(position);
                 diaryItemHelper.resortPosition();
                 break;
+            case R.id.TV_diary_location:
+                editLocationByHand();
+                break;
             case R.id.IV_diary_location:
                 if (isLocation) {
                     isLocation = false;
@@ -854,57 +860,9 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         @Override
         public void handleMessage(Message msg) {
             DiaryFragment theFrag = mFrag.get();
-            if (theFrag != null) {
-                theFrag.TV_diary_location.setText(getLocationName(theFrag));
-                theFrag.initLocationIcon();
+            if (theFrag != null && theFrag.isAdded()) {
+                theFrag.onLocationFixed();
             }
-        }
-
-        private String getLocationName(DiaryFragment theFrag) {
-            StringBuilder returnLocation = new StringBuilder();
-            try {
-                if (theFrag.diaryLocations != null) {
-                    List<String> providerList = theFrag.locationManager.getAllProviders();
-                    if (null != theFrag.diaryLocations && null != providerList && providerList.size() > 0) {
-                        double longitude = theFrag.diaryLocations.getLongitude();
-                        double latitude = theFrag.diaryLocations.getLatitude();
-                        Geocoder geocoder = new Geocoder(theFrag.getActivity().getApplicationContext(), Locale.getDefault());
-                        List<Address> listAddresses = geocoder.getFromLocation(latitude, longitude, 1);
-                        if (null != listAddresses && listAddresses.size() > 0) {
-                            try {
-                                returnLocation.append(listAddresses.get(0).getCountryName());
-                                returnLocation.append(" ");
-                                returnLocation.append(listAddresses.get(0).getAdminArea());
-                                returnLocation.append(" ");
-                                returnLocation.append(listAddresses.get(0).getLocality());
-                                theFrag.isLocation = true;
-                            } catch (Exception e) {
-                                //revert it in finally
-                            }
-                        } else {
-                            Toast.makeText(theFrag.getActivity(), theFrag.getString(R.string.toast_geocoder_fail), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                } else {
-                    Toast.makeText(theFrag.getActivity(), theFrag.getString(R.string.toast_location_timeout), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(theFrag.getActivity(), theFrag.getString(R.string.toast_geocoder_fail), Toast.LENGTH_LONG).show();
-            } finally {
-                theFrag.diaryLocations = null;
-                try {
-                    theFrag.locationManager.removeUpdates(theFrag.locationListener);
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                }
-                theFrag.progressDialog.dismiss();
-                if (returnLocation.length() == 0) {
-                    returnLocation.append(theFrag.noLocation);
-                    theFrag.isLocation = false;
-                }
-            }
-            return returnLocation.toString();
         }
     }
 }

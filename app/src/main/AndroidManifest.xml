@@ -22,10 +22,6 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme">
 
-        <!--Add this key for search the place name-->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDVL96wY3-Xqe8Rjt065Low6hMCOjW-Qd4" />
 
         <activity
             android:name=".init.InitActivity"
