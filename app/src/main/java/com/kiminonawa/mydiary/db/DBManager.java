@@ -387,6 +387,9 @@ public class DBManager {
                         + DiaryEntry_V2.COLUMN_TITLE + ", d." + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + ", t."
                         + TopicEntry.COLUMN_NAME + ", d." + DiaryEntry_V2.COLUMN_TAGS + ", i."
                         + DiaryItemEntry_V2.COLUMN_TYPE + ", i." + DiaryItemEntry_V2.COLUMN_CONTENT
+                        //8 weather, 9 mood, 10 has attachment, 11 chosen cover photo (to draw the same card as the list)
+                        + ", d." + DiaryEntry_V2.COLUMN_WEATHER + ", d." + DiaryEntry_V2.COLUMN_MOOD
+                        + ", d." + DiaryEntry_V2.COLUMN_ATTACHMENT + ", d." + DiaryEntry_V2.COLUMN_THUMBNAIL
                         + " FROM " + DiaryEntry_V2.TABLE_NAME + " d"
                         + " JOIN " + TopicEntry.TABLE_NAME + " t ON d." + DiaryEntry_V2.COLUMN_REF_TOPIC__ID
                         + " = t." + TopicEntry._ID

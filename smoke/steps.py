@@ -726,12 +726,16 @@ def seed_and_scroll():
 def global_search_test():
     """Search in the main page: a word that is in the text of a note and a word that is in a title."""
     restart()
-    for word in ("mariposa", "cancion"):
+    for word in ("mariposa", "cancion", "foto"):
         if not tap(rid="EDT_main_topic_search"):
             return
         type_text(word)
         sleep(3)
         show("search_notes_%s" % word, full=True)
+        ids = [n["rid"].split("/")[-1] for n in nodes()]
+        log("   search cards for %r: titles=%d snippets=%d thumbnails=%d placeholders=%d" % (
+            word, ids.count("TV_entries_item_title"), ids.count("TV_entries_item_snippet"),
+            ids.count("SDV_entries_item_thumbnail"), ids.count("IV_entries_item_thumbnail_placeholder")))
         alive("search %s" % word)
         if word == "mariposa":
             n = find(text="Mariposa azul") or find(text="mariposa")
@@ -1126,12 +1130,53 @@ def backup_content_test():
     alive("backup content")
 
 
+def hide_today_test():
+    """When no entry was written on this day in other years, the card 'A day like today' is not shown."""
+    import sqlite3
+    restart()
+    log("   today card before (must be True): %s" % bool(find(rid="LL_main_today")))
+    adb("shell", "am", "force-stop", PKG)
+    sleep(2)
+    path = pull_db("%s/hide" % OUT)
+    if not path:
+        log("   hide: could not copy the database")
+        return
+    con = sqlite3.connect(path)
+    ids = [r[0] for r in con.execute("select _id from diary_entry_v2 where diary_title like 'Recuerdo de hace%'")]
+    for i in ids:
+        con.execute("delete from diary_item_entry_v2 where item_ref_diary_id = ?", (i,))
+        con.execute("delete from diary_entry_v2 where _id = ?", (i,))
+    con.commit()
+    con.execute("pragma wal_checkpoint(truncate)")
+    con.execute("pragma journal_mode=delete")
+    con.commit()
+    con.close()
+    adb("shell", "run-as", PKG, "rm", "-f", "databases/mydiary.db-wal", "databases/mydiary.db-shm")
+    with open(path, "rb") as f:
+        r = subprocess.run(["adb", "shell", "run-as %s sh -c 'cat > databases/mydiary.db'" % PKG],
+                           stdin=f, capture_output=True, text=True)
+    log("   hide: removed %d memories, push rc=%s" % (len(ids), r.returncode))
+    restart("today_hidden")
+    sleep(2)
+    show("today_hidden_main", full=True)
+    log("   today card after (must be False): %s" % bool(find(rid="LL_main_today")))
+    log("   today dialog opened by itself (must be False): %s" % bool(find(rid="TV_today_title")))
+    alive("hide today")
+    # leave the app inside the topic, like the steps that follow expect
+    n = find(text="DIARY")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(3)
+        dismiss_intro()
+
+
 step("seed and scroll", seed_and_scroll)
 step("today", today_test)
 step("calendar month", calendar_month_test)
 step("cover and crop", cover_test)
 step("move and copy", move_copy_test)
 step("global search", global_search_test)
+step("hide today card", hide_today_test)
 step("settings", settings)
 step("backup", backup_test)
 step("backup content", backup_content_test)

@@ -19,6 +19,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
+import com.kiminonawa.mydiary.shared.gui.AspectRatioRelativeLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -180,9 +181,9 @@ public class DiaryCover implements View.OnClickListener {
         shownCover = path;
         Uri uri = path.startsWith("file:") || path.startsWith("content:") ? Uri.parse(path) : Uri.fromFile(new java.io.File(path));
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                //The cover is 4:3
+                //The cover has a fixed shape (see AspectRatioRelativeLayout)
                 .setResizeOptions(new ResizeOptions(ScreenHelper.getScreenWidth(context),
-                        Math.round(ScreenHelper.getScreenWidth(context) * 3f / 4f)))
+                        Math.round(ScreenHelper.getScreenWidth(context) / AspectRatioRelativeLayout.COVER_RATIO)))
                 .setRotationOptions(RotationOptions.autoRotate())
                 .build();
         SDV_cover.setController(Fresco.newDraweeControllerBuilder()

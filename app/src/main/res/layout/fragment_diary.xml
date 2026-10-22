@@ -138,7 +138,7 @@
             android:focusableInTouchMode="true">
 
             <!-- The cover: the photo chosen as the thumbnail is the background -->
-            <!-- Always 4:3, like the photos: a photo cropped to 4:3 fills it exactly -->
+            <!-- Always the same shape (4:5, taller than wide): a photo cropped to that shape fills it exactly -->
             <com.kiminonawa.mydiary.shared.gui.AspectRatioRelativeLayout
                 android:id="@+id/RL_diary_info"
                 android:layout_width="match_parent"
@@ -350,7 +350,7 @@
                         android:visibility="gone" />
                 </LinearLayout>
 
-                <!-- Bottom left (only when editing and the cover has a photo): crop the photo of the cover to 4:3 -->
+                <!-- Bottom left (only when editing and the cover has a photo): crop the photo of the cover to the shape of the cover -->
                 <ImageView
                     android:id="@+id/IV_diary_cover_crop"
                     android:layout_width="30dp"

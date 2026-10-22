@@ -5,13 +5,15 @@ import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 /**
- * A layout that is always 4:3 (the height is 3/4 of the width), like the photos of the diary.
- * It is used for the cover of an entry: a photo cropped to 4:3 fills it exactly.
+ * A layout with a fixed shape: the height is always the width divided by COVER_RATIO (4:5, taller than wide).
+ * It is used for the cover of an entry: a photo cropped with the same shape fills it exactly.
  */
 public class AspectRatioRelativeLayout extends RelativeLayout {
 
-    //width : height
-    public static final float COVER_RATIO = 4f / 3f;
+    //width : height of the cover of an entry (4:5 = a portrait cover)
+    public static final int COVER_RATIO_W = 4;
+    public static final int COVER_RATIO_H = 5;
+    public static final float COVER_RATIO = (float) COVER_RATIO_W / COVER_RATIO_H;
 
     public AspectRatioRelativeLayout(Context context) {
         super(context);

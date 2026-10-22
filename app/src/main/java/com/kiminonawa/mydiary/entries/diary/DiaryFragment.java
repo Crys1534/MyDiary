@@ -295,7 +295,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
             public void run() {
                 DiaryPhoto coverPhoto = diaryItemHelper.getThumbnailPhoto();
                 if (coverPhoto != null) {
-                    photoCropController.crop(coverPhoto.getContent(), diaryTempFileManager.getDir());
+                    photoCropController.cropCover(coverPhoto.getContent(), diaryTempFileManager.getDir());
                 }
             }
         });

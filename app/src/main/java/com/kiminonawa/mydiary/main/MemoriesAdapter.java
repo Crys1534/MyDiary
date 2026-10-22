@@ -2,28 +2,17 @@ package com.kiminonawa.mydiary.main;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.common.RotationOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.entries.DiaryActivity;
 import com.kiminonawa.mydiary.entries.diary.DiaryInfoHelper;
 import com.kiminonawa.mydiary.entries.diary.TagHelper;
-import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 
 import java.text.SimpleDateFormat;
@@ -35,7 +24,7 @@ import java.util.Locale;
  * The list of "A day like today": the same cards as the list of entries (the small picture, the date with the tags,
  * the title, the weather, the mood), with a title for every year.
  */
-public class MemoriesAdapter extends RecyclerView.Adapter<MemoriesAdapter.CardHolder> {
+public class MemoriesAdapter extends RecyclerView.Adapter<EntryCardHolder> {
 
     private final Activity activity;
     private final List<MemoriesHelper.Memory> memories;
@@ -59,13 +48,13 @@ public class MemoriesAdapter extends RecyclerView.Adapter<MemoriesAdapter.CardHo
     }
 
     @Override
-    public CardHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EntryCardHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_entries_item, parent, false);
-        return new CardHolder(view);
+        return new EntryCardHolder(view, themeColor);
     }
 
     @Override
-    public void onBindViewHolder(CardHolder holder, int position) {
+    public void onBindViewHolder(EntryCardHolder holder, int position) {
         final MemoriesHelper.Memory memory = memories.get(position);
 
         //A title for the first entry of every year
@@ -93,21 +82,7 @@ public class MemoriesAdapter extends RecyclerView.Adapter<MemoriesAdapter.CardHo
         holder.mood.setImageResource(DiaryInfoHelper.getMoodResourceId(memory.mood));
         holder.attachment.setVisibility(memory.hasAttachment ? View.VISIBLE : View.GONE);
 
-        if (memory.thumbnailPath != null) {
-            holder.thumbnail.setVisibility(View.VISIBLE);
-            ImageRequest request = ImageRequestBuilder
-                    .newBuilderWithSource(Uri.parse(FileManager.FILE_HEADER + memory.thumbnailPath))
-                    .setResizeOptions(new ResizeOptions(thumbnailSizePx, thumbnailSizePx))
-                    .setRotationOptions(RotationOptions.autoRotate())
-                    .build();
-            holder.thumbnail.setController(Fresco.newDraweeControllerBuilder()
-                    .setOldController(holder.thumbnail.getController())
-                    .setImageRequest(request)
-                    .build());
-        } else {
-            holder.thumbnail.setController(null);
-            holder.thumbnail.setVisibility(View.GONE);
-        }
+        holder.bindThumbnail(memory.thumbnailPath, thumbnailSizePx);
 
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,34 +108,5 @@ public class MemoriesAdapter extends RecyclerView.Adapter<MemoriesAdapter.CardHo
     @Override
     public int getItemCount() {
         return memories.size();
-    }
-
-    class CardHolder extends RecyclerView.ViewHolder {
-        final TextView header, time, title;
-        final ImageView weather, mood, attachment;
-        final SimpleDraweeView thumbnail;
-        final View card;
-
-        CardHolder(View rootView) {
-            super(rootView);
-            header = (TextView) rootView.findViewById(R.id.TV_entries_item_header);
-            time = (TextView) rootView.findViewById(R.id.TV_entries_item_time);
-            title = (TextView) rootView.findViewById(R.id.TV_entries_item_title);
-            weather = (ImageView) rootView.findViewById(R.id.IV_entries_item_weather);
-            mood = (ImageView) rootView.findViewById(R.id.IV_entries_item_mood);
-            attachment = (ImageView) rootView.findViewById(R.id.IV_entries_item_attachment);
-            thumbnail = (SimpleDraweeView) rootView.findViewById(R.id.SDV_entries_item_thumbnail);
-            card = rootView.findViewById(R.id.RL_entries_item_content);
-
-            //The colors of the theme, like in the list of entries
-            time.setTextColor(themeColor);
-            title.setTextColor(themeColor);
-            ((ImageView) rootView.findViewById(R.id.IV_entries_item_thumbnail_placeholder))
-                    .setColorFilter(ColorUtils.setAlphaComponent(themeColor, 40));
-            weather.setColorFilter(themeColor);
-            mood.setColorFilter(themeColor);
-            ((ImageView) rootView.findViewById(R.id.IV_entries_item_bookmark)).setColorFilter(themeColor);
-            attachment.setColorFilter(themeColor);
-        }
     }
 }

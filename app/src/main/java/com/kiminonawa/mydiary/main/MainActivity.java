@@ -205,6 +205,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         int count = MemoriesHelper.findToday(this, false).size();
+        //Nothing to remember today: the card is not shown at all
+        View todayWrap = findViewById(R.id.LL_main_today_wrap);
+        if (todayWrap != null) {
+            todayWrap.setVisibility(count == 0 ? View.GONE : View.VISIBLE);
+        }
         if (count == 0) {
             TV_main_today_subtitle.setText(R.string.today_card_none);
         } else if (count == 1) {
@@ -787,6 +792,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }
                                 searchResultsAdapter.setResults(topics, notes);
                                 RecyclerView_search_results.scrollToPosition(0);
+                                if (RecyclerView_search_results.getVisibility() != View.VISIBLE) {
+                                    //The cards are drawn over the background of the entries, like in their list
+                                    RecyclerView_search_results.setBackground(
+                                            themeManager.getTopicBgDefaultDrawable(MainActivity.this, ITopic.TYPE_DIARY));
+                                }
                                 RecyclerView_search_results.setVisibility(View.VISIBLE);
                             }
                         });

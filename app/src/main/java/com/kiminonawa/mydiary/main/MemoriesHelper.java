@@ -144,13 +144,20 @@ public class MemoriesHelper {
         return best;
     }
 
+    private static String findThumbnail(Context context, DBManager dbManager, Memory memory) {
+        return findThumbnail(context, dbManager, memory.topicId, memory.diaryId, memory.chosenThumbnail);
+    }
+
     /**
      * The photo that is the small picture of the entry: the one chosen as the cover, or else the first photo.
+     *
+     * @return the complete path of the photo, null when the entry has no photo
      */
-    private static String findThumbnail(Context context, DBManager dbManager, Memory memory) {
+    public static String findThumbnail(Context context, DBManager dbManager, long topicId, long diaryId,
+                                       String chosenThumbnail) {
         String first = null;
         String chosen = null;
-        Cursor content = dbManager.selectDiaryContentByDiaryId(memory.diaryId);
+        Cursor content = dbManager.selectDiaryContentByDiaryId(diaryId);
         if (content != null) {
             for (int i = 0; i < content.getCount(); i++) {
                 content.moveToPosition(i);
@@ -159,8 +166,8 @@ public class MemoriesHelper {
                     if (first == null) {
                         first = file;
                     }
-                    if (memory.chosenThumbnail != null && memory.chosenThumbnail.length() > 0
-                            && memory.chosenThumbnail.equals(file)) {
+                    if (chosenThumbnail != null && chosenThumbnail.length() > 0
+                            && chosenThumbnail.equals(file)) {
                         chosen = file;
                         break;
                     }
@@ -172,7 +179,7 @@ public class MemoriesHelper {
         if (file == null) {
             return null;
         }
-        return new FileManager(context, memory.topicId, memory.diaryId).getDirAbsolutePath() + "/" + file;
+        return new FileManager(context, topicId, diaryId).getDirAbsolutePath() + "/" + file;
     }
 
     /**

@@ -12,23 +12,28 @@ import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryItemHelper;
 import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.shared.ThemeManager;
+import com.kiminonawa.mydiary.shared.gui.AspectRatioRelativeLayout;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 
 /**
- * "Crop to 4:3": the person chooses what part of a photo is seen (moving and zooming the photo under a 4:3 frame).
+ * "Crop": the person chooses what part of a photo is seen (moving and zooming the photo under a frame:
+ * 4:3 for the photos of the entry, the shape of the cover for the cover).
  * The cropped photo is a new file that takes the place of the old one in the entry (the original is still in the
  * gallery of the phone). This is used by the page of a new entry and by the window that edits an entry.
  */
 public class PhotoCropController {
 
-    //The photos are 4:3 everywhere (list, cover, entry)
+    //The photos of the entry are 4:3
     private static final int RATIO_W = 4;
     private static final int RATIO_H = 3;
     //Never bigger than this (the photos of the diary are not that big anyway)
     private static final int MAX_W = 2400;
     private static final int MAX_H = 1800;
+    //The cover has its own shape (portrait): what is cropped is exactly what the cover shows
+    private static final int COVER_MAX_W = 1600;
+    private static final int COVER_MAX_H = 2000;
 
     public interface Listener {
         /**
@@ -58,6 +63,17 @@ public class PhotoCropController {
      * @param photoDir the folder where the photos of the entry that is being edited are
      */
     public void crop(String fileName, File photoDir) {
+        crop(fileName, photoDir, false);
+    }
+
+    /**
+     * Crops the photo that is the cover of the entry, with the shape of the cover.
+     */
+    public void cropCover(String fileName, File photoDir) {
+        crop(fileName, photoDir, true);
+    }
+
+    private void crop(String fileName, File photoDir, boolean forCover) {
         Context context = fragment.getActivity();
         if (context == null || fileName == null) {
             return;
@@ -71,14 +87,15 @@ public class PhotoCropController {
         UCrop.Options options = new UCrop.Options();
         options.setToolbarColor(ThemeManager.getInstance().getThemeMainColor(context));
         options.setStatusBarColor(ThemeManager.getInstance().getThemeDarkColor(context));
-        options.setToolbarTitle(context.getString(R.string.crop_photo_title));
+        options.setToolbarTitle(context.getString(forCover ? R.string.crop_cover_title : R.string.crop_photo_title));
         options.setCompressionQuality(92);
         options.setFreeStyleCropEnabled(false);
         pendingOldName = fileName;
         pendingOutput = output;
         UCrop.of(Uri.fromFile(source), Uri.fromFile(output))
-                .withAspectRatio(RATIO_W, RATIO_H)
-                .withMaxResultSize(MAX_W, MAX_H)
+                .withAspectRatio(forCover ? AspectRatioRelativeLayout.COVER_RATIO_W : RATIO_W,
+                        forCover ? AspectRatioRelativeLayout.COVER_RATIO_H : RATIO_H)
+                .withMaxResultSize(forCover ? COVER_MAX_W : MAX_W, forCover ? COVER_MAX_H : MAX_H)
                 .withOptions(options)
                 .start(context, fragment);
     }

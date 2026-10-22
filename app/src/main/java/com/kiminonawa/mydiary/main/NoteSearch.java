@@ -31,6 +31,13 @@ public class NoteSearch {
         //A piece of the text around the word (empty when the word is only in the title or the tags)
         public String snippet;
         public long time;
+        //What the card of the list shows: tags (",school,trip,"), weather, mood, attachment and the small picture
+        public String tags = "";
+        public int weather;
+        public int mood;
+        public boolean hasAttachment;
+        public String chosenThumbnail;
+        public String thumbnailPath;
     }
 
     public static String fold(String text) {
@@ -77,6 +84,11 @@ public class NoteSearch {
                     current.topicId = cursor.getLong(3);
                     current.topicName = cursor.getString(4);
                     currentTags = cursor.getString(5) == null ? "" : cursor.getString(5);
+                    current.tags = currentTags;
+                    current.weather = cursor.getInt(8);
+                    current.mood = cursor.getInt(9);
+                    current.hasAttachment = cursor.getInt(10) > 0;
+                    current.chosenThumbnail = cursor.getString(11);
                     text.setLength(0);
                 }
                 String content = cursor.getString(7);
@@ -93,6 +105,11 @@ public class NoteSearch {
             }
             if (results.size() < MAX_RESULTS) {
                 finish(results, current, text, currentTags, query);
+            }
+            //The small picture of every result (like in the list of entries)
+            for (Result result : results) {
+                result.thumbnailPath = MemoriesHelper.findThumbnail(context, dbManager, result.topicId,
+                        result.diaryId, result.chosenThumbnail);
             }
         } finally {
             if (cursor != null) {

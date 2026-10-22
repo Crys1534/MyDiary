@@ -270,6 +270,7 @@
     <string name="photo_viewer_photo_path_fail">get photo path fail</string>
     <string name="photo_viewer_no_images">No images</string>
     <string name="crop_photo_title">Crop photo (4:3)</string>
+    <string name="crop_cover_title">Crop the cover (4:5)</string>
     <string name="toast_crop_photo_done">Photo cropped</string>
     <string name="toast_crop_photo_fail">The photo could not be cropped</string>
 </resources>

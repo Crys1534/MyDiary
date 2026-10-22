@@ -296,7 +296,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             public void run() {
                 DiaryPhoto coverPhoto = diaryItemHelper.getThumbnailPhoto();
                 if (coverPhoto != null && diaryFileManager != null) {
-                    photoCropController.crop(coverPhoto.getContent(), diaryFileManager.getDir());
+                    photoCropController.cropCover(coverPhoto.getContent(), diaryFileManager.getDir());
                 }
             }
         });

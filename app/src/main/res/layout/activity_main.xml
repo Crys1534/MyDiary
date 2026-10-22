@@ -136,7 +136,11 @@
         android:layout_above="@id/RL_main_bottom_bar"
         android:layout_below="@id/LL_main_profile"
         android:background="@android:color/white"
+        android:clipToPadding="false"
         android:paddingBottom="10dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="4dp"
         android:visibility="gone" />
 
     <View

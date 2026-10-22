@@ -2,15 +2,18 @@ package com.kiminonawa.mydiary.main;
 
 import android.app.Activity;
 import android.content.Intent;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.contacts.ContactsActivity;
 import com.kiminonawa.mydiary.entries.DiaryActivity;
+import com.kiminonawa.mydiary.entries.diary.DiaryInfoHelper;
+import com.kiminonawa.mydiary.entries.diary.TagHelper;
 import com.kiminonawa.mydiary.main.topic.ITopic;
 import com.kiminonawa.mydiary.memo.MemoActivity;
 import com.kiminonawa.mydiary.shared.ThemeManager;
@@ -23,19 +26,27 @@ import java.util.List;
 /**
  * The list that appears over the topics when something is written in the search box:
  * first the topics with that word in the name, then the notes (of every topic) with that word in the
- * title or in the text.
+ * title or in the text. Every result is drawn as the card of the list of entries (small picture, date,
+ * tags, title and icons).
  */
 public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_HEADER = 0;
-    private static final int TYPE_ROW = 1;
+    private static final int TYPE_CARD = 1;
 
     private static class Row {
-        int kind = TYPE_ROW;
+        int kind = TYPE_CARD;
         String header;
-        String title;
-        String snippet;
-        String info;
+        //The first line (date and tags), the title and the line under it (diary and a piece of the text)
+        String time = "";
+        String title = "";
+        String snippet = "";
+        //Like in the list of entries
+        boolean isNote;
+        int weather;
+        int mood;
+        boolean hasAttachment;
+        String thumbnailPath;
         //What to open
         int topicType;
         long topicId;
@@ -46,9 +57,15 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final Activity activity;
     private final List<Row> rows = new ArrayList<>();
     private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+    private final int thumbnailSizePx;
+    private final int themeColor;
+    private final String[] topicTypeNames;
 
     public SearchResultsAdapter(Activity activity) {
         this.activity = activity;
+        this.thumbnailSizePx = (int) (82 * activity.getResources().getDisplayMetrics().density);
+        this.themeColor = ThemeManager.getInstance().getThemeDarkColor(activity);
+        this.topicTypeNames = activity.getResources().getStringArray(R.array.topic_type);
     }
 
     public void setResults(List<ITopic> topics, List<NoteSearch.Result> notes) {
@@ -61,8 +78,8 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             for (ITopic topic : topics) {
                 Row row = new Row();
                 row.title = topic.getTitle();
-                row.snippet = "";
-                row.info = "";
+                row.time = topic.getType() >= 0 && topic.getType() < topicTypeNames.length
+                        ? topicTypeNames[topic.getType()] : "";
                 row.topicType = topic.getType();
                 row.topicId = topic.getId();
                 row.topicName = topic.getTitle();
@@ -76,10 +93,18 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             rows.add(header);
             for (NoteSearch.Result note : notes) {
                 Row row = new Row();
+                row.isNote = true;
+                String tags = TagHelper.toDisplay(note.tags);
+                row.time = dateFormat.format(new Date(note.time)) + (tags.length() > 0 ? "   " + tags : "");
                 row.title = note.title == null || note.title.trim().length() == 0
                         ? activity.getString(R.string.diary_no_title) : note.title.trim();
-                row.snippet = note.snippet == null ? "" : note.snippet;
-                row.info = note.topicName + "  •  " + dateFormat.format(new Date(note.time));
+                //The diary of the note and the piece of text around the word
+                row.snippet = note.topicName
+                        + (note.snippet != null && note.snippet.length() > 0 ? "  •  " + note.snippet : "");
+                row.weather = note.weather;
+                row.mood = note.mood;
+                row.hasAttachment = note.hasAttachment;
+                row.thumbnailPath = note.thumbnailPath;
                 row.topicType = ITopic.TYPE_DIARY;
                 row.topicId = note.topicId;
                 row.topicName = note.topicName;
@@ -107,25 +132,38 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (viewType == TYPE_HEADER) {
             return new HeaderHolder(inflater.inflate(R.layout.rv_search_header, parent, false));
         }
-        return new RowHolder(inflater.inflate(R.layout.rv_search_result, parent, false));
+        return new EntryCardHolder(inflater.inflate(R.layout.rv_entries_item, parent, false), themeColor);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final Row row = rows.get(position);
         if (holder instanceof HeaderHolder) {
-            TextView header = ((HeaderHolder) holder).header;
-            header.setText(row.header);
-            header.setTextColor(ThemeManager.getInstance().getThemeMainColor(activity));
+            ((HeaderHolder) holder).header.setText(row.header);
             return;
         }
-        RowHolder rowHolder = (RowHolder) holder;
-        rowHolder.title.setText(row.title);
-        rowHolder.snippet.setText(row.snippet);
-        rowHolder.snippet.setVisibility(row.snippet.length() > 0 ? View.VISIBLE : View.GONE);
-        rowHolder.info.setText(row.info);
-        rowHolder.info.setVisibility(row.info.length() > 0 ? View.VISIBLE : View.GONE);
-        rowHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        EntryCardHolder card = (EntryCardHolder) holder;
+        //The year titles of the list of entries do not exist here
+        card.header.setVisibility(View.GONE);
+        card.time.setText(row.time);
+        card.title.setText(row.title);
+        boolean showSnippet = row.snippet.length() > 0;
+        card.snippet.setVisibility(showSnippet ? View.VISIBLE : View.GONE);
+        card.snippet.setText(row.snippet);
+        //With the extra line the title only has room for one line
+        card.title.setMaxLines(showSnippet ? 1 : 2);
+        if (row.isNote) {
+            card.status.setVisibility(View.VISIBLE);
+            card.weather.setImageResource(DiaryInfoHelper.getWeatherResourceId(row.weather));
+            card.mood.setImageResource(DiaryInfoHelper.getMoodResourceId(row.mood));
+            card.attachment.setVisibility(row.hasAttachment ? View.VISIBLE : View.GONE);
+        } else {
+            //A topic has no weather, mood or attachment
+            card.status.setVisibility(View.GONE);
+            card.attachment.setVisibility(View.GONE);
+        }
+        card.bindThumbnail(row.thumbnailPath, thumbnailSizePx);
+        card.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 open(row);
@@ -167,17 +205,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         HeaderHolder(View itemView) {
             super(itemView);
             header = (TextView) itemView.findViewById(R.id.TV_search_header);
-        }
-    }
-
-    private static class RowHolder extends RecyclerView.ViewHolder {
-        final TextView title, snippet, info;
-
-        RowHolder(View itemView) {
-            super(itemView);
-            title = (TextView) itemView.findViewById(R.id.TV_search_result_title);
-            snippet = (TextView) itemView.findViewById(R.id.TV_search_result_snippet);
-            info = (TextView) itemView.findViewById(R.id.TV_search_result_info);
         }
     }
 }

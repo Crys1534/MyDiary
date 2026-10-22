@@ -269,6 +269,7 @@
     <string name="photo_viewer_no_images">No hay imágenes</string>
 
     <string name="crop_photo_title">Recortar foto (4:3)</string>
+    <string name="crop_cover_title">Recortar portada (4:5)</string>
     <string name="toast_crop_photo_done">Foto recortada</string>
     <string name="toast_crop_photo_fail">No se pudo recortar la foto</string>
 </resources>
