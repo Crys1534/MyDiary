@@ -1,9 +1,12 @@
 package com.kiminonawa.mydiary.backup;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import com.kiminonawa.mydiary.shared.FileManager;
+
+import dalvik.system.ZipPathValidator;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -113,6 +116,10 @@ public class ZipManager {
                 String unmodifiedFilePath = file.getPath();
                 String relativePath = unmodifiedFilePath
                         .substring(basePathLength);
+                //Android 14 refuses zip names that start with "/": the names of a backup are always relative
+                while (relativePath.startsWith("/")) {
+                    relativePath = relativePath.substring(1);
+                }
                 FileInputStream fi = new FileInputStream(unmodifiedFilePath);
                 origin = new BufferedInputStream(fi, BUFFER_SIZE);
                 ZipEntry entry = new ZipEntry(relativePath);
@@ -122,6 +129,21 @@ public class ZipManager {
                     out.write(data, 0, count);
                 }
                 origin.close();
+            }
+        }
+    }
+
+    /**
+     * The backups made by the older versions have names like "/diary/3/photo" (with a "/" at the start).
+     * Android 14 refuses to read such names, so its check is turned off here. It is safe because unzip() checks
+     * by itself that every file stays inside the backup folder.
+     */
+    private static void allowOldBackupNames() {
+        if (Build.VERSION.SDK_INT >= 34) {
+            try {
+                ZipPathValidator.clearCallback();
+            } catch (Throwable e) {
+                Log.e(TAG, "can't turn off the zip name check", e);
             }
         }
     }
@@ -137,6 +159,7 @@ public class ZipManager {
         if (!location.endsWith("/")) {
             location += "/";
         }
+        allowOldBackupNames();
         File locationDir = new File(location);
         if (!locationDir.isDirectory()) {
             locationDir.mkdirs();

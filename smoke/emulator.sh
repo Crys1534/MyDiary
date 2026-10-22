@@ -98,6 +98,7 @@ run_steps() {
   python3 smoke/steps.py 2>&1 | tee "$SMOKE_OUT/steps-output.txt"
   adb logcat -b crash -d -v time > "$SMOKE_OUT/crash-buffer.txt"
   adb logcat -d -v time | grep -E "kiminonawa|AndroidRuntime|FATAL|StrictMode" | tail -n 400 > "$SMOKE_OUT/logcat-app.txt"
+  adb logcat -d -v time "*:E" | grep -vE "WindowManager|InputManager|SurfaceFlinger|ImeTracker" | tail -n 300 > "$SMOKE_OUT/logcat-errors.txt"
 }
 
 APK=$(ls apk/*.apk | head -n 1)

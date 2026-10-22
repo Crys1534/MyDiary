@@ -1113,7 +1113,15 @@ def backup_content_test():
         sleep(8)
         show("bk_imported", full=True)
     log("   profile after import: %s" % profile_prefs()[:300])
-    log("   files after import: %s" % adb("shell", "ls", "-R", base + "/setting", base + "/memo", base + "/diary").replace("\n", " | ")[:1500])
+    listing = adb("shell", "find", base + "/setting/", base + "/memo/", base + "/diary/", "-name", "custom_*")
+    log("   backgrounds / pictures after import: %s" % listing.replace("\n", " | "))
+    import sqlite3
+    path = pull_db("%s/bk2" % OUT)
+    if path:
+        con = sqlite3.connect(path)
+        for row in con.execute("select t._id, t.topic_name, t.topic_type, (select count(*) from diary_entry_v2 d where d.diary_ref_topic_id = t._id) from topic_entry t order by t._id"):
+            log("   topic after import: %r" % (row,))
+        con.close()
     restart("bk_after_import")
     alive("backup content")
 
