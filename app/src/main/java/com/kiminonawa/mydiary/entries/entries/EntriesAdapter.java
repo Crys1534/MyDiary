@@ -46,7 +46,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
     private ThemeManager themeManager;
 
     private boolean isEditMode = false;
-    //The thumbnail is 56dp
+    //The thumbnail is 82dp (it touches the edges of the card)
     private int thumbnailSizePx;
 
     public EntriesAdapter(EntriesFragment fragment, List<EntriesEntity> topicList) {
@@ -56,7 +56,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntriesV
         this.dateFormat = new SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(Locale.getDefault(), "MMMd"),
                 Locale.getDefault());
         this.themeManager = ThemeManager.getInstance();
-        this.thumbnailSizePx = (int) (56 * mFragment.getResources().getDisplayMetrics().density);
+        this.thumbnailSizePx = (int) (82 * mFragment.getResources().getDisplayMetrics().density);
     }
 
 

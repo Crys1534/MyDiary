@@ -131,7 +131,7 @@ public class DiaryCover implements View.OnClickListener {
         Uri uri = path.startsWith("file:") || path.startsWith("content:") ? Uri.parse(path) : Uri.fromFile(new java.io.File(path));
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setResizeOptions(new ResizeOptions(ScreenHelper.getScreenWidth(context),
-                        ScreenHelper.dpToPixel(context.getResources(), 200)))
+                        ScreenHelper.dpToPixel(context.getResources(), 230)))
                 .setRotationOptions(RotationOptions.autoRotate())
                 .build();
         SDV_cover.setController(Fresco.newDraweeControllerBuilder()

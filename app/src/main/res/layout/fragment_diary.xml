@@ -112,7 +112,7 @@
             <RelativeLayout
                 android:id="@+id/RL_diary_info"
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="230dp">
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/SDV_diary_cover"

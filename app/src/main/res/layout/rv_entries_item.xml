@@ -17,121 +17,114 @@
         android:textColor="@android:color/white"
         android:textSize="34dp" />
 
+    <!-- The picture touches the left, top and bottom edges of the white block (2dp of the card are its shadow) -->
     <RelativeLayout
         android:id="@+id/RL_entries_item_content"
         android:layout_width="match_parent"
         android:layout_height="84dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/rv_item_radius_bg"
-        android:paddingBottom="10dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="10dp">
+        android:paddingBottom="2dp"
+        android:paddingRight="2dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <!-- The small picture of the entry (a soft square when it has no photo) -->
+        <FrameLayout
+            android:id="@+id/LL_entries_item_day"
+            android:layout_width="82dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true">
 
-
-            <!-- The small picture of the entry (a soft square when it has no photo) -->
-            <FrameLayout
-                android:id="@+id/LL_entries_item_day"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true">
-
-                <ImageView
-                    android:id="@+id/IV_entries_item_thumbnail_placeholder"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/entries_thumb_placeholder" />
-
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/SDV_entries_item_thumbnail"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"
-                    fresco:actualImageScaleType="centerCrop"
-                    fresco:roundedCornerRadius="6dp" />
-            </FrameLayout>
-
-            <RelativeLayout
-                android:id="@+id/LL_entries_item_icon"
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true">
-
-                <LinearLayout
-                    android:id="@+id/LL_entries_item_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true">
-
-                    <ImageView
-                        android:id="@+id/IV_entries_item_weather"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:padding="2dp"
-                        android:src="@drawable/ic_weather_sunny" />
-
-                    <ImageView
-                        android:id="@+id/IV_entries_item_mood"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:padding="4dp"
-                        android:src="@drawable/ic_mood_happy"
-                        android:layout_marginLeft="4dp" />
-
-                    <ImageView
-                        android:id="@+id/IV_entries_item_bookmark"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:padding="2dp"
-                        android:src="@drawable/ic_bookmark_border"
-                        android:layout_marginLeft="4dp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/IV_entries_item_attachment"
-                    android:src="@drawable/ic_attach"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_height="24dp"
-                    android:layout_width="24dp"
-                    android:padding="2dp" />
-
-            </RelativeLayout>
-
-            <LinearLayout
+            <ImageView
+                android:id="@+id/IV_entries_item_thumbnail_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_toLeftOf="@id/LL_entries_item_icon"
-                android:layout_toRightOf="@id/LL_entries_item_day"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:src="@drawable/entries_thumb_placeholder" />
 
-                <!-- Month and day (and the tags) -->
-                <TextView
-                    android:id="@+id/TV_entries_item_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textSize="14dp" />
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/SDV_entries_item_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                fresco:actualImageScaleType="centerCrop" />
+        </FrameLayout>
 
-                <TextView
-                    android:id="@+id/TV_entries_item_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:textSize="16dp" />
+        <RelativeLayout
+            android:id="@+id/LL_entries_item_icon"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:paddingBottom="10dp"
+            android:paddingRight="18dp"
+            android:paddingTop="10dp">
+
+            <LinearLayout
+                android:id="@+id/LL_entries_item_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true">
+
+                <ImageView
+                    android:id="@+id/IV_entries_item_weather"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_weather_sunny" />
+
+                <ImageView
+                    android:id="@+id/IV_entries_item_mood"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="4dp"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_mood_happy" />
+
+                <ImageView
+                    android:id="@+id/IV_entries_item_bookmark"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="4dp"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_bookmark_border" />
             </LinearLayout>
 
+            <ImageView
+                android:id="@+id/IV_entries_item_attachment"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:padding="2dp"
+                android:src="@drawable/ic_attach" />
+
         </RelativeLayout>
+
+        <!-- Month and day (and the tags), then the title; a little space after the picture -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:layout_toLeftOf="@id/LL_entries_item_icon"
+            android:layout_toRightOf="@id/LL_entries_item_day"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/TV_entries_item_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/TV_entries_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textSize="16dp" />
+        </LinearLayout>
 
     </RelativeLayout>
 </LinearLayout>
