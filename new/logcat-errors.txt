@@ -1,0 +1,68 @@
+--------- beginning of main
+10-22 15:12:58.346 E/android.hardware.audio@7.1-impl.ranchu(  364): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+10-22 15:12:58.346 E/android.hardware.audio@7.1-impl.ranchu(  364): pcmOpen:184 failure: nullptr
+10-22 15:12:58.346 E/android.hardware.audio@7.1-impl.ranchu(  364): create:239 failure: nullptr
+10-22 15:13:06.924 E/android.hardware.audio@7.1-impl.ranchu(  364): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+10-22 15:13:06.924 E/android.hardware.audio@7.1-impl.ranchu(  364): pcmOpen:184 failure: nullptr
+10-22 15:13:06.924 E/android.hardware.audio@7.1-impl.ranchu(  364): create:239 failure: nullptr
+10-22 15:13:15.630 E/android.hardware.audio@7.1-impl.ranchu(  364): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+10-22 15:13:15.630 E/android.hardware.audio@7.1-impl.ranchu(  364): pcmOpen:184 failure: nullptr
+10-22 15:13:15.630 E/android.hardware.audio@7.1-impl.ranchu(  364): create:239 failure: nullptr
+10-22 15:13:18.742 E/A       ( 1946): onError
+10-22 15:13:18.742 E/A       ( 1946): com.google.android.apps.gsa.shared.speech.a.m: errorCode: 65561, engine: 2
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.staticplugins.dc.a.e.a(PG:3)
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.s3.n.hh(PG:1)
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.cd.g.a.f.e(PG:2)
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:22)
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.speech.k.a.g.ks(PG:6)
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.s3.o.e(PG:14)
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.s3.p.run(PG:1)
+10-22 15:13:18.742 E/A       ( 1946): 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:487)
+10-22 15:13:18.742 E/A       ( 1946): 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.shared.util.c.a.e.run(PG:2)
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+10-22 15:13:18.742 E/A       ( 1946): 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-22 15:13:18.742 E/A       ( 1946): 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-22 15:13:18.742 E/A       ( 1946): 	at java.lang.Thread.run(Thread.java:1012)
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.shared.util.c.a.l.run(PG:5)
+10-22 15:13:18.742 E/A       ( 1946): Caused by: com.google.android.apps.gsa.shared.speech.a.o: errorCode: 65586, engine: 2
+10-22 15:13:18.742 E/A       ( 1946): 	... 15 more
+10-22 15:13:18.742 E/A       ( 1946): Caused by: com.google.android.apps.gsa.shared.speech.a.k: errorCode: 401, engine: 2
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.assistant.shared.n.h.a(PG:5)
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.s3.producers.j.hE(PG:2)
+10-22 15:13:18.742 E/A       ( 1946): 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:16)
+10-22 15:13:18.742 E/A       ( 1946): 	... 12 more
+10-22 15:13:18.794 E/constellation(11321): [api_verify_phone_operation] Failed to generate Client Signature
+10-22 15:13:18.794 E/constellation(11321): acwp: Stored private key deleted
+10-22 15:13:18.794 E/constellation(11321): 	at acos.e(:com.google.android.gms@231818047@23.18.18 (190800-535401451):4)
+10-22 15:13:18.794 E/constellation(11321): 	at acos.d(:com.google.android.gms@231818047@23.18.18 (190800-535401451):1)
+10-22 15:13:18.794 E/constellation(11321): 	at acoa.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):22)
+10-22 15:13:18.794 E/constellation(11321): 	at acoa.f(:com.google.android.gms@231818047@23.18.18 (190800-535401451):12)
+10-22 15:13:18.794 E/constellation(11321): 	at avsy.eo(:com.google.android.gms@231818047@23.18.18 (190800-535401451):1)
+10-22 15:13:18.794 E/constellation(11321): 	at avtf.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):14)
+10-22 15:13:18.794 E/constellation(11321): 	at dfhf.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+10-22 15:13:18.794 E/constellation(11321): 	at aced.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):6)
+10-22 15:13:18.794 E/constellation(11321): 	at aced.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):7)
+10-22 15:13:18.794 E/constellation(11321): 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-22 15:13:18.794 E/constellation(11321): 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-22 15:13:18.794 E/constellation(11321): 	at acjn.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-22 15:13:18.794 E/constellation(11321): 	at java.lang.Thread.run(Thread.java:1012)
+10-22 15:13:18.881 E/bwfc    ( 5779): Phenotype API error. Event # edax@71436956, EventCode: 5 [CONTEXT service_id=51 ]
+10-22 15:13:18.881 E/bwfc    ( 5779): bwdx: 29501: Stale snapshot for com.google.android.libraries.consentverifier#com.google.android.gms(change count changed - expected 5  but was 3)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at bwfg.b(:com.google.android.gms@231818047@23.18.18 (190800-535401451):16)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at bwff.g(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at bwfc.e(:com.google.android.gms@231818047@23.18.18 (190800-535401451):4)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at bwfc.f(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at avsy.eo(:com.google.android.gms@231818047@23.18.18 (190800-535401451):1)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at avtf.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):14)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at dfhf.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at aced.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):6)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at aced.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):7)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at acjn.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+10-22 15:13:18.881 E/bwfc    ( 5779): 	at java.lang.Thread.run(Thread.java:1012)
+10-22 15:13:20.912 E/android.hardware.audio@7.1-impl.ranchu(  364): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+10-22 15:13:20.912 E/android.hardware.audio@7.1-impl.ranchu(  364): pcmOpen:184 failure: nullptr
+10-22 15:13:20.912 E/android.hardware.audio@7.1-impl.ranchu(  364): create:239 failure: nullptr
