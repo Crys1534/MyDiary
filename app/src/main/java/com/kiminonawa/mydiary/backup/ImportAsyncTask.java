@@ -280,13 +280,22 @@ public class ImportAsyncTask extends AsyncTask<Void, Void, Boolean> {
             //The pictures of the profile
             File settingDir = new FileManager(mContext, FileManager.SETTING_DIR).getDir();
             File backupSettingDir = new File(backupFileManager.getDirAbsolutePath() + "/setting");
-            restoreSettingPicture(backupSettingDir, settingDir, ThemeManager.CUSTOM_PROFILE_BANNER_BG_FILENAME,
-                    settings.has_custom_profile_banner_bg);
+            //Every picture on its own: one that fails must not stop the other
+            try {
+                restoreSettingPicture(backupSettingDir, settingDir, ThemeManager.CUSTOM_PROFILE_BANNER_BG_FILENAME,
+                        settings.has_custom_profile_banner_bg);
+            } catch (Exception e) {
+                Log.e(TAG, "can't restore the banner picture", e);
+            }
             SPFManager.setCustomProfileBannerBg(mContext,
                     settings.has_custom_profile_banner_bg
                             && new File(settingDir, ThemeManager.CUSTOM_PROFILE_BANNER_BG_FILENAME).exists());
-            restoreSettingPicture(backupSettingDir, settingDir, ThemeManager.CUSTOM_PROFILE_PICTURE_FILENAME,
-                    settings.has_profile_picture);
+            try {
+                restoreSettingPicture(backupSettingDir, settingDir, ThemeManager.CUSTOM_PROFILE_PICTURE_FILENAME,
+                        settings.has_profile_picture);
+            } catch (Exception e) {
+                Log.e(TAG, "can't restore the profile picture", e);
+            }
         } catch (Exception e) {
             //The notes are already imported: a failed setting does not make the import fail
             Log.e(TAG, "can't restore the settings", e);
@@ -298,6 +307,11 @@ public class ImportAsyncTask extends AsyncTask<Void, Void, Boolean> {
         File source = new File(backupSettingDir, fileName);
         File target = new File(settingDir, fileName);
         if (inBackup && source.isFile()) {
+            //The picture of the backup replaces the one that is there now
+            if (target.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                target.delete();
+            }
             FileUtils.copyFile(source, target);
         } else if (target.exists()) {
             //The backup was made without this picture
