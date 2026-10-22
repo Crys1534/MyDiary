@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -126,11 +125,16 @@ public class DiaryCover implements View.OnClickListener {
     }
 
     /**
-     * "October 21" / "21 de octubre": only the month and the day (no hour, no year).
+     * "October 21" / "Octubre 21": the month first and then the day (no hour, no year), in every language.
      */
     public static String formatDate(Calendar calendar) {
-        String pattern = DateFormat.getBestDateTimePattern(Locale.getDefault(), "MMMMd");
-        return new SimpleDateFormat(pattern, Locale.getDefault()).format(calendar.getTime());
+        Locale locale = Locale.getDefault();
+        String text = new SimpleDateFormat("MMMM d", locale).format(calendar.getTime());
+        if (text.length() > 0) {
+            //Spanish writes the months with a small letter: "octubre 21" -> "Octubre 21"
+            text = text.substring(0, 1).toUpperCase(locale) + text.substring(1);
+        }
+        return text;
     }
 
     public void setDate(Calendar calendar) {

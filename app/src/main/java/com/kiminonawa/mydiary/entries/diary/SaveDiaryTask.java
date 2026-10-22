@@ -2,7 +2,7 @@ package com.kiminonawa.mydiary.entries.diary;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
+import com.kiminonawa.mydiary.shared.BackgroundTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,7 +18,7 @@ import java.io.File;
  * Created by daxia on 2016/11/21.
  */
 
-public class SaveDiaryTask extends AsyncTask<Long, Void, Integer> {
+public class SaveDiaryTask extends BackgroundTask<Long, Integer> {
 
     public interface SaveDiaryCallBack {
         void onDiarySaved();

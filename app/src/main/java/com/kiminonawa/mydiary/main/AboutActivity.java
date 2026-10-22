@@ -51,9 +51,6 @@ public class AboutActivity extends AppCompatActivity {
                 new LicenseObj("pinyin4j", "Li Min", "2006", LicenseObj.GPLv2)
                         .getLicense());
         license.append(
-                new LicenseObj("UltimateRecyclerView", "Marshal Chen", "2014-present", LicenseObj.APACHE)
-                        .getLicense());
-        license.append(
                 new LicenseObj("Fresco", "Facebook, Inc.", "2015-present", LicenseObj.BSD)
                         .getLicense());
         license.append(

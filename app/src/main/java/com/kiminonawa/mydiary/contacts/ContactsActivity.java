@@ -242,8 +242,8 @@ public class ContactsActivity extends FragmentActivity implements View.OnClickLi
             case 2:
                 return Locale.ENGLISH.getLanguage();
             default:
-                return getResources().getConfiguration().locale.getLanguage() +
-                        "-" + getResources().getConfiguration().locale.getCountry();
+                java.util.Locale systemLocale = Locale.getDefault();
+                return systemLocale.getLanguage() + "-" + systemLocale.getCountry();
         }
     }
 }

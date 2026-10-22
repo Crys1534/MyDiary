@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
+import com.kiminonawa.mydiary.shared.BackgroundTask;
 import android.util.Log;
 
 import com.kiminonawa.mydiary.R;
@@ -20,7 +20,7 @@ import java.io.IOException;
  * Created by daxia on 2016/11/21.
  */
 
-public class CopyPhotoTask extends AsyncTask<Void, Void, String> {
+public class CopyPhotoTask extends BackgroundTask<Void, String> {
 
     public interface CopyPhotoCallBack {
         void onCopyCompiled(String fileName);

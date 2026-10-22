@@ -2,7 +2,7 @@ package com.kiminonawa.mydiary.init;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.AsyncTask;
+import com.kiminonawa.mydiary.shared.BackgroundTask;
 
 import com.kiminonawa.mydiary.BuildConfig;
 import com.kiminonawa.mydiary.R;
@@ -30,7 +30,7 @@ import com.kiminonawa.mydiary.shared.SPFManager;
  * Add memo function & show memo sample data in versionCode 6
  * ----
  */
-public class InitTask extends AsyncTask<Long, Void, Boolean> {
+public class InitTask extends BackgroundTask<Long, Boolean> {
 
     public interface InitCallBack {
         void onInitCompiled(boolean showReleaseNote);

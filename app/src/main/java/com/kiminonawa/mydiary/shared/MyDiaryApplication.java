@@ -1,8 +1,10 @@
 package com.kiminonawa.mydiary.shared;
 
 import android.app.Application;
-import android.content.res.Configuration;
+import android.content.res.Resources;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.ConfigurationCompat;
+import androidx.core.os.LocaleListCompat;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -54,30 +56,46 @@ public class MyDiaryApplication extends Application {
         themeManager.setCurrentTheme(SPFManager.getTheme(this));
     }
 
+    /**
+     * The language chosen in Settings (0 = the one of the phone, 1 = English, 2 = Spanish).
+     * Android itself changes the language of all the screens (the same way the "language of each app"
+     * of the phone settings does), so nothing has to be killed or restarted by hand.
+     */
     private void setLocaleLanguage() {
-        Locale locale;
-        switch (SPFManager.getLocalLanguageCode(this)) {
-            case 1:
-                locale = Locale.ENGLISH;
-                break;
-            case 2:
-                locale = new Locale("es", "");
-                break;
-            // 0 = default = language of system
-            default:
-                locale = Locale.getDefault();
-                break;
+        int code = SPFManager.getLocalLanguageCode(this);
+        if (code == 0) {
+            //The language of the phone: nothing to force
+            return;
         }
-        Locale.setDefault(locale);
-        Configuration config = getBaseContext().getResources().getConfiguration();
-        overwriteConfigurationLocale(config, locale);
+        applyLanguage(code);
     }
 
-    private void overwriteConfigurationLocale(Configuration config, Locale locale) {
-        //TODO FIX updateConfiguration on Android N
-        config.setLocale(locale);
-        getBaseContext().getResources()
-                .updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+    /**
+     * @param code 0 = language of the phone, 1 = English, 2 = Spanish
+     */
+    public static void applyLanguage(int code) {
+        LocaleListCompat locales;
+        switch (code) {
+            case 1:
+                locales = LocaleListCompat.forLanguageTags("en");
+                break;
+            case 2:
+                locales = LocaleListCompat.forLanguageTags("es");
+                break;
+            default:
+                locales = LocaleListCompat.getEmptyLocaleList();
+                break;
+        }
+        //The texts written in code (dates, names of the months) use the default language of Java
+        if (!locales.isEmpty()) {
+            Locale.setDefault(locales.get(0));
+        } else {
+            Locale phoneLocale = ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration()).get(0);
+            if (phoneLocale != null) {
+                Locale.setDefault(phoneLocale);
+            }
+        }
+        AppCompatDelegate.setApplicationLocales(locales);
     }
 
 

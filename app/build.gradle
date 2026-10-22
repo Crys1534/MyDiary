@@ -86,13 +86,8 @@ dependencies {
     implementation 'info.hoang8f:android-segmented:1.0.6'
     implementation 'com.larswerkman:HoloColorPicker:1.5'
     implementation 'com.yalantis:ucrop:2.2.0-native'
-    implementation 'commons-io:commons-io:2.5'
-    implementation 'de.hdodenhof:circleimageview:2.1.0'
-    //jp.wasabeef:recyclerview-animators:2.2.3 (required by this library) disappeared with jcenter.
-    //The app only uses ItemTouchHelperViewHolder from it, so the animators are excluded.
-    implementation('com.marshalchen.ultimaterecyclerview:library:0.7.0') {
-        exclude group: 'jp.wasabeef', module: 'recyclerview-animators'
-    }
+    implementation 'commons-io:commons-io:2.16.1'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.10.4@aar') {
         transitive = true
     }
@@ -102,7 +97,7 @@ dependencies {
     //Year class to check the old devices
     implementation 'com.facebook.device.yearclass:yearclass:2.0.0'
 
-    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.google.code.gson:gson:2.11.0'
     //For diary to show themonth mode
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
     //For OOBE

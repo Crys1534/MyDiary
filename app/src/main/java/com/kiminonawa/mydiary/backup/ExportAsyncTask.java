@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
+import com.kiminonawa.mydiary.shared.BackgroundTask;
 import android.provider.DocumentsContract;
 import android.util.Log;
 import android.widget.Toast;
@@ -36,7 +36,7 @@ import java.util.List;
  * Created by daxia on 2017/2/16.
  */
 
-public class ExportAsyncTask extends AsyncTask<Void, Void, Boolean> {
+public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
 
     public interface ExportCallBack {
         void onExportCompiled(boolean exportSuccessful);

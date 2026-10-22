@@ -3,7 +3,7 @@ package com.kiminonawa.mydiary.backup;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
+import com.kiminonawa.mydiary.shared.BackgroundTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -32,7 +32,7 @@ import java.io.InputStreamReader;
  * Created by daxia on 2017/2/16.
  */
 
-public class ImportAsyncTask extends AsyncTask<Void, Void, Boolean> {
+public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
 
     public interface ImportCallBack {
         void onImportCompiled(boolean importSuccessful);

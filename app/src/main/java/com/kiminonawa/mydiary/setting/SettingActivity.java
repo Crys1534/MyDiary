@@ -19,6 +19,7 @@ import com.kiminonawa.mydiary.BuildConfig;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.shared.ColorTools;
 import com.kiminonawa.mydiary.shared.FileManager;
+import com.kiminonawa.mydiary.shared.MyDiaryApplication;
 import com.kiminonawa.mydiary.shared.OldVersionHelper;
 import com.kiminonawa.mydiary.shared.PermissionHelper;
 import com.kiminonawa.mydiary.shared.SPFManager;
@@ -391,7 +392,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.SP_setting_language:
                 if (!isLanguageFirstRun) {
                     SPFManager.setLocalLanguageCode(this, position);
-                    applySetting(true);
+                    //Android changes the language of the open screens by itself
+                    MyDiaryApplication.applyLanguage(position);
                 } else {
                     //First time do nothing
                     isLanguageFirstRun = false;

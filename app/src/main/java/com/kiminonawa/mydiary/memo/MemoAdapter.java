@@ -20,7 +20,6 @@ import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.shared.EditMode;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
 import com.kiminonawa.mydiary.shared.ThemeManager;
-import com.marshalchen.ultimaterecyclerview.itemTouchHelper.ItemTouchHelperViewHolder;
 
 import java.util.Collections;
 import java.util.List;
