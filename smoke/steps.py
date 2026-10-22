@@ -463,7 +463,10 @@ def report_edit_bar(label):
 
 def location_test():
     """The permission dialog of the location, then a fake position from the emulator."""
-    # the place is on the cover now: tap it, then "Use my location" of the little window
+    # the place is on the cover now: go to the top of the page, tap it, then "Use my location" of the little window
+    for _ in range(4):
+        adb("shell", "input", "swipe", "540", "900", "540", "2000", "250")
+        sleep(0.8)
     if not tap(rid="TV_diary_location"):
         log("   NO LOCATION TEXT ON THE COVER")
         return
@@ -1260,6 +1263,8 @@ def dark_test():
     # the main screen, the diary, an entry, the new entry page, the calendar
     key(4)
     sleep(2)
+    dismiss_intro()
+    sleep(1)
     show("dark_main", full=True)
     n = find(text="DIARY")
     if n:
@@ -1280,6 +1285,9 @@ def dark_test():
         sleep(3)
         show("dark_new_entry", full=True)
     alive("dark mode")
-    log("   dark: Sfx errors in logcat: %r" % adb("logcat", "-d", "-s", "Sfx:E").strip()[:400])
+    sfx = adb("logcat", "-d", "-s", "Sfx:I", "Sfx:E").strip().splitlines()
+    played = [l.split("played ")[1].split(" ")[0] for l in sfx if "played " in l]
+    log("   dark: sounds played in this run = %d, kinds = %s" % (len(played), sorted(set(played))))
+    log("   dark: Sfx problems in logcat: %r" % [l for l in sfx if " E " in l][:5])
 step("dark mode", dark_test)
 log("== done")

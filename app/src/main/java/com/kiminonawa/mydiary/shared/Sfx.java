@@ -85,6 +85,8 @@ public final class Sfx {
                 public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
                     if (status == 0) {
                         loaded.put(sampleId, 1);
+                    } else {
+                        Log.e(TAG, "sound " + sampleId + " did not load: " + status);
                     }
                 }
             });
@@ -123,7 +125,8 @@ public final class Sfx {
             }
             lastPlayed[sound.ordinal()] = now;
             float volume = SPFManager.getSoundVolume(context) / 100f;
-            pool.play(id, volume, volume, 1, 0, 1f);
+            int stream = pool.play(id, volume, volume, 1, 0, 1f);
+            Log.i(TAG, "played " + sound + " volume=" + volume + " stream=" + stream);
         } catch (Exception e) {
             Log.e(TAG, "sound could not be played", e);
         }
