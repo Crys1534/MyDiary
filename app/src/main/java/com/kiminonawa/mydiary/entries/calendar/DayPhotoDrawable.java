@@ -1,5 +1,6 @@
 package com.kiminonawa.mydiary.entries.calendar;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -25,9 +26,11 @@ public class DayPhotoDrawable extends Drawable {
     private final RectF rect = new RectF();
     private final float inset;
     private final float radius;
+    private final float density;
 
     public DayPhotoDrawable(Bitmap bitmap, float density) {
         this.bitmap = bitmap;
+        this.density = density;
         this.shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         this.photoPaint.setShader(shader);
         this.veilPaint.setColor(0x59000000);
@@ -64,5 +67,39 @@ public class DayPhotoDrawable extends Drawable {
     @Override
     public int getOpacity() {
         return PixelFormat.TRANSLUCENT;
+    }
+
+    /**
+     * MaterialCalendarView makes a copy of the background of every day with getConstantState().newDrawable(),
+     * so this can not be null.
+     */
+    @Override
+    public ConstantState getConstantState() {
+        return new State(bitmap, density);
+    }
+
+    private static class State extends ConstantState {
+        private final Bitmap bitmap;
+        private final float density;
+
+        State(Bitmap bitmap, float density) {
+            this.bitmap = bitmap;
+            this.density = density;
+        }
+
+        @Override
+        public Drawable newDrawable() {
+            return new DayPhotoDrawable(bitmap, density);
+        }
+
+        @Override
+        public Drawable newDrawable(Resources res) {
+            return new DayPhotoDrawable(bitmap, density);
+        }
+
+        @Override
+        public int getChangingConfigurations() {
+            return 0;
+        }
     }
 }
