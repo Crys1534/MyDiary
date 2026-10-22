@@ -19,6 +19,15 @@ def show(label, full=False):
         log("   [%s] text=%r desc=%r %s click=%s @%d,%d" % (n["rid"].split("/")[-1], n["text"][:60], n["desc"][:40], n["cls"].split(".")[-1], n["clickable"], n["cx"], n["cy"]))
 
 
+def node_ids():
+    return set(n["rid"].split("/")[-1] for n in nodes())
+
+
+def node_text(rid):
+    n = find(rid=rid)
+    return n["text"] if n else None
+
+
 def keyboard_shown():
     out = adb("shell", "dumpsys", "input_method")
     return "mInputShown=true" in out
@@ -869,15 +878,6 @@ def calendar_month_test():
     alive("calendar month")
 
 
-def node_ids():
-    return set(n["rid"].split("/")[-1] for n in nodes())
-
-
-def node_text(rid):
-    n = find(rid=rid)
-    return n["text"] if n else None
-
-
 def close_viewer():
     """Closes the entry window (BACK once; the list of entries must be visible after it)."""
     key(4)
@@ -1038,6 +1038,8 @@ def profile_prefs(name=None):
 def backup_content_test():
     """Full backup: the zip must have the settings, the pictures and the backgrounds; importing must restore them."""
     import json, zipfile, glob
+    # only one backup file in Downloads (the one of this test)
+    adb("shell", "sh", "-c", "'rm -f /sdcard/Download/MyDiaryBackup_*.zip'")
     # something to save: the name, a profile picture and the background of the diary topic
     profile_prefs("Nombre Prueba")
     topic = None
@@ -1073,7 +1075,8 @@ def backup_content_test():
     tap(rid="But_backup_export")
     sleep(6)
     show("bk_exported", full=True)
-    found = adb("shell", "find", "/sdcard", "-name", "MyDiaryBackup_*.zip").split()
+    found = adb("shell", "ls", "/sdcard/Download/").split()
+    found = ["/sdcard/Download/" + f for f in found if f.startswith("MyDiaryBackup_") and f.endswith(".zip")]
     log("   backup files on the phone: %s" % found)
     if not found:
         return

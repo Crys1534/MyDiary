@@ -73,6 +73,10 @@ public class MemoriesAdapter extends RecyclerView.Adapter<MemoriesAdapter.CardHo
         if (newYear) {
             holder.header.setVisibility(View.VISIBLE);
             holder.header.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
+            //a little air: the title must not touch the card under it
+            int gap = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6,
+                    activity.getResources().getDisplayMetrics());
+            holder.header.setPadding(0, gap, 0, gap);
             holder.header.setText(memory.yearsAgo == 1
                     ? activity.getString(R.string.today_years_one, memory.year)
                     : activity.getString(R.string.today_years_many, memory.yearsAgo, memory.year));
