@@ -7,7 +7,9 @@ import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
 import com.kiminonawa.mydiary.entries.diary.item.RichText;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Looks for a diary written on this same day (same month and day) in a past year:
@@ -25,6 +27,58 @@ public class MemoriesHelper {
         public String summary;
         public long time;
         public int yearsAgo;
+        public int year;
+    }
+
+    /**
+     * Every diary written on this same day (month and day) in a past year, the most recent year first.
+     *
+     * @param withSummary also reads the beginning of the first text of each one (a bit slower)
+     */
+    public static List<Memory> findToday(Context context, boolean withSummary) {
+        List<Memory> memories = new ArrayList<>();
+        Calendar now = Calendar.getInstance();
+        Calendar written = Calendar.getInstance();
+        DBManager dbManager = new DBManager(context);
+        try {
+            dbManager.opeDB();
+            Cursor cursor = dbManager.selectDiaryMemoryCandidates();
+            if (cursor != null) {
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    cursor.moveToPosition(i);
+                    written.setTimeInMillis(cursor.getLong(1));
+                    int yearsAgo = now.get(Calendar.YEAR) - written.get(Calendar.YEAR);
+                    if (yearsAgo > 0
+                            && written.get(Calendar.MONTH) == now.get(Calendar.MONTH)
+                            && written.get(Calendar.DAY_OF_MONTH) == now.get(Calendar.DAY_OF_MONTH)) {
+                        Memory memory = new Memory();
+                        memory.diaryId = cursor.getLong(0);
+                        memory.time = cursor.getLong(1);
+                        memory.title = cursor.getString(2);
+                        memory.topicId = cursor.getLong(3);
+                        memory.topicName = cursor.getString(4);
+                        memory.yearsAgo = yearsAgo;
+                        memory.year = written.get(Calendar.YEAR);
+                        memories.add(memory);
+                    }
+                }
+                cursor.close();
+            }
+            if (withSummary) {
+                for (Memory memory : memories) {
+                    memory.summary = findSummary(dbManager, memory.diaryId);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                dbManager.closeDB();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return memories;
     }
 
     /**

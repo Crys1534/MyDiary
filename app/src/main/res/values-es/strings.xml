@@ -120,6 +120,21 @@
     <string name="list_menu_quote">Cita</string>
     <string name="list_menu_none">Quitar lista / cita</string>
     <string name="toast_list_tap_text">Toca el texto donde quieres la lista o la cita y luego el botón de lista</string>
+    <string name="diary_move_menu_move">Mover a otro diario…</string>
+    <string name="diary_move_menu_copy">Copiar a un diario…</string>
+    <string name="diary_move_title_move">Mover esta entrada a…</string>
+    <string name="diary_move_title_copy">Copiar esta entrada a…</string>
+    <string name="diary_move_no_other">No tienes otro diario al que moverla</string>
+    <string name="diary_move_this_diary">(este)</string>
+    <string name="diary_moved">Entrada movida a «%1$s»</string>
+    <string name="diary_copied">Copia guardada en «%1$s»</string>
+    <string name="diary_move_failed">No se pudo mover ni copiar la entrada</string>
+    <string name="today_card_title">Un día como hoy</string>
+    <string name="today_card_none">Aún no tienes entradas de este día en otros años</string>
+    <string name="today_card_one">1 entrada escrita en este día de otro año</string>
+    <string name="today_card_many">%1$d entradas escritas en este día de otros años</string>
+    <string name="today_years_one">Hace 1 año · %1$d</string>
+    <string name="today_years_many">Hace %1$d años · %2$d</string>
     <string name="toast_format_select_text">Primero selecciona un texto de la entrada y luego toca B (negrita) o I (cursiva)</string>
 
     <!--Memories-->

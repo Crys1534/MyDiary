@@ -121,6 +121,21 @@
     <string name="list_menu_quote">Quote</string>
     <string name="list_menu_none">Remove list / quote</string>
     <string name="toast_list_tap_text">Tap the text where you want the list or quote, then tap the list button</string>
+    <string name="diary_move_menu_move">Move to another diary…</string>
+    <string name="diary_move_menu_copy">Copy to a diary…</string>
+    <string name="diary_move_title_move">Move this entry to…</string>
+    <string name="diary_move_title_copy">Copy this entry to…</string>
+    <string name="diary_move_no_other">You have no other diary to move it to</string>
+    <string name="diary_move_this_diary">(this one)</string>
+    <string name="diary_moved">Entry moved to \"%1$s\"</string>
+    <string name="diary_copied">Copy saved in \"%1$s\"</string>
+    <string name="diary_move_failed">The entry could not be moved or copied</string>
+    <string name="today_card_title">A day like today</string>
+    <string name="today_card_none">No entries from this day in other years yet</string>
+    <string name="today_card_one">1 entry written on this day in another year</string>
+    <string name="today_card_many">%1$d entries written on this day in other years</string>
+    <string name="today_years_one">1 year ago · %1$d</string>
+    <string name="today_years_many">%1$d years ago · %2$d</string>
     <string name="toast_format_select_text">Select some text in the entry first, then tap B (bold) or I (italic)</string>
 
     <!--Memories-->

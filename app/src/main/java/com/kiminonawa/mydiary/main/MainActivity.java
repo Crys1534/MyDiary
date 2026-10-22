@@ -105,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final Handler searchHandler = new Handler();
     private Runnable searchRunnable;
     private ImageView IV_main_setting;
+    //"A day like today"
+    private LinearLayout LL_main_today;
+    private TextView TV_main_today_subtitle;
 
 
     @Override
@@ -133,6 +136,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         IV_main_setting = (ImageView) findViewById(R.id.IV_main_setting);
         IV_main_setting.setOnClickListener(this);
 
+        LL_main_today = (LinearLayout) findViewById(R.id.LL_main_today);
+        TV_main_today_subtitle = (TextView) findViewById(R.id.TV_main_today_subtitle);
+        android.graphics.drawable.GradientDrawable todayBg = new android.graphics.drawable.GradientDrawable();
+        todayBg.setColor(themeManager.getThemeMainColor(this));
+        todayBg.setCornerRadius(12f * getResources().getDisplayMetrics().density);
+        LL_main_today.setBackground(todayBg);
+        LL_main_today.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTodayDialog(true);
+            }
+        });
+
         RecyclerView_topic = (RecyclerView) findViewById(R.id.RecyclerView_topic);
 
         topicList = new ArrayList<>();
@@ -160,50 +176,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * "A year ago you wrote this": a diary written on this same day in a past year.
-     * It is shown once a day, when the app is opened.
+     * "A day like today": the first time the app is opened in a day, the diaries written on this same day in
+     * other years are shown (if there are any). The same list opens any time with the card of the main page.
      */
     private void showMemoryOfToday() {
         String today = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.US).format(new java.util.Date());
         if (today.equals(SPFManager.getMemoryShownDay(this))) {
             return;
         }
-        final MemoriesHelper.Memory memory = MemoriesHelper.findTodayMemory(this);
-        if (memory == null) {
+        if (showTodayDialog(false)) {
+            SPFManager.setMemoryShownDay(this, today);
+        }
+    }
+
+    /**
+     * The text of the "a day like today" card: how many diaries there are from this day in other years.
+     */
+    private void refreshTodayCard() {
+        if (TV_main_today_subtitle == null) {
             return;
         }
-        SPFManager.setMemoryShownDay(this, today);
-
-        String title = memory.yearsAgo == 1
-                ? getString(R.string.memories_title_one)
-                : getString(R.string.memories_title_many, memory.yearsAgo);
-        String diaryTitle = memory.title == null || memory.title.trim().length() == 0
-                ? getString(R.string.diary_no_title) : memory.title.trim();
-        StringBuilder message = new StringBuilder();
-        message.append(java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG)
-                .format(new java.util.Date(memory.time)));
-        message.append("  \u2022  ").append(memory.topicName);
-        message.append("\n\n").append(diaryTitle);
-        if (memory.summary != null && memory.summary.length() > 0) {
-            message.append("\n").append(memory.summary);
+        int count = MemoriesHelper.findToday(this, false).size();
+        if (count == 0) {
+            TV_main_today_subtitle.setText(R.string.today_card_none);
+        } else if (count == 1) {
+            TV_main_today_subtitle.setText(R.string.today_card_one);
+        } else {
+            TV_main_today_subtitle.setText(getString(R.string.today_card_many, count));
         }
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(message.toString())
-                .setPositiveButton(R.string.memories_open, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent goEntriesPageIntent = new Intent(MainActivity.this, DiaryActivity.class);
-                        goEntriesPageIntent.putExtra("topicId", memory.topicId);
-                        goEntriesPageIntent.putExtra("diaryTitle", memory.topicName);
-                        goEntriesPageIntent.putExtra("has_entries", true);
-                        //DiaryActivity opens this diary right away
-                        goEntriesPageIntent.putExtra(DiaryActivity.EXTRA_OPEN_DIARY_ID, memory.diaryId);
-                        startActivity(goEntriesPageIntent);
-                    }
-                })
-                .setNegativeButton(R.string.memories_close, null)
-                .show();
+    }
+
+    /**
+     * @param explain true: when there is nothing to show, tell it (the person tapped the card)
+     * @return true when the list was shown
+     */
+    private boolean showTodayDialog(boolean explain) {
+        List<MemoriesHelper.Memory> memories = MemoriesHelper.findToday(this, true);
+        if (memories.isEmpty()) {
+            if (explain) {
+                Toast.makeText(this, R.string.today_card_none, Toast.LENGTH_LONG).show();
+            }
+            return false;
+        }
+        RecyclerView list = new RecyclerView(this);
+        list.setLayoutManager(new LinearLayoutManager(this));
+        SearchResultsAdapter adapter = new SearchResultsAdapter(this);
+        list.setAdapter(adapter);
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.today_card_title)
+                .setView(list)
+                .setPositiveButton(R.string.memories_close, null)
+                .create();
+        adapter.setOnOpenListener(new Runnable() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+            }
+        });
+        adapter.setMemories(memories);
+        dialog.show();
+        return true;
     }
 
     @Override
@@ -211,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStart();
         //It should be reload
         countTopicContent();
+        refreshTodayCard();
     }
 
     @Override

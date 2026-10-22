@@ -262,6 +262,63 @@ public class DBManager {
                 new String[]{String.valueOf(diaryId), String.valueOf(position)});
     }
 
+    /**
+     * Moves a diary to another diary topic (its lines stay with it).
+     */
+    public long updateDiaryTopic(long diaryId, long newTopicId) {
+        ContentValues values = new ContentValues();
+        values.put(DiaryEntry_V2.COLUMN_REF_TOPIC__ID, newTopicId);
+        return db.update(
+                DiaryEntry_V2.TABLE_NAME,
+                values,
+                DiaryEntry_V2._ID + " = ?",
+                new String[]{String.valueOf(diaryId)});
+    }
+
+    /**
+     * Makes a copy of a diary (all its info and all its lines) in a diary topic.
+     *
+     * @return the id of the new diary, or -1 when it could not be copied
+     */
+    public long copyDiary(long diaryId, long newTopicId) {
+        Cursor info = db.query(DiaryEntry_V2.TABLE_NAME, null, DiaryEntry_V2._ID + " = ?",
+                new String[]{String.valueOf(diaryId)}, null, null, null);
+        if (info == null) {
+            return -1;
+        }
+        ContentValues infoValues = new ContentValues();
+        try {
+            if (!info.moveToFirst()) {
+                return -1;
+            }
+            android.database.DatabaseUtils.cursorRowToContentValues(info, infoValues);
+        } finally {
+            info.close();
+        }
+        infoValues.remove(DiaryEntry_V2._ID);
+        infoValues.put(DiaryEntry_V2.COLUMN_REF_TOPIC__ID, newTopicId);
+        long newDiaryId = db.insert(DiaryEntry_V2.TABLE_NAME, null, infoValues);
+        if (newDiaryId < 0) {
+            return -1;
+        }
+        Cursor items = db.query(DiaryItemEntry_V2.TABLE_NAME, null, DiaryItemEntry_V2.COLUMN_REF_DIARY__ID + " = ?",
+                new String[]{String.valueOf(diaryId)}, null, null, DiaryItemEntry_V2.COLUMN_POSITION + " ASC");
+        if (items != null) {
+            try {
+                while (items.moveToNext()) {
+                    ContentValues itemValues = new ContentValues();
+                    android.database.DatabaseUtils.cursorRowToContentValues(items, itemValues);
+                    itemValues.remove(DiaryItemEntry_V2._ID);
+                    itemValues.put(DiaryItemEntry_V2.COLUMN_REF_DIARY__ID, newDiaryId);
+                    db.insert(DiaryItemEntry_V2.TABLE_NAME, null, itemValues);
+                }
+            } finally {
+                items.close();
+            }
+        }
+        return newDiaryId;
+    }
+
     public long delDiary(long diaryId) {
         return db.delete(
                 DiaryEntry_V2.TABLE_NAME,

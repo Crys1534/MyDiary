@@ -47,8 +47,45 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private final List<Row> rows = new ArrayList<>();
     private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
 
+    //Called when a row is opened (for example to close the dialog that shows this list)
+    private Runnable onOpen = null;
+
     public SearchResultsAdapter(Activity activity) {
         this.activity = activity;
+    }
+
+    public void setOnOpenListener(Runnable onOpen) {
+        this.onOpen = onOpen;
+    }
+
+    /**
+     * "A day like today": the diaries written on this same day in other years, a title for every year.
+     */
+    public void setMemories(List<MemoriesHelper.Memory> memories) {
+        rows.clear();
+        int lastYear = Integer.MIN_VALUE;
+        for (MemoriesHelper.Memory memory : memories) {
+            if (memory.year != lastYear) {
+                lastYear = memory.year;
+                Row header = new Row();
+                header.kind = TYPE_HEADER;
+                header.header = memory.yearsAgo == 1
+                        ? activity.getString(R.string.today_years_one, memory.year)
+                        : activity.getString(R.string.today_years_many, memory.yearsAgo, memory.year);
+                rows.add(header);
+            }
+            Row row = new Row();
+            row.title = memory.title == null || memory.title.trim().length() == 0
+                    ? activity.getString(R.string.diary_no_title) : memory.title.trim();
+            row.snippet = memory.summary == null ? "" : memory.summary;
+            row.info = memory.topicName;
+            row.topicType = ITopic.TYPE_DIARY;
+            row.topicId = memory.topicId;
+            row.topicName = memory.topicName;
+            row.diaryId = memory.diaryId;
+            rows.add(row);
+        }
+        notifyDataSetChanged();
     }
 
     public void setResults(List<ITopic> topics, List<NoteSearch.Result> notes) {
@@ -154,6 +191,9 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         intent.putExtra("topicId", row.topicId);
         intent.putExtra("diaryTitle", row.topicName);
         activity.startActivity(intent);
+        if (onOpen != null) {
+            onOpen.run();
+        }
     }
 
     @Override

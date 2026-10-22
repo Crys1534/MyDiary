@@ -67,10 +67,12 @@ def launch():
     show("main")
 
 
-def restart():
+def restart(label=None):
     adb("shell", "am", "force-stop", PKG)
     adb("shell", "am", "start", "-n", PKG + "/com.kiminonawa.mydiary.init.InitActivity")
     sleep(7)
+    if label:
+        show(label, full=True)   # before the intro dialogs are closed
     dismiss_intro()
     sleep(1)
 
@@ -611,6 +613,35 @@ def seed_db():
         cur = con.execute("insert into diary_entry_v2 (diary_time, diary_title, diary_mood, diary_weather, diary_attachment, diary_ref_topic_id, diary_location, diary_tags, diary_thumbnail) values (?,?,?,?,?,?,?,?,?)",
                           (int(when.timestamp() * 1000), title, 0, 0, 0, topic_id, "", ",prueba," if i % 3 == 0 else "", ""))
         con.execute("insert into diary_item_entry_v2 (diary_item_type, diary_item_position, diary_item_content, item_ref_diary_id) values (0, 0, ?, ?)", (text, cur.lastrowid))
+    # a second diary (to try move / copy)
+    color = con.execute("select topic_color from topic_entry where _id = ?", (topic_id,)).fetchone()
+    cur = con.execute("insert into topic_entry (topic_name, topic_type, topic_color) values (?,?,?)",
+                      ("Otro diario", 1, color[0] if color else -12627531))
+    other_topic = cur.lastrowid
+    con.execute("insert into topic_order (topic_order_order_in_parent, topic_order_ref_topic_id) values (?,?)", (0, other_topic))
+    log("   seed: second diary 'Otro diario' = topic %s" % other_topic)
+    # "a day like today": the same day, one and two years ago
+    now = datetime.datetime.now().replace(hour=12, minute=0, second=0, microsecond=0)
+    for years, title, text in ((1, "Recuerdo de hace un a\u00f1o", "Hace un a\u00f1o escribi esto en la playa"),
+                               (2, "Recuerdo de hace dos a\u00f1os", "Dos a\u00f1os atras fue un dia muy bonito")):
+        try:
+            when = now.replace(year=now.year - years)
+        except ValueError:
+            when = now.replace(year=now.year - years, day=28)
+        cur = con.execute("insert into diary_entry_v2 (diary_time, diary_title, diary_mood, diary_weather, diary_attachment, diary_ref_topic_id, diary_location, diary_tags, diary_thumbnail) values (?,?,?,?,?,?,?,?,?)",
+                          (int(when.timestamp() * 1000), title, 0, 0, 0, topic_id, "", "", ""))
+        con.execute("insert into diary_item_entry_v2 (diary_item_type, diary_item_position, diary_item_content, item_ref_diary_id) values (0, 0, ?, ?)", (text, cur.lastrowid))
+    # entries of the last days, with a photo each (for the month calendar)
+    global SEED_PHOTOS
+    SEED_PHOTOS = []
+    for k, days in enumerate((1, 2, 4)):
+        when = now - datetime.timedelta(days=days)
+        name = "seedphoto%d.png" % k
+        cur = con.execute("insert into diary_entry_v2 (diary_time, diary_title, diary_mood, diary_weather, diary_attachment, diary_ref_topic_id, diary_location, diary_tags, diary_thumbnail) values (?,?,?,?,?,?,?,?,?)",
+                          (int(when.timestamp() * 1000), "Foto del dia %d" % (k + 1), 0, 0, 1, topic_id, "", "", ""))
+        con.execute("insert into diary_item_entry_v2 (diary_item_type, diary_item_position, diary_item_content, item_ref_diary_id) values (1, 0, ?, ?)", (name, cur.lastrowid))
+        con.execute("insert into diary_item_entry_v2 (diary_item_type, diary_item_position, diary_item_content, item_ref_diary_id) values (0, 1, ?, ?)", (" Texto de la foto %d" % (k + 1), cur.lastrowid))
+        SEED_PHOTOS.append((topic_id, cur.lastrowid, name, k))
     con.commit()
     con.execute("pragma wal_checkpoint(truncate)")
     con.execute("pragma journal_mode=delete")
@@ -626,6 +657,14 @@ def seed_db():
     size = adb("shell", "run-as", PKG, "ls", "-l", "databases/").strip()
     log("   seed: databases/ = %s" % size.replace("\n", " | ")[:300])
     log("   seed: 60 entries added to topic %s" % topic_id)
+    # the photos of the entries with a photo go to the folder of each entry: diary/topic/entry/
+    for topic, diary, name, k in SEED_PHOTOS:
+        local = "%s/%s" % (OUT, name)
+        make_png(local, 400, 300, ((60 + k * 70) % 200, 40 + k * 50, 160 - k * 40))
+        folder = "/sdcard/Android/data/%s/files/diary/%s/%s" % (PKG, topic, diary)
+        adb("shell", "mkdir", "-p", folder)
+        out = subprocess.run(["adb", "push", local, folder + "/" + name], capture_output=True, text=True)
+        log("   seed photo: %s -> rc=%s %s" % (folder + "/" + name, out.returncode, (out.stderr or out.stdout).strip()[:120]))
     return True
 
 
@@ -633,7 +672,8 @@ def seed_and_scroll():
     """The list of entries with many entries: month names, the year chip and the scroll bar with its label."""
     if not seed_db():
         return
-    restart()
+    # the first time the app is opened in a day, the memories of this day (other years) are shown by themselves
+    restart("after_seed_first_open")
     n = find(text="DIARY")
     if not n:
         show("seed_no_diary_topic", full=True)
@@ -698,7 +738,130 @@ def global_search_test():
         dismiss_intro()
 
 
+def open_diary_topic():
+    restart()
+    n = find(text="DIARY")
+    if not n:
+        show("no_diary_topic", full=True)
+        return False
+    tap_xy(n["cx"], n["cy"])
+    sleep(3)
+    dismiss_intro()
+    tap(rid="But_diary_topbar_entries")
+    sleep(2)
+    return True
+
+
+def today_test():
+    """The "a day like today" card of the main page, the list of memories, and opening one."""
+    restart()
+    show("main_today_card", full=True)
+    if not tap(rid="LL_main_today"):
+        log("   NO TODAY CARD")
+        return
+    sleep(2)
+    show("today_dialog", full=True)
+    n = find(text="Recuerdo de hace un a\u00f1o")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(4)
+        show("today_opened_entry", full=True)
+        alive("today open")
+        key(4)
+        sleep(1)
+        key(4)
+        sleep(2)
+
+
+def tap_menu_item(prefix):
+    n = find(text=prefix)
+    if not n:
+        log("   menu item not found: %s" % prefix)
+        show("menu_item_missing", full=True)
+        return False
+    tap_xy(n["cx"], n["cy"])
+    sleep(1)
+    return True
+
+
+def move_copy_test():
+    """Inside an entry: copy it to the other diary, then move it there (the photos go with it)."""
+    if not open_diary_topic():
+        return
+    show("mc_entries", full=True)
+    n = find(text="Prueba negrita")
+    if not n:
+        log("   mc: entry not found")
+        return
+    tap_xy(n["cx"], n["cy"])
+    sleep(3)
+    show("mc_viewer", full=True)
+    if not tap(rid="IV_diary_move"):
+        log("   NO MOVE BUTTON")
+        return
+    sleep(1)
+    show("mc_menu", full=True)
+    if tap_menu_item("Copy to") and find(text="Otro diario"):
+        show("mc_copy_list", full=True)
+        tap_menu_item("Otro diario")
+        sleep(2)
+        show("mc_copied", full=True)
+    # now move the original
+    if tap(rid="IV_diary_move"):
+        sleep(1)
+        if tap_menu_item("Move to"):
+            show("mc_move_list", full=True)
+            tap_menu_item("Otro diario")
+            sleep(3)
+            show("mc_after_move", full=True)
+            alive("move")
+    import sqlite3
+    path = pull_db("%s/mc" % OUT)
+    if path:
+        con = sqlite3.connect(path)
+        for row in con.execute("select d._id, d.diary_title, t.topic_name, d.diary_ref_topic_id from diary_entry_v2 d join topic_entry t on t._id = d.diary_ref_topic_id where d.diary_title = 'Prueba negrita'"):
+            log("   mc DB: %r" % (row,))
+        for row in con.execute("select item_ref_diary_id, diary_item_type, substr(diary_item_content, 1, 30) from diary_item_entry_v2 where item_ref_diary_id in (select _id from diary_entry_v2 where diary_title = 'Prueba negrita') order by item_ref_diary_id, diary_item_position"):
+            log("   mc DB item: %r" % (row,))
+        con.close()
+    log("   mc files: %s" % adb("shell", "ls", "-R", "/sdcard/Android/data/%s/files/diary" % PKG).replace("\n", " | ")[:1500])
+    # the other diary: the entry (and its copy) must be there with their photos
+    restart()
+    n = find(text="Otro diario")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(3)
+        dismiss_intro()
+        tap(rid="But_diary_topbar_entries")
+        sleep(2)
+        show("mc_other_diary_list", full=True)
+        n = find(text="Prueba negrita")
+        if n:
+            tap_xy(n["cx"], n["cy"])
+            sleep(4)
+            show("mc_other_viewer", full=True)
+            alive("other viewer")
+
+
+def calendar_month_test():
+    """The month view of the calendar: days with a photo show the picture."""
+    if not open_diary_topic():
+        return
+    if not tap(rid="But_diary_topbar_calendar"):
+        return
+    sleep(2)
+    if not tap(rid="FAB_calendar_change_mode"):
+        show("no_calendar_fab", full=True)
+        return
+    sleep(5)
+    show("calendar_month", full=True)
+    alive("calendar month")
+
+
 step("seed and scroll", seed_and_scroll)
+step("today", today_test)
+step("calendar month", calendar_month_test)
+step("move and copy", move_copy_test)
 step("global search", global_search_test)
 step("settings", settings)
 step("backup", backup_test)

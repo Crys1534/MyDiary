@@ -36,6 +36,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.kiminonawa.mydiary.R;
@@ -132,7 +133,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
     private LinearLayout LL_diary_item_content;
     private ImageView IV_diary_close_dialog, IV_diary_location, IV_diary_photo,
-            IV_diary_delete, IV_diary_clear, IV_diary_save, IV_diary_bold, IV_diary_italic, IV_diary_list, IV_diary_checklist, IV_diary_audio;
+            IV_diary_delete, IV_diary_move, IV_diary_clear, IV_diary_save, IV_diary_bold, IV_diary_italic, IV_diary_list, IV_diary_checklist, IV_diary_audio;
     private boolean isEditMode;
 
     /**
@@ -270,6 +271,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
         IV_diary_photo = (ImageView) rootView.findViewById(R.id.IV_diary_photo);
         IV_diary_delete = (ImageView) rootView.findViewById(R.id.IV_diary_delete);
+        IV_diary_move = (ImageView) rootView.findViewById(R.id.IV_diary_move);
         IV_diary_clear = (ImageView) rootView.findViewById(R.id.IV_diary_clear);
         IV_diary_save = (ImageView) rootView.findViewById(R.id.IV_diary_save);
         IV_diary_bold = (ImageView) rootView.findViewById(R.id.IV_diary_bold);
@@ -618,6 +620,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             TV_diary_title_content.setVisibility(View.GONE);
 
             IV_diary_delete.setOnClickListener(this);
+            //Move / copy to another diary (only when reading: the changes of an edition are not saved yet)
+            IV_diary_move.setVisibility(View.VISIBLE);
+            IV_diary_move.setOnClickListener(this);
             IV_diary_clear.setVisibility(View.GONE);
             IV_diary_save.setVisibility(View.GONE);
 
@@ -1175,6 +1180,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                     dismiss();
                 }
                 break;
+            case R.id.IV_diary_move:
+                showMoveCopyMenu();
+                break;
             case R.id.IV_diary_delete:
                 DiaryDeleteDialogFragment diaryDeleteDialogFragment =
                         DiaryDeleteDialogFragment.newInstance(((DiaryActivity) getActivity()).getTopicId(), diaryId);
@@ -1191,6 +1199,75 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                     Toast.makeText(getActivity(), getString(R.string.toast_diary_empty), Toast.LENGTH_SHORT).show();
                 }
                 break;
+        }
+    }
+
+    /**
+     * The "move / copy" button: first the choice (move or copy), then the diary.
+     */
+    private void showMoveCopyMenu() {
+        android.widget.PopupMenu menu = new android.widget.PopupMenu(getActivity(), IV_diary_move);
+        menu.getMenu().add(0, 1, 0, R.string.diary_move_menu_move);
+        menu.getMenu().add(0, 2, 1, R.string.diary_move_menu_copy);
+        menu.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                chooseDiaryForMoveCopy(item.getItemId() == 1);
+                return true;
+            }
+        });
+        menu.show();
+    }
+
+    private void chooseDiaryForMoveCopy(final boolean move) {
+        final long currentTopicId = ((DiaryActivity) getActivity()).getTopicId();
+        final java.util.List<DiaryMover.TopicOption> topics = new java.util.ArrayList<>();
+        for (DiaryMover.TopicOption option : DiaryMover.diaryTopics(getActivity())) {
+            if (!move || option.id != currentTopicId) {
+                topics.add(option);
+            }
+        }
+        if (topics.isEmpty()) {
+            Toast.makeText(getActivity(), R.string.diary_move_no_other, Toast.LENGTH_LONG).show();
+            return;
+        }
+        String[] names = new String[topics.size()];
+        for (int i = 0; i < names.length; i++) {
+            names[i] = topics.get(i).name;
+            if (topics.get(i).id == currentTopicId) {
+                names[i] += " " + getString(R.string.diary_move_this_diary);
+            }
+        }
+        new androidx.appcompat.app.AlertDialog.Builder(getActivity())
+                .setTitle(move ? R.string.diary_move_title_move : R.string.diary_move_title_copy)
+                .setItems(names, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        moveOrCopyTo(move, currentTopicId, topics.get(which));
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void moveOrCopyTo(boolean move, long currentTopicId, DiaryMover.TopicOption target) {
+        boolean ok;
+        if (move) {
+            ok = DiaryMover.move(getActivity(), diaryId, currentTopicId, target.id);
+        } else {
+            ok = DiaryMover.copy(getActivity(), diaryId, currentTopicId, target.id) >= 0;
+        }
+        if (!ok) {
+            Toast.makeText(getActivity(), R.string.diary_move_failed, Toast.LENGTH_LONG).show();
+            return;
+        }
+        Toast.makeText(getActivity(), getString(move ? R.string.diary_moved : R.string.diary_copied, target.name),
+                Toast.LENGTH_LONG).show();
+        if (callback != null) {
+            callback.updateDiary();
+        }
+        if (move) {
+            dismiss();
         }
     }
 

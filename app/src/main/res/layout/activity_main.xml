@@ -39,6 +39,49 @@
     </LinearLayout>
 
 
+    <!-- "A day like today": the diaries written on this day in other years -->
+    <LinearLayout
+        android:id="@+id/LL_main_today_wrap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/LL_main_profile"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/LL_main_today"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/TV_main_today_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/today_card_title"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/TV_main_today_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="13dp" />
+        </LinearLayout>
+    </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/RL_main_bottom_bar"
         android:layout_width="match_parent"
@@ -80,7 +123,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/RL_main_bottom_bar"
-        android:layout_below="@id/LL_main_profile"
+        android:layout_below="@id/LL_main_today_wrap"
         android:background="@android:color/white"
         android:paddingBottom="10dp"
         android:paddingTop="10dp" />
