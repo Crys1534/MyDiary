@@ -130,9 +130,16 @@ def write_entry():
     # title
     tap(rid="EDT_diary_title")
     type_text("Prueba negrita")
-    # tags
-    if tap(rid="EDT_diary_tags"):
-        type_text("\\#escuela \\#viaje")
+    # tags: only with the pencil of the cover (the old tags box is hidden now)
+    log("   tags box visible (must be False): %s" % ("EDT_diary_tags" in node_ids()))
+    if tap(rid="IV_diary_cover_tag_add"):
+        sleep(2)
+        show("new_entry_tags_dialog", full=True)
+        type_text("escuela viaje")
+        tap(rid="android:id/button1")
+        sleep(1)
+    else:
+        log("   NO PENCIL IN THE NEW ENTRY")
     close_keyboard()
     show("title_tags_typed")
     # first text box
@@ -637,8 +644,12 @@ def seed_db():
     for k, days in enumerate((1, 2, 4)):
         when = now - datetime.timedelta(days=days)
         name = "seedphoto%d.png" % k
+        # day 1: rainy, no place; day 2: cloudy, with a place and a tag; day 3: sunny, no place
+        weather = (3, 1, 0)[k]
+        place = "Ciudad de Mexico" if k == 1 else ""
+        tags = ",playa," if k == 1 else ""
         cur = con.execute("insert into diary_entry_v2 (diary_time, diary_title, diary_mood, diary_weather, diary_attachment, diary_ref_topic_id, diary_location, diary_tags, diary_thumbnail) values (?,?,?,?,?,?,?,?,?)",
-                          (int(when.timestamp() * 1000), "Foto del dia %d" % (k + 1), 0, 0, 1, topic_id, "", "", ""))
+                          (int(when.timestamp() * 1000), "Foto del dia %d" % (k + 1), 0, weather, 1, topic_id, place, tags, ""))
         con.execute("insert into diary_item_entry_v2 (diary_item_type, diary_item_position, diary_item_content, item_ref_diary_id) values (1, 0, ?, ?)", (name, cur.lastrowid))
         con.execute("insert into diary_item_entry_v2 (diary_item_type, diary_item_position, diary_item_content, item_ref_diary_id) values (0, 1, ?, ?)", (" Texto de la foto %d" % (k + 1), cur.lastrowid))
         SEED_PHOTOS.append((topic_id, cur.lastrowid, name, k))
@@ -858,13 +869,261 @@ def calendar_month_test():
     alive("calendar month")
 
 
+def node_ids():
+    return set(n["rid"].split("/")[-1] for n in nodes())
+
+
+def node_text(rid):
+    n = find(rid=rid)
+    return n["text"] if n else None
+
+
+def close_viewer():
+    """Closes the entry window (BACK once; the list of entries must be visible after it)."""
+    key(4)
+    sleep(1)
+    if not find(rid="RecyclerView_entries"):
+        key(4)
+        sleep(1)
+
+
+def report_cover(label):
+    ids = node_ids()
+    log("   COVER %s: weather icon=%s weather word=%r | place icon=%s place text=%r | tag chip=%r pencil=%s | crop(cover)=%s crop(photos)=%d | tags box (EDT_diary_tags) visible=%s"
+        % (label, "IV_diary_weather" in ids, node_text("TV_diary_weather"),
+           "IV_diary_location_name_icon" in ids, node_text("TV_diary_location"),
+           node_text("TV_diary_cover_tag"), "IV_diary_cover_tag_add" in ids,
+           "IV_diary_cover_crop" in ids,
+           len([n for n in nodes() if n["rid"].endswith("IV_diary_photo_crop")]),
+           "EDT_diary_tags" in ids))
+    cover = find(rid="RL_diary_info")
+    if cover:
+        x1, y1, x2, y2 = cover["b"]
+        log("   COVER %s: size %dx%d (ratio width/height = %.3f, 4:3 = 1.333)" % (label, x2 - x1, y2 - y1, (x2 - x1) / max(1, (y2 - y1))))
+    title = find(rid="TV_diary_cover_title")
+    if title:
+        log("   COVER %s: title text=%r" % (label, title["text"]))
+
+
+def long_press_entry(title):
+    n = find(text=title)
+    if not n:
+        log("   entry not found: %s" % title)
+        return False
+    adb("shell", "input", "swipe", str(n["cx"]), str(n["cy"]), str(n["cx"]), str(n["cy"]), "1100")
+    sleep(3)
+    return True
+
+
+def crop_confirm():
+    """UCrop screen: press the check mark of its toolbar."""
+    for kind, val in (("rid", "menu_crop"), ("desc", "Crop")):
+        n = find(rid=val) if kind == "rid" else find(desc=val)
+        if n:
+            log("   crop confirm found by %s=%s @%d,%d" % (kind, val, n["cx"], n["cy"]))
+            tap_xy(n["cx"], n["cy"])
+            return True
+    log("   crop confirm NOT found")
+    return False
+
+
+def cover_test():
+    """The cover of an entry: weather icon only, no empty place, 4:3 size, tags with the pencil, crop 4:3."""
+    import sqlite3
+    if not open_diary_topic():
+        return
+    # reading mode: day 1 (rainy, no place) and day 2 (cloudy, place + tag)
+    for title in ("Foto del dia 1", "Foto del dia 2"):
+        n = find(text=title)
+        if not n:
+            log("   cover: entry not found: %s" % title)
+            continue
+        tap_xy(n["cx"], n["cy"])
+        sleep(4)
+        show("cover_read_" + title[-1], full=True)
+        report_cover("reading '%s'" % title)
+        close_viewer()
+    # edit mode (long press) on day 2
+    if not long_press_entry("Foto del dia 2"):
+        return
+    show("cover_edit", full=True)
+    report_cover("editing 'Foto del dia 2'")
+    # tags only with the pencil
+    if tap(rid="IV_diary_cover_tag_add"):
+        sleep(2)
+        show("cover_tags_dialog", full=True)
+        type_text(" viaje")
+        show("cover_tags_typed")
+        tap(rid="android:id/button1")
+        sleep(2)
+        close_keyboard()
+        show("cover_tags_after", full=True)
+        report_cover("after the pencil")
+    else:
+        log("   NO PENCIL BUTTON")
+    # crop a photo of the entry (4:3)
+    for _ in range(3):
+        if find(rid="IV_diary_photo_crop"):
+            break
+        adb("shell", "input", "swipe", "540", "1700", "540", "900", "300")
+        sleep(1.5)
+    old_files = adb("shell", "ls", "-R", "/sdcard/Android/data/%s/files/diary/editCache" % PKG).replace("\n", " | ")[:600]
+    log("   crop: editCache before = %s" % old_files)
+    if tap(rid="IV_diary_photo_crop"):
+        sleep(5)
+        show("crop_screen", full=True)
+        if crop_confirm():
+            sleep(5)
+            show("crop_done", full=True)
+            alive("crop photo")
+        else:
+            key(4)
+            sleep(2)
+    else:
+        log("   NO PHOTO CROP BUTTON")
+        show("no_photo_crop", full=True)
+    log("   crop: editCache after = %s" % adb("shell", "ls", "-R", "/sdcard/Android/data/%s/files/diary/editCache" % PKG).replace("\n", " | ")[:600])
+    # the crop button of the cover (go to the top first), then cancel it with BACK
+    for _ in range(3):
+        adb("shell", "input", "swipe", "540", "900", "540", "1800", "300")
+        sleep(1)
+    show("cover_top_again", full=True)
+    if tap(rid="IV_diary_cover_crop"):
+        sleep(5)
+        show("cover_crop_screen", full=True)
+        key(4)
+        sleep(2)
+        show("cover_crop_cancelled", full=True)
+        alive("cover crop cancel")
+    else:
+        log("   NO COVER CROP BUTTON")
+    # save and look at the database
+    close_keyboard()
+    if tap(rid="IV_diary_save"):
+        sleep(4)
+        show("cover_saved")
+    path = pull_db("%s/cover" % OUT)
+    if path:
+        con = sqlite3.connect(path)
+        for row in con.execute("select _id, diary_title, diary_tags, diary_location, diary_thumbnail from diary_entry_v2 where diary_title like 'Foto del dia%'"):
+            log("   cover DB entry: %r" % (row,))
+        for row in con.execute("select item_ref_diary_id, diary_item_type, substr(diary_item_content,1,40) from diary_item_entry_v2 where diary_item_type = 1 and item_ref_diary_id in (select _id from diary_entry_v2 where diary_title like 'Foto del dia%') order by 1"):
+            log("   cover DB photo item: %r" % (row,))
+        con.close()
+    log("   cover files: %s" % adb("shell", "ls", "-R", "/sdcard/Android/data/%s/files/diary" % PKG).replace("\n", " | ")[:1500])
+    # read it again: the new tags are there
+    restart()
+    if open_diary_topic():
+        n = find(text="Foto del dia 2")
+        if n:
+            tap_xy(n["cx"], n["cy"])
+            sleep(4)
+            show("cover_read_again", full=True)
+            report_cover("reading again 'Foto del dia 2'")
+            alive("cover read again")
+
+
+def profile_prefs(name=None):
+    """Reads (or, with name, rewrites) the name of the profile directly in the shared preferences of the app."""
+    adb("shell", "am", "force-stop", PKG)
+    sleep(1)
+    if name is not None:
+        xml = "<?xml version='1.0' encoding='utf-8' standalone='yes' ?><map><string name=\"YOUR_NAME_IS\">%s</string></map>" % name
+        r = subprocess.run(["adb", "shell", "run-as %s sh -c 'cat > shared_prefs/PROFILE.xml'" % PKG],
+                           input=xml, capture_output=True, text=True)
+        log("   profile prefs written (%s): rc=%s %r" % (name, r.returncode, (r.stderr or "")[:100]))
+    return adb("shell", "run-as", PKG, "cat", "shared_prefs/PROFILE.xml").strip()
+
+
+def backup_content_test():
+    """Full backup: the zip must have the settings, the pictures and the backgrounds; importing must restore them."""
+    import json, zipfile, glob
+    # something to save: the name, a profile picture and the background of the diary topic
+    profile_prefs("Nombre Prueba")
+    topic = None
+    pull = pull_db("%s/bk" % OUT)
+    if pull:
+        import sqlite3
+        con = sqlite3.connect(pull)
+        row = con.execute("select _id from topic_entry where topic_name = 'DIARY' limit 1").fetchone()
+        topic = row[0] if row else None
+        con.close()
+    base = "/sdcard/Android/data/%s/files" % PKG
+    make_png("%s/bgtest.png" % OUT, 300, 200, (200, 60, 60))
+    adb("shell", "mkdir", "-p", base + "/setting")
+    subprocess.run(["adb", "push", "%s/bgtest.png" % OUT, base + "/setting/custom_profile_picture_bg"], capture_output=True)
+    if topic is not None:
+        adb("shell", "mkdir", "-p", "%s/diary/%s" % (base, topic))
+        subprocess.run(["adb", "push", "%s/bgtest.png" % OUT, "%s/diary/%s/custom_topic_bg" % (base, topic)], capture_output=True)
+    adb("shell", "mkdir", "-p", base + "/memo/99")
+    subprocess.run(["adb", "push", "%s/bgtest.png" % OUT, base + "/memo/99/custom_topic_bg"], capture_output=True)
+    restart()
+    # export (like backup_test, but we keep the file)
+    if not tap(rid="IV_main_setting"):
+        show("bk_no_setting", full=True)
+        return
+    sleep(2)
+    if not tap(rid="IV_main_setting_backup"):
+        return
+    sleep(2)
+    tap(rid="TV_backup_export_src")
+    sleep(3)
+    picker_save()
+    sleep(2)
+    tap(rid="But_backup_export")
+    sleep(6)
+    show("bk_exported", full=True)
+    found = adb("shell", "find", "/sdcard", "-name", "MyDiaryBackup_*.zip").split()
+    log("   backup files on the phone: %s" % found)
+    if not found:
+        return
+    newest = sorted(found)[-1]
+    local = "%s/exported.zip" % OUT
+    subprocess.run(["adb", "pull", newest, local], capture_output=True)
+    try:
+        z = zipfile.ZipFile(local)
+        names = z.namelist()
+        log("   zip has %d files: %s" % (len(names), names[:60]))
+        log("   zip: settings folder=%s memo bg=%s diary bg=%s editCache=%s temp=%s" % (
+            any(n.startswith("setting/") for n in names),
+            any(n.startswith("memo/") and n.endswith("custom_topic_bg") for n in names),
+            any(n.startswith("diary/") and n.endswith("custom_topic_bg") for n in names),
+            any("editCache" in n for n in names), any("/temp/" in n for n in names)))
+        data = json.loads(z.read("backup.json").decode("utf-8"))
+        log("   backup.json keys: %s" % list(data.keys()))
+        log("   backup.json settings: %s" % json.dumps(data.get("settings"), ensure_ascii=False)[:600])
+    except Exception as e:
+        log("   zip read failed: %r" % (e,))
+    # change the name, then import the file: the name must come back
+    log("   profile before the change: %s" % profile_prefs("Otro Nombre")[:300])
+    restart()
+    if not tap(rid="IV_main_setting") or not tap(rid="IV_main_setting_backup"):
+        return
+    sleep(2)
+    tap(rid="TV_backup_import_src")
+    sleep(3)
+    n = find(text=".zip")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(2)
+        tap(rid="But_backup_import")
+        sleep(8)
+        show("bk_imported", full=True)
+    log("   profile after import: %s" % profile_prefs()[:300])
+    log("   files after import: %s" % adb("shell", "ls", "-R", base + "/setting", base + "/memo", base + "/diary").replace("\n", " | ")[:1500])
+    restart("bk_after_import")
+    alive("backup content")
+
+
 step("seed and scroll", seed_and_scroll)
 step("today", today_test)
 step("calendar month", calendar_month_test)
+step("cover and crop", cover_test)
 step("move and copy", move_copy_test)
 step("global search", global_search_test)
 step("settings", settings)
 step("backup", backup_test)
+step("backup content", backup_content_test)
 
 
 def camera_last():
