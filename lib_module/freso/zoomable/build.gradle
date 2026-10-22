@@ -19,8 +19,8 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.9.1'
     implementation 'androidx.core:core:1.13.1'
     implementation 'com.nineoldandroids:library:2.4.0'
-    implementation 'com.facebook.fresco:drawee:1.2.0'
-    implementation 'com.facebook.fresco:fbcore:1.2.0'
-    implementation 'com.facebook.fresco:imagepipeline:1.2.0'
+    implementation 'com.facebook.fresco:drawee:2.6.0'
+    implementation 'com.facebook.fresco:fbcore:2.6.0'
+    implementation 'com.facebook.fresco:imagepipeline:2.6.0'
     api project(':gestures')
 }

@@ -463,7 +463,14 @@ def report_edit_bar(label):
 
 def location_test():
     """The permission dialog of the location, then a fake position from the emulator."""
-    if not tap(rid="IV_diary_location"):
+    # the place is on the cover now: tap it, then "Use my location" of the little window
+    if not tap(rid="TV_diary_location"):
+        log("   NO LOCATION TEXT ON THE COVER")
+        return
+    sleep(2)
+    show("location_dialog", full=True)
+    if not tap(text="Use my location"):
+        log("   NO 'Use my location' BUTTON")
         return
     sleep(2)
     show("location_permission_dialog", full=True)
@@ -893,6 +900,8 @@ def close_viewer():
 
 def report_cover(label):
     ids = node_ids()
+    log("   COVER %s: trash button visible=%s, move button visible=%s, old location button visible=%s, old clear button visible=%s"
+        % (label, "IV_diary_delete" in ids, "IV_diary_move" in ids, "IV_diary_location" in ids, "IV_diary_clear" in ids))
     log("   COVER %s: weather icon=%s weather word=%r | place icon=%s place text=%r | tag chip=%r pencil=%s | crop(cover)=%s crop(photos)=%d | tags box (EDT_diary_tags) visible=%s"
         % (label, "IV_diary_weather" in ids, node_text("TV_diary_weather"),
            "IV_diary_location_name_icon" in ids, node_text("TV_diary_location"),
@@ -965,42 +974,53 @@ def cover_test():
         report_cover("after the pencil")
     else:
         log("   NO PENCIL BUTTON")
-    # crop a photo of the entry (4:3)
+    # choose the visible part of a photo of the entry (4:3): nothing is cut
     for _ in range(3):
         if find(rid="IV_diary_photo_crop"):
             break
         adb("shell", "input", "swipe", "540", "1700", "540", "900", "300")
         sleep(1.5)
     old_files = adb("shell", "ls", "-R", "/sdcard/Android/data/%s/files/diary/editCache" % PKG).replace("\n", " | ")[:600]
-    log("   crop: editCache before = %s" % old_files)
+    log("   area: editCache before = %s" % old_files)
     if tap(rid="IV_diary_photo_crop"):
-        sleep(5)
-        show("crop_screen", full=True)
-        if crop_confirm():
-            sleep(5)
-            show("crop_done", full=True)
-            alive("crop photo")
+        sleep(4)
+        show("area_screen_body", full=True)
+        log("   area screen: done button=%s center button=%s view=%s" % (
+            bool(find(rid="But_area_done")), bool(find(rid="But_area_center")), bool(find(rid="APV_area"))))
+        # move the photo with one finger, zoom with the keyboard-less emulator is not possible, so only a drag
+        adb("shell", "input", "swipe", "700", "1000", "300", "1000", "400")
+        sleep(1)
+        show("area_screen_body_moved")
+        if tap(rid="But_area_done"):
+            sleep(4)
+            show("area_done_body", full=True)
+            alive("area of a photo")
         else:
             key(4)
             sleep(2)
     else:
-        log("   NO PHOTO CROP BUTTON")
-        show("no_photo_crop", full=True)
-    log("   crop: editCache after = %s" % adb("shell", "ls", "-R", "/sdcard/Android/data/%s/files/diary/editCache" % PKG).replace("\n", " | ")[:600])
-    # the crop button of the cover (go to the top first), then cancel it with BACK
+        log("   NO PHOTO AREA BUTTON")
+        show("no_photo_area", full=True)
+    log("   area: editCache after = %s" % adb("shell", "ls", "-R", "/sdcard/Android/data/%s/files/diary/editCache" % PKG).replace("\n", " | ")[:600])
+    # the area button of the cover (go to the top first): choose the part that the cover shows
     for _ in range(3):
         adb("shell", "input", "swipe", "540", "900", "540", "1800", "300")
         sleep(1)
     show("cover_top_again", full=True)
     if tap(rid="IV_diary_cover_crop"):
-        sleep(5)
-        show("cover_crop_screen", full=True)
-        key(4)
-        sleep(2)
-        show("cover_crop_cancelled", full=True)
-        alive("cover crop cancel")
+        sleep(4)
+        show("area_screen_cover", full=True)
+        adb("shell", "input", "swipe", "500", "1300", "500", "900", "400")
+        sleep(1)
+        if tap(rid="But_area_done"):
+            sleep(4)
+            show("area_done_cover", full=True)
+            alive("area of the cover")
+        else:
+            key(4)
+            sleep(2)
     else:
-        log("   NO COVER CROP BUTTON")
+        log("   NO COVER AREA BUTTON")
     # save and look at the database
     close_keyboard()
     if tap(rid="IV_diary_save"):
@@ -1011,7 +1031,7 @@ def cover_test():
         con = sqlite3.connect(path)
         for row in con.execute("select _id, diary_title, diary_tags, diary_location, diary_thumbnail from diary_entry_v2 where diary_title like 'Foto del dia%'"):
             log("   cover DB entry: %r" % (row,))
-        for row in con.execute("select item_ref_diary_id, diary_item_type, substr(diary_item_content,1,40) from diary_item_entry_v2 where diary_item_type = 1 and item_ref_diary_id in (select _id from diary_entry_v2 where diary_title like 'Foto del dia%') order by 1"):
+        for row in con.execute("select item_ref_diary_id, diary_item_type, substr(diary_item_content,1,40), diary_item_area from diary_item_entry_v2 where diary_item_type = 1 and item_ref_diary_id in (select _id from diary_entry_v2 where diary_title like 'Foto del dia%') order by 1"):
             log("   cover DB photo item: %r" % (row,))
         con.close()
     log("   cover files: %s" % adb("shell", "ls", "-R", "/sdcard/Android/data/%s/files/diary" % PKG).replace("\n", " | ")[:1500])
@@ -1199,4 +1219,67 @@ def camera_last():
 
 
 step("camera", camera_last)
+
+def scroll_to(rid, tries=6):
+    for _ in range(tries):
+        if find(rid=rid):
+            return True
+        adb("shell", "input", "swipe", "540", "1700", "540", "700", "300")
+        sleep(1.2)
+    return bool(find(rid=rid))
+
+
+def dark_test():
+    """Settings -> Look -> Dark, then the main screens are photographed in dark mode."""
+    restart()
+    if not tap(rid="IV_main_setting"):
+        log("   dark: no settings button")
+        return
+    sleep(2)
+    if not tap(rid="IV_main_setting_setting_page"):
+        log("   dark: no settings page button")
+        return
+    sleep(3)
+    show("dark_settings_before", full=True)
+    if scroll_to("SP_setting_night"):
+        show("dark_settings_night_spinner", full=True)
+        tap(rid="SP_setting_night")
+        sleep(1.5)
+        show("dark_spinner_open", full=True)
+        if not tap(text="Dark", contains=False):
+            log("   dark: NO 'Dark' ITEM")
+        sleep(4)
+        show("dark_settings_after", full=True)
+        log("   dark: night mode on the phone now = %s" % adb("shell", "cmd", "uimode", "night").strip())
+        log("   dark: app configuration = %s" % [l for l in adb("shell", "dumpsys", "activity", "top").splitlines() if "uiMode" in l or "mUiMode" in l][:2])
+    else:
+        log("   dark: NO NIGHT SPINNER")
+    if scroll_to("SW_setting_sound"):
+        show("dark_settings_sound", full=True)
+        log("   dark: sound switch checked=%s" % (find(rid="SW_setting_sound") or {}).get("checked"))
+    # the main screen, the diary, an entry, the new entry page, the calendar
+    key(4)
+    sleep(2)
+    show("dark_main", full=True)
+    n = find(text="DIARY")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(4)
+        dismiss_intro()
+        show("dark_entries", full=True)
+        entry = find(rid="TV_entries_item_title")
+        if entry:
+            tap_xy(entry["cx"], entry["cy"])
+            sleep(4)
+            show("dark_viewer", full=True)
+            close_viewer()
+        tap(rid="But_diary_topbar_calendar")
+        sleep(3)
+        show("dark_calendar", full=True)
+        tap(rid="But_diary_topbar_diary")
+        sleep(3)
+        show("dark_new_entry", full=True)
+    alive("dark mode")
+    log("   dark: Sfx errors in logcat: %r" % adb("logcat", "-d", "-s", "Sfx:E").strip()[:400])
+step("dark mode", dark_test)
 log("== done")
