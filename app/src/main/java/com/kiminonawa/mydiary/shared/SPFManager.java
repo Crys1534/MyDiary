@@ -93,11 +93,12 @@ public class SPFManager {
     }
 
     /**
-     * Look of the app: 0 = like the phone, 1 = light, 2 = dark
+     * Look of the app: 0 = like the phone, 1 = light, 2 = dark.
+     * Until the person chooses, it is light (the way the app always was).
      */
     public static int getNightMode(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
-        return settings.getInt("CONFIG_NIGHT_MODE", 0);
+        return settings.getInt("CONFIG_NIGHT_MODE", 1);
     }
 
     public static void setNightMode(Context context, int mode) {
