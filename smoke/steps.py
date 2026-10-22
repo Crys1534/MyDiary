@@ -1286,6 +1286,14 @@ def dark_test():
         sleep(3)
         show("dark_calendar", full=True)
         log("   dark: Sfx lines after the Calendar tab = %r" % adb("logcat", "-d", "-s", "Sfx:V").strip()[:400])
+        # the month view of the calendar (the round arrow button switches to it)
+        if tap(rid="FAB_calendar_change_mode"):
+            sleep(3)
+            show("dark_calendar_month", full=True)
+            tap(rid="FAB_calendar_change_mode")
+            sleep(2)
+        else:
+            log("   dark: no calendar mode button")
         tap(rid="But_diary_topbar_diary")
         sleep(3)
         show("dark_new_entry", full=True)

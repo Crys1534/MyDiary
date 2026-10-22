@@ -2,11 +2,14 @@ package com.kiminonawa.mydiary.entries.calendar;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 
+import androidx.core.content.ContextCompat;
+
+import com.kiminonawa.mydiary.R;
+import com.kiminonawa.mydiary.shared.ColorTools;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 import com.kiminonawa.mydiary.shared.TimeTools;
@@ -21,6 +24,8 @@ public class CalendarFactory {
 
 
     private Context mContext;
+    //The page of the big calendar: white in light mode, dark in dark mode
+    private int pageColor;
     private Calendar calendar;
     private int dateChange = 0;
 
@@ -39,24 +44,25 @@ public class CalendarFactory {
         this.calendar = calendar;
         timeTools = TimeTools.getInstance(context);
         mContext = context;
+        pageColor = ContextCompat.getColor(context, R.color.app_surface);
         textRect = new Rect(0, 0, width, height);
         scale = context.getResources().getDisplayMetrics().density;
 
         //init Color
         monthPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         setPrintTextSize(monthPaint,40);
-        monthPaint.setColor(ThemeManager.getInstance().getThemeDarkColor(context));
+        monthPaint.setColor(ColorTools.readableOnSurface(context, ThemeManager.getInstance().getThemeDarkColor(context)));
         monthPaint.setTextAlign(Paint.Align.CENTER);
 
         datePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         setPrintTextSize(datePaint,130);
-        datePaint.setColor(ThemeManager.getInstance().getThemeDarkColor(context));
+        datePaint.setColor(ColorTools.readableOnSurface(context, ThemeManager.getInstance().getThemeDarkColor(context)));
         datePaint.setTextAlign(Paint.Align.CENTER);
         datePaint.setTypeface(Typeface.DEFAULT_BOLD);
 
         dayPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         setPrintTextSize(dayPaint,25);
-        dayPaint.setColor(ThemeManager.getInstance().getThemeDarkColor(context));
+        dayPaint.setColor(ColorTools.readableOnSurface(context, ThemeManager.getInstance().getThemeDarkColor(context)));
         dayPaint.setTextAlign(Paint.Align.CENTER);
 
         textBaseX = width / 2;
@@ -71,20 +77,20 @@ public class CalendarFactory {
     }
 
     public synchronized void onDraw(Canvas canvas) {
-        canvas.drawColor(Color.WHITE);
+        canvas.drawColor(pageColor);
         updateCalendar(canvas);
     }
 
 
     public synchronized void nextDateDraw(Canvas canvas) {
-        canvas.drawColor(Color.WHITE);
+        canvas.drawColor(pageColor);
         dateChange = 1;
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + dateChange);
         updateCalendar(canvas);
     }
 
     public synchronized void preDateDraw(Canvas canvas) {
-        canvas.drawColor(Color.WHITE);
+        canvas.drawColor(pageColor);
         dateChange = -1;
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + dateChange);
         updateCalendar(canvas);
