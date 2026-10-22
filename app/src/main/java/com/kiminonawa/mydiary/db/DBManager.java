@@ -205,10 +205,17 @@ public class DBManager {
     }
 
     public long insertDiaryContent(int type, int position, String content, long diaryId) {
+        return insertDiaryContent(type, position, content, diaryId, "");
+    }
+
+    /**
+     * @param area photos: the part of the photo that is seen (see PhotoArea), "" when nothing was chosen
+     */
+    public long insertDiaryContent(int type, int position, String content, long diaryId, String area) {
         return db.insert(
                 DiaryItemEntry_V2.TABLE_NAME,
                 null,
-                this.createDiaryContentCV(type, position, content, diaryId));
+                this.createDiaryContentCV(type, position, content, diaryId, area));
     }
 
     /**
@@ -437,8 +444,9 @@ public class DBManager {
         return values;
     }
 
-    private ContentValues createDiaryContentCV(int type, int position, String content, long diaryId) {
+    private ContentValues createDiaryContentCV(int type, int position, String content, long diaryId, String area) {
         ContentValues values = new ContentValues();
+        values.put(DiaryItemEntry_V2.COLUMN_AREA, area == null ? "" : area);
         values.put(DiaryItemEntry_V2.COLUMN_TYPE, type);
         values.put(DiaryItemEntry_V2.COLUMN_POSITION, position);
         values.put(DiaryItemEntry_V2.COLUMN_CONTENT, content);

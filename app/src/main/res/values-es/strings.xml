@@ -268,8 +268,13 @@
     <string name="photo_viewer_photo_path_fail">no se pudo obtener la ruta de la foto</string>
     <string name="photo_viewer_no_images">No hay imágenes</string>
 
-    <string name="crop_photo_title">Recortar foto (4:3)</string>
-    <string name="crop_cover_title">Recortar portada (4:5)</string>
-    <string name="toast_crop_photo_done">Foto recortada</string>
-    <string name="toast_crop_photo_fail">No se pudo recortar la foto</string>
+    <!-- Elegir qué parte de una foto se ve (la foto no se corta) -->
+    <string name="area_title_body">Elige qué parte de la foto se ve (4:3)</string>
+    <string name="area_title_cover">Elige qué parte se ve en la portada (4:5)</string>
+    <string name="area_hint">Mueve la foto con un dedo y haz zoom con dos dedos. Tu foto no se corta.</string>
+    <string name="area_button_center">Centrar</string>
+    <string name="area_button_done">Listo</string>
+    <string name="toast_area_done">Listo: la foto conserva todas sus partes</string>
+    <string name="toast_area_fail">No se pudo abrir la foto</string>
+    <string name="location_use_mine">Usar mi ubicación</string>
 </resources>

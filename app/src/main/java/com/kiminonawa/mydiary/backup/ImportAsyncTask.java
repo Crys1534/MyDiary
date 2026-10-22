@@ -201,7 +201,7 @@ public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
                             BUDiaryItem diaryItem = diary.getDiaryItemList().get(yi);
                             dbManager.insertDiaryContent(diaryItem.getDiaryItemType(),
                                     diaryItem.getDiaryItemPosition(),
-                                    diaryItem.getDiaryItemContent(), newDiaryId);
+                                    diaryItem.getDiaryItemContent(), newDiaryId, diaryItem.getDiaryItemArea());
                         }
                         //Copy the diary photo
                         copyDiaryPhoto(backupTopic.getTopic_id(), newTopicId,

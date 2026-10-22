@@ -1,5 +1,7 @@
 package com.kiminonawa.mydiary.entries.entries;
 
+import android.graphics.RectF;
+
 import androidx.annotation.NonNull;
 
 import com.kiminonawa.mydiary.entries.diary.TagHelper;
@@ -24,6 +26,8 @@ public class EntriesEntity implements Comparable<CalendarDay> {
     private boolean hasAttachment;
     //Full path of the first photo of the diary, null when it has no photo
     private String thumbnailPath;
+    //The part of that photo that is seen (fractions of the photo), null for the center
+    private RectF thumbnailArea;
     //Tags like ",school,trip," (see TagHelper)
     private String tags = "";
 
@@ -60,6 +64,14 @@ public class EntriesEntity implements Comparable<CalendarDay> {
 
     public void setThumbnailPath(String thumbnailPath) {
         this.thumbnailPath = thumbnailPath;
+    }
+
+    public RectF getThumbnailArea() {
+        return thumbnailArea;
+    }
+
+    public void setThumbnailArea(RectF thumbnailArea) {
+        this.thumbnailArea = thumbnailArea;
     }
 
     public long getId() {

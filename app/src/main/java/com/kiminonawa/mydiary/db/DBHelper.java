@@ -55,7 +55,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * Version 1 by Daxia：
      * First DB
      */
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 10;
     public static final String DATABASE_NAME = "mydiary.db";
 
     private static final String TEXT_TYPE = " TEXT";
@@ -121,6 +121,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     DiaryItemEntry_V2.COLUMN_POSITION + INTEGER_TYPE + COMMA_SEP +
                     DiaryItemEntry_V2.COLUMN_CONTENT + TEXT_TYPE + COMMA_SEP +
                     DiaryItemEntry_V2.COLUMN_REF_DIARY__ID + INTEGER_TYPE + COMMA_SEP +
+                    DiaryItemEntry_V2.COLUMN_AREA + TEXT_TYPE + COMMA_SEP +
                     FOREIGN + " (" + DiaryItemEntry_V2.COLUMN_REF_DIARY__ID + ")" + REFERENCES + DiaryEntry_V2.TABLE_NAME + "(" + DiaryEntry_V2._ID + ")" +
                     " )";
 
@@ -232,6 +233,14 @@ public class DBHelper extends SQLiteOpenHelper {
                     if (!hasColumn(db, DiaryEntry_V2.TABLE_NAME, DiaryEntry_V2.COLUMN_THUMBNAIL)) {
                         db.execSQL("ALTER TABLE " + DiaryEntry_V2.TABLE_NAME + " ADD COLUMN "
                                 + DiaryEntry_V2.COLUMN_THUMBNAIL + TEXT_TYPE);
+                    }
+                }
+
+                //The part of a photo that is seen (this fork): the photo files are not cut any more
+                if (oldVersion < 10) {
+                    if (!hasColumn(db, DiaryItemEntry_V2.TABLE_NAME, DiaryItemEntry_V2.COLUMN_AREA)) {
+                        db.execSQL("ALTER TABLE " + DiaryItemEntry_V2.TABLE_NAME + " ADD COLUMN "
+                                + DiaryItemEntry_V2.COLUMN_AREA + TEXT_TYPE);
                     }
                 }
 

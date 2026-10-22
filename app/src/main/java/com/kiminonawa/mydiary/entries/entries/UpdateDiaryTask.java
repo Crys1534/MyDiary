@@ -94,7 +94,7 @@ public class UpdateDiaryTask extends BackgroundTask<Long, Integer> {
                 }
                 //Save new data item
                 dbManager.insertDiaryContent(diaryItemHelper.get(i).getType(), i
-                        , diaryItemHelper.get(i).getContent(), diaryId);
+                        , diaryItemHelper.get(i).getContent(), diaryId, diaryItemHelper.getAreaTextAt(i));
             }
             //Delete all dir if it is no file.
             if (diaryFileManager.getDir().listFiles().length == 0) {

@@ -45,6 +45,10 @@ public class DBStructure {
         public static final String COLUMN_POSITION = "diary_item_position";
         public static final String COLUMN_CONTENT = "diary_item_content";
         public static final String COLUMN_REF_DIARY__ID = "item_ref_diary_id";
+        /**
+         * Photos: the part of the photo that is seen (see PhotoArea). The photo file is never cut.
+         */
+        public static final String COLUMN_AREA = "diary_item_area";
     }
 
 

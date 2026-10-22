@@ -124,6 +124,14 @@ public class DiaryItemHelper extends Observable {
     }
 
     /**
+     * The part of the cover photo that is seen on the cover (4:5), or null for the center.
+     */
+    public android.graphics.RectF getThumbnailCoverArea() {
+        DiaryPhoto photo = getThumbnailPhoto();
+        return photo == null ? null : photo.getArea().cover;
+    }
+
+    /**
      * The photo that is the cover now: the chosen one, or the first photo of the diary.
      *
      * @return the photo row, or null when the diary has no photos
@@ -160,24 +168,6 @@ public class DiaryItemHelper extends Observable {
     }
 
     /**
-     * The photo was cropped: the item now shows the new file. If it was the chosen cover, the new file is the cover.
-     *
-     * @return false when there is no photo with the old name any more
-     */
-    public boolean replacePhotoFile(String oldFileName, String newFileName, android.net.Uri newUri) {
-        DiaryPhoto photo = findPhoto(oldFileName);
-        if (photo == null) {
-            return false;
-        }
-        boolean wasChosen = oldFileName.equals(thumbnailFileName);
-        photo.setPhoto(newUri, newFileName);
-        if (wasChosen) {
-            thumbnailFileName = newFileName;
-        }
-        return true;
-    }
-
-    /**
      * Address of the photo that is the cover now, or null when the diary has no photos.
      */
     public String getThumbnailUriString() {
@@ -205,6 +195,15 @@ public class DiaryItemHelper extends Observable {
                 ((DiaryPhoto) row).setThumbnailSelected(row == current);
             }
         }
+    }
+
+    /**
+     * What has to be saved in the database for the item: for a photo, the part of it that is seen
+     * (empty when nothing was chosen); other items have nothing.
+     */
+    public String getAreaTextAt(int position) {
+        IDairyRow row = diaryItemList.get(position);
+        return row instanceof DiaryPhoto ? ((DiaryPhoto) row).getArea().toString() : "";
     }
 
     public int getNowPhotoCount() {

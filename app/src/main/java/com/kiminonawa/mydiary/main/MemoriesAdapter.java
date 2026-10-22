@@ -82,7 +82,7 @@ public class MemoriesAdapter extends RecyclerView.Adapter<EntryCardHolder> {
         holder.mood.setImageResource(DiaryInfoHelper.getMoodResourceId(memory.mood));
         holder.attachment.setVisibility(memory.hasAttachment ? View.VISIBLE : View.GONE);
 
-        holder.bindThumbnail(memory.thumbnailPath, thumbnailSizePx);
+        holder.bindThumbnail(memory.thumbnailPath, memory.thumbnailArea, thumbnailSizePx);
 
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -18,6 +18,7 @@ import com.kiminonawa.mydiary.backup.obj.BUDiaryItem;
 import com.kiminonawa.mydiary.backup.obj.BUMemoEntries;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.db.DBStructure.DiaryEntry_V2;
+import com.kiminonawa.mydiary.db.DBStructure.DiaryItemEntry_V2;
 import com.kiminonawa.mydiary.main.topic.ITopic;
 import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.shared.SPFManager;
@@ -153,6 +154,15 @@ public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
         return settings;
     }
 
+    /**
+     * The part of a photo that is seen (empty for the items that are not photos or when nothing was chosen).
+     */
+    private static String readArea(Cursor diaryItemCursor) {
+        int column = diaryItemCursor.getColumnIndex(DiaryItemEntry_V2.COLUMN_AREA);
+        String area = column >= 0 ? diaryItemCursor.getString(column) : "";
+        return area == null ? "" : area;
+    }
+
     private void deleteBackupJsonFile() {
         new FileManager(mContext, FileManager.BACKUP_DIR).clearDir();
     }
@@ -231,7 +241,7 @@ public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
                     for (int k = 0; k < diaryItemCursor.getCount(); k++) {
                         diaryItemItemList.add(
                                 new BUDiaryItem(diaryItemCursor.getInt(1), diaryItemCursor.getInt(2),
-                                        diaryItemCursor.getString(3)));
+                                        diaryItemCursor.getString(3), readArea(diaryItemCursor)));
                         diaryItemCursor.moveToNext();
                     }
                     diaryItemCursor.close();

@@ -284,8 +284,21 @@ public class EntriesFragment extends BaseDiaryFragment implements
         builder.show();
     }
 
+    /**
+     * Reads the entries again (an entry was saved, edited, moved or deleted). The list is drawn again when they
+     * are read, see {@link #onEntriesLoaded()}.
+     */
     public void updateEntriesData() {
-        updateEntriesList();
+        ((DiaryActivity) getActivity()).loadEntries();
+    }
+
+    /**
+     * The activity has read the entries: draw them.
+     */
+    public void onEntriesLoaded() {
+        if (!isAdded() || entriesAdapter == null) {
+            return;
+        }
         applyTagFilter();
         entriesAdapter.notifyDataSetChanged();
         countEntries();
@@ -295,7 +308,6 @@ public class EntriesFragment extends BaseDiaryFragment implements
                 updateYearChip();
             }
         });
-        ((DiaryActivity) getActivity()).callCalendarRefresh();
     }
 
     @Override

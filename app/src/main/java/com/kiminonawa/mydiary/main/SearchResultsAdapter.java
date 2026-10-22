@@ -2,6 +2,7 @@ package com.kiminonawa.mydiary.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.RectF;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
         int mood;
         boolean hasAttachment;
         String thumbnailPath;
+        RectF thumbnailArea;
         //What to open
         int topicType;
         long topicId;
@@ -105,6 +107,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 row.mood = note.mood;
                 row.hasAttachment = note.hasAttachment;
                 row.thumbnailPath = note.thumbnailPath;
+                row.thumbnailArea = note.thumbnailArea;
                 row.topicType = ITopic.TYPE_DIARY;
                 row.topicId = note.topicId;
                 row.topicName = note.topicName;
@@ -162,7 +165,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
             card.status.setVisibility(View.GONE);
             card.attachment.setVisibility(View.GONE);
         }
-        card.bindThumbnail(row.thumbnailPath, thumbnailSizePx);
+        card.bindThumbnail(row.thumbnailPath, row.thumbnailArea, thumbnailSizePx);
         card.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

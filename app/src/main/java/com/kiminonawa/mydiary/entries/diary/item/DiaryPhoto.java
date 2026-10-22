@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.view.View;
 
+import com.kiminonawa.mydiary.entries.diary.area.PhotoArea;
 import com.kiminonawa.mydiary.shared.gui.DiaryPhotoLayout;
 
 /**
@@ -16,6 +17,8 @@ public class DiaryPhoto implements IDairyRow {
     private String photoFileName;
     private Uri photoUri;
     private int position;
+    //The part of the photo that is seen (the file is never cut)
+    private PhotoArea area = PhotoArea.NONE;
 
     public DiaryPhoto(Activity activity) {
         diaryPhotoLayout = new DiaryPhotoLayout(activity);
@@ -58,7 +61,7 @@ public class DiaryPhoto implements IDairyRow {
     }
 
     /**
-     * Edit mode: the button that crops the photo to 4:3.
+     * Edit mode: the button that opens the screen to choose what part of the photo is seen.
      */
     public void setCropClickListener(View.OnClickListener clickListener) {
         diaryPhotoLayout.setCropOnClick(clickListener);
@@ -78,7 +81,21 @@ public class DiaryPhoto implements IDairyRow {
     public void setPhoto(Uri photoUri, String photoFileName) {
         this.photoUri = photoUri;
         this.photoFileName = photoFileName;
-        diaryPhotoLayout.setPhotoUri(photoUri);
+        diaryPhotoLayout.setPhotoUri(photoUri, area.body);
+    }
+
+    /**
+     * The part of the photo that is seen inside the entry (4:3) and on the cover (4:5).
+     */
+    public PhotoArea getArea() {
+        return area;
+    }
+
+    public void setArea(PhotoArea area) {
+        this.area = area == null ? PhotoArea.NONE : area;
+        if (photoUri != null) {
+            diaryPhotoLayout.setPhotoUri(photoUri, this.area.body);
+        }
     }
 
 
@@ -89,7 +106,7 @@ public class DiaryPhoto implements IDairyRow {
     @Override
     public void setContent(String content) {
         this.photoUri = Uri.parse(content);
-        diaryPhotoLayout.setPhotoUri(photoUri);
+        diaryPhotoLayout.setPhotoUri(photoUri, area.body);
     }
 
     @Override

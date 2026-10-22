@@ -2,11 +2,10 @@ package com.kiminonawa.mydiary.main;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.RectF;
 
 import com.kiminonawa.mydiary.db.DBManager;
-import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
-import com.kiminonawa.mydiary.entries.diary.item.RichText;
-import com.kiminonawa.mydiary.shared.FileManager;
+import com.kiminonawa.mydiary.entries.EntryPreview;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +36,8 @@ public class MemoriesHelper {
         public String chosenThumbnail;
         //Complete path of the photo that is the cover of the entry, null when it has no photo
         public String thumbnailPath;
+        //The part of that photo that is seen (fractions of the photo), null for the center
+        public RectF thumbnailArea;
     }
 
     /**
@@ -80,8 +81,11 @@ public class MemoriesHelper {
             }
             if (withSummary) {
                 for (Memory memory : memories) {
-                    memory.summary = findSummary(dbManager, memory.diaryId);
-                    memory.thumbnailPath = findThumbnail(context, dbManager, memory);
+                    EntryPreview preview = EntryPreview.read(context, dbManager, memory.topicId, memory.diaryId,
+                            memory.chosenThumbnail);
+                    memory.summary = preview.firstTextSummary(MAX_SUMMARY_LENGTH);
+                    memory.thumbnailPath = preview.thumbnailPath;
+                    memory.thumbnailArea = preview.thumbnailArea;
                 }
             }
         } catch (Exception e) {
@@ -129,7 +133,8 @@ public class MemoriesHelper {
                 cursor.close();
             }
             if (best != null) {
-                best.summary = findSummary(dbManager, best.diaryId);
+                best.summary = EntryPreview.read(context, dbManager, best.topicId, best.diaryId, null)
+                        .firstTextSummary(MAX_SUMMARY_LENGTH);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -142,69 +147,5 @@ public class MemoriesHelper {
             }
         }
         return best;
-    }
-
-    private static String findThumbnail(Context context, DBManager dbManager, Memory memory) {
-        return findThumbnail(context, dbManager, memory.topicId, memory.diaryId, memory.chosenThumbnail);
-    }
-
-    /**
-     * The photo that is the small picture of the entry: the one chosen as the cover, or else the first photo.
-     *
-     * @return the complete path of the photo, null when the entry has no photo
-     */
-    public static String findThumbnail(Context context, DBManager dbManager, long topicId, long diaryId,
-                                       String chosenThumbnail) {
-        String first = null;
-        String chosen = null;
-        Cursor content = dbManager.selectDiaryContentByDiaryId(diaryId);
-        if (content != null) {
-            for (int i = 0; i < content.getCount(); i++) {
-                content.moveToPosition(i);
-                if (content.getInt(1) == IDairyRow.TYPE_PHOTO) {
-                    String file = content.getString(3);
-                    if (first == null) {
-                        first = file;
-                    }
-                    if (chosenThumbnail != null && chosenThumbnail.length() > 0
-                            && chosenThumbnail.equals(file)) {
-                        chosen = file;
-                        break;
-                    }
-                }
-            }
-            content.close();
-        }
-        String file = chosen != null ? chosen : first;
-        if (file == null) {
-            return null;
-        }
-        return new FileManager(context, topicId, diaryId).getDirAbsolutePath() + "/" + file;
-    }
-
-    /**
-     * The beginning of the first text of the diary.
-     */
-    private static String findSummary(DBManager dbManager, long diaryId) {
-        String summary = "";
-        Cursor content = dbManager.selectDiaryContentByDiaryId(diaryId);
-        if (content != null) {
-            for (int i = 0; i < content.getCount(); i++) {
-                content.moveToPosition(i);
-                if (content.getInt(1) == IDairyRow.TYPE_TEXT) {
-                    String text = RichText.strip(content.getString(3));
-                    if (text != null && text.trim().length() > 0) {
-                        text = text.trim();
-                        summary = text.substring(0, Math.min(MAX_SUMMARY_LENGTH, text.length()));
-                        if (text.length() > MAX_SUMMARY_LENGTH) {
-                            summary += "…";
-                        }
-                        break;
-                    }
-                }
-            }
-            content.close();
-        }
-        return summary;
     }
 }

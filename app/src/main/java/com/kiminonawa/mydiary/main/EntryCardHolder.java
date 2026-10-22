@@ -1,5 +1,6 @@
 package com.kiminonawa.mydiary.main;
 
+import android.graphics.RectF;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,13 +9,9 @@ import android.widget.TextView;
 import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.common.RotationOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.kiminonawa.mydiary.R;
+import com.kiminonawa.mydiary.entries.diary.area.AreaImage;
 import com.kiminonawa.mydiary.shared.FileManager;
 
 /**
@@ -57,19 +54,13 @@ public class EntryCardHolder extends RecyclerView.ViewHolder {
 
     /**
      * The small picture of the card; a soft square when the entry has no photo.
+     *
+     * @param area the part of the photo that is seen (fractions of the photo), or null for the center
      */
-    public void bindThumbnail(String thumbnailPath, int sizePx) {
+    public void bindThumbnail(String thumbnailPath, RectF area, int sizePx) {
         if (thumbnailPath != null) {
             thumbnail.setVisibility(View.VISIBLE);
-            ImageRequest request = ImageRequestBuilder
-                    .newBuilderWithSource(Uri.parse(FileManager.FILE_HEADER + thumbnailPath))
-                    .setResizeOptions(new ResizeOptions(sizePx, sizePx))
-                    .setRotationOptions(RotationOptions.autoRotate())
-                    .build();
-            thumbnail.setController(Fresco.newDraweeControllerBuilder()
-                    .setOldController(thumbnail.getController())
-                    .setImageRequest(request)
-                    .build());
+            AreaImage.show(thumbnail, Uri.parse(FileManager.FILE_HEADER + thumbnailPath), area, sizePx, sizePx);
         } else {
             thumbnail.setController(null);
             thumbnail.setVisibility(View.GONE);

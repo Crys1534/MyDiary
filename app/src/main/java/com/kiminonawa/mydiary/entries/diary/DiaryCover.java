@@ -3,20 +3,17 @@ package com.kiminonawa.mydiary.entries.diary;
 import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.common.RotationOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.kiminonawa.mydiary.R;
+import com.kiminonawa.mydiary.entries.diary.area.AreaImage;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
 import com.kiminonawa.mydiary.shared.gui.AspectRatioRelativeLayout;
 
@@ -49,13 +46,14 @@ public class DiaryCover implements View.OnClickListener {
     private final ImageView IV_weather;
     private final TextView TV_weather;
     private final Listener listener;
-    private Runnable cropListener = null;
-    //Editing: the pencil of the tags is always there, and the cover can be cropped
+    private Runnable pickAreaListener = null;
+    //Editing: the pencil of the tags is always there, and the person can choose what part of the photo is seen
     private boolean editMode = false;
 
     private String savedTags = "";
     private List<String> tags = TagHelper.toList("");
     private String shownCover = null;
+    private RectF shownCoverArea = null;
 
     public DiaryCover(View rootView, Listener listener) {
         this.context = rootView.getContext();
@@ -78,7 +76,7 @@ public class DiaryCover implements View.OnClickListener {
 
     /**
      * Editing an entry (a new one or an old one): the pencil of the tags is always there (it opens the window to
-     * write them) and the photo of the cover can be cropped. Only reading: nothing of that.
+     * write them) and the person can choose what part of the cover photo is seen. Only reading: nothing of that.
      */
     public void setEditMode(boolean editMode) {
         this.editMode = editMode;
@@ -87,10 +85,11 @@ public class DiaryCover implements View.OnClickListener {
     }
 
     /**
-     * Called when the crop button of the cover is pressed (only shown when editing and the cover has a photo).
+     * Called when the button "choose what part is seen" of the cover is pressed
+     * (only shown when editing and the cover has a photo).
      */
-    public void setCropListener(Runnable cropListener) {
-        this.cropListener = cropListener;
+    public void setPickAreaListener(Runnable pickAreaListener) {
+        this.pickAreaListener = pickAreaListener;
     }
 
     private void refreshCropButton() {
@@ -168,32 +167,29 @@ public class DiaryCover implements View.OnClickListener {
 
     /**
      * @param path complete path of the photo file, or null when there is no photo (plain color)
+     * @param area the part of the photo that is seen (fractions of the photo), or null for the center
      */
-    public void setCover(String path) {
+    public void setCover(String path, RectF area) {
         if (path == null || path.length() == 0) {
             shownCover = null;
+            shownCoverArea = null;
             SDV_cover.setController(null);
             SDV_cover.setVisibility(View.GONE);
             V_overlay.setVisibility(View.GONE);
             refreshCropButton();
             return;
         }
-        if (path.equals(shownCover)) {
+        boolean sameArea = area == null ? shownCoverArea == null : area.equals(shownCoverArea);
+        if (path.equals(shownCover) && sameArea) {
             refreshCropButton();
             return;
         }
         shownCover = path;
+        shownCoverArea = area == null ? null : new RectF(area);
         Uri uri = path.startsWith("file:") || path.startsWith("content:") ? Uri.parse(path) : Uri.fromFile(new java.io.File(path));
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                //The cover has a fixed shape (see AspectRatioRelativeLayout)
-                .setResizeOptions(new ResizeOptions(ScreenHelper.getScreenWidth(context),
-                        Math.round(ScreenHelper.getScreenWidth(context) / AspectRatioRelativeLayout.COVER_RATIO)))
-                .setRotationOptions(RotationOptions.autoRotate())
-                .build();
-        SDV_cover.setController(Fresco.newDraweeControllerBuilder()
-                .setOldController(SDV_cover.getController())
-                .setImageRequest(request)
-                .build());
+        //The cover has a fixed shape (see AspectRatioRelativeLayout)
+        int width = ScreenHelper.getScreenWidth(context);
+        AreaImage.show(SDV_cover, uri, area, width, Math.round(width / AspectRatioRelativeLayout.COVER_RATIO));
         SDV_cover.setVisibility(View.VISIBLE);
         V_overlay.setVisibility(View.VISIBLE);
         refreshCropButton();
@@ -202,8 +198,8 @@ public class DiaryCover implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == IV_crop) {
-            if (cropListener != null) {
-                cropListener.run();
+            if (pickAreaListener != null) {
+                pickAreaListener.run();
             }
         } else if (v == IV_tagAdd) {
             if (listener != null) {

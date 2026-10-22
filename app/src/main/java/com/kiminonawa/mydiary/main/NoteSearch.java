@@ -2,8 +2,10 @@ package com.kiminonawa.mydiary.main;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.RectF;
 
 import com.kiminonawa.mydiary.db.DBManager;
+import com.kiminonawa.mydiary.entries.EntryPreview;
 import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
 import com.kiminonawa.mydiary.entries.diary.item.RichText;
 
@@ -38,6 +40,8 @@ public class NoteSearch {
         public boolean hasAttachment;
         public String chosenThumbnail;
         public String thumbnailPath;
+        //The part of that photo that is seen (fractions of the photo), null for the center
+        public RectF thumbnailArea;
     }
 
     public static String fold(String text) {
@@ -108,8 +112,10 @@ public class NoteSearch {
             }
             //The small picture of every result (like in the list of entries)
             for (Result result : results) {
-                result.thumbnailPath = MemoriesHelper.findThumbnail(context, dbManager, result.topicId,
+                EntryPreview preview = EntryPreview.read(context, dbManager, result.topicId,
                         result.diaryId, result.chosenThumbnail);
+                result.thumbnailPath = preview.thumbnailPath;
+                result.thumbnailArea = preview.thumbnailArea;
             }
         } finally {
             if (cursor != null) {

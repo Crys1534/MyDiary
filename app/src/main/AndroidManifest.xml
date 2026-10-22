@@ -94,7 +94,12 @@
             android:screenOrientation="portrait" />
 
 
-        <!--Ucrop-->
+        <!-- Choose what part of a photo is seen (the photo is not cut) -->
+        <activity
+            android:name=".entries.diary.area.AreaPickerActivity"
+            android:screenOrientation="portrait" />
+
+        <!--Ucrop (profile pictures)-->
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

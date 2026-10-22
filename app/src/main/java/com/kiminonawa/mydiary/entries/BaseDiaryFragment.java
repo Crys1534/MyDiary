@@ -19,9 +19,5 @@ public class BaseDiaryFragment extends Fragment {
     public List<EntriesEntity> getEntriesList() {
         return ((DiaryActivity) getActivity()).getEntriesList();
     }
-
-    public void updateEntriesList() {
-        ((DiaryActivity) getActivity()).loadEntries();
-    }
 }
 

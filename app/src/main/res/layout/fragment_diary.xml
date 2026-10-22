@@ -24,15 +24,6 @@
             android:tint="@color/button_disable_color" />
 
         <ImageView
-            android:id="@+id/IV_diary_location"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:scaleType="center"
-            android:clickable="false"
-            android:src="@drawable/ic_location_off_white_24dp" />
-
-        <ImageView
             android:id="@+id/IV_diary_photo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -95,21 +86,15 @@
             android:src="@drawable/ic_drive_file_move_white_24dp"
             android:visibility="gone" />
 
+        <!-- Only when reading an entry (not while writing it) -->
         <ImageView
             android:id="@+id/IV_diary_delete"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="center"
-            android:src="@drawable/ic_delete_white_24dp" />
-
-        <ImageView
-            android:id="@+id/IV_diary_clear"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:scaleType="center"
-            android:src="@drawable/ic_clear_white_24dp" />
+            android:src="@drawable/ic_delete_white_24dp"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/IV_diary_save"
@@ -350,7 +335,7 @@
                         android:visibility="gone" />
                 </LinearLayout>
 
-                <!-- Bottom left (only when editing and the cover has a photo): crop the photo of the cover to the shape of the cover -->
+                <!-- Bottom left (only when editing and the cover has a photo): choose the part of the photo that the cover shows -->
                 <ImageView
                     android:id="@+id/IV_diary_cover_crop"
                     android:layout_width="30dp"
@@ -361,7 +346,7 @@
                     android:layout_marginLeft="10dp"
                     android:background="@drawable/diary_cover_chip_bg"
                     android:padding="6dp"
-                    android:src="@drawable/ic_crop_white_24dp"
+                    android:src="@drawable/ic_area_white_24dp"
                     android:visibility="gone" />
 
             </com.kiminonawa.mydiary.shared.gui.AspectRatioRelativeLayout>

@@ -27,7 +27,7 @@
         android:src="@drawable/ic_star_border_white_24dp"
         android:visibility="gone" />
 
-    <!-- Edit mode: crop the photo to 4:3 (choose what is seen) -->
+    <!-- Edit mode: choose the part of the photo that is seen (4:3), nothing is cut -->
     <ImageView
         android:id="@+id/IV_diary_photo_crop"
         android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
         android:layout_toRightOf="@id/IV_diary_photo_thumbnail"
         android:background="@drawable/diary_photo_star_bg"
         android:padding="6dp"
-        android:src="@drawable/ic_crop_white_24dp"
+        android:src="@drawable/ic_area_white_24dp"
         android:visibility="gone" />
 
     <ImageView

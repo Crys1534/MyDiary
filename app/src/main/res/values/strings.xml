@@ -269,8 +269,13 @@
     <string name="photo_viewer_topic_fail">get diary fail</string>
     <string name="photo_viewer_photo_path_fail">get photo path fail</string>
     <string name="photo_viewer_no_images">No images</string>
-    <string name="crop_photo_title">Crop photo (4:3)</string>
-    <string name="crop_cover_title">Crop the cover (4:5)</string>
-    <string name="toast_crop_photo_done">Photo cropped</string>
-    <string name="toast_crop_photo_fail">The photo could not be cropped</string>
+    <!-- Choose what part of a photo is seen (the photo is not cut) -->
+    <string name="area_title_body">Choose what part of the photo is seen (4:3)</string>
+    <string name="area_title_cover">Choose what part is seen on the cover (4:5)</string>
+    <string name="area_hint">Move the photo with one finger and zoom with two. Your photo is not cut.</string>
+    <string name="area_button_center">Center</string>
+    <string name="area_button_done">Done</string>
+    <string name="toast_area_done">Done: the photo keeps all its parts</string>
+    <string name="toast_area_fail">The photo could not be opened</string>
+    <string name="location_use_mine">Use my location</string>
 </resources>

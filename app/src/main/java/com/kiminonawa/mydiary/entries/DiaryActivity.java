@@ -1,5 +1,6 @@
 package com.kiminonawa.mydiary.entries;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -21,11 +22,9 @@ import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.entries.calendar.CalendarFragment;
 import com.kiminonawa.mydiary.entries.diary.DiaryFragment;
 import com.kiminonawa.mydiary.db.DBStructure;
-import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
-import com.kiminonawa.mydiary.entries.diary.item.RichText;
-import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.entries.entries.EntriesEntity;
 import com.kiminonawa.mydiary.entries.entries.EntriesFragment;
+import com.kiminonawa.mydiary.shared.BackgroundTask;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 import com.kiminonawa.mydiary.shared.statusbar.ChinaPhoneHelper;
 
@@ -66,6 +65,8 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
      * The diary list for every fragment
      */
     private List<EntriesEntity> entriesList = new ArrayList<>();
+    //To ignore the answer of a reading when a newer one was asked
+    private int entriesLoadSequence = 0;
     private final static int MAX_TEXT_LENGTH = 18;
 
     /**
@@ -115,89 +116,90 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
 
 
     /**
-     *
+     * Reads all the entries of the diary from the database in the background (a big diary needs some time) and
+     * then tells the pages to draw them again.
      */
     public void loadEntries() {
-        entriesList.clear();
-        DBManager dbManager = new DBManager(this);
+        final int sequence = ++entriesLoadSequence;
+        final long topic = getTopicId();
+        final String noTitle = getString(R.string.diary_no_title);
+        final DiaryActivity activity = this;
+        new BackgroundTask<Void, List<EntriesEntity>>() {
+            @Override
+            protected List<EntriesEntity> doInBackground(Void... params) {
+                return readEntries(activity, topic, noTitle);
+            }
+
+            @Override
+            protected void onPostExecute(List<EntriesEntity> entries) {
+                //A newer reading is already on its way: this one is old
+                if (isFinishing() || sequence != entriesLoadSequence) {
+                    return;
+                }
+                entriesList.clear();
+                entriesList.addAll(entries);
+                notifyEntriesLoaded();
+            }
+        }.execute();
+    }
+
+    private static List<EntriesEntity> readEntries(Context context, long topicId, String noTitle) {
+        List<EntriesEntity> entries = new ArrayList<>();
+        DBManager dbManager = new DBManager(context);
         dbManager.opeDB();
-        //Select diary info
-        Cursor diaryCursor = dbManager.selectDiaryList(getTopicId());
-        for (int i = 0; i < diaryCursor.getCount(); i++) {
-            //get diary info
-            String title = diaryCursor.getString(2);
-            if ("".equals(title)) {
-                title = getString(R.string.diary_no_title);
-            }
-            EntriesEntity entity = new EntriesEntity(diaryCursor.getLong(0),
-                    new Date(diaryCursor.getLong(1)),
-                    //The whole title: the list cuts it with "..." when it is too long
-                    title,
-                    diaryCursor.getInt(4), diaryCursor.getInt(3),
-                    diaryCursor.getInt(5) > 0 ? true : false);
-
+        try {
+            //Select diary info
+            Cursor diaryCursor = dbManager.selectDiaryList(topicId);
             int tagsColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_TAGS);
-            if (tagsColumn >= 0) {
-                entity.setTags(diaryCursor.getString(tagsColumn));
-            }
-
-            //select first diary content
-            Cursor diaryContentCursor = dbManager.selectDiaryContentByDiaryId(entity.getId());
-            if (diaryContentCursor != null && diaryContentCursor.getCount() > 0) {
-                //The small picture of the entry: the photo that the person chose, or else the first photo
-                int thumbnailColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_THUMBNAIL);
+            int thumbnailColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_THUMBNAIL);
+            for (int i = 0; i < diaryCursor.getCount(); i++) {
+                String title = diaryCursor.getString(2);
+                if ("".equals(title)) {
+                    title = noTitle;
+                }
+                EntriesEntity entity = new EntriesEntity(diaryCursor.getLong(0),
+                        new Date(diaryCursor.getLong(1)),
+                        //The whole title: the list cuts it with "..." when it is too long
+                        title,
+                        diaryCursor.getInt(4), diaryCursor.getInt(3),
+                        diaryCursor.getInt(5) > 0);
+                if (tagsColumn >= 0) {
+                    entity.setTags(diaryCursor.getString(tagsColumn));
+                }
+                //The small picture (the one chosen as the cover, or else the first photo) and the first words
                 String chosenThumbnail = thumbnailColumn >= 0 ? diaryCursor.getString(thumbnailColumn) : null;
-                String firstPhoto = null;
-                String thumbnailFile = null;
-                for (int j = 0; j < diaryContentCursor.getCount(); j++) {
-                    diaryContentCursor.moveToPosition(j);
-                    if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_PHOTO) {
-                        String photoFile = diaryContentCursor.getString(3);
-                        if (firstPhoto == null) {
-                            firstPhoto = photoFile;
-                        }
-                        if (chosenThumbnail != null && chosenThumbnail.length() > 0
-                                && chosenThumbnail.equals(photoFile)) {
-                            thumbnailFile = photoFile;
-                            break;
-                        }
-                    }
+                EntryPreview preview = EntryPreview.read(context, dbManager, topicId, entity.getId(), chosenThumbnail);
+                if (preview.hasItems) {
+                    entity.setThumbnailPath(preview.thumbnailPath);
+                    entity.setThumbnailArea(preview.thumbnailArea);
+                    entity.setSummary(preview.listSummary(context, MAX_TEXT_LENGTH));
                 }
-                if (thumbnailFile == null) {
-                    thumbnailFile = firstPhoto;
-                }
-                if (thumbnailFile != null) {
-                    entity.setThumbnailPath(
-                            new FileManager(this, getTopicId(), entity.getId()).getDirAbsolutePath()
-                                    + "/" + thumbnailFile);
-                }
-                diaryContentCursor.moveToFirst();
-                String summary = "";
-                //Check content Type
-                if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_PHOTO) {
-                    summary = getString(R.string.entries_summary_photo);
-                } else if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_TEXT) {
-                    //Without the invisible marks of the bold text
-                    String firstText = RichText.strip(diaryContentCursor.getString(3));
-                    summary = firstText.substring(0, Math.min(MAX_TEXT_LENGTH, firstText.length()));
-                } else if (diaryContentCursor.getInt(1) == IDairyRow.TYPE_CHECKLIST) {
-                    //Checklist line: first char is "1" (done) or "0" (not done)
-                    String line = diaryContentCursor.getString(3);
-                    if (line != null && line.length() > 0) {
-                        String lineText = RichText.strip(line.substring(1));
-                        summary = (line.charAt(0) == '1' ? "[x] " : "[ ] ")
-                                + lineText.substring(0, Math.min(MAX_TEXT_LENGTH, lineText.length()));
-                    }
-                }
-                entity.setSummary(summary);
-                diaryContentCursor.close();
+                entries.add(entity);
+                diaryCursor.moveToNext();
             }
-            //Add entity
-            entriesList.add(entity);
-            diaryCursor.moveToNext();
+            diaryCursor.close();
+        } finally {
+            dbManager.closeDB();
         }
-        diaryCursor.close();
-        dbManager.closeDB();
+        return entries;
+    }
+
+    /**
+     * The entries were read: the list and the calendar draw them again (a page that is not open yet reads them
+     * when it opens).
+     */
+    private void notifyEntriesLoaded() {
+        if (mPagerAdapter == null) {
+            return;
+        }
+        Fragment entriesFragment = mPagerAdapter.getRegisteredFragment(0);
+        if (entriesFragment instanceof EntriesFragment) {
+            ((EntriesFragment) entriesFragment).onEntriesLoaded();
+        }
+        Fragment calendarFragment = mPagerAdapter.getRegisteredFragment(1);
+        if (calendarFragment instanceof CalendarFragment) {
+            ((CalendarFragment) calendarFragment).refreshCalendar();
+        }
     }
 
     public List<EntriesEntity> getEntriesList() {

@@ -128,6 +128,16 @@ public class LocationHelper {
      * @param current text already written (can be empty)
      */
     public static void showEditDialog(Context context, String current, final TextCallback callback) {
+        showEditDialog(context, current, callback, null);
+    }
+
+    /**
+     * Same, with a third button that asks the phone where it is.
+     *
+     * @param useMyLocation what to do when the button "Use my location" is pressed (null: no button)
+     */
+    public static void showEditDialog(Context context, String current, final TextCallback callback,
+                                      final Runnable useMyLocation) {
         final EditText input = new EditText(context);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         input.setSingleLine(true);
@@ -145,7 +155,7 @@ public class LocationHelper {
         params.rightMargin = margin;
         container.addView(input, params);
 
-        AlertDialog dialog = new AlertDialog.Builder(context)
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(R.string.location_edit_title)
                 .setView(container)
                 .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
@@ -154,8 +164,16 @@ public class LocationHelper {
                         callback.onText(input.getText().toString().trim());
                     }
                 })
-                .setNegativeButton(R.string.dialog_button_cancel, null)
-                .create();
+                .setNegativeButton(R.string.dialog_button_cancel, null);
+        if (useMyLocation != null) {
+            builder.setNeutralButton(R.string.location_use_mine, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int which) {
+                    useMyLocation.run();
+                }
+            });
+        }
+        AlertDialog dialog = builder.create();
         if (dialog.getWindow() != null) {
             dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }

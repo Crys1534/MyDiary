@@ -93,7 +93,7 @@ public class SaveDiaryTask extends BackgroundTask<Long, Integer> {
                     }
                     //Save data
                     dbManager.insertDiaryContent(diaryItemHelper.get(i).getType(), i
-                            , diaryItemHelper.get(i).getContent(), diaryId);
+                            , diaryItemHelper.get(i).getContent(), diaryId, diaryItemHelper.getAreaTextAt(i));
                 }
                 dbManager.setTransactionSuccessful();
             } else {
