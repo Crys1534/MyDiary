@@ -61,4 +61,8 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
+    <!-- Only the color of the numbers of the month calendar (used in dark mode; the size is not touched) -->
+    <style name="CalendarDateTextNight">
+        <item name="android:textColor">@color/calendar_date_text_night</item>
+    </style>
 </resources>

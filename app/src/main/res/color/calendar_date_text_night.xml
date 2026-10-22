@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The numbers of the month calendar in dark mode: light for the days of the month, softer for the days of other months -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/app_text_tertiary" android:state_enabled="false" />
+    <item android:color="@color/app_text" />
+</selector>

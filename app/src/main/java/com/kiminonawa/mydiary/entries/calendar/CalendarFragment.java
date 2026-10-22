@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.kiminonawa.mydiary.shared.ColorTools;
 import com.kiminonawa.mydiary.shared.Sfx;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.entries.BaseDiaryFragment;
@@ -267,6 +269,11 @@ public class CalendarFragment extends BaseDiaryFragment implements View.OnClickL
                         .setFirstDayOfWeek(Calendar.MONDAY)
                         .setCalendarDisplayMode(CalendarMode.MONTHS)
                         .commit();
+                if (ColorTools.isNight(getActivity())) {
+                    //The library draws dark numbers and arrows unless it is told otherwise
+                    materialCalendarView.setDateTextAppearance(R.style.CalendarDateTextNight);
+                    materialCalendarView.setArrowColor(ContextCompat.getColor(getActivity(), R.color.app_icon));
+                }
                 materialCalendarView.setCurrentDate(calendar);
                 materialCalendarView.setDateSelected(calendar, true);
                 materialCalendarView.setOnDateChangedListener(this);
