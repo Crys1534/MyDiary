@@ -157,6 +157,7 @@ def write_entry():
         tap(rid="IV_diary_italic")
         sleep(1)
         show("italic_done")
+    list_test()
     # checklist (keyboard closed first, the edit bar is under it)
     close_keyboard()
     sleep(1)
@@ -176,6 +177,62 @@ def write_entry():
     sleep(3)
     show("after_save")
     db_check()
+
+
+def list_menu(item):
+    """The list button of the edit bar opens a small menu: tap one of its items."""
+    close_keyboard()
+    if not tap(rid="IV_diary_list"):
+        log("   NO LIST BUTTON")
+        show("no_list_button", full=True)
+        return False
+    sleep(1)
+    n = find(text=item, contains=False)
+    if not n:
+        log("   menu item not found: %s" % item)
+        show("list_menu_missing", full=True)
+        return False
+    tap_xy(n["cx"], n["cy"])
+    sleep(1)
+    return True
+
+
+def list_test():
+    """Bullets, numbered list and quote: Enter continues the list, Enter on an empty line ends it."""
+    n = find(text="hola mundo bonito")
+    if not n:
+        log("   list test: text box not found")
+        return
+    tap_xy(n["b"][2] - 30, n["cy"])  # the end of the text
+    sleep(1)
+    key(66)
+    if list_menu("Bullets"):
+        show("list_bullets_menu_done", full=True)
+        type_text("uno")
+        key(66)
+        type_text("dos")
+        key(66)
+        key(66)  # empty bullet + Enter -> the list ends
+        type_text("sin lista")
+        key(66)
+    if list_menu("Numbered list"):
+        type_text("primero")
+        key(66)
+        type_text("segundo")
+        key(66)
+        type_text("tercero")
+        key(66)
+        key(66)
+        type_text("fin numeros")
+        key(66)
+    if list_menu("Quote"):
+        type_text("una cita de prueba bastante larga para que se rompa en varias lineas y se vea el margen")
+    sleep(1)
+    show("lists_typed", full=True)
+    close_keyboard()
+    sleep(1)
+    show("lists_keyboard_closed")
+    alive("lists")
 
 
 def make_png(path, w, h, base):

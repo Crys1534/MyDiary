@@ -142,7 +142,7 @@ public class RichText {
         StringBuilder sb = new StringBuilder(markup.length());
         for (int i = 0; i < markup.length(); i++) {
             char c = markup.charAt(i);
-            if (!isMark(c)) {
+            if (!isMark(c) && !ListFormat.isMark(c)) {
                 sb.append(c);
             }
         }

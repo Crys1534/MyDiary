@@ -132,7 +132,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
     private LinearLayout LL_diary_item_content;
     private ImageView IV_diary_close_dialog, IV_diary_location, IV_diary_photo,
-            IV_diary_delete, IV_diary_clear, IV_diary_save, IV_diary_bold, IV_diary_italic, IV_diary_checklist, IV_diary_audio;
+            IV_diary_delete, IV_diary_clear, IV_diary_save, IV_diary_bold, IV_diary_italic, IV_diary_list, IV_diary_checklist, IV_diary_audio;
     private boolean isEditMode;
 
     /**
@@ -274,6 +274,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         IV_diary_save = (ImageView) rootView.findViewById(R.id.IV_diary_save);
         IV_diary_bold = (ImageView) rootView.findViewById(R.id.IV_diary_bold);
         IV_diary_italic = (ImageView) rootView.findViewById(R.id.IV_diary_italic);
+        IV_diary_list = (ImageView) rootView.findViewById(R.id.IV_diary_list);
         IV_diary_checklist = (ImageView) rootView.findViewById(R.id.IV_diary_checklist);
         IV_diary_audio = (ImageView) rootView.findViewById(R.id.IV_diary_audio);
 
@@ -592,6 +593,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             IV_diary_bold.setOnClickListener(this);
             IV_diary_italic.setVisibility(View.VISIBLE);
             IV_diary_italic.setOnClickListener(this);
+            IV_diary_list.setVisibility(View.VISIBLE);
+            IV_diary_list.setOnClickListener(this);
             IV_diary_checklist.setVisibility(View.VISIBLE);
             IV_diary_checklist.setOnClickListener(this);
             IV_diary_audio.setVisibility(View.VISIBLE);
@@ -1090,6 +1093,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 if (!diaryItemHelper.toggleItalicAtFocus(getDialog().getCurrentFocus())) {
                     Toast.makeText(getActivity(), getString(R.string.toast_format_select_text), Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.IV_diary_list:
+                diaryItemHelper.showListMenu(getActivity(), IV_diary_list, getDialog().getCurrentFocus());
                 break;
             case R.id.IV_diary_checklist:
                 diaryItemHelper.insertChecklistAtFocus(getDialog().getCurrentFocus());

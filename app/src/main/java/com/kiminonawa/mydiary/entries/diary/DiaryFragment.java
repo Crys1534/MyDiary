@@ -100,7 +100,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     private Spinner SP_diary_weather, SP_diary_mood;
     private EditText EDT_diary_title, EDT_diary_tags;
     private ImageView IV_diary_menu, IV_diary_location, IV_diary_photo, IV_diary_delete, IV_diary_clear, IV_diary_save;
-    private ImageView IV_diary_bold, IV_diary_italic, IV_diary_checklist, IV_diary_audio;
+    private ImageView IV_diary_bold, IV_diary_italic, IV_diary_list, IV_diary_checklist, IV_diary_audio;
     private TextView TV_diary_item_content_hint;
     //The cover (thumbnail, date, title, tags)
     private DiaryCover diaryCover;
@@ -249,6 +249,9 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         IV_diary_italic = (ImageView) rootView.findViewById(R.id.IV_diary_italic);
         IV_diary_italic.setVisibility(View.VISIBLE);
         IV_diary_italic.setOnClickListener(this);
+        IV_diary_list = (ImageView) rootView.findViewById(R.id.IV_diary_list);
+        IV_diary_list.setVisibility(View.VISIBLE);
+        IV_diary_list.setOnClickListener(this);
         IV_diary_audio = (ImageView) rootView.findViewById(R.id.IV_diary_audio);
         IV_diary_audio.setVisibility(View.VISIBLE);
         IV_diary_audio.setOnClickListener(this);
@@ -874,6 +877,9 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 if (!diaryItemHelper.toggleItalicAtFocus(getActivity().getCurrentFocus())) {
                     Toast.makeText(getActivity(), getString(R.string.toast_format_select_text), Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.IV_diary_list:
+                diaryItemHelper.showListMenu(getActivity(), IV_diary_list, getActivity().getCurrentFocus());
                 break;
             case R.id.IV_diary_checklist:
                 diaryItemHelper.insertChecklistAtFocus(getActivity().getCurrentFocus());

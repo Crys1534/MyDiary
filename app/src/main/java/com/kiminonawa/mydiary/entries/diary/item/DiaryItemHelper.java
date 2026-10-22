@@ -237,6 +237,58 @@ public class DiaryItemHelper extends Observable {
         return true;
     }
 
+    /**
+     * The list button: bullets, numbered list or quote for the line(s) with the cursor of the box that has focus.
+     *
+     * @param mark ListFormat.BULLET / NUMBER / QUOTE, or 0 to take it away
+     * @return false when no text box has the cursor
+     */
+    public boolean applyListAtFocus(View focusView, char mark) {
+        if (!(focusView instanceof FormatEditText) || findRowByEditText(focusView) < 0) {
+            return false;
+        }
+        return ((FormatEditText) focusView).applyListFormat(mark);
+    }
+
+    /**
+     * Small menu over the list button: Bullets / Numbered list / Quote / Remove.
+     */
+    public void showListMenu(final Context context, View anchor, final View focusView) {
+        if (!(focusView instanceof FormatEditText) || findRowByEditText(focusView) < 0) {
+            android.widget.Toast.makeText(context, R.string.toast_list_tap_text, android.widget.Toast.LENGTH_SHORT).show();
+            return;
+        }
+        android.widget.PopupMenu menu = new android.widget.PopupMenu(context, anchor);
+        menu.getMenu().add(0, 1, 0, R.string.list_menu_bullets);
+        menu.getMenu().add(0, 2, 1, R.string.list_menu_numbers);
+        menu.getMenu().add(0, 3, 2, R.string.list_menu_quote);
+        menu.getMenu().add(0, 4, 3, R.string.list_menu_none);
+        menu.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(android.view.MenuItem item) {
+                char mark;
+                switch (item.getItemId()) {
+                    case 1:
+                        mark = ListFormat.BULLET;
+                        break;
+                    case 2:
+                        mark = ListFormat.NUMBER;
+                        break;
+                    case 3:
+                        mark = ListFormat.QUOTE;
+                        break;
+                    default:
+                        mark = 0;
+                        break;
+                }
+                applyListAtFocus(focusView, mark);
+                focusView.requestFocus();
+                return true;
+            }
+        });
+        menu.show();
+    }
+
     /*
      * Checklist
      */

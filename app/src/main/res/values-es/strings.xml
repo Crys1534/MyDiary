@@ -115,6 +115,11 @@
     <string name="tags_filter_title">Filtrar por etiqueta</string>
     <string name="tags_filter_all">Todas las entradas</string>
     <string name="tags_filter_none">Todavía no hay etiquetas. Agrégalas al escribir una entrada, por ejemplo: escuela viaje</string>
+    <string name="list_menu_bullets">Viñetas</string>
+    <string name="list_menu_numbers">Lista numerada</string>
+    <string name="list_menu_quote">Cita</string>
+    <string name="list_menu_none">Quitar lista / cita</string>
+    <string name="toast_list_tap_text">Toca el texto donde quieres la lista o la cita y luego el botón de lista</string>
     <string name="toast_format_select_text">Primero selecciona un texto de la entrada y luego toca B (negrita) o I (cursiva)</string>
 
     <!--Memories-->

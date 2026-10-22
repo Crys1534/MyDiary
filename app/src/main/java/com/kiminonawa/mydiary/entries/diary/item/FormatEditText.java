@@ -28,6 +28,9 @@ public class FormatEditText extends AppCompatEditText {
     private boolean touchedSince = false;
     private boolean changedSince = false;
     private BackgroundColorSpan highlight = null;
+    //Bullets / numbers / quotes (see ListFormat)
+    private boolean busy = false;
+    private int pendingEnter = -1;
 
     public FormatEditText(Context context) {
         super(context);
@@ -50,10 +53,31 @@ public class FormatEditText extends AppCompatEditText {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (busy) {
+                    return;
+                }
+                //A single new line was written: the person pressed Enter
+                pendingEnter = (before == 0 && count == 1 && start < s.length() && s.charAt(start) == '\n') ? start : -1;
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (busy) {
+                    return;
+                }
+                busy = true;
+                try {
+                    if (pendingEnter >= 0) {
+                        int cursor = ListFormat.continueListAfterEnter(s, pendingEnter);
+                        if (cursor >= 0) {
+                            setSelection(Math.min(cursor, s.length()));
+                        }
+                    }
+                    pendingEnter = -1;
+                    ListFormat.refresh(s, getResources().getDisplayMetrics().density);
+                } finally {
+                    busy = false;
+                }
             }
         });
         ready = true;
@@ -76,6 +100,39 @@ public class FormatEditText extends AppCompatEditText {
             //The selection disappeared without the person touching or writing: the keyboard was closed
             showHighlight();
         }
+        //The cursor can not be before the invisible mark of a list line
+        if (!busy && selStart == selEnd && getText() != null && ListFormat.isBeforeMark(getText(), selStart)) {
+            setSelection(selStart + 1);
+        }
+    }
+
+    /**
+     * Bullets / numbered list / quote for the lines that have the cursor or the selection.
+     *
+     * @param mark ListFormat.BULLET, NUMBER, QUOTE; or 0 to take it away. The same button again takes it away.
+     */
+    public boolean applyListFormat(char mark) {
+        Editable text = getText();
+        if (text == null) {
+            return false;
+        }
+        int start = getSelectionStart();
+        int end = getSelectionEnd();
+        if (start < 0 || end < 0) {
+            start = end = text.length();
+        }
+        busy = true;
+        try {
+            ListFormat.apply(text, start, end, mark);
+            ListFormat.refresh(text, getResources().getDisplayMetrics().density);
+        } finally {
+            busy = false;
+        }
+        int cursor = getSelectionEnd();
+        if (cursor >= 0 && ListFormat.isBeforeMark(text, cursor)) {
+            setSelection(cursor + 1);
+        }
+        return true;
     }
 
     @Override
