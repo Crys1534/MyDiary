@@ -2,7 +2,6 @@ package com.kiminonawa.mydiary.entries.diary.item;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
@@ -12,7 +11,6 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,12 +19,14 @@ import com.kiminonawa.mydiary.shared.AudioDownloader;
 import com.kiminonawa.mydiary.shared.AudioLink;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
 import com.kiminonawa.mydiary.shared.ThemeManager;
+import com.kiminonawa.mydiary.shared.WaveformExtractor;
+import com.kiminonawa.mydiary.shared.gui.WaveformView;
 
 import java.io.File;
 import java.util.Locale;
 
 /**
- * An audio inside a diary: a link (for example of Google Drive) with a play / pause button and a bar.
+ * An audio inside a diary: a link (for example of Google Drive) with a play / pause button and the waves of the sound.
  * Only one audio plays at a time. The audio is not part of the diary: only the link is saved. When it is played
  * the first time it is downloaded to the temporary memory of the app (with its percentage) and played from there.
  */
@@ -38,8 +38,8 @@ public class DiaryAudio implements IDairyRow {
     private final Context context;
     private final View root;
     private final ImageView IV_play, IV_open, IV_delete;
-    private final SeekBar SB_audio;
-    private final TextView TV_name, TV_time;
+    private final WaveformView WV_wave;
+    private final TextView TV_time;
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     private String link = "";
@@ -49,6 +49,7 @@ public class DiaryAudio implements IDairyRow {
     private boolean preparing = false;
     private boolean userSeeking = false;
     private AudioDownloader downloader = null;
+    private int waveToken = 0;
 
     private final Runnable progressUpdater = new Runnable() {
         @Override
@@ -73,8 +74,7 @@ public class DiaryAudio implements IDairyRow {
         IV_play = (ImageView) root.findViewById(R.id.IV_diary_audio_play);
         IV_open = (ImageView) root.findViewById(R.id.IV_diary_audio_open);
         IV_delete = (ImageView) root.findViewById(R.id.IV_diary_audio_delete);
-        SB_audio = (SeekBar) root.findViewById(R.id.SB_diary_audio);
-        TV_name = (TextView) root.findViewById(R.id.TV_diary_audio_name);
+        WV_wave = (WaveformView) root.findViewById(R.id.WV_diary_audio_wave);
         TV_time = (TextView) root.findViewById(R.id.TV_diary_audio_time);
 
         int color = ThemeManager.getInstance().getThemeMainColor(context);
@@ -83,8 +83,7 @@ public class DiaryAudio implements IDairyRow {
         circle.setColor(color);
         IV_play.setBackground(circle);
         IV_open.setColorFilter(color);
-        SB_audio.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        SB_audio.getThumb().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        WV_wave.setPlayedColor(color);
 
         IV_play.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,26 +97,31 @@ public class DiaryAudio implements IDairyRow {
                 openOutside();
             }
         });
-        SB_audio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        WV_wave.setOnSeekListener(new WaveformView.OnSeekListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser && player != null && prepared) {
-                    TV_time.setText(timeText((int) ((long) player.getDuration() * progress / seekBar.getMax()),
-                            player.getDuration()));
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            public void onSeekStart() {
                 userSeeking = true;
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+            public void onSeekChange(float fraction) {
+                if (player != null && prepared) {
+                    int duration = player.getDuration();
+                    TV_time.setText(timeText((int) (duration * fraction), duration));
+                }
+            }
+
+            @Override
+            public void onSeekEnd(float fraction) {
                 userSeeking = false;
                 if (player != null && prepared) {
-                    player.seekTo((int) ((long) player.getDuration() * seekBar.getProgress() / seekBar.getMax()));
+                    player.seekTo((int) (player.getDuration() * fraction));
                 }
+            }
+
+            @Override
+            public void onSeekCancel() {
+                userSeeking = false;
             }
         });
         setEditMode(false);
@@ -176,6 +180,9 @@ public class DiaryAudio implements IDairyRow {
 
             @Override
             public void onDone(File file) {
+                if (!WV_wave.hasPeaks()) {
+                    loadWave();
+                }
                 play(file);
             }
 
@@ -223,6 +230,7 @@ public class DiaryAudio implements IDairyRow {
                 public void onPrepared(MediaPlayer mp) {
                     preparing = false;
                     prepared = true;
+                    WV_wave.setSeekEnabled(true);
                     startPlaying();
                 }
             });
@@ -230,7 +238,7 @@ public class DiaryAudio implements IDairyRow {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     IV_play.setImageResource(R.drawable.ic_play_arrow_24dp);
-                    SB_audio.setProgress(0);
+                    WV_wave.setProgress(0);
                     TV_time.setText(timeText(0, mp.getDuration()));
                     try {
                         mp.seekTo(0);
@@ -297,7 +305,7 @@ public class DiaryAudio implements IDairyRow {
             int duration = player.getDuration();
             int now = player.getCurrentPosition();
             if (duration > 0 && !userSeeking) {
-                SB_audio.setProgress((int) ((long) now * SB_audio.getMax() / duration));
+                WV_wave.setProgress((float) now / duration);
                 TV_time.setText(timeText(now, duration));
             }
         } catch (IllegalStateException ignored) {
@@ -348,14 +356,36 @@ public class DiaryAudio implements IDairyRow {
             current = null;
         }
         IV_play.setImageResource(R.drawable.ic_play_arrow_24dp);
-        SB_audio.setProgress(0);
+        WV_wave.setSeekEnabled(false);
+        WV_wave.setProgress(0);
+    }
+
+    /**
+     * Shows the waves of the sound when the audio is already on the phone (otherwise the flat dots stay until it is
+     * downloaded the first time it is played).
+     */
+    private void loadWave() {
+        if (!AudioLink.isValid(link)) {
+            return;
+        }
+        final int token = ++waveToken;
+        File file = AudioDownloader.cacheFileFor(context, AudioLink.toPlayableUrl(link));
+        WaveformExtractor.loadAsync(file, new WaveformExtractor.Callback() {
+            @Override
+            public void onWave(float[] peaks) {
+                if (token == waveToken) {
+                    WV_wave.setPeaks(peaks);
+                }
+            }
+        });
     }
 
     @Override
     public void setContent(String content) {
         link = content == null ? "" : content.trim();
-        TV_name.setText(context.getString(R.string.audio_name, AudioLink.displayName(link)));
         TV_time.setText(R.string.audio_tap_to_play);
+        WV_wave.setPeaks(null);
+        loadWave();
     }
 
     @Override

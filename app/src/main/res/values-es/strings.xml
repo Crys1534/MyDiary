@@ -97,11 +97,9 @@
     <string name="audio_button_title">Agregar audio</string>
     <string name="audio_dialog_message">Pega el enlace del audio. Si está en Google Drive, el archivo debe estar compartido como «Cualquier persona con el enlace». La primera vez que lo reproduzcas se descarga al celular (verás el porcentaje).</string>
     <string name="audio_dialog_hint">https://drive.google.com/file/d/…</string>
-    <string name="audio_name">Audio · %1$s</string>
     <string name="audio_tap_to_play">Toca ▶ para escuchar</string>
     <string name="audio_loading">Cargando…</string>
     <string name="audio_error_short">No se pudo reproducir. Prueba el botón de la derecha para abrirlo.</string>
-    <string name="audio_error_play">No se pudo reproducir el audio. Revisa que el archivo esté compartido como «Cualquier persona con el enlace» y que sea pequeño; un archivo grande de Google Drive solo se puede abrir fuera de la app.</string>
     <string name="audio_downloading">Descargando… %1$d%%</string>
     <string name="audio_downloading_mb">Descargando… %1$s MB</string>
     <string name="audio_error_not_shared">El enlace no dejó descargar el audio. En Google Drive, comparte el archivo como «Cualquier persona con el enlace» e inténtalo de nuevo.</string>

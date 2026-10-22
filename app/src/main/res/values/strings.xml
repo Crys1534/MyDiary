@@ -98,11 +98,9 @@
     <string name="audio_button_title">Add audio</string>
     <string name="audio_dialog_message">Paste the link of the audio. If it is in Google Drive, the file has to be shared as \"Anyone with the link\". The first time it is played it is downloaded to the phone (you will see the percentage).</string>
     <string name="audio_dialog_hint">https://drive.google.com/file/d/…</string>
-    <string name="audio_name">Audio · %1$s</string>
     <string name="audio_tap_to_play">Tap play to listen</string>
     <string name="audio_loading">Loading…</string>
     <string name="audio_error_short">It could not be played. Try the button on the right to open it.</string>
-    <string name="audio_error_play">The audio could not be played. Check that the file is shared as \"Anyone with the link\" and that it is small; a big file of Google Drive can only be opened outside the app.</string>
     <string name="audio_downloading">Downloading… %1$d%%</string>
     <string name="audio_downloading_mb">Downloading… %1$s MB</string>
     <string name="audio_error_not_shared">The link did not let the audio be downloaded. In Google Drive, share the file as \"Anyone with the link\" and try again.</string>

@@ -238,10 +238,11 @@ def add_audio(url, tag):
 def play_audios(tag, wait):
     """Presses play on the NEWEST audio (the lowest one: new audios are added at the end of the entry),
     waits, and prints what it says every 2 seconds (download percentage, time, errors)."""
-    # go to the bottom of the entry, where the new audio is
+    # go to the bottom of the entry, where the new audio is (and let the scroll stop before touching)
     for _ in range(4):
         adb("shell", "input", "swipe", "540", "1700", "540", "700", "300")
         sleep(1)
+    sleep(2)
     plays = [n for n in nodes() if n["rid"].endswith("IV_diary_audio_play") and n["cy"] < 2180]
     log("   audios on the screen: %d, before: %s" % (len(plays), audio_times()))
     if not plays:
@@ -266,7 +267,7 @@ def audio_test():
     for tag, url in AUDIO_LINKS:
         if not add_audio(url, tag):
             return
-        play_audios(tag, 9)
+        play_audios(tag, 20 if tag == "mp3" else 10)
 
 
 def pick_photo(name, index=1):
