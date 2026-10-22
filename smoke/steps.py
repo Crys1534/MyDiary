@@ -1148,6 +1148,9 @@ def backup_content_test():
         con = sqlite3.connect(path)
         for row in con.execute("select t._id, t.topic_name, t.topic_type, (select count(*) from diary_entry_v2 d where d.diary_ref_topic_id = t._id) from topic_entry t order by t._id"):
             log("   topic after import: %r" % (row,))
+        # the part of the photos that is seen has to travel with the backup
+        for row in con.execute("select item_ref_diary_id, diary_item_content, diary_item_area from diary_item_entry_v2 where diary_item_area is not null and diary_item_area != '' order by 1"):
+            log("   AREA after import: %r" % (row,))
         con.close()
     restart("bk_after_import")
     alive("backup content")
