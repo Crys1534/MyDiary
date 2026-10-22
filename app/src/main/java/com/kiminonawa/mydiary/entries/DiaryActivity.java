@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -36,7 +36,7 @@ import java.util.List;
 
 import info.hoang8f.android.segmented.SegmentedGroup;
 
-public class DiaryActivity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener {
+public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
 
     /**

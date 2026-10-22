@@ -2,7 +2,7 @@ package com.kiminonawa.mydiary.memo;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -22,7 +22,7 @@ import com.kiminonawa.mydiary.shared.statusbar.ChinaPhoneHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MemoActivity extends FragmentActivity implements
+public class MemoActivity extends AppCompatActivity implements
         View.OnClickListener, EditMemoDialogFragment.MemoCallback, OnStartDragListener {
 
 

@@ -3,7 +3,7 @@ package com.kiminonawa.mydiary.contacts;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class ContactsActivity extends FragmentActivity implements View.OnClickListener,
+public class ContactsActivity extends AppCompatActivity implements View.OnClickListener,
         ContactsDetailDialogFragment.ContactsDetailCallback, LatterSortLayout.OnTouchingLetterChangedListener {
 
 
