@@ -17,15 +17,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kiminonawa.mydiary.R;
+import com.kiminonawa.mydiary.shared.AudioDownloader;
 import com.kiminonawa.mydiary.shared.AudioLink;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 
+import java.io.File;
 import java.util.Locale;
 
 /**
  * An audio inside a diary: a link (for example of Google Drive) with a play / pause button and a bar.
- * Only one audio plays at a time. The audio is not copied to the phone: it is played from the link.
+ * Only one audio plays at a time. The audio is not part of the diary: only the link is saved. When it is played
+ * the first time it is downloaded to the temporary memory of the app (with its percentage) and played from there.
  */
 public class DiaryAudio implements IDairyRow {
 
@@ -45,6 +48,7 @@ public class DiaryAudio implements IDairyRow {
     private boolean prepared = false;
     private boolean preparing = false;
     private boolean userSeeking = false;
+    private AudioDownloader downloader = null;
 
     private final Runnable progressUpdater = new Runnable() {
         @Override
@@ -156,15 +160,64 @@ public class DiaryAudio implements IDairyRow {
             return;
         }
         release();
-        player = new MediaPlayer();
         preparing = true;
         TV_time.setText(R.string.audio_loading);
+        downloader = new AudioDownloader();
+        downloader.start(context, AudioLink.toPlayableUrl(link), new AudioDownloader.Listener() {
+            @Override
+            public void onProgress(int percent, long bytes) {
+                if (percent >= 0) {
+                    TV_time.setText(context.getString(R.string.audio_downloading, percent));
+                } else {
+                    TV_time.setText(context.getString(R.string.audio_downloading_mb,
+                            String.format(Locale.US, "%.1f", bytes / (1024f * 1024f))));
+                }
+            }
+
+            @Override
+            public void onDone(File file) {
+                play(file);
+            }
+
+            @Override
+            public void onError(int reason) {
+                release();
+                int message;
+                switch (reason) {
+                    case AudioDownloader.ERROR_NOT_SHARED:
+                        message = R.string.audio_error_not_shared;
+                        break;
+                    case AudioDownloader.ERROR_PAGE:
+                        message = R.string.audio_error_page;
+                        break;
+                    case AudioDownloader.ERROR_TOO_BIG:
+                        message = R.string.audio_error_big;
+                        break;
+                    case AudioDownloader.ERROR_NOT_HTTPS:
+                        message = R.string.audio_error_link;
+                        break;
+                    default:
+                        message = R.string.audio_error_network;
+                        break;
+                }
+                TV_time.setText(R.string.audio_error_short);
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    /**
+     * Plays the audio that is already on the phone.
+     */
+    private void play(final File file) {
+        player = new MediaPlayer();
+        preparing = true;
         try {
             player.setAudioAttributes(new AudioAttributes.Builder()
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .build());
-            player.setDataSource(AudioLink.toPlayableUrl(link));
+            player.setDataSource(file.getAbsolutePath());
             player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
@@ -188,17 +241,22 @@ public class DiaryAudio implements IDairyRow {
             player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
+                    //A file that can't be played is not kept: the next try downloads it again
+                    //noinspection ResultOfMethodCallIgnored
+                    file.delete();
                     release();
                     TV_time.setText(R.string.audio_error_short);
-                    Toast.makeText(context, R.string.audio_error_play, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.audio_error_format, Toast.LENGTH_LONG).show();
                     return true;
                 }
             });
             player.prepareAsync();
         } catch (Exception e) {
+            //noinspection ResultOfMethodCallIgnored
+            file.delete();
             release();
             TV_time.setText(R.string.audio_error_short);
-            Toast.makeText(context, R.string.audio_error_play, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.audio_error_format, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -273,6 +331,10 @@ public class DiaryAudio implements IDairyRow {
      */
     public void release() {
         handler.removeCallbacks(progressUpdater);
+        if (downloader != null) {
+            downloader.cancel();
+            downloader = null;
+        }
         if (player != null) {
             try {
                 player.release();

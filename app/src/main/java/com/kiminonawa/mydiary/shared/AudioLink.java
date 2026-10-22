@@ -6,9 +6,9 @@ import java.util.regex.Pattern;
 /**
  * Links of audio files that can be put inside a diary.
  * <p>
- * A link of Google Drive ("share" link) is changed into the address that downloads the file, so the
- * phone can play it. The file has to be shared as "Anyone with the link" and should be small
- * (Google asks for a confirmation for big files and then it can't be played inside the app).
+ * A link of Google Drive ("share" link) is changed into the address that downloads the file. The audio
+ * is downloaded to the phone the first time it is played (so any format and any place of the file
+ * works) and played from there. The file has to be shared as "Anyone with the link".
  */
 public class AudioLink {
 
@@ -60,7 +60,8 @@ public class AudioLink {
     public static String toPlayableUrl(String link) {
         String id = driveFileId(link);
         if (id != null) {
-            return "https://drive.google.com/uc?export=download&id=" + id;
+            //"confirm=t": Google does not ask for a confirmation page for the big files
+            return "https://drive.usercontent.google.com/download?id=" + id + "&export=download&confirm=t";
         }
         return link == null ? "" : link.trim();
     }

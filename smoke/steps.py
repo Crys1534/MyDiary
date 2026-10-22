@@ -201,27 +201,60 @@ def make_png(path, w, h, base):
         f.write(png)
 
 
-def audio_test():
-    """The audio button: paste a link, the audio appears with a play button, play it for a few seconds."""
+AUDIO_LINKS = [
+    ("mp3", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"),
+    # a real m4a with the index (moov) at the END of the file, like the recorders make them
+    ("m4a", "https://raw.githubusercontent.com/Crys1534/MyDiary/master/smoke/test-audio.m4a"),
+    # not an audio: a web page (like Google Drive when the file is not shared) -> a clear error
+    ("page", "https://example.com/"),
+]
+
+
+def audio_times():
+    return [n["text"] for n in nodes() if n["rid"].endswith("TV_diary_audio_time")]
+
+
+def add_audio(url, tag):
     close_keyboard()
     sleep(1)
     if not tap(rid="IV_diary_audio"):
-        show("no_audio_button", full=True)
-        return
+        show("no_audio_button_%s" % tag, full=True)
+        return False
     sleep(2)
-    show("audio_dialog", full=True)
-    type_text("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
-    show("audio_link_typed")
+    show("audio_dialog_%s" % tag, full=True)
+    type_text(url)
     tap(rid="android:id/button1")
     sleep(2)
-    show("audio_added", full=True)
-    if tap(rid="IV_diary_audio_play"):
-        sleep(7)
-        show("audio_playing", full=True)
-        alive("audio playing")
-        tap(rid="IV_diary_audio_play")  # pause
+    show("audio_added_%s" % tag, full=True)
+    return True
+
+
+def play_audios(tag, wait):
+    """Presses play on every audio that is on the screen, waits, and prints what each one says."""
+    plays = []
+    for _ in range(4):
+        plays = [n for n in nodes() if n["rid"].endswith("IV_diary_audio_play")]
+        if plays:
+            break
+        adb("shell", "input", "swipe", "540", "1700", "540", "900", "300")
         sleep(1)
-        show("audio_paused")
+    log("   audios on the screen: %d, before: %s" % (len(plays), audio_times()))
+    for n in plays:
+        tap_xy(n["cx"], n["cy"])
+        sleep(wait)
+        log("   after play (%s): %s" % (tag, audio_times()))
+        show("audio_playing_%s" % tag, full=True)
+        alive("audio %s" % tag)
+        tap_xy(n["cx"], n["cy"])  # pause (or nothing if it ended / failed)
+        sleep(1)
+
+
+def audio_test():
+    """The audio button: paste a link, the audio appears with a play button, play it for a few seconds."""
+    for tag, url in AUDIO_LINKS:
+        if not add_audio(url, tag):
+            return
+        play_audios(tag, 9)
 
 
 def pick_photo(name, index=1):
