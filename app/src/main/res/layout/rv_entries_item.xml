@@ -50,7 +50,7 @@
 
         <RelativeLayout
             android:id="@+id/LL_entries_item_icon"
-            android:layout_width="70dp"
+            android:layout_width="88dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:paddingBottom="10dp"
