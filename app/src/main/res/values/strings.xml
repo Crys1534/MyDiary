@@ -233,7 +233,7 @@
     <!--Backup-->
     <string name="backup_title">Backup</string>
     <string name="backup_export_title">Export</string>
-    <string name="backup_export_hint">Export all data(Not including profile)</string>
+    <string name="backup_export_hint">Saves everything: notes, photos, tags, covers, topics and their backgrounds, colors, settings, your name and profile pictures, and the passcode</string>
     <string name="backup_export_path_hint">Click to choose where to save the backup</string>
     <string name="backup_export_button">export</string>
     <string name="backup_export_share_title">Share with</string>
@@ -243,7 +243,7 @@
     <string name="toast_export_fail">export fail&#8230;please checking permission or storage</string>
 
     <string name="backup_import_title">Import</string>
-    <string name="backup_import_hint">Import existing file((Not including profile)</string>
+    <string name="backup_import_hint">Brings back everything saved in a backup file. The notes are added to the ones you already have; the settings of the backup replace the current ones</string>
     <string name="backup_import_path_hint">Click to select importing file</string>
     <string name="backup_import_button">import</string>
     <string name="backup_import_can_not_read">Can\'t open the file picker of this phone</string>
@@ -269,4 +269,7 @@
     <string name="photo_viewer_topic_fail">get diary fail</string>
     <string name="photo_viewer_photo_path_fail">get photo path fail</string>
     <string name="photo_viewer_no_images">No images</string>
+    <string name="crop_photo_title">Crop photo (4:3)</string>
+    <string name="toast_crop_photo_done">Photo cropped</string>
+    <string name="toast_crop_photo_fail">The photo could not be cropped</string>
 </resources>

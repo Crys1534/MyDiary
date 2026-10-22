@@ -3,6 +3,13 @@ package com.kiminonawa.mydiary.main;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.Outline;
+import android.graphics.drawable.ColorDrawable;
+import android.view.LayoutInflater;
+import android.view.ViewOutlineProvider;
+import android.view.Window;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +46,7 @@ import com.kiminonawa.mydiary.oobe.CustomViewTarget;
 import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.entries.DiaryActivity;
 import com.kiminonawa.mydiary.shared.SPFManager;
+import com.kiminonawa.mydiary.shared.ScreenHelper;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 import com.kiminonawa.mydiary.shared.gui.MyDiaryButton;
 import com.kiminonawa.mydiary.shared.statusbar.ChinaPhoneHelper;
@@ -218,23 +226,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             return false;
         }
-        RecyclerView list = new RecyclerView(this);
+        //Over the background of the entries, with the same cards as the list of entries
+        View content = LayoutInflater.from(this).inflate(R.layout.dialog_today, null);
+        content.setBackground(ThemeManager.getInstance().getTopicBgDefaultDrawable(this, ITopic.TYPE_DIARY));
+        final float radius = ScreenHelper.dpToPixel(getResources(), 16);
+        content.setClipToOutline(true);
+        content.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), radius);
+            }
+        });
+        RecyclerView list = (RecyclerView) content.findViewById(R.id.RV_today_list);
         list.setLayoutManager(new LinearLayoutManager(this));
-        SearchResultsAdapter adapter = new SearchResultsAdapter(this);
-        list.setAdapter(adapter);
-        final AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.today_card_title)
-                .setView(list)
-                .setPositiveButton(R.string.memories_close, null)
-                .create();
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(content);
+        MemoriesAdapter adapter = new MemoriesAdapter(this, memories);
         adapter.setOnOpenListener(new Runnable() {
             @Override
             public void run() {
                 dialog.dismiss();
             }
         });
-        adapter.setMemories(memories);
+        list.setAdapter(adapter);
+        content.findViewById(R.id.TV_today_close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(
+                    ScreenHelper.getScreenWidth(this) - ScreenHelper.dpToPixel(getResources(), 16),
+                    (int) (ScreenHelper.getScreenHeight(this) * 0.82f));
+        }
         return true;
     }
 

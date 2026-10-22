@@ -25,39 +25,34 @@ import java.util.zip.ZipOutputStream;
 public class ZipManager {
 
     private static final String TAG = "ZipManager";
-    private FileManager diaryFileManager;
+    //The folders (inside the files of the app) that go in the backup:
+    //diary = photos of the entries + the background of every diary, memo / contacts = the background of every topic,
+    //setting = the pictures of the profile
+    private static final String[] BACKUP_FOLDERS = {"diary", "memo", "contacts", "setting"};
+    //Work folders that are not worth saving
+    private static final String[] SKIP_FOLDERS = {"editCache", "temp"};
+    private File rootDir;
     private final int BUFFER_SIZE = 2048;
 
 
     public ZipManager(Context context) {
-        //Copy data form diary
-        diaryFileManager = new FileManager(context, FileManager.DIARY_ROOT_DIR);
+        rootDir = new FileManager(context, FileManager.ROOT_DIR).getDir();
     }
 
     /**
-     * Writes the backup (all the diary files + the json file) into the given stream.
+     * Writes the backup (all the files of the folders above + the json file) into the given stream.
      * The stream is always closed.
      */
     public boolean zipFileAtPath(String backupJsonFilePath, OutputStream destination) {
-
-        File sourceFile = diaryFileManager.getDir();
         try {
-            BufferedInputStream origin = null;
             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
                     destination));
-            if (sourceFile.isDirectory()) {
-                zipSubFolder(out, sourceFile, sourceFile.getParent().length());
-            } else {
-                byte data[] = new byte[BUFFER_SIZE];
-                FileInputStream fi = new FileInputStream(sourceFile);
-                origin = new BufferedInputStream(fi, BUFFER_SIZE);
-                ZipEntry entry = new ZipEntry(sourceFile.getName());
-                out.putNextEntry(entry);
-                int count;
-                while ((count = origin.read(data, 0, BUFFER_SIZE)) != -1) {
-                    out.write(data, 0, count);
+            int basePathLength = rootDir.getPath().length();
+            for (String name : BACKUP_FOLDERS) {
+                File folder = new File(rootDir, name);
+                if (folder.isDirectory()) {
+                    zipSubFolder(out, folder, basePathLength);
                 }
-                origin.close();
             }
             //Zip the json file
             zipBackupJsonFile(backupJsonFilePath, out);
@@ -86,6 +81,15 @@ public class ZipManager {
         }
     }
 
+    private boolean isSkippedFolder(File folder) {
+        for (String skip : SKIP_FOLDERS) {
+            if (skip.equals(folder.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Zips a subfolder
      */
@@ -94,9 +98,15 @@ public class ZipManager {
                               int basePathLength) throws IOException {
 
         File[] fileList = folder.listFiles();
+        if (fileList == null) {
+            return;
+        }
         BufferedInputStream origin = null;
         for (File file : fileList) {
             if (file.isDirectory()) {
+                if (isSkippedFolder(file)) {
+                    continue;
+                }
                 zipSubFolder(out, file, basePathLength);
             } else {
                 byte data[] = new byte[BUFFER_SIZE];

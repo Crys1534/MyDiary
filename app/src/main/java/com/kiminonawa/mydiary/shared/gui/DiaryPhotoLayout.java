@@ -27,7 +27,7 @@ public class DiaryPhotoLayout extends LinearLayout {
     private static final float PHOTO_ASPECT_RATIO = 4f / 3f;
 
     private SimpleDraweeView SDV_diary_new_photo;
-    private ImageView IV_diary_photo_delete, IV_diary_photo_thumbnail;
+    private ImageView IV_diary_photo_delete, IV_diary_photo_thumbnail, IV_diary_photo_crop;
 
     public DiaryPhotoLayout(Activity activity) {
         super(activity);
@@ -36,6 +36,7 @@ public class DiaryPhotoLayout extends LinearLayout {
         SDV_diary_new_photo.setAspectRatio(PHOTO_ASPECT_RATIO);
         IV_diary_photo_delete = (ImageView) v.findViewById(R.id.IV_diary_photo_delete);
         IV_diary_photo_thumbnail = (ImageView) v.findViewById(R.id.IV_diary_photo_thumbnail);
+        IV_diary_photo_crop = (ImageView) v.findViewById(R.id.IV_diary_photo_crop);
     }
 
     public void setPhotoUri( Uri photoUri) {
@@ -57,6 +58,7 @@ public class DiaryPhotoLayout extends LinearLayout {
     public void setDeletePositionTag(int position) {
         IV_diary_photo_delete.setTag(position);
         IV_diary_photo_thumbnail.setTag(position);
+        IV_diary_photo_crop.setTag(position);
     }
 
     /**
@@ -64,6 +66,13 @@ public class DiaryPhotoLayout extends LinearLayout {
      */
     public void setThumbnailOnClick(OnClickListener listener) {
         IV_diary_photo_thumbnail.setOnClickListener(listener);
+    }
+
+    /**
+     * Edit mode: the button that crops this photo to 4:3.
+     */
+    public void setCropOnClick(OnClickListener listener) {
+        IV_diary_photo_crop.setOnClickListener(listener);
     }
 
     public void setThumbnailSelected(boolean selected) {
@@ -83,9 +92,11 @@ public class DiaryPhotoLayout extends LinearLayout {
         if (isEditMode) {
             IV_diary_photo_delete.setVisibility(VISIBLE);
             IV_diary_photo_thumbnail.setVisibility(VISIBLE);
+            IV_diary_photo_crop.setVisibility(VISIBLE);
         } else {
             IV_diary_photo_delete.setVisibility(GONE);
             IV_diary_photo_thumbnail.setVisibility(GONE);
+            IV_diary_photo_crop.setVisibility(GONE);
         }
     }
 

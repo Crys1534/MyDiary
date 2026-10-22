@@ -145,6 +145,39 @@ public class DiaryItemHelper extends Observable {
     }
 
     /**
+     * The photo item with this file name, or null.
+     */
+    public DiaryPhoto findPhoto(String fileName) {
+        if (fileName == null) {
+            return null;
+        }
+        for (IDairyRow row : diaryItemList) {
+            if (row instanceof DiaryPhoto && fileName.equals(row.getContent())) {
+                return (DiaryPhoto) row;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * The photo was cropped: the item now shows the new file. If it was the chosen cover, the new file is the cover.
+     *
+     * @return false when there is no photo with the old name any more
+     */
+    public boolean replacePhotoFile(String oldFileName, String newFileName, android.net.Uri newUri) {
+        DiaryPhoto photo = findPhoto(oldFileName);
+        if (photo == null) {
+            return false;
+        }
+        boolean wasChosen = oldFileName.equals(thumbnailFileName);
+        photo.setPhoto(newUri, newFileName);
+        if (wasChosen) {
+            thumbnailFileName = newFileName;
+        }
+        return true;
+    }
+
+    /**
      * Address of the photo that is the cover now, or null when the diary has no photos.
      */
     public String getThumbnailUriString() {

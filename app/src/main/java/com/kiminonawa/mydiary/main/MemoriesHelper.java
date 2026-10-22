@@ -6,6 +6,7 @@ import android.database.Cursor;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
 import com.kiminonawa.mydiary.entries.diary.item.RichText;
+import com.kiminonawa.mydiary.shared.FileManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +29,14 @@ public class MemoriesHelper {
         public long time;
         public int yearsAgo;
         public int year;
+        //Like in the list of entries: tags (",school,trip,"), weather, mood, attachment and the small picture
+        public String tags = "";
+        public int weather;
+        public int mood;
+        public boolean hasAttachment;
+        public String chosenThumbnail;
+        //Complete path of the photo that is the cover of the entry, null when it has no photo
+        public String thumbnailPath;
     }
 
     /**
@@ -59,6 +68,11 @@ public class MemoriesHelper {
                         memory.topicName = cursor.getString(4);
                         memory.yearsAgo = yearsAgo;
                         memory.year = written.get(Calendar.YEAR);
+                        memory.tags = cursor.getString(5) == null ? "" : cursor.getString(5);
+                        memory.weather = cursor.getInt(6);
+                        memory.mood = cursor.getInt(7);
+                        memory.hasAttachment = cursor.getInt(8) > 0;
+                        memory.chosenThumbnail = cursor.getString(9);
                         memories.add(memory);
                     }
                 }
@@ -67,6 +81,7 @@ public class MemoriesHelper {
             if (withSummary) {
                 for (Memory memory : memories) {
                     memory.summary = findSummary(dbManager, memory.diaryId);
+                    memory.thumbnailPath = findThumbnail(context, dbManager, memory);
                 }
             }
         } catch (Exception e) {
@@ -127,6 +142,37 @@ public class MemoriesHelper {
             }
         }
         return best;
+    }
+
+    /**
+     * The photo that is the small picture of the entry: the one chosen as the cover, or else the first photo.
+     */
+    private static String findThumbnail(Context context, DBManager dbManager, Memory memory) {
+        String first = null;
+        String chosen = null;
+        Cursor content = dbManager.selectDiaryContentByDiaryId(memory.diaryId);
+        if (content != null) {
+            for (int i = 0; i < content.getCount(); i++) {
+                content.moveToPosition(i);
+                if (content.getInt(1) == IDairyRow.TYPE_PHOTO) {
+                    String file = content.getString(3);
+                    if (first == null) {
+                        first = file;
+                    }
+                    if (memory.chosenThumbnail != null && memory.chosenThumbnail.length() > 0
+                            && memory.chosenThumbnail.equals(file)) {
+                        chosen = file;
+                        break;
+                    }
+                }
+            }
+            content.close();
+        }
+        String file = chosen != null ? chosen : first;
+        if (file == null) {
+            return null;
+        }
+        return new FileManager(context, memory.topicId, memory.diaryId).getDirAbsolutePath() + "/" + file;
     }
 
     /**

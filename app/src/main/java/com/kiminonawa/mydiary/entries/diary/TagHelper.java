@@ -1,5 +1,16 @@
 package com.kiminonawa.mydiary.entries.diary;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.text.InputType;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+
+import androidx.appcompat.app.AlertDialog;
+
+import com.kiminonawa.mydiary.R;
+import com.kiminonawa.mydiary.shared.ScreenHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -75,5 +86,49 @@ public class TagHelper {
             }
         }
         return sb.toString();
+    }
+
+    public interface Callback {
+        /**
+         * @param savedTags what the person wrote, ready to be saved (",school,trip," or "" for no tags)
+         */
+        void onTags(String savedTags);
+    }
+
+    /**
+     * The small window to write the tags of an entry (it opens with the pencil of the cover).
+     *
+     * @param currentSavedTags the tags the entry has now, like ",school,trip,"
+     */
+    public static void showEditDialog(Context context, String currentSavedTags, final Callback callback) {
+        final EditText input = new EditText(context);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        input.setSingleLine(true);
+        input.setHint(R.string.diary_tags_hint);
+        String current = toDisplay(currentSavedTags);
+        input.setText(current.length() > 0 ? current + " " : "");
+        input.setSelection(input.getText().length());
+        int margin = ScreenHelper.dpToPixel(context.getResources(), 20);
+        FrameLayout container = new FrameLayout(context);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        params.leftMargin = margin;
+        params.rightMargin = margin;
+        container.addView(input, params);
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle(R.string.cover_tags_title)
+                .setView(container)
+                .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        callback.onTags(normalize(input.getText().toString()));
+                    }
+                })
+                .setNegativeButton(R.string.dialog_button_cancel, null)
+                .create();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
+        dialog.show();
     }
 }

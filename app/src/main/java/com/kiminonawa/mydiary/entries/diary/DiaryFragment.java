@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -123,6 +124,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
      * diary item
      */
     private DiaryItemHelper diaryItemHelper;
+    private PhotoCropController photoCropController;
     /**
      * File
      */
@@ -191,12 +193,17 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         diaryCover = new DiaryCover(rootView, new DiaryCover.Listener() {
             @Override
             public void onEditTagsRequested() {
-                //The pencil: write the tags in the tags box
-                EDT_diary_tags.requestFocus();
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(EDT_diary_tags, InputMethodManager.SHOW_IMPLICIT);
+                //The pencil of the cover: a small window to write the tags (the hidden box keeps them)
+                TagHelper.showEditDialog(getActivity(), TagHelper.normalize(EDT_diary_tags.getText().toString()),
+                        new TagHelper.Callback() {
+                            @Override
+                            public void onTags(String savedTags) {
+                                EDT_diary_tags.setText(TagHelper.toDisplay(savedTags));
+                            }
+                        });
             }
         });
+        diaryCover.setEditMode(true);
         //The cover shows the title while it is written
         EDT_diary_title.addTextChangedListener(new TextWatcher() {
             @Override
@@ -228,9 +235,8 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 diaryCover.setTags(TagHelper.normalize(s.toString()));
             }
         });
-        EDT_diary_tags.setVisibility(View.VISIBLE);
-        EDT_diary_tags.getBackground().mutate().setColorFilter(ThemeManager.getInstance().getThemeMainColor(getActivity()),
-                PorterDuff.Mode.SRC_ATOP);
+        //Only keeps the text: the tags are written in the window of the pencil of the cover
+        EDT_diary_tags.setVisibility(View.GONE);
 
         TV_diary_item_content_hint = (TextView) rootView.findViewById(R.id.TV_diary_item_content_hint);
         //For create diary
@@ -278,6 +284,32 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         initLocationManager();
         initProgressDialog();
         diaryItemHelper = new DiaryItemHelper(LL_diary_item_content);
+        photoCropController = new PhotoCropController(this, diaryItemHelper, new PhotoCropController.Listener() {
+            @Override
+            public void onPhotoCropped() {
+                updateCover();
+            }
+        });
+        diaryCover.setCropListener(new Runnable() {
+            @Override
+            public void run() {
+                DiaryPhoto coverPhoto = diaryItemHelper.getThumbnailPhoto();
+                if (coverPhoto != null) {
+                    photoCropController.crop(coverPhoto.getContent(), diaryTempFileManager.getDir());
+                }
+            }
+        });
+        //The cover shows the weather that is chosen (the icon and its name while editing)
+        SP_diary_weather.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                diaryCover.setWeather(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
         clearDiaryPage();
         //Revert the auto saved diary
         revertAutoSaveDiary();
@@ -337,6 +369,15 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //The screen that crops a photo to 4:3 is closed
+        if (photoCropController != null && photoCropController.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -381,12 +422,14 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 diaryPhoto.setPosition(tag.getPositionTag() + 1);
                 diaryPhoto.setDeleteClickListener(this);
                 diaryPhoto.setThumbnailClickListener(this);
+                diaryPhoto.setCropClickListener(this);
                 diaryItemHelper.createItem(diaryPhoto, tag.getPositionTag() + 1);
             } else {
                 //Add photo
                 diaryPhoto.setPosition(diaryItemHelper.getItemSize());
                 diaryPhoto.setDeleteClickListener(this);
                 diaryPhoto.setThumbnailClickListener(this);
+                diaryPhoto.setCropClickListener(this);
                 diaryItemHelper.createItem(diaryPhoto);
                 //Add new edittext
                 DiaryText diaryText = new DiaryText(getActivity());
@@ -468,6 +511,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         initLocationIcon();
         SP_diary_mood.setSelection(0);
         SP_diary_weather.setSelection(0);
+        diaryCover.setWeather(0);
         EDT_diary_title.setText("");
         EDT_diary_tags.setText("");
         diaryItemHelper.initDiary();
@@ -546,6 +590,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     private void setIcon(int mood, int weather) {
         SP_diary_mood.setSelection(mood);
         SP_diary_weather.setSelection(weather);
+        diaryCover.setWeather(weather);
     }
 
     private void loadDiaryItemContent(BUDiaryEntries autoSaveDiary) {
@@ -559,6 +604,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                         autoSaveDiary.getDiaryItemList().get(i).getDiaryItemContent();
                 ((DiaryPhoto) diaryItem).setDeleteClickListener(this);
                 ((DiaryPhoto) diaryItem).setThumbnailClickListener(this);
+                ((DiaryPhoto) diaryItem).setCropClickListener(this);
                 //For get the right file name
                 ((DiaryPhoto) diaryItem).setPhotoFileName(
                         autoSaveDiary.getDiaryItemList().get(i).getDiaryItemContent());
@@ -909,6 +955,12 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 diaryItemHelper.mergerAdjacentText(position);
                 diaryItemHelper.resortPosition();
                 updateCover();
+                break;
+            case R.id.IV_diary_photo_crop:
+                IDairyRow cropRow = diaryItemHelper.get((int) v.getTag());
+                if (cropRow instanceof DiaryPhoto) {
+                    photoCropController.crop(cropRow.getContent(), diaryTempFileManager.getDir());
+                }
                 break;
             case R.id.IV_diary_photo_thumbnail:
                 diaryItemHelper.chooseThumbnailAt((int) v.getTag());

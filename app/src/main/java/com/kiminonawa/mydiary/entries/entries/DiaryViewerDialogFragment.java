@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,6 +43,7 @@ import android.widget.Toast;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.db.DBStructure;
+import com.kiminonawa.mydiary.entries.diary.PhotoCropController;
 import com.kiminonawa.mydiary.entries.diary.TagHelper;
 import com.kiminonawa.mydiary.entries.DiaryActivity;
 import com.kiminonawa.mydiary.entries.EditDiaryBackDialogFragment;
@@ -128,6 +130,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
     //The cover (thumbnail, date, title, tags)
     private DiaryCover diaryCover;
+    private PhotoCropController photoCropController;
     //Tags of the diary as they are in the database (",school,trip,")
     private String savedTags = "";
 
@@ -243,6 +246,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             }
         });
         diaryCover.setTopCornerRadius(ScreenHelper.dpToPixel(getResources(), 10));
+        diaryCover.setEditMode(isEditMode);
 
         LinearLayout LL_diary_edit_bar = (LinearLayout) rootView.findViewById(R.id.LL_diary_edit_bar);
         LL_diary_edit_bar.setBackground(ThemeManager.getInstance().createDiaryViewerEditBarBg(getActivity()));
@@ -280,8 +284,23 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         IV_diary_checklist = (ImageView) rootView.findViewById(R.id.IV_diary_checklist);
         IV_diary_audio = (ImageView) rootView.findViewById(R.id.IV_diary_audio);
 
-        initView(rootView);
         diaryItemHelper = new DiaryItemHelper(LL_diary_item_content);
+        photoCropController = new PhotoCropController(this, diaryItemHelper, new PhotoCropController.Listener() {
+            @Override
+            public void onPhotoCropped() {
+                updateCover();
+            }
+        });
+        diaryCover.setCropListener(new Runnable() {
+            @Override
+            public void run() {
+                DiaryPhoto coverPhoto = diaryItemHelper.getThumbnailPhoto();
+                if (coverPhoto != null && diaryFileManager != null) {
+                    photoCropController.crop(coverPhoto.getContent(), diaryFileManager.getDir());
+                }
+            }
+        });
+        initView(rootView);
         noLocation = getString(R.string.diary_no_location);
 
         return rootView;
@@ -316,6 +335,15 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 initData();
             }
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //The screen that crops a photo to 4:3 is closed
+        if (photoCropController != null && photoCropController.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -445,11 +473,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         String locationName = diaryInfoCursor.getString(7);
         if (locationName != null && !"".equals(locationName)) {
             haveLocation = true;
-            IV_diary_location_name_icon.setVisibility(View.VISIBLE);
             TV_diary_location.setText(locationName);
         } else {
             haveLocation = false;
-            IV_diary_location_name_icon.setVisibility(View.VISIBLE);
         }
         initLocationIcon();
         setIcon(diaryInfoCursor.getInt(3), diaryInfoCursor.getInt(4));
@@ -473,47 +499,23 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     }
 
     /**
-     * The pencil / "Edit" of the tags on the cover.
+     * The pencil / "Edit" of the tags on the cover: a small window to write them.
+     * Editing the entry: they are kept in the hidden box and saved with the entry.
+     * Only reading: they are saved right away.
      */
     private void onCoverEditTags() {
-        if (isEditMode) {
-            //Editing: write the tags in the tags box
-            EDT_diary_tags.requestFocus();
-            android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager)
-                    getActivity().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(EDT_diary_tags, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
-            return;
-        }
-        //Only reading: a small window to write the tags, they are saved right away
-        final EditText input = new EditText(getActivity());
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        input.setSingleLine(true);
-        input.setHint(R.string.diary_tags_hint);
-        String current = TagHelper.toDisplay(savedTags);
-        input.setText(current.length() > 0 ? current + " " : "");
-        input.setSelection(input.getText().length());
-        int margin = ScreenHelper.dpToPixel(getResources(), 20);
-        android.widget.FrameLayout container = new android.widget.FrameLayout(getActivity());
-        android.widget.FrameLayout.LayoutParams params = new android.widget.FrameLayout.LayoutParams(
-                android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.WRAP_CONTENT);
-        params.leftMargin = margin;
-        params.rightMargin = margin;
-        container.addView(input, params);
-        AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.cover_tags_title)
-                .setView(container)
-                .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int which) {
-                        saveTagsOnly(TagHelper.normalize(input.getText().toString()));
-                    }
-                })
-                .setNegativeButton(R.string.dialog_button_cancel, null)
-                .create();
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        }
-        dialog.show();
+        String current = isEditMode ? TagHelper.normalize(EDT_diary_tags.getText().toString()) : savedTags;
+        TagHelper.showEditDialog(getActivity(), current, new TagHelper.Callback() {
+            @Override
+            public void onTags(String newTags) {
+                if (isEditMode) {
+                    //The text watcher updates the cover
+                    EDT_diary_tags.setText(TagHelper.toDisplay(newTags));
+                } else {
+                    saveTagsOnly(newTags);
+                }
+            }
+        });
     }
 
     private void saveTagsOnly(String newTags) {
@@ -576,12 +578,22 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                     diaryCover.setTags(TagHelper.normalize(s.toString()));
                 }
             });
-            EDT_diary_tags.setVisibility(View.VISIBLE);
-            EDT_diary_tags.getBackground().mutate().setColorFilter(ThemeManager.getInstance().getThemeMainColor(getActivity()),
-                    PorterDuff.Mode.SRC_ATOP);
+            //Only keeps the text: the tags are written in the window of the pencil of the cover
+            EDT_diary_tags.setVisibility(View.GONE);
 
             initMoodSpinner();
             initWeatherSpinner();
+            //The cover shows the weather that is chosen (the icon and its name while editing)
+            SP_diary_weather.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    diaryCover.setWeather(position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
             IV_diary_location.setOnClickListener(this);
             TV_diary_location.setOnClickListener(this);
 
@@ -608,11 +620,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             RL_diary_mood = (RelativeLayout) rootView.findViewById(R.id.RL_diary_mood);
             RL_diary_mood.setVisibility(View.GONE);
 
-            IV_diary_weather = (ImageView) rootView.findViewById(R.id.IV_diary_weather);
-            TV_diary_weather = (TextView) rootView.findViewById(R.id.TV_diary_weather);
-            IV_diary_weather.setVisibility(View.VISIBLE);
-            TV_diary_weather.setVisibility(View.VISIBLE);
-
+            //The weather of the cover: only the icon (see setIcon)
             IV_diary_location_name_icon.setVisibility(View.VISIBLE);
 
             //The title is on the cover now
@@ -659,6 +667,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                     diaryItem.setEditMode(true);
                     ((DiaryPhoto) diaryItem).setDeleteClickListener(this);
                     ((DiaryPhoto) diaryItem).setThumbnailClickListener(this);
+                    ((DiaryPhoto) diaryItem).setCropClickListener(this);
                 } else {
                     diaryItem.setEditMode(false);
                     ((DiaryPhoto) diaryItem).setDraweeViewClickListener(this);
@@ -739,6 +748,11 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             IV_diary_location.setImageResource(R.drawable.ic_location_off_white_24dp);
             TV_diary_location.setText(noLocation);
         }
+        //Only reading: without a place there is no pin and no "No location" on the cover.
+        //Editing: they stay, the person can tap the text to write a place.
+        int visibility = (isEditMode || haveLocation) ? View.VISIBLE : View.GONE;
+        IV_diary_location_name_icon.setVisibility(visibility);
+        TV_diary_location.setVisibility(visibility);
     }
 
     private void startGetLocation() {
@@ -865,10 +879,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         if (isEditMode) {
             SP_diary_mood.setSelection(mood);
             SP_diary_weather.setSelection(weather);
-        } else {
-            IV_diary_weather.setImageResource(DiaryInfoHelper.getWeatherResourceId(weather));
-            TV_diary_weather.setText(getResources().getStringArray(R.array.weather_list)[weather]);
         }
+        //Reading: only the icon. Editing: the icon and its name.
+        diaryCover.setWeather(weather);
     }
 
     private void loadFileFromTemp(String fileName) {
@@ -889,12 +902,14 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 diaryPhoto.setPosition(tag.getPositionTag() + 1);
                 diaryPhoto.setDeleteClickListener(this);
                 diaryPhoto.setThumbnailClickListener(this);
+                diaryPhoto.setCropClickListener(this);
                 diaryItemHelper.createItem(diaryPhoto, tag.getPositionTag() + 1);
             } else {
                 //Add photo
                 diaryPhoto.setPosition(diaryItemHelper.getItemSize());
                 diaryPhoto.setDeleteClickListener(this);
                 diaryPhoto.setThumbnailClickListener(this);
+                diaryPhoto.setCropClickListener(this);
                 diaryItemHelper.createItem(diaryPhoto);
                 //Add new edittext
                 DiaryText diaryText = new DiaryText(getActivity());
@@ -1132,6 +1147,12 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 diaryItemHelper.mergerAdjacentText(deletePosition);
                 diaryItemHelper.resortPosition();
                 updateCover();
+                break;
+            case R.id.IV_diary_photo_crop:
+                IDairyRow cropRow = diaryItemHelper.get((int) v.getTag());
+                if (cropRow instanceof DiaryPhoto) {
+                    photoCropController.crop(cropRow.getContent(), diaryFileManager.getDir());
+                }
                 break;
             case R.id.IV_diary_photo_thumbnail:
                 diaryItemHelper.chooseThumbnailAt((int) v.getTag());

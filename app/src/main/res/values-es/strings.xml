@@ -231,7 +231,7 @@
     <!--Backup-->
     <string name="backup_title">Respaldo</string>
     <string name="backup_export_title">Exportar</string>
-    <string name="backup_export_hint">Exporta todos los datos (sin incluir el perfil)</string>
+    <string name="backup_export_hint">Guarda todo: notas, fotos, etiquetas, portadas, temas y sus fondos, colores, configuración, tu nombre y fotos de perfil, y la contraseña</string>
     <string name="backup_export_path_hint">Toca para elegir dónde guardar el respaldo</string>
     <string name="backup_export_button">exportar</string>
     <string name="backup_export_share_title">Compartir con</string>
@@ -241,7 +241,7 @@
     <string name="toast_export_fail">falló la exportación&#8230; revisa los permisos o el almacenamiento</string>
 
     <string name="backup_import_title">Importar</string>
-    <string name="backup_import_hint">Importa un archivo existente (sin incluir el perfil)</string>
+    <string name="backup_import_hint">Recupera todo lo guardado en un archivo de respaldo. Las notas se agregan a las que ya tienes; la configuración del respaldo reemplaza a la actual</string>
     <string name="backup_import_path_hint">Toca para elegir el archivo a importar</string>
     <string name="backup_import_button">importar</string>
     <string name="backup_import_can_not_read">No se pudo abrir el selector de archivos del teléfono</string>
@@ -268,4 +268,7 @@
     <string name="photo_viewer_photo_path_fail">no se pudo obtener la ruta de la foto</string>
     <string name="photo_viewer_no_images">No hay imágenes</string>
 
+    <string name="crop_photo_title">Recortar foto (4:3)</string>
+    <string name="toast_crop_photo_done">Foto recortada</string>
+    <string name="toast_crop_photo_fail">No se pudo recortar la foto</string>
 </resources>

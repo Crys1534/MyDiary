@@ -20,7 +20,10 @@ import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.db.DBStructure.DiaryEntry_V2;
 import com.kiminonawa.mydiary.main.topic.ITopic;
 import com.kiminonawa.mydiary.shared.FileManager;
+import com.kiminonawa.mydiary.shared.SPFManager;
+import com.kiminonawa.mydiary.shared.ThemeManager;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -94,6 +97,8 @@ public class ExportAsyncTask extends AsyncTask<Void, Void, Boolean> {
         try {
             //Load the data
             exportDataIntoBackupManager();
+            //The settings of the app (colors, name, passcode...)
+            backupManager.setSettings(readSettings());
             //Create backup.json
             outputBackupJson();
             //Zip the json file and photo
@@ -128,6 +133,25 @@ public class ExportAsyncTask extends AsyncTask<Void, Void, Boolean> {
         callBack.onExportCompiled(exportSuccessful);
     }
 
+
+    /**
+     * Everything the person chose in the app (the pictures are zipped from the setting folder).
+     */
+    private BackupManager.BackupSettings readSettings() {
+        BackupManager.BackupSettings settings = new BackupManager.BackupSettings();
+        settings.language_code = SPFManager.getLocalLanguageCode(mContext);
+        settings.theme = SPFManager.getTheme(mContext);
+        settings.theme_main_color = SPFManager.getMainColor(mContext);
+        settings.theme_secondary_color = SPFManager.getSecondaryColor(mContext);
+        settings.your_name = SPFManager.getYourName(mContext);
+        File settingDir = new FileManager(mContext, FileManager.SETTING_DIR).getDir();
+        settings.has_custom_profile_banner_bg = SPFManager.hasCustomProfileBannerBg(mContext)
+                && new File(settingDir, ThemeManager.CUSTOM_PROFILE_BANNER_BG_FILENAME).exists();
+        settings.has_profile_picture = new File(settingDir, ThemeManager.CUSTOM_PROFILE_PICTURE_FILENAME).exists();
+        settings.encrypted_password = SPFManager.getPassword(mContext);
+        settings.release_note_close = SPFManager.getReleaseNoteClose(mContext);
+        return settings;
+    }
 
     private void deleteBackupJsonFile() {
         new FileManager(mContext, FileManager.BACKUP_DIR).clearDir();

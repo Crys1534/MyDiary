@@ -359,7 +359,13 @@ public class DBManager {
                         + DiaryEntry_V2.COLUMN_TIME + ", "
                         + DiaryEntry_V2.COLUMN_TITLE + ", "
                         + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + ", "
-                        + TopicEntry.COLUMN_NAME
+                        + TopicEntry.COLUMN_NAME + ", "
+                        //5 tags, 6 weather, 7 mood, 8 has attachment, 9 chosen cover photo
+                        + DiaryEntry_V2.COLUMN_TAGS + ", "
+                        + DiaryEntry_V2.COLUMN_WEATHER + ", "
+                        + DiaryEntry_V2.COLUMN_MOOD + ", "
+                        + DiaryEntry_V2.COLUMN_ATTACHMENT + ", "
+                        + DiaryEntry_V2.COLUMN_THUMBNAIL
                         + " FROM " + DiaryEntry_V2.TABLE_NAME
                         + " JOIN " + TopicEntry.TABLE_NAME
                         + " ON " + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + " = " + TopicEntry.TABLE_NAME + "." + TopicEntry._ID

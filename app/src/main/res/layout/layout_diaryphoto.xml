@@ -27,6 +27,20 @@
         android:src="@drawable/ic_star_border_white_24dp"
         android:visibility="gone" />
 
+    <!-- Edit mode: crop the photo to 4:3 (choose what is seen) -->
+    <ImageView
+        android:id="@+id/IV_diary_photo_crop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/IV_diary_photo_thumbnail"
+        android:background="@drawable/diary_photo_star_bg"
+        android:padding="6dp"
+        android:src="@drawable/ic_crop_white_24dp"
+        android:visibility="gone" />
+
     <ImageView
         android:id="@+id/IV_diary_photo_delete"
         android:layout_width="wrap_content"

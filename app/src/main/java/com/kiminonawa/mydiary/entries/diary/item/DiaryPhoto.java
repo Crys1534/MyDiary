@@ -57,6 +57,13 @@ public class DiaryPhoto implements IDairyRow {
         diaryPhotoLayout.setThumbnailOnClick(clickListener);
     }
 
+    /**
+     * Edit mode: the button that crops the photo to 4:3.
+     */
+    public void setCropClickListener(View.OnClickListener clickListener) {
+        diaryPhotoLayout.setCropOnClick(clickListener);
+    }
+
     public void setThumbnailSelected(boolean selected) {
         diaryPhotoLayout.setThumbnailSelected(selected);
     }

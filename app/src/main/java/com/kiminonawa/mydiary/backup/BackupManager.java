@@ -29,6 +29,8 @@ public class BackupManager {
     private long create_time;
     private int version_code;
     private List<BackupTopicListBean> backup_topic_list;
+    //The settings of the app (missing in the backups made by older versions)
+    private BackupSettings settings;
 
     public BackupManager() {
     }
@@ -57,12 +59,41 @@ public class BackupManager {
     }
 
 
+    public BackupSettings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(BackupSettings settings) {
+        this.settings = settings;
+    }
+
     public List<BackupTopicListBean> getBackup_topic_list() {
         return backup_topic_list;
     }
 
     public void setBackup_topic_list(List<BackupTopicListBean> backup_topic_list) {
         this.backup_topic_list = backup_topic_list;
+    }
+
+    /**
+     * What the person chose in the app (not notes): language, theme and colors, name, profile pictures, passcode.
+     * The pictures themselves are in the zip file (setting folder).
+     */
+    public static class BackupSettings {
+        //0 system, 1 English, 2 Spanish
+        public int language_code;
+        public int theme;
+        public int theme_main_color;
+        public int theme_secondary_color;
+        public String your_name;
+        //The custom picture of the top of the main page
+        public boolean has_custom_profile_banner_bg;
+        //The round picture of the person
+        public boolean has_profile_picture;
+        //The passcode as the app keeps it (already scrambled, "" when there is none)
+        public String encrypted_password;
+        //The person checked "don't show again" in the release note
+        public boolean release_note_close;
     }
 
     public static class BackupTopicListBean {

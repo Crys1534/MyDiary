@@ -16,6 +16,8 @@ import com.kiminonawa.mydiary.backup.obj.BUMemoEntries;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.main.topic.ITopic;
 import com.kiminonawa.mydiary.shared.FileManager;
+import com.kiminonawa.mydiary.shared.SPFManager;
+import com.kiminonawa.mydiary.shared.ThemeManager;
 
 import org.apache.commons.io.FileUtils;
 
@@ -97,6 +99,10 @@ public class ImportAsyncTask extends AsyncTask<Void, Void, Boolean> {
             zipManager.unzip(source, zipBackupFM.getDirAbsolutePath() + "/");
             loadBackupJsonFileIntoManager();
             importSuccessful = importTopic();
+            if (importSuccessful) {
+                //The settings come after the notes (an old backup has none)
+                restoreSettings();
+            }
         } catch (Exception e) {
             Log.e(TAG, "import flow fail", e);
             importSuccessful = false;
@@ -166,6 +172,8 @@ public class ImportAsyncTask extends AsyncTask<Void, Void, Boolean> {
                 backupTopic.getTopic_title(),
                 backupTopic.getTopic_type(),
                 backupTopic.getTopic_color());
+        //The background picture of the topic
+        restoreTopicBackground(backupTopic.getTopic_type(), backupTopic.getTopic_id(), newTopicId);
 
 
         switch (backupTopic.getTopic_type()) {
@@ -211,6 +219,90 @@ public class ImportAsyncTask extends AsyncTask<Void, Void, Boolean> {
                     }
                 }
                 break;
+        }
+    }
+
+    /**
+     * The picture that the person chose as the background of a topic (it is in the backup folder of its kind:
+     * diary / memo / contacts, in the folder of the old topic).
+     */
+    private void restoreTopicBackground(int topicType, long oldTopicId, long newTopicId) {
+        String kindFolder;
+        switch (topicType) {
+            case ITopic.TYPE_MEMO:
+                kindFolder = "memo";
+                break;
+            case ITopic.TYPE_CONTACTS:
+                kindFolder = "contacts";
+                break;
+            default:
+                kindFolder = "diary";
+                break;
+        }
+        File source = new File(backupFileManager.getDirAbsolutePath() + "/" + kindFolder + "/"
+                + oldTopicId + "/" + ThemeManager.CUSTOM_TOPIC_BG_FILENAME);
+        if (!source.isFile()) {
+            return;
+        }
+        try {
+            File target = ThemeManager.getInstance().getTopicBgSavePathFile(mContext, newTopicId, topicType);
+            FileUtils.copyFile(source, target);
+        } catch (Exception e) {
+            //The notes are more important than a background: go on
+            Log.e(TAG, "can't restore the background of a topic", e);
+        }
+    }
+
+    /**
+     * The settings of the backup replace the ones of the app: language, theme and colors, name, profile pictures.
+     * The passcode is restored only when the backup has one (a passcode is never taken away by an import).
+     */
+    private void restoreSettings() {
+        BackupManager.BackupSettings settings = backupManager.getSettings();
+        if (settings == null) {
+            return;
+        }
+        try {
+            SPFManager.setLocalLanguageCode(mContext, settings.language_code);
+            SPFManager.setTheme(mContext, settings.theme);
+            SPFManager.setMainColor(mContext, settings.theme_main_color);
+            SPFManager.setSecondaryColor(mContext, settings.theme_secondary_color);
+            SPFManager.setYourName(mContext, settings.your_name == null ? "" : settings.your_name);
+            if (settings.release_note_close) {
+                SPFManager.setReleaseNoteClose(mContext, true);
+            }
+            if (settings.encrypted_password != null && settings.encrypted_password.length() > 0) {
+                SPFManager.setAndEncryptPassword(mContext, settings.encrypted_password);
+            }
+            //The theme that the screens use now
+            ThemeManager.getInstance().setCurrentTheme(settings.theme);
+
+            //The pictures of the profile
+            File settingDir = new FileManager(mContext, FileManager.SETTING_DIR).getDir();
+            File backupSettingDir = new File(backupFileManager.getDirAbsolutePath() + "/setting");
+            restoreSettingPicture(backupSettingDir, settingDir, ThemeManager.CUSTOM_PROFILE_BANNER_BG_FILENAME,
+                    settings.has_custom_profile_banner_bg);
+            SPFManager.setCustomProfileBannerBg(mContext,
+                    settings.has_custom_profile_banner_bg
+                            && new File(settingDir, ThemeManager.CUSTOM_PROFILE_BANNER_BG_FILENAME).exists());
+            restoreSettingPicture(backupSettingDir, settingDir, ThemeManager.CUSTOM_PROFILE_PICTURE_FILENAME,
+                    settings.has_profile_picture);
+        } catch (Exception e) {
+            //The notes are already imported: a failed setting does not make the import fail
+            Log.e(TAG, "can't restore the settings", e);
+        }
+    }
+
+    private void restoreSettingPicture(File backupSettingDir, File settingDir, String fileName, boolean inBackup)
+            throws IOException {
+        File source = new File(backupSettingDir, fileName);
+        File target = new File(settingDir, fileName);
+        if (inBackup && source.isFile()) {
+            FileUtils.copyFile(source, target);
+        } else if (target.exists()) {
+            //The backup was made without this picture
+            //noinspection ResultOfMethodCallIgnored
+            target.delete();
         }
     }
 

@@ -45,9 +45,15 @@ public class DiaryCover implements View.OnClickListener {
     private final SimpleDraweeView SDV_cover;
     private final View V_overlay;
     private final TextView TV_date, TV_title, TV_tag, TV_tagMore;
-    private final ImageView IV_tagAdd;
+    private final ImageView IV_tagAdd, IV_crop;
+    private final ImageView IV_weather;
+    private final TextView TV_weather;
     private final Listener listener;
+    private Runnable cropListener = null;
+    //Editing: the pencil of the tags is always there, and the cover can be cropped
+    private boolean editMode = false;
 
+    private String savedTags = "";
     private List<String> tags = TagHelper.toList("");
     private String shownCover = null;
 
@@ -61,9 +67,49 @@ public class DiaryCover implements View.OnClickListener {
         TV_tag = (TextView) rootView.findViewById(R.id.TV_diary_cover_tag);
         TV_tagMore = (TextView) rootView.findViewById(R.id.TV_diary_cover_tag_more);
         IV_tagAdd = (ImageView) rootView.findViewById(R.id.IV_diary_cover_tag_add);
+        IV_crop = (ImageView) rootView.findViewById(R.id.IV_diary_cover_crop);
+        IV_weather = (ImageView) rootView.findViewById(R.id.IV_diary_weather);
+        TV_weather = (TextView) rootView.findViewById(R.id.TV_diary_weather);
+        IV_crop.setOnClickListener(this);
         TV_tag.setOnClickListener(this);
         TV_tagMore.setOnClickListener(this);
         IV_tagAdd.setOnClickListener(this);
+    }
+
+    /**
+     * Editing an entry (a new one or an old one): the pencil of the tags is always there (it opens the window to
+     * write them) and the photo of the cover can be cropped. Only reading: nothing of that.
+     */
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+        setTags(savedTags);
+        refreshCropButton();
+    }
+
+    /**
+     * Called when the crop button of the cover is pressed (only shown when editing and the cover has a photo).
+     */
+    public void setCropListener(Runnable cropListener) {
+        this.cropListener = cropListener;
+    }
+
+    private void refreshCropButton() {
+        IV_crop.setVisibility(editMode && shownCover != null ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * The weather in the top left corner: only the icon when reading, the icon and its name when editing.
+     */
+    public void setWeather(int weather) {
+        IV_weather.setImageResource(DiaryInfoHelper.getWeatherResourceId(weather));
+        IV_weather.setVisibility(View.VISIBLE);
+        String[] names = context.getResources().getStringArray(R.array.weather_list);
+        if (editMode && weather >= 0 && weather < names.length) {
+            TV_weather.setText(names[weather]);
+            TV_weather.setVisibility(View.VISIBLE);
+        } else {
+            TV_weather.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -99,6 +145,7 @@ public class DiaryCover implements View.OnClickListener {
      * @param savedTags tags like ",school,trip," (what the database has)
      */
     public void setTags(String savedTags) {
+        this.savedTags = savedTags;
         tags = TagHelper.toList(savedTags);
         if (tags.isEmpty()) {
             TV_tag.setVisibility(View.GONE);
@@ -109,7 +156,8 @@ public class DiaryCover implements View.OnClickListener {
             TV_tag.setText(tags.get(0));
             TV_tag.setVisibility(View.VISIBLE);
             TV_tagMore.setVisibility(tags.size() > 1 ? View.VISIBLE : View.GONE);
-            IV_tagAdd.setVisibility(View.GONE);
+            //When editing, the pencil is there to change them
+            IV_tagAdd.setVisibility(editMode ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -122,16 +170,19 @@ public class DiaryCover implements View.OnClickListener {
             SDV_cover.setController(null);
             SDV_cover.setVisibility(View.GONE);
             V_overlay.setVisibility(View.GONE);
+            refreshCropButton();
             return;
         }
         if (path.equals(shownCover)) {
+            refreshCropButton();
             return;
         }
         shownCover = path;
         Uri uri = path.startsWith("file:") || path.startsWith("content:") ? Uri.parse(path) : Uri.fromFile(new java.io.File(path));
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                //The cover is 4:3
                 .setResizeOptions(new ResizeOptions(ScreenHelper.getScreenWidth(context),
-                        ScreenHelper.dpToPixel(context.getResources(), 230)))
+                        Math.round(ScreenHelper.getScreenWidth(context) * 3f / 4f)))
                 .setRotationOptions(RotationOptions.autoRotate())
                 .build();
         SDV_cover.setController(Fresco.newDraweeControllerBuilder()
@@ -140,11 +191,16 @@ public class DiaryCover implements View.OnClickListener {
                 .build());
         SDV_cover.setVisibility(View.VISIBLE);
         V_overlay.setVisibility(View.VISIBLE);
+        refreshCropButton();
     }
 
     @Override
     public void onClick(View v) {
-        if (v == IV_tagAdd) {
+        if (v == IV_crop) {
+            if (cropListener != null) {
+                cropListener.run();
+            }
+        } else if (v == IV_tagAdd) {
             if (listener != null) {
                 listener.onEditTagsRequested();
             }
