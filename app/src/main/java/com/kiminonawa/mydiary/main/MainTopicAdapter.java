@@ -100,12 +100,15 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
         holder.getSwipeableContainerView().setBackground(ThemeManager.getInstance().getTopicItemSelectDrawable(activity));
         holder.getTopicLeftSettingView().setBackgroundColor(ThemeManager.getInstance().getThemeMainColor(activity));
         holder.getIconView().setImageResource(filteredTopicList.get(position).getIcon());
-        holder.getIconView().setColorFilter(filteredTopicList.get(position).getColor());
+        //A topic color chosen for a white page (black...) is made lighter in dark mode
+        int topicColor = com.kiminonawa.mydiary.shared.ColorTools.readableOnSurface(activity,
+                filteredTopicList.get(position).getColor());
+        holder.getIconView().setColorFilter(topicColor);
         holder.getTitleView().setText(filteredTopicList.get(position).getTitle());
-        holder.getTitleView().setTextColor(filteredTopicList.get(position).getColor());
+        holder.getTitleView().setTextColor(topicColor);
         holder.getTVCount().setText(String.valueOf(filteredTopicList.get(position).getCount()));
-        holder.getTVCount().setTextColor(filteredTopicList.get(position).getColor());
-        holder.getArrow().setColorFilter(filteredTopicList.get(position).getColor());
+        holder.getTVCount().setTextColor(topicColor);
+        holder.getArrow().setColorFilter(topicColor);
 
         // set swiping properties
         holder.setMaxRightSwipeAmount(0.3f);

@@ -277,4 +277,11 @@
     <string name="toast_area_done">Listo: la foto conserva todas sus partes</string>
     <string name="toast_area_fail">No se pudo abrir la foto</string>
     <string name="location_use_mine">Usar mi ubicación</string>
+    <!-- Apariencia (claro / oscuro) y sonidos -->
+    <string name="setting_night_title">Apariencia</string>
+    <string name="setting_night_hint">Claro, oscuro, o como tu teléfono</string>
+    <string name="setting_sound_title">Sonidos</string>
+    <string name="setting_sound_hint">Sonidos suaves de libreta: hojas, pluma, sello&#8230; Respetan el modo silencio de tu teléfono.</string>
+    <string name="setting_sound_switch">Sonidos del diario</string>
+    <string name="setting_sound_volume">Volumen</string>
 </resources>

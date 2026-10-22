@@ -278,4 +278,11 @@
     <string name="toast_area_done">Done: the photo keeps all its parts</string>
     <string name="toast_area_fail">The photo could not be opened</string>
     <string name="location_use_mine">Use my location</string>
+    <!-- Look (light / dark) and sounds -->
+    <string name="setting_night_title">Look</string>
+    <string name="setting_night_hint">Light, dark, or like your phone</string>
+    <string name="setting_sound_title">Sounds</string>
+    <string name="setting_sound_hint">Soft notebook sounds: pages, pen, stamp&#8230; They follow the silent mode of your phone.</string>
+    <string name="setting_sound_switch">Diary sounds</string>
+    <string name="setting_sound_volume">Volume</string>
 </resources>

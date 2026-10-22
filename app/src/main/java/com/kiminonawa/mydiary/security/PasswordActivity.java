@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kiminonawa.mydiary.shared.Sfx;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.main.MainActivity;
 import com.kiminonawa.mydiary.shared.Encryption;
@@ -191,6 +192,8 @@ public class PasswordActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case VERIFY_PASSWORD:
                 if (isPasswordCorrect(passwordStrBuilder.toString())) {
+                    //The little lock of the diary opens
+                    Sfx.play(this, Sfx.Sound.LOCK);
                     Intent goMainPageIntent = new Intent(this, MainActivity.class);
                     goMainPageIntent.putExtra("showReleaseNote", showReleaseNote);
                     finish();
@@ -273,6 +276,8 @@ public class PasswordActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
+        //A small tap for every key
+        Sfx.play(this, Sfx.Sound.PENCIL_TAP);
         switch (v.getId()) {
             case R.id.But_password_key_1:
                 addPasswordStr("1");

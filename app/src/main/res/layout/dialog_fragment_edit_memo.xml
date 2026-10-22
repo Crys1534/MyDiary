@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    android:background="@color/app_surface"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true">
 
@@ -24,7 +24,7 @@
             android:maxLines="5"
             android:paddingLeft="5dp"
             android:scrollbars="vertical"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/app_text" />
 
 
         <RelativeLayout

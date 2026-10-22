@@ -36,6 +36,7 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropM
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
+import com.kiminonawa.mydiary.shared.Sfx;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.main.topic.Contacts;
@@ -153,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         LL_main_today.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Sfx.play(MainActivity.this, Sfx.Sound.PAGE_SOFT);
                 showTodayDialog(true);
             }
         });
@@ -258,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         content.findViewById(R.id.TV_today_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Sfx.play(MainActivity.this, Sfx.Sound.CLOSE);
                 dialog.dismiss();
             }
         });
@@ -569,10 +572,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.LL_main_profile:
+                Sfx.play(this, Sfx.Sound.SLIDE);
                 YourNameDialogFragment yourNameDialogFragment = new YourNameDialogFragment();
                 yourNameDialogFragment.show(getSupportFragmentManager(), "yourNameDialogFragment");
                 break;
             case R.id.IV_main_setting:
+                Sfx.play(this, Sfx.Sound.SLIDE);
                 MainSettingDialogFragment mainSettingDialogFragment = new MainSettingDialogFragment();
                 mainSettingDialogFragment.show(getSupportFragmentManager(), "mainSettingDialogFragment");
                 break;
@@ -581,6 +586,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void TopicCreated(final String topicTitle, final int type, final int color) {
+        //A new notebook
+        Sfx.play(this, Sfx.Sound.SAVE);
         dbManager.opeDB();
         //Create newTopic into List first
         final long newTopicId = dbManager.insertTopic(topicTitle, type, color);
@@ -675,6 +682,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onTopicDelete(final int position) {
+        Sfx.play(this, Sfx.Sound.CRUMPLE);
         DBManager dbManager = new DBManager(MainActivity.this);
         dbManager.opeDB();
         switch (mainTopicAdapter.getList().get(position).getType()) {

@@ -93,6 +93,42 @@ public class SPFManager {
     }
 
     /**
+     * Look of the app: 0 = like the phone, 1 = light, 2 = dark
+     */
+    public static int getNightMode(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
+        return settings.getInt("CONFIG_NIGHT_MODE", 0);
+    }
+
+    public static void setNightMode(Context context, int mode) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
+        settings.edit().putInt("CONFIG_NIGHT_MODE", mode).commit();
+    }
+
+    /**
+     * Sound effects of the diary (pages, pen, stamp...): on by default, and how loud (0 to 100)
+     */
+    public static boolean isSoundOn(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
+        return settings.getBoolean("CONFIG_SOUND_ON", true);
+    }
+
+    public static void setSoundOn(Context context, boolean on) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
+        settings.edit().putBoolean("CONFIG_SOUND_ON", on).commit();
+    }
+
+    public static int getSoundVolume(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
+        return settings.getInt("CONFIG_SOUND_VOLUME", 60);
+    }
+
+    public static void setSoundVolume(Context context, int volume) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
+        settings.edit().putInt("CONFIG_SOUND_VOLUME", volume).commit();
+    }
+
+    /**
      * Memories ("a year ago you wrote this"): the day it was shown last, so it is only shown once a day
      */
     public static String getMemoryShownDay(Context context) {

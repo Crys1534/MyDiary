@@ -6,6 +6,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 
+import com.kiminonawa.mydiary.R;
+import com.kiminonawa.mydiary.shared.ColorTools;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
 
 /**
@@ -26,7 +28,7 @@ public class DiaryText implements IDairyRow {
 
     private void createEditText(Context context) {
         EDT_diary_text = new FormatEditText(context);
-        EDT_diary_text.setTextColor(Color.BLACK);
+        EDT_diary_text.setTextColor(ColorTools.getColor(context, R.color.app_text));
         EDT_diary_text.setBackgroundColor(Color.TRANSPARENT);
         EDT_diary_text.setGravity(Gravity.TOP | Gravity.LEFT);
         //2dp paddding

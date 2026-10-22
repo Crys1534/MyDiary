@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kiminonawa.mydiary.shared.Sfx;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.shared.SPFManager;
@@ -71,6 +72,9 @@ public class ContactsActivity extends FragmentActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
+        if (savedInstanceState == null) {
+            Sfx.play(this, Sfx.Sound.NOTEBOOK_OPEN);
+        }
         //For set status bar
         ChinaPhoneHelper.setStatusBar(this, true);
 

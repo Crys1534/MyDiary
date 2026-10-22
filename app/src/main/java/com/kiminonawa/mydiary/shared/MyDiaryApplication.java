@@ -35,8 +35,10 @@ public class MyDiaryApplication extends Application {
                 .build();
         Fresco.initialize(this, config);
 
-        //To fix bug : spinner bg is dark when mode is night.
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        //Light / dark look (Settings): like the phone, light or dark
+        applyNightMode(SPFManager.getNightMode(this));
+        //The sounds of the diary
+        Sfx.init(this);
 
         //Check password
         if (SPFManager.getPassword(this).equals("")) {
@@ -68,6 +70,23 @@ public class MyDiaryApplication extends Application {
             return;
         }
         applyLanguage(code);
+    }
+
+    /**
+     * @param mode 0 = like the phone, 1 = light, 2 = dark
+     */
+    public static void applyNightMode(int mode) {
+        switch (mode) {
+            case 1:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case 2:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            default:
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+        }
     }
 
     /**

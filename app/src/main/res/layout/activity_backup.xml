@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/app_surface"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:padding="5dp">
@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/setting_group_margin_top"
         android:text="@string/backup_title"
-        android:textColor="@android:color/black"
+        android:textColor="@color/app_text"
         android:textSize="28dp" />
 
 
@@ -30,7 +30,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="10dp"
             android:text="@string/backup_export_title"
-            android:textColor="@android:color/black"
+            android:textColor="@color/app_text"
             android:textSize="22dp" />
 
         <TextView
@@ -83,7 +83,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="10dp"
             android:text="@string/backup_import_title"
-            android:textColor="@android:color/black"
+            android:textColor="@color/app_text"
             android:textSize="22dp" />
 
         <TextView

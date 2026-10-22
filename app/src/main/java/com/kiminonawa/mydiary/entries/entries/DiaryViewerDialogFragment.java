@@ -50,6 +50,7 @@ import com.kiminonawa.mydiary.entries.photo.PhotoOverviewActivity;
 import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.shared.PermissionHelper;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
+import com.kiminonawa.mydiary.shared.Sfx;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 import com.kiminonawa.mydiary.shared.ViewTools;
 import com.kiminonawa.mydiary.shared.statusbar.ChinaPhoneHelper;
@@ -148,6 +149,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         isEditMode = getArguments().getBoolean("isEditMode", false);
+        //A page of the notebook is opened
+        Sfx.play(getActivity(), isEditMode ? Sfx.Sound.PEN_CLICK : Sfx.Sound.PAGE_SOFT);
         if (isEditMode) {
             Toast.makeText(getActivity(),
                     getString(R.string.toast_diary_long_click_edit), Toast.LENGTH_SHORT).show();
@@ -443,6 +446,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             dbManager.opeDB();
             dbManager.updateDiaryTags(diaryId, newTags);
             dbManager.closeDB();
+            Sfx.play(getActivity(), Sfx.Sound.POP);
             savedTags = newTags;
             diaryCover.setTags(savedTags);
             //The list of entries shows the tags too
@@ -515,6 +519,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                     ((DiaryChecklist) diaryItem).setToggleListener(new DiaryChecklist.ToggleListener() {
                         @Override
                         public void onToggled(DiaryChecklist item) {
+                            Sfx.play(getActivity(), Sfx.Sound.CHECK);
                             saveChecklistState(item);
                         }
                     });
@@ -559,6 +564,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
     @Override
     public void onDiaryUpdated() {
+        Sfx.play(getActivity(), Sfx.Sound.SAVE);
         this.dismissAllowingStateLoss();
         callback.updateDiary();
     }
@@ -592,12 +598,14 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
     @Override
     public void onDiaryDelete() {
+        Sfx.play(getActivity(), Sfx.Sound.CRUMPLE);
         callback.deleteDiary();
         dismiss();
     }
 
     @Override
     public void onBack() {
+        Sfx.play(getActivity(), Sfx.Sound.CLOSE);
         dismiss();
     }
 
@@ -659,6 +667,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 if (isEditMode) {
                     askBeforeLeaving();
                 } else {
+                    Sfx.play(getActivity(), Sfx.Sound.CLOSE);
                     dismiss();
                 }
                 break;
@@ -735,6 +744,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             ok = DiaryMover.move(getActivity(), diaryId, currentTopicId, target.id);
         } else {
             ok = DiaryMover.copy(getActivity(), diaryId, currentTopicId, target.id) >= 0;
+        }
+        if (ok) {
+            Sfx.play(getActivity(), Sfx.Sound.SLIDE);
         }
         if (!ok) {
             Toast.makeText(getActivity(), R.string.diary_move_failed, Toast.LENGTH_LONG).show();

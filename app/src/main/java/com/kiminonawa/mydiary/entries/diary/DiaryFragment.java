@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
+import com.kiminonawa.mydiary.shared.Sfx;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.backup.obj.BUDiaryEntries;
 import com.kiminonawa.mydiary.backup.obj.BUDiaryItem;
@@ -408,6 +409,8 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
 
     @Override
     public void onDiarySaved() {
+        //A stamp: saved
+        Sfx.play(getActivity(), Sfx.Sound.SAVE);
         //For next diary
         dateField.setNow();
         //Clear
@@ -416,7 +419,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         //Set flag
         ((DiaryActivity) getActivity()).callEntriesListRefresh();
         //Goto entries page
-        ((DiaryActivity) getActivity()).gotoPage(0);
+        ((DiaryActivity) getActivity()).gotoPageSilently(0);
     }
 
 

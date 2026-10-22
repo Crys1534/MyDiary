@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.db.DBManager;
+import com.kiminonawa.mydiary.shared.ColorTools;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 import com.kiminonawa.mydiary.shared.gui.MyDiaryButton;
 
@@ -98,7 +99,8 @@ public class EditMemoDialogFragment extends DialogFragment implements View.OnCli
 
         EDT_edit_memo_content.getBackground().mutate().setColorFilter(
                 ThemeManager.getInstance().getThemeMainColor(getActivity()), PorterDuff.Mode.SRC_ATOP);
-        EDT_edit_memo_content.setTextColor(ThemeManager.getInstance().getThemeDarkColor(getActivity()));
+        EDT_edit_memo_content.setTextColor(ColorTools.readableOnSurface(getActivity(),
+                ThemeManager.getInstance().getThemeDarkColor(getActivity())));
         But_edit_memo_ok.setOnClickListener(EditMemoDialogFragment.this);
         But_edit_memo_cancel.setOnClickListener(EditMemoDialogFragment.this);
         return rootView;

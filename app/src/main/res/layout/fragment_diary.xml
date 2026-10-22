@@ -357,7 +357,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/RL_diary_info"
-                android:background="@android:color/white"
+                android:background="@color/app_surface"
                 android:orientation="vertical"
                 android:padding="5dp">
 
@@ -378,7 +378,7 @@
                         android:hint="@string/diary_title_hint"
                         android:inputType="textCapSentences"
                         android:maxLines="1"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/app_text"
                         android:textColorHint="@color/edittext_hint" />
 
                     <RelativeLayout
@@ -430,7 +430,7 @@
                     android:hint="@string/diary_tags_hint"
                     android:inputType="text|textNoSuggestions"
                     android:maxLines="1"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/app_text"
                     android:textColorHint="@color/edittext_hint"
                     android:textSize="16dp"
                     android:visibility="gone" />

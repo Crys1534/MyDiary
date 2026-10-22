@@ -11,8 +11,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kiminonawa.mydiary.shared.Sfx;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.db.DBManager;
+import com.kiminonawa.mydiary.shared.ColorTools;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 import com.kiminonawa.mydiary.shared.ViewTools;
 import com.kiminonawa.mydiary.shared.statusbar.ChinaPhoneHelper;
@@ -64,6 +66,9 @@ public class MemoActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo);
+        if (savedInstanceState == null) {
+            Sfx.play(this, Sfx.Sound.NOTEBOOK_OPEN);
+        }
         //For set status bar
         ChinaPhoneHelper.setStatusBar(this, true);
 
@@ -92,10 +97,12 @@ public class MemoActivity extends FragmentActivity implements
         RecyclerView_memo = (RecyclerView) findViewById(R.id.RecyclerView_memo);
         rootView = findViewById(R.id.Layout_memo_item_add);
         TV_memo_item_add = (TextView) rootView.findViewById(R.id.TV_memo_item_add);
-        TV_memo_item_add.setTextColor(ThemeManager.getInstance().getThemeDarkColor(this));
+        TV_memo_item_add.setTextColor(ColorTools.readableOnSurface(this,
+                ThemeManager.getInstance().getThemeDarkColor(this)));
         TV_memo_item_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Sfx.play(MemoActivity.this, Sfx.Sound.PEN_CLICK);
                 EditMemoDialogFragment editMemoDialogFragment = EditMemoDialogFragment.newInstance(
                         topicId, -1, true, "");
 
@@ -167,6 +174,7 @@ public class MemoActivity extends FragmentActivity implements
 
     @Override
     public void addMemo(String memoContent) {
+        Sfx.play(this, Sfx.Sound.SAVE);
         dbManager.opeDB();
 
         //Create newMemoEntity into List first

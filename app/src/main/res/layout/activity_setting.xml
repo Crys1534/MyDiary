@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/app_surface"
     android:fitsSystemWindows="true">
 
     <ScrollView
@@ -22,7 +22,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/setting_group_margin_top"
                 android:text="@string/setting_theme_title"
-                android:textColor="@android:color/black"
+                android:textColor="@color/app_text"
                 android:textSize="28dp" />
 
 
@@ -94,7 +94,7 @@
                             android:layout_weight="1"
                             android:gravity="left|center_vertical"
                             android:text="@string/setting_theme_sec_color"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@color/app_text" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -103,7 +103,7 @@
                             android:layout_weight="1"
                             android:gravity="left|center_vertical"
                             android:text="@string/setting_theme_main_color"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@color/app_text" />
 
                     </LinearLayout>
 
@@ -180,8 +180,39 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/setting_group_margin_top"
+                android:text="@string/setting_night_title"
+                android:textColor="@color/app_text"
+                android:textSize="28dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/setting_content_margin_top"
+                android:text="@string/setting_night_hint"
+                android:textColor="@color/setting_hint_text_color"
+                android:textSize="16dp" />
+
+            <Spinner
+                android:id="@+id/SP_setting_night"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="@dimen/setting_content_margin_top"
+                android:background="@drawable/spinner_bg" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="@dimen/setting_content_margin_top"
+                android:background="@drawable/dash_line"
+                android:layerType="software" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/setting_group_margin_top"
                 android:text="@string/setting_language_title"
-                android:textColor="@android:color/black"
+                android:textColor="@color/app_text"
                 android:textSize="28dp" />
 
             <TextView
@@ -212,8 +243,57 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/setting_group_margin_top"
+                android:text="@string/setting_sound_title"
+                android:textColor="@color/app_text"
+                android:textSize="28dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/setting_content_margin_top"
+                android:text="@string/setting_sound_hint"
+                android:textColor="@color/setting_hint_text_color"
+                android:textSize="16dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/SW_setting_sound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/setting_content_margin_top"
+                android:text="@string/setting_sound_switch"
+                android:textColor="@color/app_text"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/setting_content_margin_top"
+                android:text="@string/setting_sound_volume"
+                android:textColor="@color/setting_hint_text_color"
+                android:textSize="16dp" />
+
+            <SeekBar
+                android:id="@+id/SB_setting_sound_volume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:max="100" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="@dimen/setting_content_margin_top"
+                android:background="@drawable/dash_line"
+                android:layerType="software" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/setting_group_margin_top"
                 android:text="@string/setting_system_title"
-                android:textColor="@android:color/black"
+                android:textColor="@color/app_text"
                 android:textSize="28dp" />
 
 

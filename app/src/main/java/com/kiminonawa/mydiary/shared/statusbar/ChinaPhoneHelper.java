@@ -40,6 +40,10 @@ public class ChinaPhoneHelper {
      * @return 1:MIUI 2:Flyme 3:android6.0
      */
     public static void setStatusBar(Activity activity, boolean lightMode) {
+        //Dark mode: the status bar has a dark background, so its icons have to be light
+        if (com.kiminonawa.mydiary.shared.ColorTools.isNight(activity)) {
+            lightMode = false;
+        }
         @SystemType int result = OTHER;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (new MIUIHelper().setStatusBarLightMode(activity, lightMode)) {

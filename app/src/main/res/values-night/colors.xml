@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Dark mode-->
+    <color name="colorPrimary">#1E1E22</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimaryDark_23">#121214</color>
+    <color name="colorAccent">#8A8A90</color>
+
+    <color name="app_surface">#1E1E22</color>
+    <color name="app_surface_soft">#2A2A2F</color>
+    <color name="app_text">#ECECEF</color>
+    <color name="app_text_secondary">#B4B4BA</color>
+    <color name="app_text_tertiary">#8A8A90</color>
+    <color name="app_icon">#E2E2E6</color>
+    <color name="app_divider">#3A3A40</color>
+
+    <color name="button_boarder_color">#4A4A50</color>
+    <color name="button_text_color">#9A9AA0</color>
+    <color name="button_disable_color">#76767C</color>
+    <color name="imagebutton_hint_color">#9A9AA0</color>
+    <color name="topic_divider">#3A3A40</color>
+    <color name="memo_icon_tint">#9DB2C6</color>
+    <color name="diary_photo_layout_boarder">#3A3A40</color>
+    <color name="custom_button_disable_bg_color">#2A2A2F</color>
+    <color name="edittext_hint">#6E6E75</color>
+    <color name="edit_stroke">#4A4A50</color>
+    <color name="edit_content_background">#1E1E22</color>
+    <color name="textview_hint">#6E6E75</color>
+    <color name="contacts_photo_tint">#76767C</color>
+    <color name="setting_hint_text_color">#A0A0A6</color>
+    <color name="backup_hint_text_color">#A0A0A6</color>
+</resources>

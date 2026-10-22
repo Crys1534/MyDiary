@@ -1,0 +1,14 @@
+<resources>
+
+    <!-- The windows to choose a day (dark mode): dark windows -->
+    <style name="TakiPickerDialogTheme" parent="android:Theme.Material.Dialog">
+        <item name="android:colorAccent">@color/themeColor_taki</item>
+    </style>
+
+    <style name="MistuhaPickerDialogTheme" parent="android:Theme.Material.Dialog">
+        <item name="android:colorAccent">@color/themeColor_mistuha</item>
+    </style>
+
+    <style name="CustomPickerDialogTheme" parent="android:Theme.Material.Dialog"/>
+
+</resources>

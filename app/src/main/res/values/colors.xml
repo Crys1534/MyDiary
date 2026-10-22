@@ -16,6 +16,16 @@
     <color name="themeColor_custom_default">#8BC34A</color>
     <color name="theme_dark_color_custom_default">#388E3C</color>
 
+
+    <!--Light / dark mode: these colors change when the app is dark (see values-night/colors.xml)-->
+    <color name="app_surface">#FFFFFF</color>
+    <color name="app_surface_soft">#F1F3F4</color>
+    <color name="app_text">#000000</color>
+    <color name="app_text_secondary">#666666</color>
+    <color name="app_text_tertiary">#999999</color>
+    <color name="app_icon">#000000</color>
+    <color name="app_divider">#DDDDDD</color>
+
     <!--Button-->
     <color name="button_boarder_color">#cccccc</color>
     <color name="button_text_color">#b2b2b2</color>

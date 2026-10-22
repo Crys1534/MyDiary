@@ -114,7 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@android:color/white"
+        android:background="@color/app_surface"
         android:gravity="center"
         android:text="@string/entries_edit_view"
         android:textSize="18dp"

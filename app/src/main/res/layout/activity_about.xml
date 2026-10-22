@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/app_surface"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:padding="5dp">
@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         android:layout_margin="5dp"
         android:text="@string/about_title"
-        android:textColor="@android:color/black"
+        android:textColor="@color/app_text"
         android:textSize="20dp" />
 
     <ScrollView
@@ -24,7 +24,7 @@
             android:id="@+id/TV_about_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@android:color/black"
+            android:textColor="@color/app_text"
             android:textIsSelectable="true"
             android:textSize="14dp"
             android:autoLink="web"/>

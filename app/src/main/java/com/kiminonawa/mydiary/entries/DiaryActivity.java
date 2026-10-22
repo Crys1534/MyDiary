@@ -17,6 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.kiminonawa.mydiary.shared.Sfx;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.entries.calendar.CalendarFragment;
@@ -25,6 +26,7 @@ import com.kiminonawa.mydiary.db.DBStructure;
 import com.kiminonawa.mydiary.entries.entries.EntriesEntity;
 import com.kiminonawa.mydiary.entries.entries.EntriesFragment;
 import com.kiminonawa.mydiary.shared.BackgroundTask;
+import com.kiminonawa.mydiary.shared.ColorTools;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 import com.kiminonawa.mydiary.shared.statusbar.ChinaPhoneHelper;
 
@@ -74,6 +76,7 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
      */
     public final static String EXTRA_OPEN_DIARY_ID = "open_diary_id";
     private long openDiaryId = -1;
+    private boolean silentNextPage = false;
 
 
     @Override
@@ -100,7 +103,8 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
         But_diary_topbar_calendar = (RadioButton) findViewById(R.id.But_diary_topbar_calendar);
         But_diary_topbar_diary = (RadioButton) findViewById(R.id.But_diary_topbar_diary);
         TV_diary_topbar_title = (TextView) findViewById(R.id.TV_diary_topbar_title);
-        TV_diary_topbar_title.setTextColor(ThemeManager.getInstance().getThemeDarkColor(this));
+        TV_diary_topbar_title.setTextColor(ColorTools.readableOnSurface(this,
+                ThemeManager.getInstance().getThemeDarkColor(this)));
 
         String diaryTitle = getIntent().getStringExtra("diaryTitle");
         if (diaryTitle == null) {
@@ -112,6 +116,19 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
 
         //Load the all entries from db.
         loadEntries();
+        //The notebook is opened
+        if (savedInstanceState == null) {
+            Sfx.play(this, Sfx.Sound.NOTEBOOK_OPEN);
+        }
+    }
+
+    @Override
+    public void finish() {
+        if (!isFinishing() && !isChangingConfigurations()) {
+            //The notebook is closed
+            Sfx.play(this, Sfx.Sound.NOTEBOOK_CLOSE);
+        }
+        super.finish();
     }
 
 
@@ -247,6 +264,14 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
         ViewPager_diary_content.setCurrentItem(position);
     }
 
+    /**
+     * Same as {@link #gotoPage(int)} but without the sound of the page (something else is already sounding)
+     */
+    public void gotoPageSilently(int position) {
+        silentNextPage = true;
+        gotoPage(position);
+    }
+
     public void callEntriesGotoDiaryPosition(int position) {
         EntriesFragment entriesFragment = ((EntriesFragment) mPagerAdapter.getRegisteredFragment(0));
         if (entriesFragment != null) {
@@ -290,6 +315,12 @@ public class DiaryActivity extends FragmentActivity implements RadioGroup.OnChec
     private ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
+            //The Diary tab is the page of the notebook where a new entry begins: the sound of a page turning
+            if (silentNextPage) {
+                silentNextPage = false;
+            } else {
+                Sfx.play(DiaryActivity.this, position == 2 ? Sfx.Sound.PAGE_FLIP : Sfx.Sound.TAB);
+            }
             switch (position) {
                 default:
                     But_diary_topbar_entries.setChecked(true);

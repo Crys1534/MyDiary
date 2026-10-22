@@ -19,6 +19,7 @@ import com.kiminonawa.mydiary.entries.diary.item.DiaryTextTag;
 import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
 import com.kiminonawa.mydiary.entries.diary.item.RichText;
 import com.kiminonawa.mydiary.shared.FileManager;
+import com.kiminonawa.mydiary.shared.Sfx;
 
 import java.io.File;
 
@@ -81,22 +82,27 @@ public class EditorActions implements View.OnClickListener {
         Activity activity = host.getEditorActivity();
         switch (v.getId()) {
             case R.id.IV_diary_bold:
+                Sfx.play(activity, Sfx.Sound.PEN_TICK);
                 if (!diaryItemHelper.toggleBoldAtFocus(host.getFocusView())) {
                     Toast.makeText(activity, activity.getString(R.string.toast_format_select_text), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.IV_diary_italic:
+                Sfx.play(activity, Sfx.Sound.PEN_TICK);
                 if (!diaryItemHelper.toggleItalicAtFocus(host.getFocusView())) {
                     Toast.makeText(activity, activity.getString(R.string.toast_format_select_text), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.IV_diary_list:
+                Sfx.play(activity, Sfx.Sound.PEN_TICK);
                 diaryItemHelper.showListMenu(activity, v, host.getFocusView());
                 break;
             case R.id.IV_diary_checklist:
+                Sfx.play(activity, Sfx.Sound.CHECK);
                 diaryItemHelper.insertChecklistAtFocus(host.getFocusView());
                 break;
             case R.id.IV_diary_audio:
+                Sfx.play(activity, Sfx.Sound.PEN_TICK);
                 AudioLinkDialog.show(activity, new AudioLinkDialog.Callback() {
                     @Override
                     public void onAudioLink(String link) {
@@ -105,6 +111,7 @@ public class EditorActions implements View.OnClickListener {
                 });
                 break;
             case R.id.IV_diary_audio_delete:
+                Sfx.play(activity, Sfx.Sound.RUSTLE);
                 int audioPosition = (int) v.getTag();
                 if (diaryItemHelper.get(audioPosition) instanceof DiaryAudio) {
                     ((DiaryAudio) diaryItemHelper.get(audioPosition)).release();
@@ -112,16 +119,19 @@ public class EditorActions implements View.OnClickListener {
                 removeRow(audioPosition);
                 break;
             case R.id.IV_diary_photo_delete:
+                Sfx.play(activity, Sfx.Sound.CRUMPLE);
                 removeRow((int) v.getTag());
                 host.onCoverChanged();
                 break;
             case R.id.IV_diary_photo_crop:
+                Sfx.play(activity, Sfx.Sound.SLIDE);
                 IDairyRow row = diaryItemHelper.get((int) v.getTag());
                 if (row instanceof DiaryPhoto) {
                     areaPicker.pickForBody((DiaryPhoto) row, host.getPhotoFolder());
                 }
                 break;
             case R.id.IV_diary_photo_thumbnail:
+                Sfx.play(activity, Sfx.Sound.STAR);
                 diaryItemHelper.chooseThumbnailAt((int) v.getTag());
                 host.onCoverChanged();
                 Toast.makeText(activity, activity.getString(R.string.cover_thumbnail_chosen), Toast.LENGTH_SHORT).show();
@@ -146,6 +156,7 @@ public class EditorActions implements View.OnClickListener {
      */
     public void insertPhoto(String fileName, String folderAbsolute) {
         Activity activity = host.getEditorActivity();
+        Sfx.play(activity, Sfx.Sound.PHOTO);
         try {
             DiaryPhoto diaryPhoto = new DiaryPhoto(activity);
             diaryPhoto.setPhoto(Uri.parse(FileManager.FILE_HEADER + folderAbsolute + "/" + fileName), fileName);

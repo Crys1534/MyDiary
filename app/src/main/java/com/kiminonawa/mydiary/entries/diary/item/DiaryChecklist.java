@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kiminonawa.mydiary.R;
+import com.kiminonawa.mydiary.shared.ColorTools;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
 
 /**
@@ -62,7 +64,7 @@ public class DiaryChecklist implements IDairyRow {
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         editText = new FormatEditText(context);
-        editText.setTextColor(Color.BLACK);
+        editText.setTextColor(ColorTools.getColor(context, R.color.app_text));
         editText.setBackgroundColor(Color.TRANSPARENT);
         editText.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         editText.setPadding(dp2, dp2, dp2, dp2);
@@ -126,10 +128,10 @@ public class DiaryChecklist implements IDairyRow {
     private void updateLook() {
         if (checkBox.isChecked()) {
             editText.setPaintFlags(editText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            editText.setTextColor(Color.GRAY);
+            editText.setTextColor(ColorTools.getColor(editText.getContext(), R.color.app_text_tertiary));
         } else {
             editText.setPaintFlags(editText.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
-            editText.setTextColor(Color.BLACK);
+            editText.setTextColor(ColorTools.getColor(editText.getContext(), R.color.app_text));
         }
     }
 

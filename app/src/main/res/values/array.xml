@@ -67,4 +67,10 @@
         <item>Español</item>
     </array>
 
+    <array name="night_list">
+        <item>Like the phone</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </array>
+
 </resources>

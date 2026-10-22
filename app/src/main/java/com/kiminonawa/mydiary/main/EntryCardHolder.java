@@ -26,8 +26,10 @@ public class EntryCardHolder extends RecyclerView.ViewHolder {
     public final SimpleDraweeView thumbnail;
     public final View card, status;
 
-    public EntryCardHolder(View rootView, int themeColor) {
+    public EntryCardHolder(View rootView, int themeColorChosen) {
         super(rootView);
+        //A dark custom color is made lighter in dark mode, so it can be read
+        int themeColor = com.kiminonawa.mydiary.shared.ColorTools.readableOnSurface(rootView.getContext(), themeColorChosen);
         header = (TextView) rootView.findViewById(R.id.TV_entries_item_header);
         time = (TextView) rootView.findViewById(R.id.TV_entries_item_time);
         title = (TextView) rootView.findViewById(R.id.TV_entries_item_title);

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.kiminonawa.mydiary.shared.Sfx;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.entries.BaseDiaryFragment;
 import com.kiminonawa.mydiary.entries.DiaryActivity;
@@ -294,6 +295,7 @@ public class CalendarFragment extends BaseDiaryFragment implements View.OnClickL
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         //Make calendar sync the new date
+        Sfx.play(getActivity(), Sfx.Sound.TAB);
         calendar.setTime(date.getDate());
 
         //Goto the diary position

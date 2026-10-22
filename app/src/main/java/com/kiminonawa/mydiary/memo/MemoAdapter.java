@@ -15,9 +15,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.kiminonawa.mydiary.shared.Sfx;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.shared.EditMode;
+import com.kiminonawa.mydiary.shared.ColorTools;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 
@@ -148,7 +150,8 @@ public class MemoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             IV_memo_item_dot = (ImageView) rootView.findViewById(R.id.IV_memo_item_dot);
             TV_memo_item_content = (TextView) rootView.findViewById(R.id.TV_memo_item_content);
             IV_memo_item_delete = (ImageView) rootView.findViewById(R.id.IV_memo_item_delete);
-            TV_memo_item_content.setTextColor(ThemeManager.getInstance().getThemeDarkColor(mActivity));
+            TV_memo_item_content.setTextColor(ColorTools.readableOnSurface(mActivity,
+                ThemeManager.getInstance().getThemeDarkColor(mActivity)));
         }
 
         private TextView getTVContent() {
@@ -184,6 +187,7 @@ public class MemoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.IV_memo_item_delete:
+                    Sfx.play(mActivity, Sfx.Sound.CRUMPLE);
                     dbManager.opeDB();
                     dbManager.delMemo(memoList.get(itemPosition).getMemoId());
                     dbManager.deleteMemoOrder(memoList.get(itemPosition).getMemoId());
@@ -214,7 +218,7 @@ public class MemoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
         @Override
         public void onItemClear() {
-            RL_memo_item_root_view.setBackgroundColor(Color.WHITE);
+            RL_memo_item_root_view.setBackgroundColor(ColorTools.getColor(mActivity, R.color.app_surface));
         }
 
         @Override

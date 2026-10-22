@@ -6,11 +6,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +27,7 @@ import com.kiminonawa.mydiary.shared.OldVersionHelper;
 import com.kiminonawa.mydiary.shared.PermissionHelper;
 import com.kiminonawa.mydiary.shared.SPFManager;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
+import com.kiminonawa.mydiary.shared.Sfx;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 import com.kiminonawa.mydiary.shared.statusbar.ChinaPhoneHelper;
 import com.yalantis.ucrop.UCrop;
@@ -49,6 +53,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private boolean isThemeFirstRun = true;
     private static final String UPDATE_URL = "https://github.com/Crys1534/MyDiary/releases";
     private boolean isLanguageFirstRun = true;
+    private boolean isNightFirstRun = true;
     //Because the default profile bg is color ,
     //so we should keep main color for replace when main color was changed.
     private int tempMainColorCode;
@@ -66,7 +71,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     /**
      * UI
      */
-    private Spinner SP_setting_theme, SP_setting_language;
+    private Spinner SP_setting_theme, SP_setting_language, SP_setting_night;
     private ImageView IV_setting_profile_bg, IV_setting_theme_main_color, IV_setting_theme_dark_color;
     private Button But_setting_theme_default_bg, But_setting_theme_default, But_setting_theme_apply;
     private Button But_setting_fix_photo_17_dir;
@@ -96,6 +101,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         But_setting_theme_apply.setOnClickListener(this);
 
         SP_setting_language = (Spinner) findViewById(R.id.SP_setting_language);
+        SP_setting_night = (Spinner) findViewById(R.id.SP_setting_night);
 
         But_setting_fix_photo_17_dir = (Button) findViewById(R.id.But_setting_fix_photo_17_dir);
         But_setting_fix_photo_17_dir.setOnClickListener(this);
@@ -108,6 +114,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         initSpinner();
         initTheme(themeManager.getCurrentTheme());
         initLanguage();
+        initSounds();
     }
 
     @Override
@@ -173,6 +180,44 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
 
+    /**
+     * The switch and the volume of the sounds of the diary.
+     */
+    private void initSounds() {
+        final SwitchCompat soundSwitch = (SwitchCompat) findViewById(R.id.SW_setting_sound);
+        final SeekBar volume = (SeekBar) findViewById(R.id.SB_setting_sound_volume);
+        soundSwitch.setChecked(SPFManager.isSoundOn(this));
+        volume.setProgress(SPFManager.getSoundVolume(this));
+        volume.setEnabled(soundSwitch.isChecked());
+        soundSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPFManager.setSoundOn(SettingActivity.this, isChecked);
+                volume.setEnabled(isChecked);
+                //So the person hears what it is
+                Sfx.play(SettingActivity.this, Sfx.Sound.PAGE_FLIP);
+            }
+        });
+        volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    SPFManager.setSoundVolume(SettingActivity.this, progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                SPFManager.setSoundVolume(SettingActivity.this, seekBar.getProgress());
+                Sfx.play(SettingActivity.this, Sfx.Sound.PEN_CLICK);
+            }
+        });
+    }
+
     private void initLanguage() {
         if (SPFManager.getLocalLanguageCode(this) != -1) {
             SP_setting_language.setSelection(SPFManager.getLocalLanguageCode(this));
@@ -221,6 +266,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         SP_setting_theme.setAdapter(themeAdapter);
         SP_setting_theme.setSelection(themeManager.getCurrentTheme());
         SP_setting_theme.setOnItemSelectedListener(this);
+
+        //Light / dark spinner
+        ArrayAdapter nightAdapter = new ArrayAdapter(this, R.layout.spinner_simple_text,
+                getResources().getStringArray(R.array.night_list));
+        SP_setting_night.setAdapter(nightAdapter);
+        SP_setting_night.setSelection(SPFManager.getNightMode(this));
+        SP_setting_night.setOnItemSelectedListener(this);
 
         //Language spinner
         ArrayAdapter languageAdapter = new ArrayAdapter(this, R.layout.spinner_simple_text,
@@ -387,6 +439,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 } else {
                     //First time do nothing
                     isThemeFirstRun = false;
+                }
+                break;
+            case R.id.SP_setting_night:
+                if (!isNightFirstRun) {
+                    SPFManager.setNightMode(this, position);
+                    //Android draws the open screens again with the new look
+                    MyDiaryApplication.applyNightMode(position);
+                } else {
+                    isNightFirstRun = false;
                 }
                 break;
             case R.id.SP_setting_language:

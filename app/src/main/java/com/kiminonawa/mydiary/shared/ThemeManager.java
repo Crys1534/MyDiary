@@ -141,7 +141,7 @@ public class ThemeManager {
         stateListDrawable.addState(new int[]{android.R.attr.state_pressed},
                 new ColorDrawable(getThemeMainColor(context)));
         stateListDrawable.addState(new int[]{},
-                new ColorDrawable(Color.WHITE));
+                new ColorDrawable(ColorTools.getColor(context, R.color.app_surface)));
         return stateListDrawable;
     }
 
@@ -207,13 +207,13 @@ public class ThemeManager {
         } else {
             switch (currentTheme) {
                 case TAKI:
-                    bgDrawable = new ColorDrawable(Color.WHITE);
+                    bgDrawable = new ColorDrawable(ColorTools.getColor(context, R.color.app_surface));
                     break;
                 case MITSUHA:
-                    bgDrawable = new ColorDrawable(Color.WHITE);
+                    bgDrawable = new ColorDrawable(ColorTools.getColor(context, R.color.app_surface));
                     break;
                 default:
-                    bgDrawable = new ColorDrawable(Color.WHITE);
+                    bgDrawable = new ColorDrawable(ColorTools.getColor(context, R.color.app_surface));
                     break;
             }
         }
@@ -249,7 +249,7 @@ public class ThemeManager {
         Drawable returnDefaultDrawable;
         switch (topicType) {
             case ITopic.TYPE_MEMO:
-                returnDefaultDrawable = getMemoBgDefaultDrawable();
+                returnDefaultDrawable = getMemoBgDefaultDrawable(context);
                 break;
             case ITopic.TYPE_CONTACTS:
                 returnDefaultDrawable = getContactsDefaultBgDrawable(context);
@@ -278,17 +278,17 @@ public class ThemeManager {
         return defaultBgDrawable;
     }
 
-    public Drawable getMemoBgDefaultDrawable() {
+    public Drawable getMemoBgDefaultDrawable(Context context) {
         Drawable defaultBgDrawable;
         switch (currentTheme) {
             case TAKI:
-                defaultBgDrawable = new ColorDrawable(Color.WHITE);
+                defaultBgDrawable = new ColorDrawable(ColorTools.getColor(context, R.color.app_surface));
                 break;
             case MITSUHA:
-                defaultBgDrawable = new ColorDrawable(Color.WHITE);
+                defaultBgDrawable = new ColorDrawable(ColorTools.getColor(context, R.color.app_surface));
                 break;
             default:
-                defaultBgDrawable = new ColorDrawable(Color.WHITE);
+                defaultBgDrawable = new ColorDrawable(ColorTools.getColor(context, R.color.app_surface));
                 break;
         }
         return defaultBgDrawable;
