@@ -43,7 +43,7 @@ public class WaveformExtractor {
     }
 
     private static File waveFileFor(File audio) {
-        return new File(audio.getPath() + ".wave");
+        return new File(audio.getPath() + ".wave2");
     }
 
     /**
@@ -227,7 +227,7 @@ public class WaveformExtractor {
     }
 
     /**
-     * Receives the decoded sound (numbers) and keeps the loudest value of every little piece.
+     * Receives the decoded sound (numbers) and keeps how loud every little piece is.
      */
     private static class Measurer {
         private int channels;
@@ -235,7 +235,7 @@ public class WaveformExtractor {
         private final int blockFrames;
         private float[] blocks = new float[2048];
         private int blockCount = 0;
-        private float blockMax = 0;
+        private double blockSquares = 0;
         private int inBlock = 0;
         private short[] shortTmp = new short[0];
         private float[] floatTmp = new float[0];
@@ -296,9 +296,7 @@ public class WaveformExtractor {
         }
 
         private void push(float value) {
-            if (value > blockMax) {
-                blockMax = value;
-            }
+            blockSquares += (double) value * value;
             if (++inBlock >= blockFrames) {
                 closeBlock();
             }
@@ -308,8 +306,9 @@ public class WaveformExtractor {
             if (blockCount == blocks.length) {
                 blocks = Arrays.copyOf(blocks, blocks.length * 2);
             }
-            blocks[blockCount++] = blockMax;
-            blockMax = 0;
+            //How loud this little piece is (the "strength" of the sound, not only its highest point)
+            blocks[blockCount++] = (float) Math.sqrt(blockSquares / Math.max(1, inBlock));
+            blockSquares = 0;
             inBlock = 0;
         }
 
@@ -329,13 +328,11 @@ public class WaveformExtractor {
                 int to = Math.max(from + 1, (int) ((long) (i + 1) * blockCount / BARS));
                 to = Math.min(to, blockCount);
                 from = Math.min(from, blockCount - 1);
-                float max = 0;
+                double squares = 0;
                 for (int j = from; j < to; j++) {
-                    if (blocks[j] > max) {
-                        max = blocks[j];
-                    }
+                    squares += (double) blocks[j] * blocks[j];
                 }
-                bars[i] = max;
+                bars[i] = (float) Math.sqrt(squares / (to - from));
             }
             //The reference is a loud (not the loudest) bar, so one single click does not flatten everything
             float[] sorted = bars.clone();
@@ -347,7 +344,7 @@ public class WaveformExtractor {
             for (int i = 0; i < BARS; i++) {
                 float v = reference <= 0.0001f ? 0 : Math.min(1f, bars[i] / reference);
                 //A soft curve: quiet parts can still be seen
-                bars[i] = (float) Math.pow(v, 0.7);
+                bars[i] = (float) Math.pow(v, 0.85);
             }
             return bars;
         }
