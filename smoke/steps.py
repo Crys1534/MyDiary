@@ -214,6 +214,12 @@ def audio_times():
     return [n["text"] for n in nodes() if n["rid"].endswith("TV_diary_audio_time")]
 
 
+def audio_messages():
+    """Toasts / texts of the audio errors that are on the screen right now."""
+    words = ("could not", "link gave", "did not let", "too big", "format")
+    return [n["text"][:90] for n in nodes() if n["text"] and any(w in n["text"] for w in words)]
+
+
 def add_audio(url, tag):
     close_keyboard()
     sleep(1)
@@ -230,23 +236,29 @@ def add_audio(url, tag):
 
 
 def play_audios(tag, wait):
-    """Presses play on every audio that is on the screen, waits, and prints what each one says."""
-    plays = []
+    """Presses play on the NEWEST audio (the lowest one: new audios are added at the end of the entry),
+    waits, and prints what it says every 2 seconds (download percentage, time, errors)."""
+    # go to the bottom of the entry, where the new audio is
     for _ in range(4):
-        plays = [n for n in nodes() if n["rid"].endswith("IV_diary_audio_play")]
-        if plays:
-            break
-        adb("shell", "input", "swipe", "540", "1700", "540", "900", "300")
+        adb("shell", "input", "swipe", "540", "1700", "540", "700", "300")
         sleep(1)
+    plays = [n for n in nodes() if n["rid"].endswith("IV_diary_audio_play") and n["cy"] < 2180]
     log("   audios on the screen: %d, before: %s" % (len(plays), audio_times()))
-    for n in plays:
-        tap_xy(n["cx"], n["cy"])
-        sleep(wait)
-        log("   after play (%s): %s" % (tag, audio_times()))
-        show("audio_playing_%s" % tag, full=True)
-        alive("audio %s" % tag)
-        tap_xy(n["cx"], n["cy"])  # pause (or nothing if it ended / failed)
-        sleep(1)
+    if not plays:
+        show("audio_no_play_%s" % tag, full=True)
+        return
+    n = max(plays, key=lambda p: p["cy"])
+    log("   tapping the lowest play button @%d,%d" % (n["cx"], n["cy"]))
+    tap_xy(n["cx"], n["cy"])
+    waited = 0
+    while waited < wait:
+        sleep(2)
+        waited += 2
+        log("   t+%ds (%s): %s %s" % (waited, tag, audio_times(), audio_messages()))
+    show("audio_playing_%s" % tag, full=True)
+    alive("audio %s" % tag)
+    tap_xy(n["cx"], n["cy"])  # pause (or nothing if it ended / failed)
+    sleep(1)
 
 
 def audio_test():
