@@ -76,7 +76,7 @@ public class BackupManager {
     }
 
     /**
-     * What the person chose in the app (not notes): language, theme and colors, name, profile pictures, passcode.
+     * What the person chose in the app (not notes): language, theme and colors, dark mode, sounds, vibration, notebook sheet, name, profile pictures, passcode.
      * The pictures themselves are in the zip file (setting folder).
      */
     public static class BackupSettings {
@@ -94,6 +94,13 @@ public class BackupManager {
         public String encrypted_password;
         //The person checked "don't show again" in the release note
         public boolean release_note_close;
+        //Look of the app (0 like the phone, 1 light, 2 dark), sounds, vibration and the notebook sheet.
+        //They are "null" in a backup made by an older version: then the app keeps what it has now
+        public Integer night_mode;
+        public Boolean sound_on;
+        public Integer sound_volume;
+        public Boolean vibration_on;
+        public Boolean notebook_paper;
     }
 
     public static class BackupTopicListBean {

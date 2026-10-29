@@ -16,6 +16,7 @@ import com.kiminonawa.mydiary.backup.obj.BUMemoEntries;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.main.topic.ITopic;
 import com.kiminonawa.mydiary.shared.FileManager;
+import com.kiminonawa.mydiary.shared.MyDiaryApplication;
 import com.kiminonawa.mydiary.shared.SPFManager;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 
@@ -117,6 +118,11 @@ public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
         super.onPostExecute(importSuccessful);
         progressDialog.dismiss();
         if (importSuccessful) {
+            //The dark mode of the backup is used right away (this has to be done on the main thread)
+            if (backupManager != null && backupManager.getSettings() != null
+                    && backupManager.getSettings().night_mode != null) {
+                MyDiaryApplication.applyNightMode(backupManager.getSettings().night_mode);
+            }
             Toast.makeText(mContext, mContext.getString(R.string.toast_import_successful), Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(mContext, mContext.getString(R.string.toast_import_fail), Toast.LENGTH_LONG).show();
@@ -254,7 +260,7 @@ public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
     }
 
     /**
-     * The settings of the backup replace the ones of the app: language, theme and colors, name, profile pictures.
+     * The settings of the backup replace the ones of the app: language, theme and colors, dark mode, sounds, vibration, notebook sheet, name, profile pictures.
      * The passcode is restored only when the backup has one (a passcode is never taken away by an import).
      */
     private void restoreSettings() {
@@ -273,6 +279,22 @@ public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
             }
             if (settings.encrypted_password != null && settings.encrypted_password.length() > 0) {
                 SPFManager.setAndEncryptPassword(mContext, settings.encrypted_password);
+            }
+            //Dark mode, sounds, vibration and the notebook sheet (an older backup does not have them: nothing changes)
+            if (settings.night_mode != null) {
+                SPFManager.setNightMode(mContext, settings.night_mode);
+            }
+            if (settings.sound_on != null) {
+                SPFManager.setSoundOn(mContext, settings.sound_on);
+            }
+            if (settings.sound_volume != null) {
+                SPFManager.setSoundVolume(mContext, settings.sound_volume);
+            }
+            if (settings.vibration_on != null) {
+                SPFManager.setVibrationOn(mContext, settings.vibration_on);
+            }
+            if (settings.notebook_paper != null) {
+                SPFManager.setNotebookPaper(mContext, settings.notebook_paper);
             }
             //The theme that the screens use now
             ThemeManager.getInstance().setCurrentTheme(settings.theme);

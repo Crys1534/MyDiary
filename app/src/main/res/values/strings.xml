@@ -250,7 +250,7 @@
     <!--Backup-->
     <string name="backup_title">Backup</string>
     <string name="backup_export_title">Export</string>
-    <string name="backup_export_hint">Saves everything: notes, photos, tags, covers, topics and their backgrounds, colors, settings, your name and profile pictures, and the passcode</string>
+    <string name="backup_export_hint">Saves everything: notes, photos, audios, links, tags, covers, topics and their backgrounds, colors, dark mode, sounds, settings, your name and profile pictures, and the passcode</string>
     <string name="backup_export_path_hint">Click to choose where to save the backup</string>
     <string name="backup_export_button">export</string>
     <string name="backup_export_share_title">Share with</string>

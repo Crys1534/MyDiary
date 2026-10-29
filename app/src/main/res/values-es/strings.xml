@@ -248,7 +248,7 @@
     <!--Backup-->
     <string name="backup_title">Respaldo</string>
     <string name="backup_export_title">Exportar</string>
-    <string name="backup_export_hint">Guarda todo: notas, fotos, etiquetas, portadas, temas y sus fondos, colores, configuración, tu nombre y fotos de perfil, y la contraseña</string>
+    <string name="backup_export_hint">Guarda todo: notas, fotos, audios, enlaces, etiquetas, portadas, temas y sus fondos, colores, modo oscuro, sonidos, configuración, tu nombre y fotos de perfil, y la contraseña</string>
     <string name="backup_export_path_hint">Toca para elegir dónde guardar el respaldo</string>
     <string name="backup_export_button">exportar</string>
     <string name="backup_export_share_title">Compartir con</string>

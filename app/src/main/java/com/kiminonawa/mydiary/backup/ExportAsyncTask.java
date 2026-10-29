@@ -151,6 +151,11 @@ public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
         settings.has_profile_picture = new File(settingDir, ThemeManager.CUSTOM_PROFILE_PICTURE_FILENAME).exists();
         settings.encrypted_password = SPFManager.getPassword(mContext);
         settings.release_note_close = SPFManager.getReleaseNoteClose(mContext);
+        settings.night_mode = SPFManager.getNightMode(mContext);
+        settings.sound_on = SPFManager.isSoundOn(mContext);
+        settings.sound_volume = SPFManager.getSoundVolume(mContext);
+        settings.vibration_on = SPFManager.isVibrationOn(mContext);
+        settings.notebook_paper = SPFManager.isNotebookPaper(mContext);
         return settings;
     }
 

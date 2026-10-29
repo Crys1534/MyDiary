@@ -1062,6 +1062,45 @@ def profile_prefs(name=None):
     return adb("shell", "run-as", PKG, "cat", "shared_prefs/PROFILE.xml").strip()
 
 
+def config_prefs(changes=None):
+    """Reads (or changes) the settings of the app that are not the profile (dark mode, sounds, vibration, notebook
+    sheet) directly in its shared preferences. changes = {"KEY": ("int" or "boolean", value)}."""
+    import re
+    adb("shell", "am", "force-stop", PKG)
+    sleep(1)
+    xml = adb("shell", "run-as", PKG, "cat", "shared_prefs/CONFIG.xml")
+    if changes:
+        if not xml.strip().startswith("<?xml"):
+            xml = "<?xml version='1.0' encoding='utf-8' standalone='yes' ?>\n<map>\n</map>\n"
+        for name in changes:
+            xml = re.sub(r'\s*<(?:int|boolean)\s+name="%s"[^>]*/>' % name, "", xml)
+        lines = "".join('    <%s name="%s" value="%s" />\n' % (kind, name, value) for name, (kind, value) in changes.items())
+        xml = xml.replace("</map>", lines + "</map>")
+        r = subprocess.run(["adb", "shell", "run-as %s sh -c 'cat > shared_prefs/CONFIG.xml'" % PKG],
+                           input=xml, capture_output=True, text=True)
+        log("   config prefs written: rc=%s %r" % (r.returncode, (r.stderr or "")[:100]))
+        xml = adb("shell", "run-as", PKG, "cat", "shared_prefs/CONFIG.xml")
+    return xml
+
+
+def config_summary(xml):
+    import re
+    keys = ("CONFIG_NIGHT_MODE", "CONFIG_SOUND_ON", "CONFIG_SOUND_VOLUME", "CONFIG_VIBRATION_ON", "CONFIG_NOTEBOOK_PAPER")
+    out = {}
+    for k in keys:
+        m = re.search(r'name="%s"\s+value="([^"]*)"' % k, xml)
+        out[k] = m.group(1) if m else None
+    return out
+
+
+CONFIG_SPECIAL = {"CONFIG_NIGHT_MODE": ("int", 2), "CONFIG_SOUND_ON": ("boolean", "false"),
+                  "CONFIG_SOUND_VOLUME": ("int", 35), "CONFIG_VIBRATION_ON": ("boolean", "false"),
+                  "CONFIG_NOTEBOOK_PAPER": ("boolean", "true")}
+CONFIG_DEFAULT = {"CONFIG_NIGHT_MODE": ("int", 1), "CONFIG_SOUND_ON": ("boolean", "true"),
+                  "CONFIG_SOUND_VOLUME": ("int", 60), "CONFIG_VIBRATION_ON": ("boolean", "true"),
+                  "CONFIG_NOTEBOOK_PAPER": ("boolean", "false")}
+
+
 def backup_content_test():
     """Full backup: the zip must have the settings, the pictures and the backgrounds; importing must restore them."""
     import json, zipfile, glob
@@ -1069,6 +1108,9 @@ def backup_content_test():
     adb("shell", "sh", "-c", "'rm -f /sdcard/Download/MyDiaryBackup_*.zip'")
     # something to save: the name, a profile picture and the background of the diary topic
     profile_prefs("Nombre Prueba")
+    # dark mode, sounds, vibration and the notebook sheet must travel in the backup too
+    log("   CONFIG before: %s" % config_summary(config_prefs()))
+    log("   CONFIG special values written: %s" % config_summary(config_prefs(CONFIG_SPECIAL)))
     topic = None
     pull = pull_db("%s/bk" % OUT)
     if pull:
@@ -1126,6 +1168,7 @@ def backup_content_test():
         log("   zip read failed: %r" % (e,))
     # change the name, then import the file: the name must come back
     log("   profile before the change: %s" % profile_prefs("Otro Nombre")[:300])
+    log("   CONFIG back to the default values: %s" % config_summary(config_prefs(CONFIG_DEFAULT)))
     restart()
     if not tap(rid="IV_main_setting") or not tap(rid="IV_main_setting_backup"):
         return
@@ -1140,6 +1183,7 @@ def backup_content_test():
         sleep(8)
         show("bk_imported", full=True)
     log("   profile after import: %s" % profile_prefs()[:300])
+    log("   CONFIG after import (must be the special values: 2 / false / 35 / false / true): %s" % config_summary(config_prefs()))
     listing = adb("shell", "find", base + "/setting/", base + "/memo/", base + "/diary/", "-name", "custom_*")
     log("   backgrounds / pictures after import: %s" % listing.replace("\n", " | "))
     import sqlite3
@@ -1152,6 +1196,7 @@ def backup_content_test():
         for row in con.execute("select item_ref_diary_id, diary_item_content, diary_item_area from diary_item_entry_v2 where diary_item_area is not null and diary_item_area != '' order by 1"):
             log("   AREA after import: %r" % (row,))
         con.close()
+    log("   CONFIG put back to the default values: %s" % config_summary(config_prefs(CONFIG_DEFAULT)))
     restart("bk_after_import")
     alive("backup content")
 
