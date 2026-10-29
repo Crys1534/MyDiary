@@ -1343,6 +1343,177 @@ def cover_photo_test():
         show("paper_new_entry", full=True)
 
 
+def pick_audio_from_phone(name):
+    """Audio button -> 'From my phone' -> the system file window -> the file with this name."""
+    close_keyboard()
+    sleep(1)
+    if not tap(rid="IV_diary_audio"):
+        log("   FEATURES: no audio button")
+        return False
+    sleep(2)
+    show("feat_audio_dialog", full=True)
+    if not tap(rid="android:id/button3"):
+        log("   FEATURES: no 'From my phone' button in the audio window")
+        return False
+    sleep(4)
+    show("feat_audio_picker", full=True)
+    n = find(text=name)
+    if not n:
+        # the window may open in 'Recent' without the file: open the list of places and choose Audio / Downloads
+        for desc in ("Show roots", "Show drawer", "Open drawer"):
+            if tap(desc=desc):
+                break
+        sleep(2)
+        show("feat_audio_picker_roots", full=True)
+        for place in ("Audio", "Downloads", "Download"):
+            if tap(text=place, contains=False):
+                sleep(3)
+                break
+        show("feat_audio_picker_place", full=True)
+        n = find(text=name)
+    if not n:
+        log("   FEATURES: the audio file %r was not found in the file window" % name)
+        key(4)
+        return False
+    tap_xy(n["cx"], n["cy"])
+    sleep(5)
+    show("feat_audio_added", full=True)
+    return True
+
+
+def features_test():
+    """Audio file from the phone, dragging a photo, a link card, the notebook margin and holes, the full-screen
+    entry window and the vibration switch."""
+    import sqlite3
+    audio_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test-audio.m4a")
+    for folder in ("Music", "Download"):
+        adb("shell", "mkdir", "-p", "/sdcard/" + folder)
+        subprocess.run(["adb", "push", audio_file, "/sdcard/%s/mi_prueba.m4a" % folder], capture_output=True)
+        adb("shell", "am", "broadcast", "-a", "android.intent.action.MEDIA_SCANNER_SCAN_FILE",
+            "-d", "file:///sdcard/%s/mi_prueba.m4a" % folder)
+    sleep(3)
+    if not open_diary_topic():
+        return
+    tap(rid="But_diary_topbar_diary")
+    sleep(3)
+    dismiss_intro()
+    tap(rid="EDT_diary_title")
+    type_text("Prueba funciones")
+    close_keyboard()
+    tap(rid="LL_diary_item_content")
+    sleep(1)
+    type_text("primera linea sobre la hoja")
+    close_keyboard()
+    sleep(1)
+    show("feat_paper_text", full=True)
+
+    # 1. two photos, then the first one is dragged under the second one
+    pick_photo("feat_a", 2)
+    pick_photo("feat_b", 1)
+    sleep(1)
+    photos = sorted([n for n in nodes() if n["rid"].endswith("SDV_diary_new_photo")], key=lambda n: n["cy"])
+    log("   FEATURES: photos in the entry: %d at %s" % (len(photos), [(p["cx"], p["cy"]) for p in photos]))
+    show("feat_before_drag", full=True)
+    if len(photos) >= 2:
+        a, b = photos[0], photos[1]
+        # the 'draganddrop' command waits for the long press and then moves
+        adb("shell", "input", "draganddrop", str(a["cx"]), str(a["cy"] + 60), str(b["cx"]), str(b["b"][3] - 20), "2500")
+        sleep(3)
+        show("feat_after_drag", full=True)
+        after = sorted([n for n in nodes() if n["rid"].endswith("SDV_diary_new_photo")], key=lambda n: n["cy"])
+        log("   FEATURES: photos after the drag: %s" % [(p["cx"], p["cy"]) for p in after])
+        alive("dragging a photo")
+    else:
+        log("   FEATURES: could not try the drag (less than 2 photos on the screen)")
+
+    # 2. a link with its preview (needs internet)
+    close_keyboard()
+    sleep(1)
+    if tap(rid="IV_diary_link"):
+        sleep(2)
+        show("feat_link_dialog", full=True)
+        type_text("https://es.wikipedia.org/wiki/Monterrey")
+        tap(rid="android:id/button1")
+        waited = 0
+        while waited < 14 and not find(rid="TV_diary_link_description"):
+            sleep(2)
+            waited += 2
+        sleep(3)
+        for _ in range(3):
+            adb("shell", "input", "swipe", "540", "1700", "540", "900", "300")
+            sleep(1)
+        show("feat_link_card", full=True)
+        log("   FEATURES LINK: title=%r description=%r domain=%r image visible=%s" % (
+            node_text("TV_diary_link_title"), (node_text("TV_diary_link_description") or "")[:60],
+            node_text("TV_diary_link_domain"), bool(find(rid="SDV_diary_link_image"))))
+    else:
+        log("   FEATURES: no link button in the edit bar")
+
+    # 3. an audio file of the phone
+    if pick_audio_from_phone("mi_prueba.m4a"):
+        for _ in range(3):
+            adb("shell", "input", "swipe", "540", "1700", "540", "900", "300")
+            sleep(1)
+        log("   FEATURES AUDIO: texts under the waves = %s" % audio_times())
+        plays = [n for n in nodes() if n["rid"].endswith("IV_diary_audio_play") and n["cy"] < 2180]
+        if plays:
+            tap_xy(plays[-1]["cx"], plays[-1]["cy"])
+            for _ in range(3):
+                sleep(2)
+                log("   FEATURES AUDIO: playing -> %s %s" % (audio_times(), audio_messages()))
+            show("feat_audio_playing", full=True)
+            tap_xy(plays[-1]["cx"], plays[-1]["cy"])
+            sleep(1)
+    close_keyboard()
+    sleep(1)
+    show("feat_before_save", full=True)
+
+    # 4. save (soft vibration) and look at what was saved
+    if tap(rid="IV_diary_save"):
+        sleep(4)
+        show("feat_saved")
+        log("   FEATURES VIBRATION: %r" % adb("shell", "dumpsys", "vibrator_manager").strip()[-700:])
+    path = pull_db("%s/features" % OUT)
+    if path:
+        con = sqlite3.connect(path)
+        for row in con.execute("select diary_item_type, substr(diary_item_content,1,70) from diary_item_entry_v2 where item_ref_diary_id in (select _id from diary_entry_v2 where diary_title = 'Prueba funciones') order by diary_item_position"):
+            log("   FEATURES DB item: %r" % (row,))
+        con.close()
+    files = adb("shell", "run-as", PKG, "find", "files/diary", "-name", "*.m4a")
+    log("   FEATURES: audio files kept inside the entry: %r" % files.strip())
+
+    # 5. the entry window opens on the whole screen
+    tap(rid="But_diary_topbar_entries")
+    sleep(3)
+    n = find(text="Prueba funciones")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(4)
+        show("feat_viewer", full=True)
+        top = find(rid="RL_diary_info")
+        log("   FEATURES VIEWER: the cover starts at y=%s (the status bar is about 63 px; before it started at about 200)" %
+            (top["b"][1] if top else None))
+        log("   FEATURES VIEWER: link card=%s audio=%s" % (bool(find(rid="TV_diary_link_title")), bool(find(rid="IV_diary_audio_play"))))
+        for _ in range(3):
+            adb("shell", "input", "swipe", "540", "1700", "540", "700", "300")
+            sleep(1)
+        show("feat_viewer_bottom", full=True)
+        alive("opening the entry")
+        close_viewer()
+
+    # 6. the vibration switch of the settings
+    restart()
+    if tap(rid="IV_main_setting"):
+        sleep(2)
+        if tap(rid="IV_main_setting_setting_page"):
+            sleep(3)
+            if scroll_to("SW_setting_vibration"):
+                show("feat_settings_vibration", full=True)
+                log("   FEATURES: vibration switch checked=%s" % (find(rid="SW_setting_vibration") or {}).get("checked"))
+            else:
+                log("   FEATURES: no vibration switch in the settings")
+
+
 def dark_test():
     """Settings -> Look -> Dark, then the main screens are photographed in dark mode."""
     restart()
@@ -1412,5 +1583,6 @@ def dark_test():
     log("   dark: sounds played in this run = %d, kinds = %s" % (len(played), sorted(set(played))))
     log("   dark: Sfx problems in logcat: %r" % [l for l in sfx if " E " in l][:5])
 step("cover-only photo and notebook sheet", cover_photo_test)
+step("new features: audio from phone, drag, link, paper, full screen", features_test)
 step("dark mode", dark_test)
 log("== done")
