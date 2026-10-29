@@ -20,7 +20,7 @@ public final class PaperStyle {
 
     //Lines of the sheet: blue-gray pencil lines (light) / soft light lines (dark)
     private static final int LINE_COLOR_LIGHT = 0x80789BCB;
-    private static final int LINE_COLOR_NIGHT = 0x50B4C3DC;
+    private static final int LINE_COLOR_NIGHT = 0x66B4C3DC;
     //The lines are a bit more apart than in plain text, like the lines of a notebook
     private static final float LINE_SPACING = 1.3f;
 
