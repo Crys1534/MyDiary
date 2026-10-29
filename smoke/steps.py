@@ -1479,8 +1479,8 @@ def features_test():
         for row in con.execute("select diary_item_type, substr(diary_item_content,1,70) from diary_item_entry_v2 where item_ref_diary_id in (select _id from diary_entry_v2 where diary_title = 'Prueba funciones') order by diary_item_position"):
             log("   FEATURES DB item: %r" % (row,))
         con.close()
-    files = adb("shell", "run-as", PKG, "find", "files/diary", "-name", "*.m4a")
-    log("   FEATURES: audio files kept inside the entry: %r" % files.strip())
+    files = adb("shell", "find", "/sdcard/Android/data/" + PKG + "/files", "-name", "*.m4a*")
+    log("   FEATURES: audio files kept inside the entries: %r" % files.strip())
 
     # 5. the entry window opens on the whole screen
     tap(rid="But_diary_topbar_entries")
@@ -1494,6 +1494,18 @@ def features_test():
         log("   FEATURES VIEWER: the cover starts at y=%s (the status bar is about 63 px; before it started at about 200)" %
             (top["b"][1] if top else None))
         log("   FEATURES VIEWER: link card=%s audio=%s" % (bool(find(rid="TV_diary_link_title")), bool(find(rid="IV_diary_audio_play"))))
+        sleep(3)
+        show("feat_viewer_wave", full=True)
+        play = find(rid="IV_diary_audio_play")
+        if play:
+            # the audio of the phone is played from the folder of the entry
+            tap_xy(play["cx"], play["cy"])
+            for _ in range(4):
+                sleep(2)
+                log("   FEATURES VIEWER AUDIO: playing -> %s %s" % (audio_times(), audio_messages()))
+            show("feat_viewer_audio_playing", full=True)
+            tap_xy(play["cx"], play["cy"])
+            sleep(1)
         for _ in range(3):
             adb("shell", "input", "swipe", "540", "1700", "540", "700", "300")
             sleep(1)
