@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <!-- To play audios from a link (Google Drive) -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <!-- No camera and no storage permissions: the photos are taken by the camera app of the phone
          and chosen with the picker of Android, and everything is saved in the private folder of the app. -->
 

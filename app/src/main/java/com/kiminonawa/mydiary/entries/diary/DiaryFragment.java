@@ -33,6 +33,7 @@ import com.kiminonawa.mydiary.entries.diary.editor.DiaryItemFactory;
 import com.kiminonawa.mydiary.entries.diary.editor.EditorActions;
 import com.kiminonawa.mydiary.entries.diary.editor.EntryDateField;
 import com.kiminonawa.mydiary.entries.diary.editor.LocationField;
+import com.kiminonawa.mydiary.entries.diary.editor.AudioFileImporter;
 import com.kiminonawa.mydiary.entries.diary.editor.PhotoImporter;
 import com.kiminonawa.mydiary.entries.diary.editor.TitleTagsField;
 import com.kiminonawa.mydiary.entries.diary.editor.WeatherMoodField;
@@ -104,6 +105,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     private EditorActions editorActions;
     private AreaPickerController areaPicker;
     private PhotoImporter photoImporter;
+    private AudioFileImporter audioImporter;
     //The photo that is being chosen is for the cover only (it is not put in the text)
     private boolean pickingCover = false;
     /**
@@ -178,6 +180,13 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         editorActions.bindBar(view);
         photoImporter = new PhotoImporter(this, this);
         photoImporter.setTargetFolder(diaryTempFileManager);
+        audioImporter = new AudioFileImporter(this, new AudioFileImporter.Listener() {
+            @Override
+            public void onAudioReady(String fileName, String displayName) {
+                editorActions.insertLocalAudio(fileName, displayName);
+            }
+        });
+        audioImporter.setTargetFolder(diaryTempFileManager);
         diaryCover.setPickAreaListener(new Runnable() {
             @Override
             public void run() {
@@ -244,6 +253,10 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         if (areaPicker != null && areaPicker.onActivityResult(requestCode, resultCode, data)) {
             return;
         }
+        //The audio file that was chosen on the phone
+        if (audioImporter != null && audioImporter.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -283,6 +296,11 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     @Override
     public void onCoverChanged() {
         updateCover();
+    }
+
+    @Override
+    public void pickAudioFile() {
+        audioImporter.pick();
     }
 
     /**

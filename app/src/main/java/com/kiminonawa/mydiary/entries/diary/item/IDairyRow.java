@@ -15,6 +15,8 @@ public interface IDairyRow {
     int TYPE_CHECKLIST = 3;
     //An audio that is played from a link (for example of Google Drive); the content is the link
     int TYPE_AUDIO = 4;
+    //A link to a web page, shown as a card with the title, the description and the picture of the page; the content is the link
+    int TYPE_LINK = 5;
 
     void setContent(String content);
 

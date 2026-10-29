@@ -67,6 +67,13 @@ public class DiaryPhoto implements IDairyRow {
         diaryPhotoLayout.setCropOnClick(clickListener);
     }
 
+    /**
+     * Edit mode: a finger kept pressed on the photo starts moving it to another place of the entry.
+     */
+    public void setLongClickListener(View.OnLongClickListener listener) {
+        diaryPhotoLayout.setOnLongClickListener(listener);
+    }
+
     public void setThumbnailSelected(boolean selected) {
         diaryPhotoLayout.setThumbnailSelected(selected);
     }

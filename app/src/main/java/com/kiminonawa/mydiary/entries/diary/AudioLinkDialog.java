@@ -26,7 +26,11 @@ public class AudioLinkDialog {
         void onAudioLink(String link);
     }
 
-    public static void show(final Context context, final Callback callback) {
+    /**
+     * @param callback    the person pasted a link
+     * @param pickFromPhone called when the person wants to choose an audio file of the phone instead (can be null)
+     */
+    public static void show(final Context context, final Callback callback, final Runnable pickFromPhone) {
         final EditText input = new EditText(context);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
         input.setSingleLine(true);
@@ -44,7 +48,7 @@ public class AudioLinkDialog {
         params.rightMargin = margin;
         container.addView(input, params);
 
-        AlertDialog dialog = new AlertDialog.Builder(context)
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(R.string.audio_button_title)
                 .setMessage(R.string.audio_dialog_message)
                 .setView(container)
@@ -59,8 +63,16 @@ public class AudioLinkDialog {
                         }
                     }
                 })
-                .setNegativeButton(R.string.dialog_button_cancel, null)
-                .create();
+                .setNegativeButton(R.string.dialog_button_cancel, null);
+        if (pickFromPhone != null) {
+            builder.setNeutralButton(R.string.audio_dialog_from_phone, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int which) {
+                    pickFromPhone.run();
+                }
+            });
+        }
+        AlertDialog dialog = builder.create();
         if (dialog.getWindow() != null) {
             dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }

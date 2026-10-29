@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryItemHelper;
+import com.kiminonawa.mydiary.entries.diary.item.DiaryAudio;
 import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
 import com.kiminonawa.mydiary.shared.FileManager;
 
@@ -91,6 +92,10 @@ public class UpdateDiaryTask extends BackgroundTask<Long, Integer> {
                 //Copy photo from temp to diary dir
                 if (diaryItemHelper.get(i).getType() == IDairyRow.TYPE_PHOTO) {
                     savePhoto(diaryItemHelper.get(i).getContent());
+                } else if (diaryItemHelper.get(i).getType() == IDairyRow.TYPE_AUDIO
+                        && DiaryAudio.localFileName(diaryItemHelper.get(i).getContent()) != null) {
+                    //An audio of the phone: its file goes with the photos
+                    savePhoto(DiaryAudio.localFileName(diaryItemHelper.get(i).getContent()));
                 }
                 //Save new data item
                 dbManager.insertDiaryContent(diaryItemHelper.get(i).getType(), i
@@ -114,6 +119,7 @@ public class UpdateDiaryTask extends BackgroundTask<Long, Integer> {
         super.onPostExecute(result);
         progressDialog.dismiss();
         if (result == UpdateDiaryTask.RESULT_UPDATE_SUCCESSFUL) {
+            com.kiminonawa.mydiary.shared.Haptics.saved(mContext);
             Toast.makeText(mContext, mContext.getString(R.string.toast_diary_update_successful), Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(mContext, mContext.getString(R.string.toast_diary_update_fail), Toast.LENGTH_LONG).show();

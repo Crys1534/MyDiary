@@ -23,6 +23,7 @@ import com.kiminonawa.mydiary.BuildConfig;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.shared.ColorTools;
 import com.kiminonawa.mydiary.shared.FileManager;
+import com.kiminonawa.mydiary.shared.Haptics;
 import com.kiminonawa.mydiary.shared.MyDiaryApplication;
 import com.kiminonawa.mydiary.entries.diary.item.FormatEditText;
 import com.kiminonawa.mydiary.shared.OldVersionHelper;
@@ -119,6 +120,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         initLanguage();
         initSounds();
         initPaper();
+        initVibration();
     }
 
     @Override
@@ -223,6 +225,24 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     /**
+     * The switch of the soft vibration when an entry is saved.
+     */
+    private void initVibration() {
+        SwitchCompat vibrationSwitch = (SwitchCompat) findViewById(R.id.SW_setting_vibration);
+        vibrationSwitch.setChecked(SPFManager.isVibrationOn(this));
+        vibrationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPFManager.setVibrationOn(SettingActivity.this, isChecked);
+                if (isChecked) {
+                    //So the person feels what it is
+                    Haptics.saved(SettingActivity.this);
+                }
+            }
+        });
+    }
+
+    /**
      * The switch of the notebook sheet and a small sample of how it looks.
      */
     private void initPaper() {
@@ -240,8 +260,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         sample.setPadding(pad, pad, pad, pad);
         sample.setMinLines(5);
         PaperStyle.applyAlways(this, sample);
-        sampleHolder.addView(sample, new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
+        FrameLayout.LayoutParams sampleParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        //The writing starts after the red margin of the sheet
+        sampleParams.leftMargin = PaperStyle.contentLeftPadding(this);
+        sampleHolder.addView(sample, sampleParams);
         android.graphics.drawable.Drawable paper = PaperStyle.background(this);
         if (paper != null) {
             sampleHolder.setBackground(paper);

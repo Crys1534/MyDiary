@@ -279,6 +279,15 @@
                 android:layout_marginTop="4dp"
                 android:max="100" />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/SW_setting_vibration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/setting_content_margin_top"
+                android:text="@string/setting_vibration_switch"
+                android:textColor="@color/app_text"
+                android:textSize="18dp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"

@@ -6,10 +6,13 @@ import com.kiminonawa.mydiary.entries.diary.area.PhotoArea;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryAudio;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryChecklist;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryItemHelper;
+import com.kiminonawa.mydiary.entries.diary.item.DiaryLink;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryPhoto;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryText;
 import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
 import com.kiminonawa.mydiary.shared.FileManager;
+
+import java.io.File;
 
 /**
  * Makes the rows of an entry (text, photo, audio, checklist) from what the database, the backup or the saved draft
@@ -43,6 +46,7 @@ public final class DiaryItemFactory {
                     photo.setDeleteClickListener(actions);
                     photo.setThumbnailClickListener(actions);
                     photo.setCropClickListener(actions);
+                    photo.setLongClickListener(actions.getPhotoLongClickListener());
                 }
                 photo.setContent(FileManager.FILE_HEADER + photoFolder + "/" + content);
                 return photo;
@@ -52,11 +56,21 @@ public final class DiaryItemFactory {
                 break;
             case IDairyRow.TYPE_AUDIO:
                 DiaryAudio audio = new DiaryAudio(activity);
+                //An audio of the phone has its file in the same folder as the photos
+                audio.setLocalFolder(new File(photoFolder));
                 audio.setEditMode(editMode);
                 if (editMode) {
                     audio.setDeleteClickListener(actions);
                 }
                 row = audio;
+                break;
+            case IDairyRow.TYPE_LINK:
+                DiaryLink link = new DiaryLink(activity);
+                link.setEditMode(editMode);
+                if (editMode) {
+                    link.setDeleteClickListener(actions);
+                }
+                row = link;
                 break;
             case IDairyRow.TYPE_CHECKLIST:
                 row = new DiaryChecklist(activity, helper);

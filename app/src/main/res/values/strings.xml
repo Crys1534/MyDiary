@@ -96,8 +96,13 @@
     <string name="search_section_notes">Notes</string>
     <string name="search_no_results">Nothing found</string>
     <string name="audio_button_title">Add audio</string>
-    <string name="audio_dialog_message">Paste the link of the audio. If it is in Google Drive, the file has to be shared as \"Anyone with the link\". The first time it is played it is downloaded to the phone (you will see the percentage).</string>
+    <string name="audio_dialog_message">Paste the link of the audio, or choose an audio file that is on your phone. If it is in Google Drive, the file has to be shared as \"Anyone with the link\". A link is downloaded to the phone the first time it is played; a file of the phone is saved inside the entry.</string>
     <string name="audio_dialog_hint">https://drive.google.com/file/d/…</string>
+    <string name="audio_dialog_from_phone">From my phone</string>
+    <string name="audio_file_copying">Adding the audio…</string>
+    <string name="audio_file_missing">The audio file is not in this entry any more.</string>
+    <string name="audio_file_error">That audio could not be added.</string>
+    <string name="audio_file_too_big">That audio is too big (the limit is 150 MB).</string>
     <string name="audio_tap_to_play">Tap play to listen</string>
     <string name="audio_loading">Loading…</string>
     <string name="audio_error_short">It could not be played. Try the button on the right to open it.</string>
@@ -109,6 +114,11 @@
     <string name="audio_error_network">The audio could not be downloaded. Check your internet connection.</string>
     <string name="audio_error_format">The phone could not play this audio format. Open it with the button on the right.</string>
     <string name="audio_error_link">That is not a link (it has to start with https://)</string>
+    <string name="link_button_title">Add link</string>
+    <string name="link_dialog_message">Paste the link of a web page. The entry shows a card with the title, the description and the picture of the page. The first time it needs internet; without internet only the link is shown.</string>
+    <string name="link_dialog_hint">https://…</string>
+    <string name="link_error_invalid">That is not the link of a web page.</string>
+    <string name="link_error_open">The link could not be opened.</string>
     <string name="cover_tags_title">Tags</string>
     <string name="cover_tags_edit">Edit</string>
     <string name="tags_dialog_hint">Write a tag and press space or a comma to add it. Touch a tag to remove it.</string>
@@ -292,6 +302,7 @@
     <string name="setting_sound_hint">Soft notebook sounds: pages, pen, stamp&#8230; They follow the silent mode of your phone.</string>
     <string name="setting_sound_switch">Diary sounds</string>
     <string name="setting_sound_volume">Volume</string>
+    <string name="setting_vibration_switch">Soft vibration when an entry is saved</string>
     <string name="setting_paper_title">Notebook sheet</string>
     <string name="setting_paper_hint">See the text of your entries as if it were written on a sheet of a ruled notebook, with a paper texture. It is only a way of seeing them: nothing is changed in what you saved.</string>
     <string name="setting_paper_switch">Use the notebook sheet</string>

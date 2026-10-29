@@ -130,6 +130,19 @@ public class SPFManager {
     }
 
     /**
+     * A soft vibration when an entry is saved: on until the person turns it off.
+     */
+    public static boolean isVibrationOn(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
+        return settings.getBoolean("CONFIG_VIBRATION_ON", true);
+    }
+
+    public static void setVibrationOn(Context context, boolean on) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
+        settings.edit().putBoolean("CONFIG_VIBRATION_ON", on).commit();
+    }
+
+    /**
      * The text of the entries on a sheet of a ruled notebook (paper texture and lines): off until the person turns it on.
      */
     public static boolean isNotebookPaper(Context context) {

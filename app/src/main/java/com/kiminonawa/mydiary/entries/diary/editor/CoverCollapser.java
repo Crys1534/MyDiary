@@ -25,6 +25,8 @@ public final class CoverCollapser implements ViewTreeObserver.OnGlobalLayoutList
     private final View rootView;
     private final AspectRatioRelativeLayout cover;
     private boolean keyboardVisible = false;
+    //The tallest the window has been (to know when the keyboard made it shorter)
+    private int maxWindowHeight = 0;
     private boolean started = false;
     private ValueAnimator animator;
     //Where the cover is going to (or is): 0 = open, 1 = folded
@@ -76,10 +78,19 @@ public final class CoverCollapser implements ViewTreeObserver.OnGlobalLayoutList
             }
         }
         View decor = rootView.getRootView();
+        int minHeight = ScreenHelper.dpToPixel(rootView.getResources(), MIN_KEYBOARD_DP);
+        //A window that is resized by the keyboard gets shorter: it is compared with the tallest it has been
+        if (decor.getHeight() > maxWindowHeight) {
+            maxWindowHeight = decor.getHeight();
+        }
+        if (maxWindowHeight - decor.getHeight() > minHeight) {
+            return true;
+        }
+        //A window that is moved up (not resized): the keyboard covers its bottom part
         Rect visibleFrame = new Rect();
         decor.getWindowVisibleDisplayFrame(visibleFrame);
         int hidden = decor.getHeight() - visibleFrame.bottom;
-        return hidden > ScreenHelper.dpToPixel(rootView.getResources(), MIN_KEYBOARD_DP);
+        return hidden > minHeight;
     }
 
     /**

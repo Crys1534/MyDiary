@@ -42,7 +42,17 @@ public class DiaryAudio implements IDairyRow {
     private final TextView TV_time;
     private final Handler handler = new Handler(Looper.getMainLooper());
 
+    /**
+     * The content of an audio that was taken from the phone starts with this: "local:" + the file name inside the folder
+     * of the entry + "|" + the name it had on the phone. Any other content is a link.
+     */
+    public static final String LOCAL_PREFIX = "local:";
+
     private String link = "";
+    //Audio of the phone: the file is in the folder of the entry (like the photos)
+    private File localFolder = null;
+    private String localFileName = null;
+    private String localDisplayName = "";
     private int position;
     private MediaPlayer player = null;
     private boolean prepared = false;
@@ -127,6 +137,46 @@ public class DiaryAudio implements IDairyRow {
         setEditMode(false);
     }
 
+    public static String makeLocalContent(String fileName, String displayName) {
+        return LOCAL_PREFIX + fileName + "|" + (displayName == null ? "" : displayName);
+    }
+
+    /**
+     * @return the name of the file in the folder of the entry, or null when the content is a link
+     */
+    public static String localFileName(String content) {
+        if (content == null || !content.startsWith(LOCAL_PREFIX)) {
+            return null;
+        }
+        String rest = content.substring(LOCAL_PREFIX.length());
+        int bar = rest.indexOf('|');
+        String name = bar >= 0 ? rest.substring(0, bar) : rest;
+        return name.length() == 0 ? null : name;
+    }
+
+    private static String localDisplayName(String content) {
+        int bar = content.indexOf('|');
+        return bar >= 0 ? content.substring(bar + 1) : "";
+    }
+
+    /**
+     * The folder where the file of an audio of the phone is (the folder of the photos of the entry).
+     */
+    public void setLocalFolder(File folder) {
+        this.localFolder = folder;
+        if (isLocal()) {
+            loadWave();
+        }
+    }
+
+    private boolean isLocal() {
+        return localFileName != null;
+    }
+
+    private File localFile() {
+        return (localFolder == null || localFileName == null) ? null : new File(localFolder, localFileName);
+    }
+
     /**
      * Edit mode: the delete button.
      */
@@ -159,6 +209,20 @@ public class DiaryAudio implements IDairyRow {
     }
 
     private void prepare() {
+        if (isLocal()) {
+            File file = localFile();
+            if (file == null || !file.exists()) {
+                TV_time.setText(R.string.audio_error_short);
+                Toast.makeText(context, R.string.audio_file_missing, Toast.LENGTH_LONG).show();
+                return;
+            }
+            release();
+            if (!WV_wave.hasPeaks()) {
+                loadWave();
+            }
+            play(file);
+            return;
+        }
         if (!AudioLink.isValid(link)) {
             Toast.makeText(context, R.string.audio_error_link, Toast.LENGTH_LONG).show();
             return;
@@ -249,9 +313,12 @@ public class DiaryAudio implements IDairyRow {
             player.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
-                    //A file that can't be played is not kept: the next try downloads it again
-                    //noinspection ResultOfMethodCallIgnored
-                    file.delete();
+                    //A downloaded file that can't be played is not kept: the next try downloads it again
+                    //(the audio of the phone is part of the entry: it is never deleted here)
+                    if (!isLocal()) {
+                        //noinspection ResultOfMethodCallIgnored
+                        file.delete();
+                    }
                     release();
                     TV_time.setText(R.string.audio_error_short);
                     Toast.makeText(context, R.string.audio_error_format, Toast.LENGTH_LONG).show();
@@ -260,8 +327,10 @@ public class DiaryAudio implements IDairyRow {
             });
             player.prepareAsync();
         } catch (Exception e) {
-            //noinspection ResultOfMethodCallIgnored
-            file.delete();
+            if (!isLocal()) {
+                //noinspection ResultOfMethodCallIgnored
+                file.delete();
+            }
             release();
             TV_time.setText(R.string.audio_error_short);
             Toast.makeText(context, R.string.audio_error_format, Toast.LENGTH_LONG).show();
@@ -365,11 +434,19 @@ public class DiaryAudio implements IDairyRow {
      * downloaded the first time it is played).
      */
     private void loadWave() {
-        if (!AudioLink.isValid(link)) {
-            return;
+        File file;
+        if (isLocal()) {
+            file = localFile();
+            if (file == null || !file.exists()) {
+                return;
+            }
+        } else {
+            if (!AudioLink.isValid(link)) {
+                return;
+            }
+            file = AudioDownloader.cacheFileFor(context, AudioLink.toPlayableUrl(link));
         }
         final int token = ++waveToken;
-        File file = AudioDownloader.cacheFileFor(context, AudioLink.toPlayableUrl(link));
         WaveformExtractor.loadAsync(file, new WaveformExtractor.Callback() {
             @Override
             public void onWave(float[] peaks) {
@@ -383,7 +460,14 @@ public class DiaryAudio implements IDairyRow {
     @Override
     public void setContent(String content) {
         link = content == null ? "" : content.trim();
-        TV_time.setText(R.string.audio_tap_to_play);
+        localFileName = localFileName(link);
+        localDisplayName = isLocal() ? localDisplayName(link) : "";
+        IV_open.setVisibility(isLocal() ? View.GONE : View.VISIBLE);
+        if (isLocal() && localDisplayName.length() > 0) {
+            TV_time.setText(localDisplayName);
+        } else {
+            TV_time.setText(R.string.audio_tap_to_play);
+        }
         WV_wave.setPeaks(null);
         loadWave();
     }

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
@@ -42,9 +40,7 @@ public final class PaperStyle {
             if (tile == null) {
                 return null;
             }
-            BitmapDrawable paper = new BitmapDrawable(context.getResources(), tile);
-            paper.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-            return paper;
+            return new NotebookPaperDrawable(context, tile, ColorTools.isNight(context));
         } catch (Throwable e) {
             return null;
         }
@@ -63,8 +59,18 @@ public final class PaperStyle {
             page.setBackground(paper);
             if (content != null) {
                 content.setBackgroundColor(Color.TRANSPARENT);
+                //The writing starts after the red margin line
+                content.setPadding(contentLeftPadding(context), content.getPaddingTop(),
+                        content.getPaddingRight(), content.getPaddingBottom());
             }
         }
+    }
+
+    /**
+     * Space on the left of the writing (the margin and the holes of the sheet).
+     */
+    public static int contentLeftPadding(Context context) {
+        return Math.round((NotebookPaperDrawable.MARGIN_X_DP + 4f) * context.getResources().getDisplayMetrics().density);
     }
 
     public static int lineColor(Context context) {

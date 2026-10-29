@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.entries.diary.AudioLinkDialog;
+import com.kiminonawa.mydiary.entries.diary.LinkDialog;
 import com.kiminonawa.mydiary.entries.diary.area.AreaPickerController;
 import com.kiminonawa.mydiary.entries.diary.area.PhotoArea;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryAudio;
@@ -25,7 +26,7 @@ import com.kiminonawa.mydiary.shared.Sfx;
 import java.io.File;
 
 /**
- * What the buttons do while an entry is written: the bar of the editor (bold, italic, lists, checklist, audio) and the
+ * What the buttons do while an entry is written: the bar of the editor (bold, italic, lists, checklist, audio, link) and the
  * buttons of the rows (delete a photo or an audio, choose the cover, choose what part of a photo is seen).
  * The page that writes a new entry and the window that edits an old one share it.
  */
@@ -48,6 +49,11 @@ public class EditorActions implements View.OnClickListener {
          * The photos or the cover changed: the cover has to be drawn again.
          */
         void onCoverChanged();
+
+        /**
+         * Opens the window to choose an audio file of the phone (see AudioFileImporter).
+         */
+        void pickAudioFile();
     }
 
     private static final String TAG = "EditorActions";
@@ -56,6 +62,7 @@ public class EditorActions implements View.OnClickListener {
     private final DiaryItemHelper diaryItemHelper;
     private final LinearLayout itemContainer;
     private final AreaPickerController areaPicker;
+    private final PhotoDragController photoDrag;
 
     public EditorActions(Host host, DiaryItemHelper diaryItemHelper, LinearLayout itemContainer,
                          AreaPickerController areaPicker) {
@@ -63,6 +70,20 @@ public class EditorActions implements View.OnClickListener {
         this.diaryItemHelper = diaryItemHelper;
         this.itemContainer = itemContainer;
         this.areaPicker = areaPicker;
+        this.photoDrag = new PhotoDragController(itemContainer, diaryItemHelper, new PhotoDragController.Listener() {
+            @Override
+            public void onPhotoMoved() {
+                Sfx.play(EditorActions.this.host.getEditorActivity(), Sfx.Sound.SLIDE);
+                EditorActions.this.host.onCoverChanged();
+            }
+        });
+    }
+
+    /**
+     * What a photo does when the finger stays pressed on it: it can be dragged to another place of the entry.
+     */
+    public View.OnLongClickListener getPhotoLongClickListener() {
+        return photoDrag;
     }
 
     /**
@@ -70,7 +91,7 @@ public class EditorActions implements View.OnClickListener {
      */
     public void bindBar(View rootView) {
         int[] ids = {R.id.IV_diary_bold, R.id.IV_diary_italic, R.id.IV_diary_list,
-                R.id.IV_diary_checklist, R.id.IV_diary_audio};
+                R.id.IV_diary_checklist, R.id.IV_diary_audio, R.id.IV_diary_link};
         for (int id : ids) {
             View button = rootView.findViewById(id);
             button.setVisibility(View.VISIBLE);
@@ -107,9 +128,27 @@ public class EditorActions implements View.OnClickListener {
                 AudioLinkDialog.show(activity, new AudioLinkDialog.Callback() {
                     @Override
                     public void onAudioLink(String link) {
-                        diaryItemHelper.insertAudioAtFocus(host.getFocusView(), link, EditorActions.this);
+                        diaryItemHelper.insertAudioAtFocus(host.getFocusView(), link, null, EditorActions.this);
+                    }
+                }, new Runnable() {
+                    @Override
+                    public void run() {
+                        host.pickAudioFile();
                     }
                 });
+                break;
+            case R.id.IV_diary_link:
+                Sfx.play(activity, Sfx.Sound.PEN_TICK);
+                LinkDialog.show(activity, new LinkDialog.Callback() {
+                    @Override
+                    public void onLink(String link) {
+                        diaryItemHelper.insertLinkAtFocus(host.getFocusView(), link, EditorActions.this);
+                    }
+                });
+                break;
+            case R.id.IV_diary_link_delete:
+                Sfx.play(activity, Sfx.Sound.RUSTLE);
+                removeRow((int) v.getTag());
                 break;
             case R.id.IV_diary_audio_delete:
                 Sfx.play(activity, Sfx.Sound.RUSTLE);
@@ -164,6 +203,7 @@ public class EditorActions implements View.OnClickListener {
             diaryPhoto.setDeleteClickListener(this);
             diaryPhoto.setThumbnailClickListener(this);
             diaryPhoto.setCropClickListener(this);
+            diaryPhoto.setLongClickListener(photoDrag);
             DiaryTextTag tag = cutTextAtCursor();
             //Check edittext is focused
             if (tag != null) {
@@ -224,6 +264,16 @@ public class EditorActions implements View.OnClickListener {
             }
         });
         menu.show();
+    }
+
+    /**
+     * An audio file of the phone is ready in the folder of the entry: it goes where the cursor is.
+     */
+    public void insertLocalAudio(String fileName, String displayName) {
+        Activity activity = host.getEditorActivity();
+        Sfx.play(activity, Sfx.Sound.PEN_TICK);
+        diaryItemHelper.insertAudioAtFocus(host.getFocusView(), DiaryAudio.makeLocalContent(fileName, displayName),
+                host.getPhotoFolder(), this);
     }
 
     /**

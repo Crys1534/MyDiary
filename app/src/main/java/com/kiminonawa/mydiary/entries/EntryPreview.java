@@ -117,6 +117,9 @@ public final class EntryPreview {
             String plain = RichText.strip(firstContent);
             return plain.substring(0, Math.min(maxLength, plain.length()));
         }
+        if (firstType == IDairyRow.TYPE_LINK && firstContent.length() > 0) {
+            return com.kiminonawa.mydiary.shared.LinkPreview.domainOf(firstContent);
+        }
         if (firstType == IDairyRow.TYPE_CHECKLIST && firstContent.length() > 0) {
             //Checklist line: the first character is "1" (done) or "0" (not done)
             String lineText = RichText.strip(firstContent.substring(1));

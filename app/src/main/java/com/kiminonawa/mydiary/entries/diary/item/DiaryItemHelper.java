@@ -299,6 +299,58 @@ public class DiaryItemHelper extends Observable {
         return nowPhotoCount;
     }
 
+    /**
+     * Moves a photo to another place of the entry.
+     *
+     * @param from         where the photo is now
+     * @param insertBefore before which row it goes (the number of rows = at the end)
+     * @return false when nothing changed (it would stay in the same place)
+     */
+    public boolean movePhotoRow(int from, int insertBefore) {
+        if (from < 0 || from >= diaryItemList.size() || !isShownPhoto(diaryItemList.get(from))) {
+            return false;
+        }
+        //The photo that is only the cover stays first (it is not seen)
+        int firstPlace = 0;
+        while (firstPlace < diaryItemList.size() && isCoverOnlyPhoto(diaryItemList.get(firstPlace))) {
+            firstPlace++;
+        }
+        insertBefore = Math.max(insertBefore, firstPlace);
+        if (insertBefore == from || insertBefore == from + 1) {
+            return false;
+        }
+        IDairyRow photo = diaryItemList.get(from);
+        IDairyRow rowBefore = from > 0 ? diaryItemList.get(from - 1) : null;
+        IDairyRow rowAfter = from + 1 < diaryItemList.size() ? diaryItemList.get(from + 1) : null;
+        IDairyRow target = insertBefore < diaryItemList.size() ? diaryItemList.get(insertBefore) : null;
+
+        View photoView = photo.getView();
+        diaryItemList.remove(from);
+        itemContentLayout.removeViewAt(from);
+        int to = target == null ? diaryItemList.size() : diaryItemList.indexOf(target);
+        diaryItemList.add(to, photo);
+        itemContentLayout.addView(photoView, to);
+
+        //The two texts that were apart (the photo was between them) are one text again
+        if (rowBefore instanceof DiaryText && rowAfter instanceof DiaryText) {
+            int afterIndex = diaryItemList.indexOf(rowAfter);
+            if (afterIndex > 0 && diaryItemList.get(afterIndex - 1) == rowBefore) {
+                mergerAdjacentText(afterIndex);
+            }
+        }
+        //A photo at the very end: there is a text box under it to go on writing
+        if (getLastContentRow() == photo) {
+            DiaryText below = new DiaryText(itemContentLayout.getContext());
+            below.setContent("");
+            createItem(below);
+        }
+        resortPosition();
+        refreshThumbnailMarks();
+        setChanged();
+        notifyObservers();
+        return true;
+    }
+
     public int getItemSize() {
         return diaryItemList.size();
     }
@@ -555,13 +607,39 @@ public class DiaryItemHelper extends Observable {
      *
      * @param focusView the view that has the focus (the text box with the cursor), can be null
      */
-    public DiaryAudio insertAudioAtFocus(View focusView, String link, View.OnClickListener deleteListener) {
-        Context context = itemContentLayout.getContext();
-        int rowIndex = findRowByEditText(focusView);
-        DiaryAudio audio = new DiaryAudio(context);
+    public DiaryAudio insertAudioAtFocus(View focusView, String link, java.io.File localFolder,
+                                         View.OnClickListener deleteListener) {
+        DiaryAudio audio = new DiaryAudio(itemContentLayout.getContext());
+        //Only an audio of the phone needs it: the folder where its file is
+        audio.setLocalFolder(localFolder);
         audio.setContent(link);
         audio.setEditMode(true);
         audio.setDeleteClickListener(deleteListener);
+        insertBlockAtFocus(focusView, audio);
+        return audio;
+    }
+
+    /**
+     * The link button: puts a card with the preview of a web page where the cursor is (same place rules as the audio).
+     *
+     * @param focusView the view that has the focus (the text box with the cursor), can be null
+     */
+    public DiaryLink insertLinkAtFocus(View focusView, String link, View.OnClickListener deleteListener) {
+        DiaryLink card = new DiaryLink(itemContentLayout.getContext());
+        card.setContent(link);
+        card.setEditMode(true);
+        card.setDeleteClickListener(deleteListener);
+        insertBlockAtFocus(focusView, card);
+        return card;
+    }
+
+    /**
+     * Puts a row that is not text (an audio, a link) where the cursor is. The text after the cursor goes below it.
+     * After it there is always a text box.
+     */
+    private void insertBlockAtFocus(View focusView, IDairyRow block) {
+        Context context = itemContentLayout.getContext();
+        int rowIndex = findRowByEditText(focusView);
         String rest = "";
         int insertAt;
 
@@ -573,22 +651,21 @@ public class DiaryItemHelper extends Observable {
             text.delete(index, text.length());
             insertAt = rowIndex + 1;
             if (text.length() == 0) {
-                //The empty text box would stay as a blank line, the audio takes its place
+                //The empty text box would stay as a blank line, the new row takes its place
                 removeRowAndView(rowIndex);
                 insertAt = rowIndex;
             }
         } else if (rowIndex >= 0) {
-            //In a checklist line: the audio goes below it
+            //In a checklist line: the new row goes below it
             insertAt = rowIndex + 1;
         } else {
             insertAt = diaryItemList.size();
         }
-        createItem(audio, insertAt);
+        createItem(block, insertAt);
         DiaryText after = new DiaryText(context);
         after.setContent(rest);
         createItem(after, insertAt + 1);
         resortPosition();
-        return audio;
     }
 
     /**

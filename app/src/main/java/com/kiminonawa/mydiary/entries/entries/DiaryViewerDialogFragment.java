@@ -39,6 +39,7 @@ import com.kiminonawa.mydiary.entries.diary.editor.DiaryItemFactory;
 import com.kiminonawa.mydiary.entries.diary.editor.EditorActions;
 import com.kiminonawa.mydiary.entries.diary.editor.EntryDateField;
 import com.kiminonawa.mydiary.entries.diary.editor.LocationField;
+import com.kiminonawa.mydiary.entries.diary.editor.AudioFileImporter;
 import com.kiminonawa.mydiary.entries.diary.editor.PhotoImporter;
 import com.kiminonawa.mydiary.entries.diary.editor.TitleTagsField;
 import com.kiminonawa.mydiary.entries.diary.editor.WeatherMoodField;
@@ -121,6 +122,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     private EditorActions editorActions;
     private AreaPickerController areaPicker;
     private PhotoImporter photoImporter;
+    private AudioFileImporter audioImporter;
     //The photo that is being chosen is for the cover only (it is not put in the text)
     private boolean pickingCover = false;
     private FileManager diaryFileManager;
@@ -178,8 +180,11 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         };
         // request a window without the title
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        //Set background is transparent , for dialog radius
-        dialog.getWindow().getDecorView().getBackground().setAlpha(0);
+        //The entry uses the whole screen (also to read it): the page color is the background and the activity behind
+        //is not dimmed (the status bar keeps looking like the rest of the app)
+        dialog.getWindow().setBackgroundDrawable(
+                new android.graphics.drawable.ColorDrawable(androidx.core.content.ContextCompat.getColor(getActivity(), R.color.app_surface)));
+        dialog.getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         return dialog;
     }
 
@@ -205,21 +210,20 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 rootView.findViewById(R.id.RL_diary_content));
 
         RelativeLayout RL_diary_info = (RelativeLayout) rootView.findViewById(R.id.RL_diary_info);
-        RL_diary_info.setBackground(ThemeManager.getInstance().createDiaryViewerInfoBg(getActivity()));
+        RL_diary_info.setBackgroundColor(ThemeManager.getInstance().getThemeMainColor(getActivity()));
         diaryCover = new DiaryCover(rootView, new DiaryCover.Listener() {
             @Override
             public void onEditTagsRequested() {
                 onCoverEditTags();
             }
         });
-        diaryCover.setTopCornerRadius(ScreenHelper.dpToPixel(getResources(), 10));
         diaryCover.setEditMode(isEditMode);
         if (isEditMode) {
             coverCollapser = new CoverCollapser(rootView, (AspectRatioRelativeLayout) RL_diary_info);
         }
 
         LinearLayout LL_diary_edit_bar = (LinearLayout) rootView.findViewById(R.id.LL_diary_edit_bar);
-        LL_diary_edit_bar.setBackground(ThemeManager.getInstance().createDiaryViewerEditBarBg(getActivity()));
+        LL_diary_edit_bar.setBackgroundColor(ThemeManager.getInstance().getThemeMainColor(getActivity()));
 
         PB_diary_item_content_hint = (ProgressBar) rootView.findViewById(R.id.PB_diary_item_content_hint);
         LL_diary_item_content = (LinearLayout) rootView.findViewById(R.id.LL_diary_item_content);
@@ -245,6 +249,12 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         });
         editorActions = new EditorActions(this, diaryItemHelper, LL_diary_item_content, areaPicker);
         photoImporter = new PhotoImporter(this, this);
+        audioImporter = new AudioFileImporter(this, new AudioFileImporter.Listener() {
+            @Override
+            public void onAudioReady(String fileName, String displayName) {
+                editorActions.insertLocalAudio(fileName, displayName);
+            }
+        });
         diaryCover.setPickAreaListener(new Runnable() {
             @Override
             public void run() {
@@ -279,6 +289,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 diaryFileManager = new FileManager(getActivity(), FileManager.DIARY_EDIT_CACHE_DIR);
                 diaryFileManager.clearDir();
                 photoImporter.setTargetFolder(diaryFileManager);
+                audioImporter.setTargetFolder(diaryFileManager);
                 PB_diary_item_content_hint.setVisibility(View.VISIBLE);
                 mTask = new CopyDiaryToEditCacheTask(getActivity(), diaryFileManager, this);
                 //Make ths ProgressBar show 0.7s+.
@@ -303,6 +314,10 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //The screen where the part of a photo that is seen is chosen is closed
         if (areaPicker != null && areaPicker.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+        //The audio file that was chosen on the phone
+        if (audioImporter != null && audioImporter.onActivityResult(requestCode, resultCode, data)) {
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -339,21 +354,12 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     @Override
     public void onStart() {
         super.onStart();
-        //Modify dialog size
+        //The whole screen. The keyboard pushes the bottom bar up (the page is resized, not moved)
         Dialog dialog = getDialog();
-        if (dialog != null) {
-            int dialogHeight;
-            if (ChinaPhoneHelper.getDeviceStatusBarType() == ChinaPhoneHelper.OTHER) {
-                dialogHeight = ScreenHelper.getScreenHeight(getActivity())
-                        - ScreenHelper.getStatusBarHeight(getActivity())
-                        - ScreenHelper.dpToPixel(getActivity().getResources(), 2 * 10);
-            } else {
-                dialogHeight = ScreenHelper.getScreenHeight(getActivity())
-                        - ScreenHelper.dpToPixel(getActivity().getResources(), 2 * 10);
-            }
-            int dialogWidth = ScreenHelper.getScreenWidth(getActivity())
-                    - ScreenHelper.dpToPixel(getActivity().getResources(), 2 * 5);
-            dialog.getWindow().setLayout(dialogWidth, dialogHeight);
+        if (dialog != null && dialog.getWindow() != null) {
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            dialog.getWindow().setSoftInputMode(
+                    android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         }
         if (coverCollapser != null) {
             coverCollapser.start();
@@ -401,6 +407,11 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     @Override
     public void onCoverChanged() {
         updateCover();
+    }
+
+    @Override
+    public void pickAudioFile() {
+        audioImporter.pick();
     }
 
     private void initData() {
