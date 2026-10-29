@@ -110,7 +110,14 @@
     <string name="audio_error_link">Eso no es un enlace (debe empezar con https://)</string>
     <string name="cover_tags_title">Etiquetas</string>
     <string name="cover_tags_edit">Editar</string>
+    <string name="tags_dialog_hint">Escribe una etiqueta y pulsa espacio o coma para agregarla. Toca una etiqueta para quitarla.</string>
+    <string name="tags_input_hint">Nueva etiqueta…</string>
     <string name="cover_thumbnail_chosen">Esta foto ahora es la portada de la nota</string>
+    <string name="cover_photo_button">Elegir una foto para la portada</string>
+    <string name="cover_photo_menu_change">Cambiar la foto de la portada</string>
+    <string name="cover_photo_menu_remove">Quitar la foto de la portada</string>
+    <string name="cover_photo_chosen">Esta foto es la portada (no aparece dentro de la nota)</string>
+    <string name="cover_photo_removed">Se quitó la foto de la portada</string>
     <string name="diary_tags_hint">Etiquetas: escuela viaje</string>
     <string name="tags_filter_title">Filtrar por etiqueta</string>
     <string name="tags_filter_all">Todas las entradas</string>
@@ -270,7 +277,7 @@
 
     <!-- Elegir qué parte de una foto se ve (la foto no se corta) -->
     <string name="area_title_body">Elige qué parte de la foto se ve (4:3)</string>
-    <string name="area_title_cover">Elige qué parte se ve en la portada (4:5)</string>
+    <string name="area_title_cover">Elige qué parte se ve en la portada (3:4)</string>
     <string name="area_hint">Mueve la foto con un dedo y haz zoom con dos dedos. Tu foto no se corta.</string>
     <string name="area_button_center">Centrar</string>
     <string name="area_button_done">Listo</string>
@@ -284,4 +291,8 @@
     <string name="setting_sound_hint">Sonidos suaves de libreta: hojas, pluma, sello&#8230; Respetan el modo silencio de tu teléfono.</string>
     <string name="setting_sound_switch">Sonidos del diario</string>
     <string name="setting_sound_volume">Volumen</string>
+    <string name="setting_paper_title">Hoja de libreta</string>
+    <string name="setting_paper_hint">Ve el texto de tus entradas como si estuviera escrito en una hoja de libreta con renglones y textura de papel. Es solo una forma de verlas: no cambia nada de lo que guardaste.</string>
+    <string name="setting_paper_switch">Usar hoja de libreta</string>
+    <string name="setting_paper_sample">Querido diario:\nHoy fue un día tranquilo. Salí a caminar y escribí esta página a mano, con lápiz.</string>
 </resources>

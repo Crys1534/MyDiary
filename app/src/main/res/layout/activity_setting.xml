@@ -286,6 +286,46 @@
                 android:background="@drawable/dash_line"
                 android:layerType="software" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/setting_group_margin_top"
+                android:text="@string/setting_paper_title"
+                android:textColor="@color/app_text"
+                android:textSize="28dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/setting_content_margin_top"
+                android:text="@string/setting_paper_hint"
+                android:textColor="@color/setting_hint_text_color"
+                android:textSize="16dp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/SW_setting_paper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/setting_content_margin_top"
+                android:text="@string/setting_paper_switch"
+                android:textColor="@color/app_text"
+                android:textSize="18dp" />
+
+            <!-- A small sample of the sheet, so the person sees what it is like -->
+            <FrameLayout
+                android:id="@+id/FL_setting_paper_sample"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/setting_content_margin_top" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="@dimen/setting_content_margin_top"
+                android:background="@drawable/dash_line"
+                android:layerType="software" />
+
 
             <TextView
                 android:layout_width="wrap_content"

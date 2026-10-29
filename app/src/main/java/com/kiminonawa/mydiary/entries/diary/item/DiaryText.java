@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.shared.ColorTools;
+import com.kiminonawa.mydiary.shared.PaperStyle;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
 
 /**
@@ -18,6 +19,7 @@ public class DiaryText implements IDairyRow {
 
     private EditText EDT_diary_text;
     private int position;
+    private boolean paperOn = false;
 
 
     public DiaryText(Context context) {
@@ -27,13 +29,17 @@ public class DiaryText implements IDairyRow {
     }
 
     private void createEditText(Context context) {
-        EDT_diary_text = new FormatEditText(context);
+        FormatEditText editText = new FormatEditText(context);
+        EDT_diary_text = editText;
         EDT_diary_text.setTextColor(ColorTools.getColor(context, R.color.app_text));
         EDT_diary_text.setBackgroundColor(Color.TRANSPARENT);
         EDT_diary_text.setGravity(Gravity.TOP | Gravity.LEFT);
         //2dp paddding
         int padding = ScreenHelper.dpToPixel(context.getResources(), 2);
         EDT_diary_text.setPadding(padding, padding, padding, padding);
+        //Notebook sheet (Settings): lines under the text
+        PaperStyle.apply(context, editText);
+        paperOn = PaperStyle.isOn(context);
     }
     /**
      * @param text saved text (it can have bold marks, see RichText)
@@ -61,6 +67,10 @@ public class DiaryText implements IDairyRow {
 
     @Override
     public void setEditMode(boolean isEditMode) {
+        if (paperOn) {
+            //On the sheet there are a few lines to write on while writing
+            EDT_diary_text.setMinLines(isEditMode ? 3 : 1);
+        }
         if (isEditMode) {
             EDT_diary_text.setFocusable(true);
             EDT_diary_text.setFocusableInTouchMode(true);

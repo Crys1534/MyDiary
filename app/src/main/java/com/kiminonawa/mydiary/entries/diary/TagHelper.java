@@ -2,8 +2,6 @@ package com.kiminonawa.mydiary.entries.diary;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.text.InputType;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AlertDialog;
@@ -76,7 +74,10 @@ public class TagHelper {
         return sb.toString();
     }
 
-    private static String cleanTag(String raw) {
+    /**
+     * One tag as it is kept: lower case, only letters, numbers, _ and -.
+     */
+    public static String cleanTag(String raw) {
         String lower = raw.toLowerCase(Locale.getDefault());
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < lower.length(); i++) {
@@ -96,32 +97,28 @@ public class TagHelper {
     }
 
     /**
-     * The small window to write the tags of an entry (it opens with the pencil of the cover).
+     * The small window to write the tags of an entry (it opens with the pencil of the cover). Every tag is a chip:
+     * a space, a comma or Enter finishes the word that is being written.
      *
      * @param currentSavedTags the tags the entry has now, like ",school,trip,"
      */
     public static void showEditDialog(Context context, String currentSavedTags, final Callback callback) {
-        final EditText input = new EditText(context);
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        input.setSingleLine(true);
-        input.setHint(R.string.diary_tags_hint);
-        String current = toDisplay(currentSavedTags);
-        input.setText(current.length() > 0 ? current + " " : "");
-        input.setSelection(input.getText().length());
-        int margin = ScreenHelper.dpToPixel(context.getResources(), 20);
+        final TagEditorView editor = new TagEditorView(context, currentSavedTags);
+        int margin = ScreenHelper.dpToPixel(context.getResources(), 16);
         FrameLayout container = new FrameLayout(context);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         params.leftMargin = margin;
         params.rightMargin = margin;
-        container.addView(input, params);
+        container.addView(editor, params);
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setTitle(R.string.cover_tags_title)
+                .setMessage(R.string.tags_dialog_hint)
                 .setView(container)
                 .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int which) {
-                        callback.onTags(normalize(input.getText().toString()));
+                        callback.onTags(editor.getSavedTags());
                     }
                 })
                 .setNegativeButton(R.string.dialog_button_cancel, null)
@@ -130,5 +127,6 @@ public class TagHelper {
             dialog.getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
         dialog.show();
+        editor.getInput().requestFocus();
     }
 }

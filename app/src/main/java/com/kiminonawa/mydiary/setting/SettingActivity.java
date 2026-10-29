@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -23,7 +24,9 @@ import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.shared.ColorTools;
 import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.shared.MyDiaryApplication;
+import com.kiminonawa.mydiary.entries.diary.item.FormatEditText;
 import com.kiminonawa.mydiary.shared.OldVersionHelper;
+import com.kiminonawa.mydiary.shared.PaperStyle;
 import com.kiminonawa.mydiary.shared.PermissionHelper;
 import com.kiminonawa.mydiary.shared.SPFManager;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
@@ -115,6 +118,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         initTheme(themeManager.getCurrentTheme());
         initLanguage();
         initSounds();
+        initPaper();
     }
 
     @Override
@@ -214,6 +218,40 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             public void onStopTrackingTouch(SeekBar seekBar) {
                 SPFManager.setSoundVolume(SettingActivity.this, seekBar.getProgress());
                 Sfx.play(SettingActivity.this, Sfx.Sound.PEN_CLICK);
+            }
+        });
+    }
+
+    /**
+     * The switch of the notebook sheet and a small sample of how it looks.
+     */
+    private void initPaper() {
+        final SwitchCompat paperSwitch = (SwitchCompat) findViewById(R.id.SW_setting_paper);
+        FrameLayout sampleHolder = (FrameLayout) findViewById(R.id.FL_setting_paper_sample);
+        //The sample is a sheet with a few lines (it is always seen, so the person knows what the switch does)
+        FormatEditText sample = new FormatEditText(this);
+        sample.setText(R.string.setting_paper_sample);
+        sample.setTextColor(ColorTools.getColor(this, R.color.app_text));
+        sample.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+        sample.setTextSize(18);
+        sample.setEnabled(false);
+        sample.setFocusable(false);
+        int pad = ScreenHelper.dpToPixel(getResources(), 10);
+        sample.setPadding(pad, pad, pad, pad);
+        sample.setMinLines(5);
+        PaperStyle.applyAlways(this, sample);
+        sampleHolder.addView(sample, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
+        android.graphics.drawable.Drawable paper = PaperStyle.background(this);
+        if (paper != null) {
+            sampleHolder.setBackground(paper);
+        }
+        paperSwitch.setChecked(SPFManager.isNotebookPaper(this));
+        paperSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPFManager.setNotebookPaper(SettingActivity.this, isChecked);
+                Sfx.play(SettingActivity.this, Sfx.Sound.PAGE_FLIP);
             }
         });
     }

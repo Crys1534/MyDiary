@@ -77,28 +77,105 @@ public class DiaryItemHelper extends Observable {
 
     //TODO 鬆綁list and add view , 再最後再實作一個一次新增
     public void createItem(IDairyRow diaryItem) {
-        if (diaryItem instanceof DiaryPhoto) {
+        if (isShownPhoto(diaryItem)) {
             nowPhotoCount++;
         }
         diaryItemList.add(diaryItem);
         itemContentLayout.addView(diaryItemList.get(diaryItemList.size() - 1).getView());
-        if (diaryItemList.size() == 1) {
-            setChanged();
-            notifyObservers();
-        }
+        setChanged();
+        notifyObservers();
     }
 
     public void createItem(IDairyRow diaryItem, int position) {
-        if (diaryItem instanceof DiaryPhoto) {
+        if (isShownPhoto(diaryItem)) {
             nowPhotoCount++;
         }
         diaryItemList.add(position, diaryItem);
         itemContentLayout.addView(diaryItem.getView(), position);
-        if (diaryItemList.size() == 1) {
-            setChanged();
-            notifyObservers();
-        }
+        setChanged();
+        notifyObservers();
+    }
 
+    /**
+     * A photo that is seen between the paragraphs (the photo that is only the cover is not counted: it is not an
+     * attachment of the text).
+     */
+    private static boolean isShownPhoto(IDairyRow row) {
+        return row instanceof DiaryPhoto && !((DiaryPhoto) row).isCoverOnly();
+    }
+
+    private static boolean isCoverOnlyPhoto(IDairyRow row) {
+        return row instanceof DiaryPhoto && ((DiaryPhoto) row).isCoverOnly();
+    }
+
+    /**
+     * How many rows the person sees and writes in (the photo that is only the cover has no place in the text).
+     */
+    public int getContentItemCount() {
+        int count = 0;
+        for (IDairyRow row : diaryItemList) {
+            if (!isCoverOnlyPhoto(row)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * The last row that is seen in the entry, or null when there is none.
+     */
+    public IDairyRow getLastContentRow() {
+        for (int i = diaryItemList.size() - 1; i >= 0; i--) {
+            if (!isCoverOnlyPhoto(diaryItemList.get(i))) {
+                return diaryItemList.get(i);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * The photo that is only the cover (it was chosen from the cover, it is not in the text), or null.
+     */
+    public DiaryPhoto getCoverOnlyPhoto() {
+        for (IDairyRow row : diaryItemList) {
+            if (isCoverOnlyPhoto(row)) {
+                return (DiaryPhoto) row;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * The person chose a photo from the cover button: it becomes the cover and it is not shown in the text.
+     * The photo that was the cover before (if it was the same kind) is taken out of the entry.
+     *
+     * @param photo a photo row with {@code PhotoArea.coverOnly} already set
+     */
+    public void setCoverOnlyPhoto(DiaryPhoto photo) {
+        removeCoverOnlyRows();
+        //First place: it is not seen, so it never gets between the paragraphs
+        createItem(photo, 0);
+        thumbnailFileName = photo.getContent();
+        resortPosition();
+        refreshThumbnailMarks();
+    }
+
+    /**
+     * Takes away the photo that is only the cover. The cover goes back to the first photo of the text (if any).
+     */
+    public void removeCoverOnlyPhoto() {
+        removeCoverOnlyRows();
+        thumbnailFileName = "";
+        resortPosition();
+        refreshThumbnailMarks();
+    }
+
+    private void removeCoverOnlyRows() {
+        for (int i = diaryItemList.size() - 1; i >= 0; i--) {
+            if (isCoverOnlyPhoto(diaryItemList.get(i))) {
+                removeRowAndView(i);
+            }
+        }
     }
 
 
@@ -124,7 +201,7 @@ public class DiaryItemHelper extends Observable {
     }
 
     /**
-     * The part of the cover photo that is seen on the cover (4:5), or null for the center.
+     * The part of the cover photo that is seen on the cover (3:4), or null for the center.
      */
     public android.graphics.RectF getThumbnailCoverArea() {
         DiaryPhoto photo = getThumbnailPhoto();
@@ -139,17 +216,24 @@ public class DiaryItemHelper extends Observable {
     public DiaryPhoto getThumbnailPhoto() {
         String chosen = getChosenThumbnail();
         DiaryPhoto first = null;
+        DiaryPhoto coverOnly = null;
         for (IDairyRow row : diaryItemList) {
             if (row instanceof DiaryPhoto) {
-                if (first == null) {
-                    first = (DiaryPhoto) row;
+                DiaryPhoto photo = (DiaryPhoto) row;
+                if (photo.isCoverOnly()) {
+                    if (coverOnly == null) {
+                        coverOnly = photo;
+                    }
+                } else if (first == null) {
+                    first = photo;
                 }
                 if (chosen.length() > 0 && chosen.equals(row.getContent())) {
-                    return (DiaryPhoto) row;
+                    return photo;
                 }
             }
         }
-        return first;
+        //Nothing chosen: the photo that was picked from the cover, else the first photo of the text
+        return coverOnly != null ? coverOnly : first;
     }
 
     /**
@@ -181,6 +265,11 @@ public class DiaryItemHelper extends Observable {
     public void chooseThumbnailAt(int position) {
         if (position >= 0 && position < diaryItemList.size() && diaryItemList.get(position) instanceof DiaryPhoto) {
             thumbnailFileName = diaryItemList.get(position).getContent();
+            //A photo of the text is the cover now: the photo that was picked only for the cover is not needed any more
+            if (getCoverOnlyPhoto() != null && !thumbnailFileName.equals(getCoverOnlyPhoto().getContent())) {
+                removeCoverOnlyRows();
+                resortPosition();
+            }
         }
         refreshThumbnailMarks();
     }
@@ -219,14 +308,12 @@ public class DiaryItemHelper extends Observable {
     }
 
     public void remove(int position) {
-        if (diaryItemList.get(position) instanceof DiaryPhoto) {
+        if (isShownPhoto(diaryItemList.get(position))) {
             nowPhotoCount--;
         }
         diaryItemList.remove(position);
-        if (diaryItemList.size() == 0) {
-            setChanged();
-            notifyObservers();
-        }
+        setChanged();
+        notifyObservers();
     }
 
     public void resortPosition() {

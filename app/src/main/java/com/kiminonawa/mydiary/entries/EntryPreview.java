@@ -50,24 +50,34 @@ public final class EntryPreview {
         RectF firstPhotoArea = null;
         String chosenPhoto = null;
         RectF chosenPhotoArea = null;
+        //The photo that was chosen from the cover (it is not shown inside the entry)
+        String coverOnlyPhoto = null;
+        RectF coverOnlyArea = null;
         Cursor content = dbManager.selectDiaryContentByDiaryId(diaryId);
         if (content != null) {
             int areaColumn = content.getColumnIndex(DBStructure.DiaryItemEntry_V2.COLUMN_AREA);
+            boolean firstSeen = false;
             for (int i = 0; i < content.getCount(); i++) {
                 content.moveToPosition(i);
                 int type = content.getInt(1);
                 String text = content.getString(3);
-                if (i == 0) {
-                    preview.hasItems = true;
+                PhotoArea photoArea = type == IDairyRow.TYPE_PHOTO && areaColumn >= 0
+                        ? PhotoArea.parse(content.getString(areaColumn)) : PhotoArea.NONE;
+                preview.hasItems = true;
+                //The first thing that is seen in the entry (a photo that is only the cover is not part of the text)
+                if (!firstSeen && !photoArea.coverOnly) {
+                    firstSeen = true;
                     preview.firstType = type;
                     preview.firstContent = text == null ? "" : text;
                 }
                 if (type == IDairyRow.TYPE_PHOTO) {
-                    RectF cover = null;
-                    if (areaColumn >= 0) {
-                        cover = PhotoArea.parse(content.getString(areaColumn)).cover;
-                    }
-                    if (firstPhoto == null) {
+                    RectF cover = photoArea.cover;
+                    if (photoArea.coverOnly) {
+                        if (coverOnlyPhoto == null) {
+                            coverOnlyPhoto = text;
+                            coverOnlyArea = cover;
+                        }
+                    } else if (firstPhoto == null) {
                         firstPhoto = text;
                         firstPhotoArea = cover;
                     }
@@ -85,10 +95,12 @@ public final class EntryPreview {
             }
             content.close();
         }
-        String file = chosenPhoto != null ? chosenPhoto : firstPhoto;
+        //The chosen photo, else the photo picked from the cover, else the first photo of the text
+        String file = chosenPhoto != null ? chosenPhoto : (coverOnlyPhoto != null ? coverOnlyPhoto : firstPhoto);
         if (file != null) {
             preview.thumbnailPath = new FileManager(context, topicId, diaryId).getDirAbsolutePath() + "/" + file;
-            preview.thumbnailArea = chosenPhoto != null ? chosenPhotoArea : firstPhotoArea;
+            preview.thumbnailArea = chosenPhoto != null ? chosenPhotoArea
+                    : (coverOnlyPhoto != null ? coverOnlyArea : firstPhotoArea);
         }
         return preview;
     }

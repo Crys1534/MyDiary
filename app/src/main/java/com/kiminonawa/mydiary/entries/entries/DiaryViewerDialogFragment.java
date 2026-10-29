@@ -34,6 +34,7 @@ import com.kiminonawa.mydiary.entries.diary.DiaryCover;
 import com.kiminonawa.mydiary.entries.diary.DiaryPhotoBottomSheet;
 import com.kiminonawa.mydiary.entries.diary.TagHelper;
 import com.kiminonawa.mydiary.entries.diary.area.AreaPickerController;
+import com.kiminonawa.mydiary.entries.diary.editor.CoverCollapser;
 import com.kiminonawa.mydiary.entries.diary.editor.DiaryItemFactory;
 import com.kiminonawa.mydiary.entries.diary.editor.EditorActions;
 import com.kiminonawa.mydiary.entries.diary.editor.EntryDateField;
@@ -52,7 +53,9 @@ import com.kiminonawa.mydiary.shared.PermissionHelper;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
 import com.kiminonawa.mydiary.shared.Sfx;
 import com.kiminonawa.mydiary.shared.ThemeManager;
+import com.kiminonawa.mydiary.shared.PaperStyle;
 import com.kiminonawa.mydiary.shared.ViewTools;
+import com.kiminonawa.mydiary.shared.gui.AspectRatioRelativeLayout;
 import com.kiminonawa.mydiary.shared.statusbar.ChinaPhoneHelper;
 
 import java.io.File;
@@ -96,6 +99,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     private ImageView IV_diary_close_dialog, IV_diary_photo, IV_diary_delete, IV_diary_move, IV_diary_save;
     //The cover (thumbnail, date, title, tags)
     private DiaryCover diaryCover;
+    //Folds the cover away while the person types (only when editing)
+    private CoverCollapser coverCollapser;
     //Tags of the diary as they are in the database (",school,trip,")
     private String savedTags = "";
     private boolean isEditMode;
@@ -116,6 +121,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     private EditorActions editorActions;
     private AreaPickerController areaPicker;
     private PhotoImporter photoImporter;
+    //The photo that is being chosen is for the cover only (it is not put in the text)
+    private boolean pickingCover = false;
     private FileManager diaryFileManager;
 
     /**
@@ -193,6 +200,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         View rootView = inflater.inflate(R.layout.fragment_diary, container);
         ScrollView ScrollView_diary_content = (ScrollView) rootView.findViewById(R.id.ScrollView_diary_content);
         ViewTools.setScrollBarColor(getActivity(), ScrollView_diary_content);
+        //Notebook sheet (Settings): paper behind the entry
+        PaperStyle.applyToPage(getActivity(), rootView.findViewById(R.id.RL_diary_page),
+                rootView.findViewById(R.id.RL_diary_content));
 
         RelativeLayout RL_diary_info = (RelativeLayout) rootView.findViewById(R.id.RL_diary_info);
         RL_diary_info.setBackground(ThemeManager.getInstance().createDiaryViewerInfoBg(getActivity()));
@@ -204,6 +214,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         });
         diaryCover.setTopCornerRadius(ScreenHelper.dpToPixel(getResources(), 10));
         diaryCover.setEditMode(isEditMode);
+        if (isEditMode) {
+            coverCollapser = new CoverCollapser(rootView, (AspectRatioRelativeLayout) RL_diary_info);
+        }
 
         LinearLayout LL_diary_edit_bar = (LinearLayout) rootView.findViewById(R.id.LL_diary_edit_bar);
         LL_diary_edit_bar.setBackground(ThemeManager.getInstance().createDiaryViewerEditBarBg(getActivity()));
@@ -238,6 +251,17 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 if (diaryFileManager != null) {
                     areaPicker.pickForCover(diaryItemHelper.getThumbnailPhoto(), diaryFileManager.getDir());
                 }
+            }
+        });
+        diaryCover.setPickPhotoListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editorActions.showCoverPhotoMenu(v, new Runnable() {
+                    @Override
+                    public void run() {
+                        addPhotoFromButton(true);
+                    }
+                });
             }
         });
         initView(rootView);
@@ -331,11 +355,17 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                     - ScreenHelper.dpToPixel(getActivity().getResources(), 2 * 5);
             dialog.getWindow().setLayout(dialogWidth, dialogHeight);
         }
+        if (coverCollapser != null) {
+            coverCollapser.start();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        if (coverCollapser != null) {
+            coverCollapser.stop();
+        }
         if (diaryItemHelper != null) {
             diaryItemHelper.releaseAudio();
         }
@@ -508,7 +538,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 continue;
             }
             if (!isEditMode) {
-                if (diaryItem instanceof DiaryPhoto) {
+                if (diaryItem instanceof DiaryPhoto && ((DiaryPhoto) diaryItem).isCoverOnly()) {
+                    //The photo that is only the cover is not shown in the text (nothing to tap)
+                } else if (diaryItem instanceof DiaryPhoto) {
                     //Reading: tap a photo to see it big
                     ((DiaryPhoto) diaryItem).setDraweeViewClickListener(this);
                     ((DiaryPhoto) diaryItem).setDraweeViewPositionTag(photoCount);
@@ -556,6 +588,27 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
     }
 
+    /**
+     * The camera button (a photo for the text) or the button of the cover (a photo only for the cover).
+     */
+    private void addPhotoFromButton(boolean forCover) {
+        pickingCover = forCover;
+        if (FileManager.getSDCardFreeSize() > FileManager.MIN_FREE_SPACE) {
+            if (PermissionHelper.checkPermission(this, REQUEST_CAMERA_AND_WRITE_ES_PERMISSION)) {
+                if (forCover || diaryItemHelper.getNowPhotoCount() < DiaryItemHelper.MAX_PHOTO_COUNT) {
+                    openPhotoBottomSheet();
+                } else {
+                    Toast.makeText(getActivity(),
+                            String.format(getResources().getString(R.string.toast_max_photo), DiaryItemHelper.MAX_PHOTO_COUNT),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            //Insufficient
+            Toast.makeText(getActivity(), getString(R.string.toast_space_insufficient), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void openPhotoBottomSheet() {
         DiaryPhotoBottomSheet diaryPhotoBottomSheet = DiaryPhotoBottomSheet.newInstance(true);
         diaryPhotoBottomSheet.setTargetFragment(this, 0);
@@ -580,6 +633,10 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
     @Override
     public void selectPhotos(List<Uri> uris) {
+        if (pickingCover && uris.size() > 1) {
+            //Only one photo can be the cover
+            uris = new ArrayList<>(uris.subList(0, 1));
+        }
         photoImporter.addUris(uris);
     }
 
@@ -592,7 +649,12 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
     @Override
     public void onPhotoReady(String fileName) {
-        editorActions.insertPhoto(fileName, diaryFileManager.getDirAbsolutePath());
+        if (pickingCover) {
+            pickingCover = false;
+            editorActions.setCoverOnlyPhoto(fileName, diaryFileManager.getDirAbsolutePath());
+        } else {
+            editorActions.insertPhoto(fileName, diaryFileManager.getDirAbsolutePath());
+        }
     }
 
 
@@ -641,20 +703,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             case R.id.IV_diary_photo:
                 if (isEditMode) {
                     //Allow add photo
-                    if (FileManager.getSDCardFreeSize() > FileManager.MIN_FREE_SPACE) {
-                        if (PermissionHelper.checkPermission(this, REQUEST_CAMERA_AND_WRITE_ES_PERMISSION)) {
-                            if (diaryItemHelper.getNowPhotoCount() < DiaryItemHelper.MAX_PHOTO_COUNT) {
-                                openPhotoBottomSheet();
-                            } else {
-                                Toast.makeText(getActivity(),
-                                        String.format(getResources().getString(R.string.toast_max_photo), DiaryItemHelper.MAX_PHOTO_COUNT),
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    } else {
-                        //Insufficient
-                        Toast.makeText(getActivity(), getString(R.string.toast_space_insufficient), Toast.LENGTH_SHORT).show();
-                    }
+                    addPhotoFromButton(false);
                 } else {
                     //Show the gallery
                     Intent gotoPhotoOverviewIntent = new Intent(getActivity(), PhotoOverviewActivity.class);

@@ -117,13 +117,14 @@
         android:scrollbarStyle="insideOverlay">
 
         <RelativeLayout
+            android:id="@+id/RL_diary_page"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:focusable="true"
             android:focusableInTouchMode="true">
 
             <!-- The cover: the photo chosen as the thumbnail is the background -->
-            <!-- Always the same shape (4:5, taller than wide): a photo cropped to that shape fills it exactly -->
+            <!-- Always the same shape (3:4, taller than wide): a photo cropped to that shape fills it exactly -->
             <com.kiminonawa.mydiary.shared.gui.AspectRatioRelativeLayout
                 android:id="@+id/RL_diary_info"
                 android:layout_width="match_parent"
@@ -335,15 +336,30 @@
                         android:visibility="gone" />
                 </LinearLayout>
 
-                <!-- Bottom left (only when editing and the cover has a photo): choose the part of the photo that the cover shows -->
+                <!-- Bottom left (only when editing): choose a photo for the cover (without putting it in the text) -->
                 <ImageView
-                    android:id="@+id/IV_diary_cover_crop"
+                    android:id="@+id/IV_diary_cover_photo"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="10dp"
+                    android:background="@drawable/diary_cover_chip_bg"
+                    android:contentDescription="@string/cover_photo_button"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_add_photo_white_24dp"
+                    android:visibility="gone" />
+
+                <!-- Next to it (only when editing and the cover has a photo): choose the part of the photo that the cover shows -->
+                <ImageView
+                    android:id="@+id/IV_diary_cover_crop"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/IV_diary_cover_photo"
                     android:background="@drawable/diary_cover_chip_bg"
                     android:padding="6dp"
                     android:src="@drawable/ic_area_white_24dp"

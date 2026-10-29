@@ -42,7 +42,7 @@ public class DiaryCover implements View.OnClickListener {
     private final SimpleDraweeView SDV_cover;
     private final View V_overlay;
     private final TextView TV_date, TV_title, TV_tag, TV_tagMore;
-    private final ImageView IV_tagAdd, IV_crop;
+    private final ImageView IV_tagAdd, IV_crop, IV_coverPhoto;
     private final ImageView IV_weather;
     private final TextView TV_weather;
     private final Listener listener;
@@ -66,6 +66,7 @@ public class DiaryCover implements View.OnClickListener {
         TV_tagMore = (TextView) rootView.findViewById(R.id.TV_diary_cover_tag_more);
         IV_tagAdd = (ImageView) rootView.findViewById(R.id.IV_diary_cover_tag_add);
         IV_crop = (ImageView) rootView.findViewById(R.id.IV_diary_cover_crop);
+        IV_coverPhoto = (ImageView) rootView.findViewById(R.id.IV_diary_cover_photo);
         IV_weather = (ImageView) rootView.findViewById(R.id.IV_diary_weather);
         TV_weather = (TextView) rootView.findViewById(R.id.TV_diary_weather);
         IV_crop.setOnClickListener(this);
@@ -82,6 +83,15 @@ public class DiaryCover implements View.OnClickListener {
         this.editMode = editMode;
         setTags(savedTags);
         refreshCropButton();
+        //Editing: a photo can be chosen for the cover without putting it in the text
+        IV_coverPhoto.setVisibility(editMode ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Called when the button "choose a photo for the cover" is pressed (only shown when editing).
+     */
+    public void setPickPhotoListener(View.OnClickListener listener) {
+        IV_coverPhoto.setOnClickListener(listener);
     }
 
     /**

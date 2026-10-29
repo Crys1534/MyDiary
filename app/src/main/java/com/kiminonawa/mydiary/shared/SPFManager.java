@@ -130,6 +130,19 @@ public class SPFManager {
     }
 
     /**
+     * The text of the entries on a sheet of a ruled notebook (paper texture and lines): off until the person turns it on.
+     */
+    public static boolean isNotebookPaper(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
+        return settings.getBoolean("CONFIG_NOTEBOOK_PAPER", false);
+    }
+
+    public static void setNotebookPaper(Context context, boolean on) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG, 0);
+        settings.edit().putBoolean("CONFIG_NOTEBOOK_PAPER", on).commit();
+    }
+
+    /**
      * Memories ("a year ago you wrote this"): the day it was shown last, so it is only shown once a day
      */
     public static String getMemoryShownDay(Context context) {

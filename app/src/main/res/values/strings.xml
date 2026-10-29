@@ -111,7 +111,14 @@
     <string name="audio_error_link">That is not a link (it has to start with https://)</string>
     <string name="cover_tags_title">Tags</string>
     <string name="cover_tags_edit">Edit</string>
+    <string name="tags_dialog_hint">Write a tag and press space or a comma to add it. Touch a tag to remove it.</string>
+    <string name="tags_input_hint">New tag…</string>
     <string name="cover_thumbnail_chosen">This photo is now the cover of the entry</string>
+    <string name="cover_photo_button">Choose a photo for the cover</string>
+    <string name="cover_photo_menu_change">Change the cover photo</string>
+    <string name="cover_photo_menu_remove">Remove the cover photo</string>
+    <string name="cover_photo_chosen">This photo is now the cover (it is not shown inside the entry)</string>
+    <string name="cover_photo_removed">Cover photo removed</string>
     <string name="diary_tags_hint">Tags: school trip</string>
     <string name="tags_filter_title">Filter by tag</string>
     <string name="tags_filter_all">All entries</string>
@@ -271,7 +278,7 @@
     <string name="photo_viewer_no_images">No images</string>
     <!-- Choose what part of a photo is seen (the photo is not cut) -->
     <string name="area_title_body">Choose what part of the photo is seen (4:3)</string>
-    <string name="area_title_cover">Choose what part is seen on the cover (4:5)</string>
+    <string name="area_title_cover">Choose what part is seen on the cover (3:4)</string>
     <string name="area_hint">Move the photo with one finger and zoom with two. Your photo is not cut.</string>
     <string name="area_button_center">Center</string>
     <string name="area_button_done">Done</string>
@@ -285,4 +292,8 @@
     <string name="setting_sound_hint">Soft notebook sounds: pages, pen, stamp&#8230; They follow the silent mode of your phone.</string>
     <string name="setting_sound_switch">Diary sounds</string>
     <string name="setting_sound_volume">Volume</string>
+    <string name="setting_paper_title">Notebook sheet</string>
+    <string name="setting_paper_hint">See the text of your entries as if it were written on a sheet of a ruled notebook, with a paper texture. It is only a way of seeing them: nothing is changed in what you saved.</string>
+    <string name="setting_paper_switch">Use the notebook sheet</string>
+    <string name="setting_paper_sample">Dear diary:\nToday was a calm day. I went out for a walk and wrote this page by hand, with a pencil.</string>
 </resources>

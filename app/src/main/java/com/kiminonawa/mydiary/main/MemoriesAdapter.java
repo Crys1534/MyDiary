@@ -14,11 +14,9 @@ import com.kiminonawa.mydiary.entries.DiaryActivity;
 import com.kiminonawa.mydiary.entries.diary.DiaryInfoHelper;
 import com.kiminonawa.mydiary.entries.diary.TagHelper;
 import com.kiminonawa.mydiary.shared.ThemeManager;
+import com.kiminonawa.mydiary.shared.TimeTools;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * The list of "A day like today": the same cards as the list of entries (the small picture, the date with the tags,
@@ -28,7 +26,7 @@ public class MemoriesAdapter extends RecyclerView.Adapter<EntryCardHolder> {
 
     private final Activity activity;
     private final List<MemoriesHelper.Memory> memories;
-    private final SimpleDateFormat dateFormat;
+    private final TimeTools timeTools;
     private final int thumbnailSizePx;
     private final int themeColor;
     //Called when an entry is opened (to close the window that shows this list)
@@ -37,8 +35,7 @@ public class MemoriesAdapter extends RecyclerView.Adapter<EntryCardHolder> {
     public MemoriesAdapter(Activity activity, List<MemoriesHelper.Memory> memories) {
         this.activity = activity;
         this.memories = memories;
-        this.dateFormat = new SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(
-                Locale.getDefault(), "MMMd"), Locale.getDefault());
+        this.timeTools = TimeTools.getInstance(activity.getApplicationContext());
         this.thumbnailSizePx = (int) (82 * activity.getResources().getDisplayMetrics().density);
         this.themeColor = ThemeManager.getInstance().getThemeDarkColor(activity);
     }
@@ -74,7 +71,7 @@ public class MemoriesAdapter extends RecyclerView.Adapter<EntryCardHolder> {
         }
 
         String tagsText = TagHelper.toDisplay(memory.tags);
-        holder.time.setText(dateFormat.format(new Date(memory.time))
+        holder.time.setText(timeTools.monthAndDay(memory.time)
                 + (tagsText.length() > 0 ? "   " + tagsText : ""));
         holder.title.setText(memory.title == null || memory.title.trim().length() == 0
                 ? activity.getString(R.string.diary_no_title) : memory.title.trim());

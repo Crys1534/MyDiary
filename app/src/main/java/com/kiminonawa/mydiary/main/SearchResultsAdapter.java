@@ -18,10 +18,9 @@ import com.kiminonawa.mydiary.entries.diary.TagHelper;
 import com.kiminonawa.mydiary.main.topic.ITopic;
 import com.kiminonawa.mydiary.memo.MemoActivity;
 import com.kiminonawa.mydiary.shared.ThemeManager;
+import com.kiminonawa.mydiary.shared.TimeTools;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,7 +57,6 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private final Activity activity;
     private final List<Row> rows = new ArrayList<>();
-    private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
     private final int thumbnailSizePx;
     private final int themeColor;
     private final String[] topicTypeNames;
@@ -97,7 +95,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 Row row = new Row();
                 row.isNote = true;
                 String tags = TagHelper.toDisplay(note.tags);
-                row.time = dateFormat.format(new Date(note.time)) + (tags.length() > 0 ? "   " + tags : "");
+                row.time = TimeTools.getInstance(activity).monthDayAndYear(note.time) + (tags.length() > 0 ? "   " + tags : "");
                 row.title = note.title == null || note.title.trim().length() == 0
                         ? activity.getString(R.string.diary_no_title) : note.title.trim();
                 //The diary of the note and the piece of text around the word

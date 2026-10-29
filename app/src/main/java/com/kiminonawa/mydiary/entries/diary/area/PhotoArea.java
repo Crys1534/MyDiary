@@ -11,46 +11,61 @@ import java.util.Locale;
  * left, top, right, bottom = 0.10, 0.00, 0.90, 1.00 means "from 10% to 90% of the width, all the height".
  * <p>
  * A photo has two areas, because the same photo is shown in two shapes: inside the entry (wide, 4:3) and
- * as the cover of the entry (tall, 4:5). No area (null) means "the center", like before.
+ * as the cover of the entry (tall, 3:4). No area (null) means "the center", like before.
  * <p>
- * Text form (what is saved in the database and in the backups): {@code b=l,t,r,b;c=l,t,r,b}
- * (b = body of the entry, c = cover). An empty text means that nothing was chosen.
+ * Text form (what is saved in the database and in the backups): {@code b=l,t,r,b;c=l,t,r,b;o=1}
+ * (b = body of the entry, c = cover, o=1 = the photo is only the cover: it is not shown inside the entry).
+ * An empty text means that nothing was chosen.
  */
 public final class PhotoArea {
 
-    public static final PhotoArea NONE = new PhotoArea(null, null);
+    public static final PhotoArea NONE = new PhotoArea(null, null, false);
 
     /**
      * The area inside the entry (4:3), or null for the center.
      */
     public final RectF body;
     /**
-     * The area for the cover (4:5), or null for the center.
+     * The area for the cover (3:4), or null for the center.
      */
     public final RectF cover;
+    /**
+     * The photo is only the cover of the entry (chosen from the cover, without putting it in the text): it is saved
+     * with the entry like any photo, but it is not shown between the paragraphs.
+     */
+    public final boolean coverOnly;
 
-    private PhotoArea(RectF body, RectF cover) {
+    private PhotoArea(RectF body, RectF cover, boolean coverOnly) {
         this.body = body;
         this.cover = cover;
+        this.coverOnly = coverOnly;
     }
 
     public static PhotoArea of(RectF body, RectF cover) {
-        if (body == null && cover == null) {
+        return of(body, cover, false);
+    }
+
+    public static PhotoArea of(RectF body, RectF cover, boolean coverOnly) {
+        if (body == null && cover == null && !coverOnly) {
             return NONE;
         }
-        return new PhotoArea(body == null ? null : new RectF(body), cover == null ? null : new RectF(cover));
+        return new PhotoArea(body == null ? null : new RectF(body), cover == null ? null : new RectF(cover), coverOnly);
     }
 
     public PhotoArea withBody(RectF newBody) {
-        return of(newBody, cover);
+        return of(newBody, cover, coverOnly);
     }
 
     public PhotoArea withCover(RectF newCover) {
-        return of(body, newCover);
+        return of(body, newCover, coverOnly);
+    }
+
+    public PhotoArea withCoverOnly(boolean newCoverOnly) {
+        return of(body, cover, newCoverOnly);
     }
 
     public boolean isEmpty() {
-        return body == null && cover == null;
+        return body == null && cover == null && !coverOnly;
     }
 
     /**
@@ -62,12 +77,17 @@ public final class PhotoArea {
         }
         RectF body = null;
         RectF cover = null;
+        boolean coverOnly = false;
         for (String part : text.split(";")) {
             int equals = part.indexOf('=');
             if (equals < 0) {
                 continue;
             }
             String key = part.substring(0, equals).trim();
+            if ("o".equals(key)) {
+                coverOnly = "1".equals(part.substring(equals + 1).trim());
+                continue;
+            }
             RectF rect = parseRect(part.substring(equals + 1));
             if ("b".equals(key)) {
                 body = rect;
@@ -75,7 +95,7 @@ public final class PhotoArea {
                 cover = rect;
             }
         }
-        return of(body, cover);
+        return of(body, cover, coverOnly);
     }
 
     /**
@@ -121,6 +141,12 @@ public final class PhotoArea {
                 text.append(';');
             }
             text.append("c=").append(formatRect(cover));
+        }
+        if (coverOnly) {
+            if (text.length() > 0) {
+                text.append(';');
+            }
+            text.append("o=1");
         }
         return text.toString();
     }

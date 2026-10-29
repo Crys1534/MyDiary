@@ -13,7 +13,7 @@ import android.view.View;
 /**
  * The screen where the person chooses what part of a photo is seen.
  * <p>
- * The whole photo is drawn, and over it a frame with the shape that will be used (4:3 or 4:5). The outside of the
+ * The whole photo is drawn, and over it a frame with the shape that will be used (4:3 or 3:4). The outside of the
  * frame is darkened. One finger moves the photo, two fingers zoom it. The photo always covers the frame.
  * Nothing is cut: {@link #getArea()} gives the part inside the frame in fractions of the photo (0 to 1).
  */

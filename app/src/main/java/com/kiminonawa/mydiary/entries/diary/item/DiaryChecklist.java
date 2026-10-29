@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.shared.ColorTools;
+import com.kiminonawa.mydiary.shared.PaperStyle;
 import com.kiminonawa.mydiary.shared.ScreenHelper;
 
 /**
@@ -37,7 +38,7 @@ public class DiaryChecklist implements IDairyRow {
 
     private final LinearLayout rowLayout;
     private final AppCompatCheckBox checkBox;
-    private final EditText editText;
+    private final FormatEditText editText;
     private final ImageView deleteButton;
     private final DiaryItemHelper helper;
 
@@ -68,6 +69,7 @@ public class DiaryChecklist implements IDairyRow {
         editText.setBackgroundColor(Color.TRANSPARENT);
         editText.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         editText.setPadding(dp2, dp2, dp2, dp2);
+        PaperStyle.apply(context, editText);
         //Enter = next line of the list (the text still wraps in several lines)
         editText.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);

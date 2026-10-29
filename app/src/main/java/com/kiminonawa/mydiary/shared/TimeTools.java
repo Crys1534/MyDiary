@@ -3,6 +3,7 @@ package com.kiminonawa.mydiary.shared;
 import android.content.Context;
 
 import java.text.DateFormatSymbols;
+import java.util.Calendar;
 import java.util.Locale;
 
 /**
@@ -68,5 +69,23 @@ public class TimeTools {
     public String[] getDaysFullName() {
         refreshIfLanguageChanged();
         return daysFullName;
+    }
+
+    /**
+     * The date as the lists show it: the month first, then the day. "October 25" / "Octubre 25".
+     */
+    public String monthAndDay(long millis) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millis);
+        return getMonthsFullName()[calendar.get(Calendar.MONTH)] + " " + calendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
+     * Same, with the year (for the lists that mix several years, like the search): "October 25, 2025".
+     */
+    public String monthDayAndYear(long millis) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millis);
+        return monthAndDay(millis) + ", " + calendar.get(Calendar.YEAR);
     }
 }

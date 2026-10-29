@@ -81,11 +81,29 @@ public class DiaryPhoto implements IDairyRow {
     public void setPhoto(Uri photoUri, String photoFileName) {
         this.photoUri = photoUri;
         this.photoFileName = photoFileName;
-        diaryPhotoLayout.setPhotoUri(photoUri, area.body);
+        showPhoto();
     }
 
     /**
-     * The part of the photo that is seen inside the entry (4:3) and on the cover (4:5).
+     * Draws the photo inside the entry. A photo that is only the cover is not drawn there (its place is empty).
+     */
+    private void showPhoto() {
+        diaryPhotoLayout.setVisibility(area.coverOnly ? View.GONE : View.VISIBLE);
+        if (photoUri != null && !area.coverOnly) {
+            diaryPhotoLayout.setPhotoUri(photoUri, area.body);
+        }
+    }
+
+    /**
+     * True when this photo is only the cover of the entry: it is saved with the entry but it is not shown
+     * between the paragraphs.
+     */
+    public boolean isCoverOnly() {
+        return area.coverOnly;
+    }
+
+    /**
+     * The part of the photo that is seen inside the entry (4:3) and on the cover (3:4).
      */
     public PhotoArea getArea() {
         return area;
@@ -93,9 +111,7 @@ public class DiaryPhoto implements IDairyRow {
 
     public void setArea(PhotoArea area) {
         this.area = area == null ? PhotoArea.NONE : area;
-        if (photoUri != null) {
-            diaryPhotoLayout.setPhotoUri(photoUri, this.area.body);
-        }
+        showPhoto();
     }
 
 
@@ -106,7 +122,7 @@ public class DiaryPhoto implements IDairyRow {
     @Override
     public void setContent(String content) {
         this.photoUri = Uri.parse(content);
-        diaryPhotoLayout.setPhotoUri(photoUri, area.body);
+        showPhoto();
     }
 
     @Override

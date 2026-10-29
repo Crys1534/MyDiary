@@ -17,7 +17,7 @@ import java.io.File;
 
 /**
  * "Choose what part is seen": opens the screen where the person moves and zooms a photo under a frame
- * (4:3 for the photos of the entry, 4:5 for the cover) and keeps the answer in the photo item.
+ * (4:3 for the photos of the entry, 3:4 for the cover) and keeps the answer in the photo item.
  * The photo file is never changed, so nothing is lost and it can be chosen again any time.
  * Used by the page of a new entry and by the window that edits an entry.
  */
@@ -58,7 +58,7 @@ public class AreaPickerController {
     }
 
     /**
-     * For the cover (4:5).
+     * For the cover (3:4).
      */
     public void pickForCover(DiaryPhoto photo, File photoDir) {
         open(photo, photoDir, true);

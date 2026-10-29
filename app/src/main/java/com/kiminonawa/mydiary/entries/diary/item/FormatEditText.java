@@ -1,7 +1,10 @@
 package com.kiminonawa.mydiary.entries.diary.item;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.BackgroundColorSpan;
@@ -31,6 +34,8 @@ public class FormatEditText extends AppCompatEditText {
     //Bullets / numbers / quotes (see ListFormat)
     private boolean busy = false;
     private int pendingEnter = -1;
+    //Lines of the notebook sheet (Settings): a line under every line of text
+    private Paint rulePaint = null;
 
     public FormatEditText(Context context) {
         super(context);
@@ -81,6 +86,55 @@ public class FormatEditText extends AppCompatEditText {
             }
         });
         ready = true;
+    }
+
+    /**
+     * Draws (or stops drawing) a line under every line of text, like a ruled notebook.
+     */
+    public void setRuled(boolean ruled, int color) {
+        if (ruled) {
+            float density = getResources().getDisplayMetrics().density;
+            rulePaint = new Paint();
+            rulePaint.setColor(color);
+            rulePaint.setStrokeWidth(Math.max(1f, density * 0.9f));
+            rulePaint.setAntiAlias(false);
+        } else {
+            rulePaint = null;
+        }
+        invalidate();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (rulePaint != null) {
+            drawRules(canvas);
+        }
+        super.onDraw(canvas);
+    }
+
+    private void drawRules(Canvas canvas) {
+        Layout layout = getLayout();
+        if (layout == null || layout.getLineCount() == 0) {
+            return;
+        }
+        float density = getResources().getDisplayMetrics().density;
+        float top = getExtendedPaddingTop();
+        //The line is just below the letters (the tails of g, y, p cross it, as with a pencil on a notebook)
+        float offset = 2f * density;
+        int count = layout.getLineCount();
+        float y = 0f;
+        for (int i = 0; i < count; i++) {
+            y = top + layout.getLineBaseline(i) + offset;
+            canvas.drawLine(0f, y, getWidth(), y, rulePaint);
+        }
+        //If the box is taller than the text, the lines go on to the bottom
+        float step = Math.max(getLineHeight(), 1);
+        y += step;
+        int guard = 0;
+        while (y < getHeight() && guard++ < 200) {
+            canvas.drawLine(0f, y, getWidth(), y, rulePaint);
+            y += step;
+        }
     }
 
     @Override

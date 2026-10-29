@@ -5,15 +5,20 @@ import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 /**
- * A layout with a fixed shape: the height is always the width divided by COVER_RATIO (4:5, taller than wide).
+ * A layout with a fixed shape: the height is always the width divided by COVER_RATIO (3:4, taller than wide).
  * It is used for the cover of an entry: a photo cropped with the same shape fills it exactly.
+ * <p>
+ * It can also be folded (see {@link #setCollapse(float)}), so the cover is out of the way while the person types.
  */
 public class AspectRatioRelativeLayout extends RelativeLayout {
 
-    //width : height of the cover of an entry (4:5 = a portrait cover)
-    public static final int COVER_RATIO_W = 4;
-    public static final int COVER_RATIO_H = 5;
+    //width : height of the cover of an entry (3:4 = a portrait cover)
+    public static final int COVER_RATIO_W = 3;
+    public static final int COVER_RATIO_H = 4;
     public static final float COVER_RATIO = (float) COVER_RATIO_W / COVER_RATIO_H;
+
+    //0 = the whole cover is seen, 1 = folded (no height)
+    private float collapse = 0f;
 
     public AspectRatioRelativeLayout(Context context) {
         super(context);
@@ -34,8 +39,23 @@ public class AspectRatioRelativeLayout extends RelativeLayout {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             return;
         }
-        int height = Math.round(width / COVER_RATIO);
+        int height = Math.round(width / COVER_RATIO * (1f - collapse));
         super.onMeasure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+    }
+
+    /**
+     * @param collapse 0 = the whole cover, 1 = no height at all (the cover is folded away)
+     */
+    public void setCollapse(float collapse) {
+        float value = Math.max(0f, Math.min(1f, collapse));
+        if (value != this.collapse) {
+            this.collapse = value;
+            requestLayout();
+        }
+    }
+
+    public float getCollapse() {
+        return collapse;
     }
 }

@@ -28,6 +28,7 @@ import com.kiminonawa.mydiary.backup.obj.BUDiaryItem;
 import com.kiminonawa.mydiary.entries.BaseDiaryFragment;
 import com.kiminonawa.mydiary.entries.DiaryActivity;
 import com.kiminonawa.mydiary.entries.diary.area.AreaPickerController;
+import com.kiminonawa.mydiary.entries.diary.editor.CoverCollapser;
 import com.kiminonawa.mydiary.entries.diary.editor.DiaryItemFactory;
 import com.kiminonawa.mydiary.entries.diary.editor.EditorActions;
 import com.kiminonawa.mydiary.entries.diary.editor.EntryDateField;
@@ -42,7 +43,9 @@ import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.shared.PermissionHelper;
 import com.kiminonawa.mydiary.shared.SPFManager;
 import com.kiminonawa.mydiary.shared.ThemeManager;
+import com.kiminonawa.mydiary.shared.PaperStyle;
 import com.kiminonawa.mydiary.shared.ViewTools;
+import com.kiminonawa.mydiary.shared.gui.AspectRatioRelativeLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -78,6 +81,8 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     private ImageView IV_diary_photo, IV_diary_save;
     //The cover (thumbnail, date, title, tags)
     private DiaryCover diaryCover;
+    //Folds the cover away while the person types
+    private CoverCollapser coverCollapser;
 
     /**
      * The parts of the entry that are written
@@ -99,6 +104,8 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     private EditorActions editorActions;
     private AreaPickerController areaPicker;
     private PhotoImporter photoImporter;
+    //The photo that is being chosen is for the cover only (it is not put in the text)
+    private boolean pickingCover = false;
     /**
      * File
      */
@@ -117,6 +124,9 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
 
         ScrollView ScrollView_diary_content = (ScrollView) rootView.findViewById(R.id.ScrollView_diary_content);
         ViewTools.setScrollBarColor(getActivity(), ScrollView_diary_content);
+        //Notebook sheet (Settings): paper behind the entry
+        PaperStyle.applyToPage(getActivity(), rootView.findViewById(R.id.RL_diary_page),
+                rootView.findViewById(R.id.RL_diary_content));
 
         int mainColor = ThemeManager.getInstance().getThemeMainColor(getActivity());
         RelativeLayout RL_diary_info = (RelativeLayout) rootView.findViewById(R.id.RL_diary_info);
@@ -134,6 +144,8 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
             }
         });
         diaryCover.setEditMode(true);
+        coverCollapser = new CoverCollapser(rootView,
+                (AspectRatioRelativeLayout) rootView.findViewById(R.id.RL_diary_info));
         titleTags = new TitleTagsField(rootView, diaryCover, mainColor);
         weatherMood = new WeatherMoodField(getActivity(), rootView, diaryCover);
         dateField = new EntryDateField(getActivity(), rootView, diaryCover);
@@ -172,6 +184,17 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 areaPicker.pickForCover(diaryItemHelper.getThumbnailPhoto(), diaryTempFileManager.getDir());
             }
         });
+        diaryCover.setPickPhotoListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editorActions.showCoverPhotoMenu(v, new Runnable() {
+                    @Override
+                    public void run() {
+                        addPhotoFromButton(true);
+                    }
+                });
+            }
+        });
         dateField.setNow();
         clearDiaryPage();
         //Revert the auto saved diary
@@ -183,6 +206,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     public void onStart() {
         super.onStart();
         diaryItemHelper.addObserver(this);
+        coverCollapser.start();
     }
 
     @Override
@@ -209,6 +233,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         super.onStop();
         //Release the resource
         diaryItemHelper.deleteObserver(this);
+        coverCollapser.stop();
         diaryItemHelper.releaseAudio();
         locationField.onStop();
     }
@@ -333,7 +358,8 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
             } catch (Exception e) {
                 Log.e(TAG, "Load auto save fail", e);
             }
-            TV_diary_item_content_hint.setVisibility(View.INVISIBLE);
+            TV_diary_item_content_hint.setVisibility(
+                    diaryItemHelper.getContentItemCount() > 0 ? View.INVISIBLE : View.VISIBLE);
         } else {
             TV_diary_item_content_hint.setVisibility(View.VISIBLE);
         }
@@ -365,6 +391,27 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 diaryItemHelper, getTopicId(), this).execute(getTopicId());
     }
 
+    /**
+     * The camera button (a photo for the text) or the button of the cover (a photo only for the cover).
+     */
+    private void addPhotoFromButton(boolean forCover) {
+        pickingCover = forCover;
+        if (FileManager.getSDCardFreeSize() > FileManager.MIN_FREE_SPACE) {
+            if (PermissionHelper.checkPermission(this, REQUEST_CAMERA_AND_WRITE_ES_PERMISSION)) {
+                if (forCover || diaryItemHelper.getNowPhotoCount() < DiaryItemHelper.MAX_PHOTO_COUNT) {
+                    openPhotoBottomSheet();
+                } else {
+                    Toast.makeText(getActivity(),
+                            String.format(getResources().getString(R.string.toast_max_photo), DiaryItemHelper.MAX_PHOTO_COUNT),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            //Insufficient
+            Toast.makeText(getActivity(), getString(R.string.toast_space_insufficient), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void openPhotoBottomSheet() {
         DiaryPhotoBottomSheet diaryPhotoBottomSheet = DiaryPhotoBottomSheet.newInstance(false);
         diaryPhotoBottomSheet.setTargetFragment(this, 0);
@@ -382,6 +429,10 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
 
     @Override
     public void selectPhotos(List<Uri> uris) {
+        if (pickingCover && uris.size() > 1) {
+            //Only one photo can be the cover
+            uris = new ArrayList<>(uris.subList(0, 1));
+        }
         photoImporter.addUris(uris);
     }
 
@@ -394,13 +445,18 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
 
     @Override
     public void onPhotoReady(String fileName) {
-        editorActions.insertPhoto(fileName, diaryTempFileManager.getDirAbsolutePath());
+        if (pickingCover) {
+            pickingCover = false;
+            editorActions.setCoverOnlyPhoto(fileName, diaryTempFileManager.getDirAbsolutePath());
+        } else {
+            editorActions.insertPhoto(fileName, diaryTempFileManager.getDirAbsolutePath());
+        }
     }
 
 
     @Override
     public void update(Observable observable, Object data) {
-        if (diaryItemHelper.getItemSize() > 0) {
+        if (diaryItemHelper.getContentItemCount() > 0) {
             TV_diary_item_content_hint.setVisibility(View.GONE);
         } else {
             TV_diary_item_content_hint.setVisibility(View.VISIBLE);
@@ -430,8 +486,11 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                 dateField.openPicker(getFragmentManager());
                 break;
             case R.id.LL_diary_item_content:
-                if (diaryItemHelper.getItemSize() == 0) {
-                    diaryItemHelper.initDiary();
+                if (diaryItemHelper.getContentItemCount() == 0) {
+                    //Nothing is written yet (a photo that is only the cover is not text, it stays)
+                    if (diaryItemHelper.getItemSize() == 0) {
+                        diaryItemHelper.initDiary();
+                    }
                     //Add default edittext item
                     DiaryText diaryText = new DiaryText(getActivity());
                     diaryText.setPosition(diaryItemHelper.getItemSize());
@@ -441,28 +500,16 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
                     //Show keyboard automatically
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.showSoftInput(diaryText.getView(), InputMethodManager.SHOW_IMPLICIT);
-                } else if (diaryItemHelper.getItemSize() == 1) {
+                } else if (diaryItemHelper.getContentItemCount() == 1) {
                     //Make the soft keyboard can be opened when it is only one item.
-                    diaryItemHelper.get(0).getView().requestFocus();
+                    IDairyRow only = diaryItemHelper.getLastContentRow();
+                    only.getView().requestFocus();
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.showSoftInput(diaryItemHelper.get(diaryItemHelper.getItemSize() - 1).getView(), InputMethodManager.SHOW_IMPLICIT);
+                    imm.showSoftInput(only.getView(), InputMethodManager.SHOW_IMPLICIT);
                 }
                 break;
             case R.id.IV_diary_photo:
-                if (FileManager.getSDCardFreeSize() > FileManager.MIN_FREE_SPACE) {
-                    if (PermissionHelper.checkPermission(this, REQUEST_CAMERA_AND_WRITE_ES_PERMISSION)) {
-                        if (diaryItemHelper.getNowPhotoCount() < DiaryItemHelper.MAX_PHOTO_COUNT) {
-                            openPhotoBottomSheet();
-                        } else {
-                            Toast.makeText(getActivity(),
-                                    String.format(getResources().getString(R.string.toast_max_photo), DiaryItemHelper.MAX_PHOTO_COUNT),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } else {
-                    //Insufficient
-                    Toast.makeText(getActivity(), getString(R.string.toast_space_insufficient), Toast.LENGTH_SHORT).show();
-                }
+                addPhotoFromButton(false);
                 break;
             case R.id.IV_diary_save:
                 if (diaryItemHelper.getItemSize() > 0) {

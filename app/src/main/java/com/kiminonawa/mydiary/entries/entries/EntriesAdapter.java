@@ -13,11 +13,9 @@ import com.kiminonawa.mydiary.shared.EditMode;
 import com.kiminonawa.mydiary.shared.ThemeManager;
 import com.kiminonawa.mydiary.shared.TimeTools;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by daxia on 2016/10/17.
@@ -28,8 +26,8 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntryCardHolder> implem
 
     private List<EntriesEntity> entriesList;
     private EntriesFragment mFragment;
-    //Only the month and the day, like "Oct 21" or "21 oct" (the hour is not shown any more)
-    private SimpleDateFormat dateFormat;
+    //Only the month and the day, like "October 21" / "Octubre 21" (the hour is not shown any more)
+    private TimeTools timeTools;
     private String[] monthsFullName;
     private ThemeManager themeManager;
 
@@ -40,9 +38,8 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntryCardHolder> implem
     public EntriesAdapter(EntriesFragment fragment, List<EntriesEntity> topicList) {
         this.mFragment = fragment;
         this.entriesList = topicList;
-        this.monthsFullName = TimeTools.getInstance(mFragment.getActivity().getApplicationContext()).getMonthsFullName();
-        this.dateFormat = new SimpleDateFormat(android.text.format.DateFormat.getBestDateTimePattern(Locale.getDefault(), "MMMd"),
-                Locale.getDefault());
+        this.timeTools = TimeTools.getInstance(mFragment.getActivity().getApplicationContext());
+        this.monthsFullName = timeTools.getMonthsFullName();
         this.themeManager = ThemeManager.getInstance();
         this.thumbnailSizePx = (int) (82 * mFragment.getResources().getDisplayMetrics().density);
     }
@@ -105,7 +102,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntryCardHolder> implem
 
         //Month and day, then the tags (without #)
         String tagsText = TagHelper.toDisplay(entity.getTags());
-        holder.time.setText(dateFormat.format(calendar.getTime())
+        holder.time.setText(timeTools.monthAndDay(calendar.getTimeInMillis())
                 + (tagsText.length() > 0 ? "   " + tagsText : ""));
         holder.title.setText(entity.getTitle());
         holder.title.setMaxLines(2);

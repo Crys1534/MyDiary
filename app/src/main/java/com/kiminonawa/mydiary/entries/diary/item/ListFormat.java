@@ -29,6 +29,10 @@ public final class ListFormat {
     public static final char NUMBER = '';
     public static final char QUOTE = '';
 
+    //The bar of a quote, and the almost see-through tint behind it (about 10%: it works on light and dark pages)
+    private static final int QUOTE_BAR = 0xFF90A4AE;
+    private static final int QUOTE_TINT = 0x1A90A4AE;
+
     private ListFormat() {
     }
 
@@ -98,10 +102,15 @@ public final class ListFormat {
                                       CharSequence text, int start, int end, boolean first, Layout layout) {
             Paint.Style oldStyle = p.getStyle();
             if (type == QUOTE) {
-                //A bar along every line of the quote
                 int oldColor = p.getColor();
                 p.setStyle(Paint.Style.FILL);
-                p.setColor(0xFF90A4AE);
+                //A very light tint behind the whole quote (every line has its piece, so it is one block)
+                p.setColor(QUOTE_TINT);
+                float edge = dir > 0 ? layout.getWidth() : 0f;
+                float tintStart = x + dir * 4f * density;
+                c.drawRect(Math.min(tintStart, edge), top, Math.max(tintStart, edge), bottom, p);
+                //A bar along every line of the quote
+                p.setColor(QUOTE_BAR);
                 float left = x + dir * 4f * density;
                 float right = x + dir * 7f * density;
                 c.drawRect(Math.min(left, right), top, Math.max(left, right), bottom, p);

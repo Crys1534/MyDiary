@@ -345,11 +345,11 @@ def audio_test():
         play_audios(tag, 20 if tag == "mp3" else 10)
 
 
-def pick_photo(name, index=1):
+def pick_photo(name, index=1, opener="IV_diary_photo"):
     """Adds one picture from the phone gallery to the diary that is open.
     The Android photo picker has no file names: the pictures are chosen by their place in the grid
     (newest first; place 0 is a screenshot, 1 and 2 are the test pictures)."""
-    if not tap(rid="IV_diary_photo"):
+    if not tap(rid=opener):
         return False
     sleep(2)
     show("photo_sheet_%s" % name, full=True)
@@ -915,7 +915,7 @@ def report_cover(label):
     cover = find(rid="RL_diary_info")
     if cover:
         x1, y1, x2, y2 = cover["b"]
-        log("   COVER %s: size %dx%d (ratio width/height = %.3f, 4:3 = 1.333)" % (label, x2 - x1, y2 - y1, (x2 - x1) / max(1, (y2 - y1))))
+        log("   COVER %s: size %dx%d (ratio width/height = %.3f, 3:4 = 0.750)" % (label, x2 - x1, y2 - y1, (x2 - x1) / max(1, (y2 - y1))))
     title = find(rid="TV_diary_cover_title")
     if title:
         log("   COVER %s: title text=%r" % (label, title["text"]))
@@ -1235,6 +1235,114 @@ def scroll_to(rid, tries=6):
     return bool(find(rid=rid))
 
 
+def cover_height():
+    n = find(rid="RL_diary_info")
+    return (n["b"][3] - n["b"][1]) if n else -1
+
+
+def cover_photo_test():
+    """A photo only for the cover (button of the cover), the cover folds while typing, the notebook sheet."""
+    import sqlite3
+    if not open_diary_topic():
+        return
+    tap(rid="But_diary_topbar_diary")
+    sleep(3)
+    dismiss_intro()
+    show("coverphoto_new", full=True)
+    log("   COVERPHOTO: cover button visible=%s, cover height=%d" % (bool(find(rid="IV_diary_cover_photo")), cover_height()))
+    if pick_photo("portada", 1, opener="IV_diary_cover_photo"):
+        sleep(2)
+        show("coverphoto_chosen", full=True)
+        bodies = [n for n in nodes() if n["rid"].endswith("SDV_diary_new_photo")]
+        log("   COVERPHOTO: photos shown in the text after choosing the cover photo = %d (must be 0)" % len(bodies))
+        log("   COVERPHOTO: cover height now=%d" % cover_height())
+    else:
+        log("   COVERPHOTO: could not choose a photo")
+    # the cover folds while writing (the keyboard is open) and comes back when it closes
+    big = cover_height()
+    tap(rid="EDT_diary_title")
+    type_text("Solo portada")
+    sleep(1.5)
+    show("coverphoto_keyboard_title", full=True)
+    log("   COVERPHOTO: keyboard shown=%s, cover height with keyboard=%d (before %d)" % (keyboard_shown(), cover_height(), big))
+    close_keyboard()
+    sleep(1.5)
+    log("   COVERPHOTO: cover height after closing the keyboard=%d" % cover_height())
+    tap(rid="LL_diary_item_content")
+    sleep(1)
+    type_text("texto escrito sobre la hoja de prueba")
+    sleep(1.5)
+    show("coverphoto_keyboard_text", full=True)
+    log("   COVERPHOTO: keyboard shown=%s, cover height while writing the text=%d" % (keyboard_shown(), cover_height()))
+    close_keyboard()
+    sleep(1.5)
+    show("coverphoto_before_save", full=True)
+    log("   COVERPHOTO: cover height after closing the keyboard=%d" % cover_height())
+    if tap(rid="IV_diary_save"):
+        sleep(4)
+        show("coverphoto_saved")
+    path = pull_db("%s/coverphoto" % OUT)
+    if path:
+        con = sqlite3.connect(path)
+        for row in con.execute("select _id, diary_title, diary_thumbnail from diary_entry_v2 where diary_title = 'Solo portada'"):
+            log("   COVERPHOTO DB entry: %r" % (row,))
+        for row in con.execute("select diary_item_type, substr(diary_item_content,1,40), diary_item_area from diary_item_entry_v2 where item_ref_diary_id in (select _id from diary_entry_v2 where diary_title = 'Solo portada') order by diary_item_position"):
+            log("   COVERPHOTO DB item: %r" % (row,))
+        con.close()
+    # the list: the date reads "Octubre 25" and the cover photo is the thumbnail
+    tap(rid="But_diary_topbar_entries")
+    sleep(3)
+    show("coverphoto_entries", full=True)
+    n = find(text="Solo portada")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(4)
+        show("coverphoto_viewer", full=True)
+        log("   COVERPHOTO: photos shown in the text of the saved entry = %d (must be 0), cover height=%d" % (
+            len([x for x in nodes() if x["rid"].endswith("SDV_diary_new_photo")]), cover_height()))
+        close_viewer()
+    alive("cover photo")
+    # Settings -> notebook sheet on
+    restart()
+    if tap(rid="IV_main_setting") and (sleep(2) or True) and tap(rid="IV_main_setting_setting_page"):
+        sleep(3)
+        if scroll_to("SW_setting_paper"):
+            show("paper_settings_off", full=True)
+            tap(rid="SW_setting_paper")
+            sleep(1.5)
+            show("paper_settings_on", full=True)
+            log("   PAPER: switch checked=%s" % (find(rid="SW_setting_paper") or {}).get("checked"))
+        else:
+            log("   PAPER: NO PAPER SWITCH IN SETTINGS")
+            show("paper_no_switch", full=True)
+    else:
+        log("   PAPER: could not open the settings")
+    # the entry on the sheet: reading, then writing
+    if open_diary_topic():
+        n = find(text="Solo portada")
+        if n:
+            tap_xy(n["cx"], n["cy"])
+            sleep(4)
+            show("paper_viewer", full=True)
+            close_viewer()
+        if long_press_entry("Solo portada"):
+            show("paper_edit", full=True)
+            tap(rid="LL_diary_item_content")
+            sleep(1)
+            type_text("y otra linea mas")
+            sleep(1)
+            show("paper_edit_typing", full=True)
+            close_keyboard()
+            key(4)
+            sleep(2)
+        alive("notebook sheet")
+    # the new entry page on the sheet
+    if open_diary_topic():
+        tap(rid="But_diary_topbar_diary")
+        sleep(3)
+        show("paper_new_entry", full=True)
+
+
 def dark_test():
     """Settings -> Look -> Dark, then the main screens are photographed in dark mode."""
     restart()
@@ -1303,5 +1411,6 @@ def dark_test():
     played = [l.split("played ")[1].split(" ")[0] for l in sfx if "played " in l]
     log("   dark: sounds played in this run = %d, kinds = %s" % (len(played), sorted(set(played))))
     log("   dark: Sfx problems in logcat: %r" % [l for l in sfx if " E " in l][:5])
+step("cover-only photo and notebook sheet", cover_photo_test)
 step("dark mode", dark_test)
 log("== done")
