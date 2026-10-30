@@ -1,0 +1,173 @@
+Downloading https://services.gradle.org/distributions/gradle-8.13-bin.zip
+.................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+Unzipping /home/runner/.gradle/wrapper/dists/gradle-8.13-bin/5xuhj0ry160q40clulazy9h7d/gradle-8.13-bin.zip to /home/runner/.gradle/wrapper/dists/gradle-8.13-bin/5xuhj0ry160q40clulazy9h7d
+Set executable permissions for: /home/runner/.gradle/wrapper/dists/gradle-8.13-bin/5xuhj0ry160q40clulazy9h7d/gradle-8.13/bin/gradle
+
+Welcome to Gradle 8.13!
+
+Here are the highlights of this release:
+ - Daemon JVM auto-provisioning
+ - Enhancements for Scala plugin and JUnit testing
+ - Improvements for build authors and plugin developers
+
+For more details see https://docs.gradle.org/8.13/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateDebugBuildConfig
+> Task :gestures:preBuild UP-TO-DATE
+> Task :gestures:preDebugBuild UP-TO-DATE
+> Task :app:javaPreCompileDebug
+> Task :zoomable:preBuild UP-TO-DATE
+> Task :zoomable:preDebugBuild UP-TO-DATE
+> Task :gestures:writeDebugAarMetadata
+> Task :zoomable:writeDebugAarMetadata
+> Task :gestures:processDebugNavigationResources
+> Task :zoomable:processDebugNavigationResources
+> Task :app:checkDebugAarMetadata
+> Task :app:processDebugNavigationResources
+> Task :app:generateDebugResValues
+> Task :app:compileDebugNavigationResources
+> Task :gestures:generateDebugResValues
+> Task :gestures:generateDebugResources
+> Task :gestures:packageDebugResources
+> Task :zoomable:generateDebugResValues
+> Task :zoomable:generateDebugResources
+> Task :zoomable:packageDebugResources
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :gestures:extractDeepLinksDebug
+> Task :zoomable:extractDeepLinksDebug
+> Task :gestures:compileDebugLibraryResources
+> Task :zoomable:processDebugManifest
+> Task :gestures:processDebugManifest
+> Task :app:mergeDebugResources
+> Task :gestures:parseDebugLocalResources
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :zoomable:compileDebugLibraryResources
+> Task :gestures:javaPreCompileDebug
+> Task :gestures:generateDebugRFile
+> Task :zoomable:javaPreCompileDebug
+> Task :zoomable:parseDebugLocalResources
+> Task :gestures:compileDebugJavaWithJavac
+> Task :zoomable:generateDebugRFile
+> Task :app:mergeDebugShaders
+> Task :gestures:bundleLibCompileToJarDebug
+> Task :app:processDebugResources
+
+> Task :zoomable:compileDebugJavaWithJavac
+warning: unknown enum constant Mode.LOCAL
+  reason: class file for com.facebook.infer.annotation.Nullsafe$Mode not found
+warning: unknown enum constant Mode.STRICT
+warning: unknown enum constant Mode.LOCAL
+warning: unknown enum constant Mode.STRICT
+warning: unknown enum constant Mode.STRICT
+Note: /home/runner/work/MyDiary/MyDiary/lib_module/freso/zoomable/src/main/java/com/facebook/samples/zoomable/ZoomableDraweeView.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+5 warnings
+
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :zoomable:bundleLibCompileToJarDebug
+> Task :gestures:mergeDebugShaders
+
+> Task :app:compileDebugJavaWithJavac
+warning: unknown enum constant Mode.LOCAL
+  reason: class file for com.facebook.infer.annotation.Nullsafe$Mode not found
+warning: unknown enum constant Mode.STRICT
+warning: unknown enum constant Mode.STRICT
+warning: unknown enum constant Mode.STRICT
+warning: unknown enum constant Mode.STRICT
+warning: unknown enum constant Mode.STRICT
+warning: unknown enum constant Mode.LOCAL
+warning: unknown enum constant Mode.LOCAL
+warning: unknown enum constant Mode.LOCAL
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+9 warnings
+
+> Task :gestures:compileDebugShaders NO-SOURCE
+> Task :gestures:generateDebugAssets UP-TO-DATE
+> Task :gestures:mergeDebugAssets
+> Task :zoomable:mergeDebugShaders
+> Task :zoomable:compileDebugShaders NO-SOURCE
+> Task :zoomable:generateDebugAssets UP-TO-DATE
+> Task :zoomable:mergeDebugAssets
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets
+> Task :app:processDebugJavaRes NO-SOURCE
+> Task :gestures:processDebugJavaRes NO-SOURCE
+> Task :zoomable:processDebugJavaRes NO-SOURCE
+> Task :app:checkDebugDuplicateClasses
+> Task :app:mergeDebugJavaResource
+> Task :zoomable:bundleLibRuntimeToJarDebug
+> Task :gestures:bundleLibRuntimeToJarDebug
+> Task :app:mergeDebugJniLibFolders
+> Task :app:desugarDebugFileDependencies
+> Task :app:dexBuilderDebug
+> Task :app:mergeLibDexDebug
+> Task :gestures:mergeDebugJniLibFolders
+> Task :gestures:mergeDebugNativeLibs NO-SOURCE
+> Task :gestures:copyDebugJniLibsProjectOnly
+> Task :zoomable:mergeDebugJniLibFolders
+> Task :zoomable:mergeDebugNativeLibs NO-SOURCE
+> Task :app:validateSigningDebug
+> Task :app:writeDebugAppMetadata
+> Task :zoomable:copyDebugJniLibsProjectOnly
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:mergeProjectDexDebug
+> Task :gestures:stripDebugDebugSymbols NO-SOURCE
+> Task :gestures:checkDebugAarMetadata
+> Task :gestures:copyDebugJniLibsProjectAndLocalJars
+> Task :app:mergeDebugNativeLibs
+> Task :app:mergeExtDexDebug
+> Task :gestures:extractDebugAnnotations
+> Task :gestures:extractDeepLinksForAarDebug
+> Task :gestures:mergeDebugGeneratedProguardFiles
+> Task :gestures:mergeDebugConsumerProguardFiles
+> Task :gestures:prepareDebugArtProfile
+> Task :gestures:prepareLintJarForPublish
+> Task :gestures:mergeDebugJavaResource
+
+> Task :app:stripDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libimagepipeline.so, libnative-filters.so, libnative-imagetranscoder.so, libucrop.so. Run with --info option to learn more.
+
+> Task :zoomable:checkDebugAarMetadata
+> Task :gestures:syncDebugLibJars
+> Task :gestures:bundleDebugAar
+> Task :gestures:assembleDebug
+> Task :zoomable:stripDebugDebugSymbols NO-SOURCE
+> Task :zoomable:copyDebugJniLibsProjectAndLocalJars
+> Task :zoomable:extractDeepLinksForAarDebug
+> Task :zoomable:mergeDebugGeneratedProguardFiles
+> Task :zoomable:mergeDebugConsumerProguardFiles
+> Task :zoomable:prepareDebugArtProfile
+> Task :zoomable:prepareLintJarForPublish
+> Task :zoomable:mergeDebugJavaResource
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+> Task :zoomable:extractDebugAnnotations
+> Task :zoomable:syncDebugLibJars
+> Task :zoomable:bundleDebugAar
+> Task :zoomable:assembleDebug
+
+[Incubating] Problems report is available at: file:///home/runner/work/MyDiary/MyDiary/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1m 43s
+92 actionable tasks: 92 executed
