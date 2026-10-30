@@ -1,0 +1,125 @@
+--------- beginning of main
+10-30 00:39:25.187 E/IPCThreadState(  549): Binder transaction failure: 1852013/29201/-28
+10-30 00:39:25.187 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:25.191 E/IPCThreadState(  549): Binder transaction failure: 1852038/29201/-28
+10-30 00:39:25.191 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:25.197 E/IPCThreadState(  549): Binder transaction failure: 1852085/29201/-28
+10-30 00:39:25.197 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:25.200 E/IPCThreadState(  549): Binder transaction failure: 1852132/29201/-28
+10-30 00:39:25.200 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:25.207 E/IPCThreadState(  549): Binder transaction failure: 1852198/29201/-28
+10-30 00:39:25.207 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:26.268 E/IPCThreadState(  549): Binder transaction failure: 1852735/29201/-28
+10-30 00:39:26.268 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:26.268 E/IPCThreadState(  549): Binder transaction failure: 1852752/29201/-28
+10-30 00:39:26.268 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:26.268 E/IPCThreadState(  549): Binder transaction failure: 1852769/29201/-28
+10-30 00:39:26.268 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:27.128 E/android.hardware.audio@7.1-impl.ranchu(  362): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+10-30 00:39:27.128 E/android.hardware.audio@7.1-impl.ranchu(  362): pcmOpen:184 failure: nullptr
+10-30 00:39:27.129 E/android.hardware.audio@7.1-impl.ranchu(  362): create:239 failure: nullptr
+10-30 00:39:31.612 E/IPCThreadState(  549): Binder transaction failure: 1853570/29201/-28
+10-30 00:39:31.612 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:31.614 E/IPCThreadState(  549): Binder transaction failure: 1853591/29201/-28
+10-30 00:39:31.614 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:31.621 E/IPCThreadState(  549): Binder transaction failure: 1853671/29201/-28
+10-30 00:39:31.621 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:31.628 E/IPCThreadState(  549): Binder transaction failure: 1853765/29201/-28
+10-30 00:39:31.628 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:31.635 E/IPCThreadState(  549): Binder transaction failure: 1853796/29201/-28
+10-30 00:39:31.635 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:32.629 E/IPCThreadState(  549): Binder transaction failure: 1853922/29201/-28
+10-30 00:39:32.629 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:32.630 E/IPCThreadState(  549): Binder transaction failure: 1853939/29201/-28
+10-30 00:39:32.630 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:32.630 E/IPCThreadState(  549): Binder transaction failure: 1853956/29201/-28
+10-30 00:39:32.630 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:33.615 E/IPCThreadState(  549): Binder transaction failure: 1854240/29201/-28
+10-30 00:39:33.615 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:33.615 E/IPCThreadState(  549): Binder transaction failure: 1854257/29201/-28
+10-30 00:39:33.616 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:33.617 E/IPCThreadState(  549): Binder transaction failure: 1854324/29201/-28
+10-30 00:39:33.617 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:33.617 E/IPCThreadState(  549): Binder transaction failure: 1854360/29201/-28
+10-30 00:39:33.617 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:33.617 E/IPCThreadState(  549): Binder transaction failure: 1854377/29201/-28
+10-30 00:39:33.617 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:34.637 E/IPCThreadState(  549): Binder transaction failure: 1854610/29201/-28
+10-30 00:39:34.637 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:34.637 E/IPCThreadState(  549): Binder transaction failure: 1854627/29201/-28
+10-30 00:39:34.637 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:34.637 E/IPCThreadState(  549): Binder transaction failure: 1854647/29201/-28
+10-30 00:39:34.637 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:35.491 E/android.hardware.audio@7.1-impl.ranchu(  362): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+10-30 00:39:35.491 E/android.hardware.audio@7.1-impl.ranchu(  362): pcmOpen:184 failure: nullptr
+10-30 00:39:35.491 E/android.hardware.audio@7.1-impl.ranchu(  362): create:239 failure: nullptr
+10-30 00:39:39.974 E/IPCThreadState(  549): Binder transaction failure: 1855321/29201/-28
+10-30 00:39:39.974 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:39.981 E/IPCThreadState(  549): Binder transaction failure: 1855357/29201/-28
+10-30 00:39:39.981 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:39.987 E/IPCThreadState(  549): Binder transaction failure: 1855438/29201/-28
+10-30 00:39:39.987 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:39.996 E/IPCThreadState(  549): Binder transaction failure: 1855541/29201/-28
+10-30 00:39:39.996 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:40.003 E/IPCThreadState(  549): Binder transaction failure: 1855564/29201/-28
+10-30 00:39:40.003 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:41.027 E/IPCThreadState(  549): Binder transaction failure: 1855921/29201/-28
+10-30 00:39:41.027 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:41.027 E/IPCThreadState(  549): Binder transaction failure: 1855939/29201/-28
+10-30 00:39:41.027 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:41.027 E/IPCThreadState(  549): Binder transaction failure: 1855960/29201/-28
+10-30 00:39:41.027 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:41.953 E/IPCThreadState(  549): Binder transaction failure: 1856238/29201/-28
+10-30 00:39:41.953 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:41.953 E/IPCThreadState(  549): Binder transaction failure: 1856255/29201/-28
+10-30 00:39:41.953 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:41.953 E/IPCThreadState(  549): Binder transaction failure: 1856272/29201/-28
+10-30 00:39:41.953 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:41.954 E/IPCThreadState(  549): Binder transaction failure: 1856313/29201/-28
+10-30 00:39:41.954 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:41.954 E/IPCThreadState(  549): Binder transaction failure: 1856337/29201/-28
+10-30 00:39:41.954 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:42.997 E/IPCThreadState(  549): Binder transaction failure: 1856829/29201/-28
+10-30 00:39:42.997 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:42.998 E/IPCThreadState(  549): Binder transaction failure: 1856846/29201/-28
+10-30 00:39:42.998 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:42.998 E/IPCThreadState(  549): Binder transaction failure: 1856874/29201/-28
+10-30 00:39:42.998 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:43.853 E/android.hardware.audio@7.1-impl.ranchu(  362): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+10-30 00:39:43.853 E/android.hardware.audio@7.1-impl.ranchu(  362): pcmOpen:184 failure: nullptr
+10-30 00:39:43.853 E/android.hardware.audio@7.1-impl.ranchu(  362): create:239 failure: nullptr
+10-30 00:39:47.140 E/IPCThreadState(  549): Binder transaction failure: 1857307/29201/-28
+10-30 00:39:47.140 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:47.148 E/IPCThreadState(  549): Binder transaction failure: 1857344/29201/-28
+10-30 00:39:47.148 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:47.154 E/IPCThreadState(  549): Binder transaction failure: 1857434/29201/-28
+10-30 00:39:47.154 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:47.160 E/IPCThreadState(  549): Binder transaction failure: 1857481/29201/-28
+10-30 00:39:47.160 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:47.166 E/IPCThreadState(  549): Binder transaction failure: 1857498/29201/-28
+10-30 00:39:47.166 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:48.163 E/IPCThreadState(  549): Binder transaction failure: 1857671/29201/-28
+10-30 00:39:48.163 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:48.164 E/IPCThreadState(  549): Binder transaction failure: 1857703/29201/-28
+10-30 00:39:48.164 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:48.171 E/IPCThreadState(  549): Binder transaction failure: 1857753/29201/-28
+10-30 00:39:48.171 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:49.040 E/android.hardware.audio@7.1-impl.ranchu(  362): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+10-30 00:39:49.040 E/android.hardware.audio@7.1-impl.ranchu(  362): pcmOpen:184 failure: nullptr
+10-30 00:39:49.040 E/android.hardware.audio@7.1-impl.ranchu(  362): create:239 failure: nullptr
+10-30 00:39:53.547 E/IPCThreadState(  549): Binder transaction failure: 1858511/29201/-28
+10-30 00:39:53.547 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:53.556 E/IPCThreadState(  549): Binder transaction failure: 1858533/29201/-28
+10-30 00:39:53.556 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:53.563 E/IPCThreadState(  549): Binder transaction failure: 1858621/29201/-28
+10-30 00:39:53.563 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:53.568 E/IPCThreadState(  549): Binder transaction failure: 1858669/29201/-28
+10-30 00:39:53.568 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:53.577 E/IPCThreadState(  549): Binder transaction failure: 1858690/29201/-28
+10-30 00:39:53.577 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
+10-30 00:39:54.592 E/IPCThreadState(  549): Binder transaction failure: 1858975/29201/-28
+10-30 00:39:54.592 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:54.593 E/IPCThreadState(  549): Binder transaction failure: 1858992/29201/-28
+10-30 00:39:54.593 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 132)
+10-30 00:39:54.593 E/IPCThreadState(  549): Binder transaction failure: 1859011/29201/-28
+10-30 00:39:54.593 E/JavaBinder(  549): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 136)
