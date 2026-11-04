@@ -120,6 +120,8 @@ public class BackupManager {
         private long topic_id;
         private int topic_color;
         private int topic_order;
+        //The look of the category (null in a backup of an older version: classic)
+        private Integer topic_theme;
         private List<BUContactsEntries> contacts_topic_entries_list;
         private List<BUDiaryEntries> diary_topic_entries_list;
         private List<BUMemoEntries> memo_topic_entries_list;
@@ -154,6 +156,14 @@ public class BackupManager {
 
         public void setMemo_topic_entries_list(List<BUMemoEntries> memo_topic_entries_list) {
             this.memo_topic_entries_list = memo_topic_entries_list;
+        }
+
+        public int getTopic_theme() {
+            return topic_theme == null ? 0 : topic_theme;
+        }
+
+        public void setTopic_theme(int topic_theme) {
+            this.topic_theme = topic_theme;
         }
 
         public String getTopic_title() {

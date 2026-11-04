@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.main.topic.ITopic;
+import com.kiminonawa.mydiary.shared.CategoryTheme;
 import com.kiminonawa.mydiary.shared.FileManager;
 import com.kiminonawa.mydiary.shared.PermissionHelper;
 import com.kiminonawa.mydiary.shared.ThemeManager;
@@ -43,7 +44,7 @@ public class TopicDetailDialogFragment extends DialogFragment implements View.On
 
 
     public interface TopicCreatedCallback {
-        void TopicCreated(String topicTitle, int type, int color);
+        void TopicCreated(String topicTitle, int type, int color, int theme);
 
         void TopicUpdated(int position, String newTopicTitle, int color, int topicBgStatus, String newBgFileName);
     }
@@ -82,7 +83,7 @@ public class TopicDetailDialogFragment extends DialogFragment implements View.On
     private RelativeLayout RL_topic_detail_topic_bg;
     private ImageView IV_topic_color, IV_topic_detail_topic_bg;
     private MyDiaryButton But_topic_detail_default_bg;
-    private Spinner SP_topic_detail_type;
+    private Spinner SP_topic_detail_type, SP_topic_detail_theme;
     private MyDiaryButton But_topic_detail_ok, But_topic_detail_cancel;
 
 
@@ -142,6 +143,12 @@ public class TopicDetailDialogFragment extends DialogFragment implements View.On
         IV_topic_color = (ImageView) rootView.findViewById(R.id.IV_topic_color);
         IV_topic_color.setOnClickListener(this);
         setTextColor(topicColorCode);
+
+        //The look of the category
+        SP_topic_detail_theme = (Spinner) rootView.findViewById(R.id.SP_topic_detail_theme);
+        SP_topic_detail_theme.setAdapter(new ArrayAdapter(getActivity(), R.layout.spinner_simple_text,
+                getResources().getStringArray(R.array.category_theme_names)));
+        SP_topic_detail_theme.setSelection(isEditMode ? CategoryTheme.read(getActivity(), topicId) : 0);
 
         But_topic_detail_ok = (MyDiaryButton) rootView.findViewById(R.id.But_topic_detail_ok);
         But_topic_detail_ok.setOnClickListener(this);
@@ -293,6 +300,7 @@ public class TopicDetailDialogFragment extends DialogFragment implements View.On
                     if (EDT_topic_detail_title.getText().toString().length() > 0) {
                         callback.TopicUpdated(position, EDT_topic_detail_title.getText().toString(),
                                 topicColorCode, topicBgStatus, newTopicBgFileName);
+                        CategoryTheme.save(getActivity(), topicId, SP_topic_detail_theme.getSelectedItemPosition());
                         dismiss();
                     } else {
                         Toast.makeText(getActivity(), getString(R.string.toast_topic_empty), Toast.LENGTH_SHORT).show();
@@ -300,7 +308,8 @@ public class TopicDetailDialogFragment extends DialogFragment implements View.On
                 } else {
                     if (EDT_topic_detail_title.getText().toString().length() > 0) {
                         callback.TopicCreated(EDT_topic_detail_title.getText().toString(),
-                                SP_topic_detail_type.getSelectedItemPosition(), topicColorCode);
+                                SP_topic_detail_type.getSelectedItemPosition(), topicColorCode,
+                                SP_topic_detail_theme.getSelectedItemPosition());
                         dismiss();
                     } else {
                         Toast.makeText(getActivity(), getString(R.string.toast_topic_empty), Toast.LENGTH_SHORT).show();

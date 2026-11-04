@@ -17,6 +17,7 @@ import com.kiminonawa.mydiary.backup.obj.BUDiaryEntries;
 import com.kiminonawa.mydiary.backup.obj.BUDiaryItem;
 import com.kiminonawa.mydiary.backup.obj.BUMemoEntries;
 import com.kiminonawa.mydiary.db.DBManager;
+import com.kiminonawa.mydiary.db.DBStructure;
 import com.kiminonawa.mydiary.db.DBStructure.DiaryEntry_V2;
 import com.kiminonawa.mydiary.db.DBStructure.DiaryItemEntry_V2;
 import com.kiminonawa.mydiary.main.topic.ITopic;
@@ -287,6 +288,10 @@ public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
                 topic.setTopic_type(ITopic.TYPE_CONTACTS);
                 topic.setContacts_topic_entries_list(contactsEntriesItemList);
                 break;
+        }
+        if (topic != null) {
+            int themeColumn = topicCursor.getColumnIndex(DBStructure.TopicEntry.COLUMN_THEME);
+            topic.setTopic_theme(themeColumn >= 0 ? topicCursor.getInt(themeColumn) : 0);
         }
         return topic;
 

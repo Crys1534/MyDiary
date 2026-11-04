@@ -45,6 +45,7 @@
     <!--Topic detail-->
     <string name="topic_detail_name">Nombre del tema</string>
     <string name="topic_detail_text_color">Color del texto</string>
+    <string name="topic_detail_theme">Tema</string>
     <string name="topic_dialog_delete_title">Borrar</string>
     <string name="topic_dialog_delete_content">¿Quieres borrar %1$s ?</string>
 

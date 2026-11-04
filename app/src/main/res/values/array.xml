@@ -36,6 +36,12 @@
         <item>Saturday</item>
     </array>
 
+    <!-- The looks of a category: the same order as the numbers of CategoryTheme -->
+    <array name="category_theme_names">
+        <item>Classic</item>
+        <item>Notebook sheet</item>
+    </array>
+
     <array name="topic_type">
         <item>Contacts</item>
         <item>Diary</item>

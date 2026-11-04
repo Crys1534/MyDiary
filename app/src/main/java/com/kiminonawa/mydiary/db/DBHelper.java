@@ -24,6 +24,9 @@ import static com.kiminonawa.mydiary.db.DBStructure.TopicOrderEntry;
 public class DBHelper extends SQLiteOpenHelper {
 
     /**
+     * Version 11 (this fork)
+     * Add theme (the look of the category) in topic_entry
+     * -------------
      * Version 9 (this fork)
      * Add thumbnail (the photo chosen as the cover of the diary) in diary_entry_v2
      * -------------
@@ -55,7 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * Version 1 by Daxia：
      * First DB
      */
-    public static final int DATABASE_VERSION = 10;
+    public static final int DATABASE_VERSION = 11;
     public static final String DATABASE_NAME = "mydiary.db";
 
     private static final String TEXT_TYPE = " TEXT";
@@ -72,7 +75,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     TopicEntry.COLUMN_TYPE + INTEGER_TYPE + COMMA_SEP +
                     TopicEntry.COLUMN_ORDER + INTEGER_TYPE + COMMA_SEP +
                     TopicEntry.COLUMN_SUBTITLE + TEXT_TYPE + COMMA_SEP +
-                    TopicEntry.COLUMN_COLOR + INTEGER_TYPE +
+                    TopicEntry.COLUMN_COLOR + INTEGER_TYPE + COMMA_SEP +
+                    TopicEntry.COLUMN_THEME + INTEGER_TYPE +
                     " )";
 
     private static final String SQL_CREATE_TOPIC_ORDER =
@@ -241,6 +245,14 @@ public class DBHelper extends SQLiteOpenHelper {
                     if (!hasColumn(db, DiaryItemEntry_V2.TABLE_NAME, DiaryItemEntry_V2.COLUMN_AREA)) {
                         db.execSQL("ALTER TABLE " + DiaryItemEntry_V2.TABLE_NAME + " ADD COLUMN "
                                 + DiaryItemEntry_V2.COLUMN_AREA + TEXT_TYPE);
+                    }
+                }
+
+                //The look (theme) of every category (this fork)
+                if (oldVersion < 11) {
+                    if (!hasColumn(db, TopicEntry.TABLE_NAME, TopicEntry.COLUMN_THEME)) {
+                        db.execSQL("ALTER TABLE " + TopicEntry.TABLE_NAME + " ADD COLUMN "
+                                + TopicEntry.COLUMN_THEME + INTEGER_TYPE);
                     }
                 }
 

@@ -26,7 +26,7 @@ public final class PaperStyle {
     }
 
     public static boolean isOn(Context context) {
-        return SPFManager.isNotebookPaper(context);
+        return SPFManager.isNotebookPaper(context) || CategoryTheme.current() == CategoryTheme.NOTEBOOK;
     }
 
     /**

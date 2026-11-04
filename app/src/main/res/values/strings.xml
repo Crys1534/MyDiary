@@ -46,6 +46,7 @@
     <!--Topic detail-->
     <string name="topic_detail_name">Topic name</string>
     <string name="topic_detail_text_color">Text color</string>
+    <string name="topic_detail_theme">Theme</string>
     <string name="topic_dialog_delete_title">Delete</string>
     <string name="topic_dialog_delete_content">Do you want to delete %1$s?</string>
 

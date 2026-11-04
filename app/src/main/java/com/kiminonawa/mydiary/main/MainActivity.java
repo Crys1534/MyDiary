@@ -585,12 +585,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void TopicCreated(final String topicTitle, final int type, final int color) {
+    public void TopicCreated(final String topicTitle, final int type, final int color, final int theme) {
         //A new notebook
         Sfx.play(this, Sfx.Sound.SAVE);
         dbManager.opeDB();
         //Create newTopic into List first
-        final long newTopicId = dbManager.insertTopic(topicTitle, type, color);
+        final long newTopicId = dbManager.insertTopic(topicTitle, type, color, theme);
         //This ITopic is temp object to order
         topicList.add(0,
                 new ITopic() {

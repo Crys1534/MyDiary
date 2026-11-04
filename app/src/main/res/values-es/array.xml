@@ -36,6 +36,12 @@
         <item>Sábado</item>
     </array>
 
+    <!-- The looks of a category: the same order as the numbers of CategoryTheme -->
+    <array name="category_theme_names">
+        <item>Clásico</item>
+        <item>Hoja de libreta</item>
+    </array>
+
     <array name="topic_type">
         <item>Contactos</item>
         <item>Diario</item>

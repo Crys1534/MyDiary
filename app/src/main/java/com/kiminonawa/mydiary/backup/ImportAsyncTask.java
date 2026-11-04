@@ -177,7 +177,8 @@ public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
         long newTopicId = dbManager.insertTopic(
                 backupTopic.getTopic_title(),
                 backupTopic.getTopic_type(),
-                backupTopic.getTopic_color());
+                backupTopic.getTopic_color(),
+                backupTopic.getTopic_theme());
         //The background picture of the topic
         restoreTopicBackground(backupTopic.getTopic_type(), backupTopic.getTopic_id(), newTopicId);
 

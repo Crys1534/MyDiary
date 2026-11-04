@@ -67,10 +67,39 @@ public class DBManager {
      */
 
     public long insertTopic(String name, int type, int color) {
+        return insertTopic(name, type, color, 0);
+    }
+
+    public long insertTopic(String name, int type, int color, int theme) {
+        ContentValues values = this.createTopicCV(name, type, color);
+        values.put(TopicEntry.COLUMN_THEME, theme);
         return db.insert(
                 TopicEntry.TABLE_NAME,
                 null,
-                this.createTopicCV(name, type, color));
+                values);
+    }
+
+    /**
+     * The look chosen for the category (0 = classic).
+     */
+    public int getTopicTheme(long topicId) {
+        Cursor c = db.rawQuery("SELECT " + TopicEntry.COLUMN_THEME + " FROM " + TopicEntry.TABLE_NAME
+                + " WHERE " + TopicEntry._ID + " = ?", new String[]{String.valueOf(topicId)});
+        try {
+            return c.moveToFirst() ? c.getInt(0) : 0;
+        } finally {
+            c.close();
+        }
+    }
+
+    public long updateTopicTheme(long topicId, int theme) {
+        ContentValues values = new ContentValues();
+        values.put(TopicEntry.COLUMN_THEME, theme);
+        return db.update(
+                TopicEntry.TABLE_NAME,
+                values,
+                TopicEntry._ID + " = ?",
+                new String[]{String.valueOf(topicId)});
     }
 
     public long insertTopicOrder(long topicId, long order) {

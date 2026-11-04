@@ -92,6 +92,8 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
         if (topicId == -1) {
             finish();
         }
+        //The look chosen for this category
+        com.kiminonawa.mydiary.shared.CategoryTheme.useForTopic(this, topicId);
         /**
          * init UI
          */
@@ -387,4 +389,10 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
 
 
 
+
+    @Override
+    protected void onDestroy() {
+        com.kiminonawa.mydiary.shared.CategoryTheme.reset();
+        super.onDestroy();
+    }
 }

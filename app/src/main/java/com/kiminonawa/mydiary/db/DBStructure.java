@@ -59,6 +59,8 @@ public class DBStructure {
         public static final String COLUMN_TYPE = "topic_type";
         public static final String COLUMN_SUBTITLE = "topic_subtitle";
         public static final String COLUMN_COLOR = "topic_color";
+        //Added in db version 11 (this fork): the look chosen for the category (see CategoryTheme), 0 = classic
+        public static final String COLUMN_THEME = "topic_theme";
     }
 
 
