@@ -72,6 +72,7 @@
 
                 <ImageView
                     android:id="@+id/IV_entries_item_mood"
+                    android:visibility="gone"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_marginLeft="4dp"

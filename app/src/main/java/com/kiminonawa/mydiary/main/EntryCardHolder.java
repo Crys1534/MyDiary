@@ -49,7 +49,7 @@ public class EntryCardHolder extends RecyclerView.ViewHolder {
         ((ImageView) rootView.findViewById(R.id.IV_entries_item_thumbnail_placeholder))
                 .setColorFilter(ColorUtils.setAlphaComponent(themeColor, 40));
         weather.setColorFilter(themeColor);
-        mood.setColorFilter(themeColor);
+        mood.setVisibility(View.GONE);
         bookmark.setColorFilter(themeColor);
         attachment.setColorFilter(themeColor);
     }

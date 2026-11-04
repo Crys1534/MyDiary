@@ -25,7 +25,8 @@ public class WeatherMoodField {
         weather = (Spinner) rootView.findViewById(R.id.SP_diary_weather);
         mood = (Spinner) rootView.findViewById(R.id.SP_diary_mood);
         weather.setVisibility(View.VISIBLE);
-        mood.setVisibility(View.VISIBLE);
+        //The mood faces were taken out of the app: the list stays hidden (the saved number is always 0)
+        mood.setVisibility(View.GONE);
         weather.setAdapter(new ImageArrayAdapter(context, DiaryInfoHelper.getWeatherArray()));
         mood.setAdapter(new ImageArrayAdapter(context, DiaryInfoHelper.getMoodArray()));
         weather.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -45,11 +46,10 @@ public class WeatherMoodField {
     }
 
     public int getMood() {
-        return mood.getSelectedItemPosition();
+        return 0;
     }
 
     public void set(int moodPosition, int weatherPosition) {
-        mood.setSelection(moodPosition);
         weather.setSelection(weatherPosition);
         cover.setWeather(weatherPosition);
     }
