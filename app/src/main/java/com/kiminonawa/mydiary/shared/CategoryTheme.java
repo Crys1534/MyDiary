@@ -18,6 +18,9 @@ public final class CategoryTheme {
     //The entries are written on a sheet of a ruled notebook (even when the sheet is off in Settings)
     public static final int NOTEBOOK = 1;
 
+    //Night sky, a sleeping black cat, a candle, a crystal ball... (see EsotericView)
+    public static final int ESOTERIC = 2;
+
     //The theme of the category that is open now (set when the category is opened)
     private static int current = CLASSIC;
 

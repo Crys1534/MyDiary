@@ -45,7 +45,14 @@ public final class Sfx {
         POP(R.raw.sfx_pop),
         TAB(R.raw.sfx_tab),
         LOCK(R.raw.sfx_lock),
-        CLOSE(R.raw.sfx_close);
+        CLOSE(R.raw.sfx_close),
+        //Esoteric theme
+        ESO_PURR(R.raw.sfx_eso_purr),
+        ESO_BELL(R.raw.sfx_eso_bell),
+        ESO_SHIMMER(R.raw.sfx_eso_shimmer),
+        ESO_CANDLE_OUT(R.raw.sfx_eso_candle_out),
+        ESO_CANDLE_ON(R.raw.sfx_eso_candle_on),
+        ESO_MEOW(R.raw.sfx_eso_meow);
 
         final int rawId;
 

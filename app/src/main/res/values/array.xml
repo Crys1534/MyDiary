@@ -40,6 +40,23 @@
     <array name="category_theme_names">
         <item>Classic</item>
         <item>Notebook sheet</item>
+        <item>Esoteric</item>
+    </array>
+
+    <!-- Messages of the crystal ball (Esoteric theme) -->
+    <array name="esoteric_oracle_messages">
+        <item>The moon keeps your secrets</item>
+        <item>Write it down: the answer is near</item>
+        <item>Today the stars are on your side</item>
+        <item>Something you lost will return</item>
+        <item>Listen to the cat: rest a little</item>
+        <item>A small change opens a big door</item>
+        <item>Light a candle for what you wish</item>
+        <item>The next page is yours</item>
+        <item>What you dream tonight, write tomorrow</item>
+        <item>Trust the quiet voice inside</item>
+        <item>A kind word will find you today</item>
+        <item>Not everything must be understood</item>
     </array>
 
     <array name="topic_type">

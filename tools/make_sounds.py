@@ -317,6 +317,67 @@ def whoosh_close():
     return finish(body * 0.5 + crackle(d, 120, 2500, 8000, 0.4, [1, 0.4, 0.1]), 0.26)
 
 
+# ---------------------------------------------------------------- esoteric theme
+
+def eso_purr():
+    """A sleeping cat purrs: low, soft, rumbling at about 25 pulses per second."""
+    d = 1.6
+    n = int(d * SR)
+    t = t_axis(d)
+    rumble = lowpass(white(d), 260, 2) + 0.5 * np.sin(2 * np.pi * 52 * t)
+    pulse = 0.55 + 0.45 * np.sin(2 * np.pi * 25 * t)
+    out = rumble * pulse * smooth_env(n, 0.25, 1.2)
+    return finish(out, 0.34)
+
+
+def eso_bell():
+    """A small mystic bell (crystal ball, moon): clear, with a long tail."""
+    d = 2.0
+    out = tone(880, d, 0.7) * 0.7 + tone(880 * 2.76, d, 0.35) * 0.3 + tone(880 * 5.4, d, 0.12) * 0.12
+    out += tone(1320, d, 0.5) * 0.25
+    return finish(out, 0.3)
+
+
+def eso_shimmer():
+    """Magic dust: a quick rising arpeggio of tiny bells."""
+    out = np.zeros(int(1.4 * SR))
+    for i, f in enumerate([1319, 1568, 1976, 2349, 2637]):
+        out = at(out, (tone(f, 0.7, 0.18) * 0.6 + tone(f * 2, 0.7, 0.08) * 0.15) * (0.9 - i * 0.1), i * 0.07)
+    return finish(out, 0.28)
+
+
+def eso_candle_out():
+    """A candle is blown out: a breath and a thin hiss."""
+    d = 0.7
+    n = int(d * SR)
+    breath = bandpass(white(d), 500, 3500) * smooth_env(n, 0.04, 0.2) * 0.8
+    hiss = highpass(white(d), 4000) * smooth_env(n, 0.2, 0.45) * 0.25
+    return finish(breath + hiss, 0.3)
+
+
+def eso_candle_on():
+    """A match strikes and the flame catches."""
+    out = np.zeros(int(0.9 * SR))
+    scratch = bandpass(white(0.18), 1500, 7000) * smooth_env(int(0.18 * SR), 0.1, 0.06)
+    out = at(out, scratch * 0.7, 0.0)
+    whoomp = lowpass(white(0.35), 900) * smooth_env(int(0.35 * SR), 0.03, 0.3)
+    out = at(out, whoomp * 0.9, 0.2)
+    out = at(out, crackle(0.5, 40, 1500, 6000, 0.6, [1, 0.7, 0.2]), 0.3)
+    return finish(out, 0.3)
+
+
+def eso_cat_meow():
+    """A very small, sleepy meow."""
+    d = 0.55
+    n = int(d * SR)
+    t = t_axis(d)
+    f = 520 + 380 * np.sin(np.pi * np.clip(t / d, 0, 1)) ** 1.5
+    phase = 2 * np.pi * np.cumsum(f) / SR
+    voice = np.sin(phase) + 0.5 * np.sin(2 * phase) + 0.3 * np.sin(3 * phase)
+    voice = bandpass(voice, 400, 3200, 2) * smooth_env(n, 0.12, 0.38)
+    return finish(voice, 0.3)
+
+
 SOUNDS = {
     "sfx_page_flip": page_flip,
     "sfx_page_soft": page_turn_soft,
@@ -337,6 +398,12 @@ SOUNDS = {
     "sfx_tab": tab_tick,
     "sfx_lock": lock_click,
     "sfx_close": whoosh_close,
+    "sfx_eso_purr": eso_purr,
+    "sfx_eso_bell": eso_bell,
+    "sfx_eso_shimmer": eso_shimmer,
+    "sfx_eso_candle_out": eso_candle_out,
+    "sfx_eso_candle_on": eso_candle_on,
+    "sfx_eso_meow": eso_cat_meow,
 }
 
 

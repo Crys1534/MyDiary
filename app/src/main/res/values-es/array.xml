@@ -40,6 +40,23 @@
     <array name="category_theme_names">
         <item>Clásico</item>
         <item>Hoja de libreta</item>
+        <item>Esotérico</item>
+    </array>
+
+    <!-- Messages of the crystal ball (Esoteric theme) -->
+    <array name="esoteric_oracle_messages">
+        <item>La luna guarda tus secretos</item>
+        <item>Escríbelo: la respuesta está cerca</item>
+        <item>Hoy las estrellas están de tu lado</item>
+        <item>Algo que perdiste va a volver</item>
+        <item>Escucha al gato: descansa un poco</item>
+        <item>Un pequeño cambio abre una gran puerta</item>
+        <item>Enciende una vela por lo que deseas</item>
+        <item>La siguiente página es tuya</item>
+        <item>Lo que sueñes esta noche, escríbelo mañana</item>
+        <item>Confía en la voz tranquila de tu interior</item>
+        <item>Hoy te llegará una palabra amable</item>
+        <item>No todo tiene que entenderse</item>
     </array>
 
     <array name="topic_type">

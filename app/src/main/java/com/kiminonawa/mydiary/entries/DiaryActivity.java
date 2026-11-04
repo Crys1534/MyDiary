@@ -115,6 +115,7 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
         TV_diary_topbar_title.setText(diaryTitle);
         //After SegmentedGroup was created
         initViewPager();
+        initEsotericLayer();
 
         //Load the all entries from db.
         loadEntries();
@@ -122,6 +123,24 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
         if (savedInstanceState == null) {
             Sfx.play(this, Sfx.Sound.NOTEBOOK_OPEN);
         }
+    }
+
+    private com.kiminonawa.mydiary.shared.EsotericView esotericView;
+
+    /**
+     * Esoteric theme: the night sky, the cat, the candle and the crystal ball over the pages.
+     */
+    private void initEsotericLayer() {
+        if (com.kiminonawa.mydiary.shared.CategoryTheme.current()
+                != com.kiminonawa.mydiary.shared.CategoryTheme.ESOTERIC) {
+            return;
+        }
+        esotericView = new com.kiminonawa.mydiary.shared.EsotericView(this);
+        android.widget.RelativeLayout.LayoutParams lp = new android.widget.RelativeLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT);
+        lp.addRule(android.widget.RelativeLayout.BELOW, R.id.LL_diary_topbar_content);
+        lp.bottomMargin = getResources().getDimensionPixelSize(R.dimen.bottom_bar_height);
+        ((android.view.ViewGroup) findViewById(R.id.LL_diary_topbar_content).getParent()).addView(esotericView, lp);
     }
 
     @Override
@@ -322,6 +341,10 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
                 silentNextPage = false;
             } else {
                 Sfx.play(DiaryActivity.this, position == 2 ? Sfx.Sound.PAGE_FLIP : Sfx.Sound.TAB);
+            }
+            //The shelf (cat, candle, ball) would cover the writing tools of the Diary tab
+            if (esotericView != null) {
+                esotericView.setObjectsVisible(position != 2);
             }
             switch (position) {
                 default:
