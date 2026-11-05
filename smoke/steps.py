@@ -1642,7 +1642,7 @@ def dark_test():
         show("dark_new_entry", full=True)
         log("   dark: Sfx lines after the Diary tab = %r" % adb("logcat", "-d", "-s", "Sfx:V").strip()[:400])
     alive("dark mode")
-    sfx = adb("logcat", "-d", "-s", "Sfx:I", "Sfx:E").strip().splitlines()
+    sfx = adb("logcat", "-d", "-s", "Sfx:V").strip().splitlines()
     played = [l.split("played ")[1].split(" ")[0] for l in sfx if "played " in l]
     log("   dark: sounds played in this run = %d, kinds = %s" % (len(played), sorted(set(played))))
     log("   dark: Sfx problems in logcat: %r" % [l for l in sfx if " E " in l][:5])
@@ -1740,7 +1740,7 @@ def esoteric_test():
     sleep(3)
     show("eso_new_entry", full=True)
     # shake the phone is not possible here; the sounds that played:
-    sfx = adb("logcat", "-d", "-s", "Sfx:I", "Sfx:E").strip().splitlines()
+    sfx = adb("logcat", "-d", "-s", "Sfx:V").strip().splitlines()
     played = [l.split("played ")[1].split(" ")[0] for l in sfx if "played " in l]
     log("   eso: sounds played = %s" % sorted(set(played)))
     log("   eso: Sfx problems = %r" % [l for l in sfx if " E " in l][:5])
