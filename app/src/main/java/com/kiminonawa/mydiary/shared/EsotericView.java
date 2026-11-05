@@ -1,6 +1,5 @@
 package com.kiminonawa.mydiary.shared;
 
-import android.animation.ValueAnimator;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -47,7 +46,6 @@ public class EsotericView extends View {
     private final float[] dustX = new float[DUST], dustY = new float[DUST], dustSize = new float[DUST],
             dustSpeed = new float[DUST], dustPhase = new float[DUST];
 
-    private ValueAnimator clock;
     //Seconds since the view is shown
     private float time = 0f;
 
@@ -136,26 +134,16 @@ public class EsotericView extends View {
         invalidate();
     }
 
+    //The animation is driven by the screen itself (not by ValueAnimator, which stops when the phone has the
+    //animations turned off in the developer options or the battery saver)
+    private long lastNanos = 0;
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        clock = ValueAnimator.ofFloat(0f, 1f);
-        clock.setDuration(1000);
-        clock.setRepeatCount(ValueAnimator.INFINITE);
-        clock.setInterpolator(new LinearInterpolator());
-        final long[] last = {System.nanoTime()};
-        clock.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                long now = System.nanoTime();
-                float dt = Math.min(0.1f, (now - last[0]) / 1e9f);
-                last[0] = now;
-                step(dt);
-                invalidate();
-            }
-        });
-        clock.start();
+        lastNanos = 0;
         startAmbient();
+        postInvalidateOnAnimation();
     }
 
     @Override
@@ -172,10 +160,6 @@ public class EsotericView extends View {
     protected void onDetachedFromWindow() {
         stopAmbient();
         handler.removeCallbacksAndMessages(null);
-        if (clock != null) {
-            clock.cancel();
-            clock = null;
-        }
         super.onDetachedFromWindow();
     }
 
@@ -357,8 +341,14 @@ public class EsotericView extends View {
         if (w == 0 || h == 0) {
             return;
         }
+        long nowNanos = System.nanoTime();
+        if (lastNanos != 0) {
+            step(Math.min(0.1f, (nowNanos - lastNanos) / 1e9f));
+        }
+        lastNanos = nowNanos;
+        postInvalidateOnAnimation();
         if (skyShader == null || shaderW != w || shaderH != h) {
-            skyShader = new LinearGradient(0, 0, 0, h, 0x3A12063A, 0x3A4A1466, Shader.TileMode.CLAMP);
+            skyShader = new LinearGradient(0, 0, 0, h, 0x7A10063A, 0x7A3A1058, Shader.TileMode.CLAMP);
             shaderW = w;
             shaderH = h;
         }
@@ -460,7 +450,7 @@ public class EsotericView extends View {
         canvas.drawCircle(cx, cy, r * 2.6f, paint);
         paint.setShader(null);
         //the dark part of the moon
-        paint.setColor(0xFF2A1A4A);
+        paint.setColor(0x882A1A4A);
         canvas.drawCircle(cx, cy, r, paint);
         //the lit part: half a circle plus (or minus) half an ellipse. Waxing: lit on the right. Waning: on the left.
         boolean waning = phase > 0.5f;
