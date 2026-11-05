@@ -60,6 +60,13 @@ def dismiss_intro():
 
 
 def step(name, fn):
+    # smoke/only.txt (optional): only the steps whose name has one of the words in it are run
+    only_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "only.txt")
+    if os.path.exists(only_file):
+        words = [w.strip() for w in open(only_file).read().split(",") if w.strip()]
+        if words and not any(w in name for w in words):
+            log("== (skipped) " + name)
+            return
     log("== " + name)
     try:
         fn()
@@ -1642,4 +1649,104 @@ def dark_test():
 step("cover-only photo and notebook sheet", cover_photo_test)
 step("new features: audio from phone, drag, link, paper, full screen", features_test)
 step("dark mode", dark_test)
+def esoteric_test():
+    """The Esoteric theme: the DIARY category is set to Esoteric in the database, then photographed."""
+    import sqlite3
+    restart()
+    adb("shell", "am", "force-stop", PKG)
+    sleep(2)
+    path = pull_db("%s/eso" % OUT)
+    if not path:
+        log("   eso: could not copy the database")
+        return
+    con = sqlite3.connect(path)
+    topic = con.execute("select _id from topic_entry where topic_type = 1 order by _id limit 1").fetchone()
+    con.execute("update topic_entry set topic_theme = 2 where _id = ?", (topic[0],))
+    con.commit()
+    con.execute("pragma wal_checkpoint(truncate)")
+    con.execute("pragma journal_mode=delete")
+    con.commit()
+    con.close()
+    adb("shell", "run-as", PKG, "rm", "-f", "databases/mydiary.db-wal", "databases/mydiary.db-shm")
+    with open(path, "rb") as f:
+        subprocess.run(["adb", "shell", "run-as %s sh -c 'cat > databases/mydiary.db'" % PKG], stdin=f, capture_output=True, text=True)
+    size = adb("shell", "wm", "size").strip().split()[-1]
+    sw, sh = [int(v) for v in size.split("x")]
+    dens = int(adb("shell", "wm", "density").strip().split()[-1]) / 160.0
+    log("   eso: screen %dx%d density %.2f, theme set on topic %s" % (sw, sh, dens, topic[0]))
+    restart()
+    n = find(text="DIARY")
+    if not n:
+        show("eso_no_diary", full=True)
+        return
+    adb("logcat", "-c")
+    tap_xy(n["cx"], n["cy"])
+    sleep(1.2)
+    show("eso_open_card_back")
+    sleep(1.2)
+    show("eso_card_turning")
+    sleep(1.5)
+    show("eso_card_front")
+    sleep(3)
+    dismiss_intro()
+    show("eso_entries", full=True)
+    bar = find(rid="RL_entries_edit_bar")
+    if not bar:
+        log("   eso: no bottom bar found")
+        return
+    shelf = bar["b"][1] - 8 * dens
+    def tapdp(xdp, ydp_from_shelf):
+        tap_xy(int(xdp * dens), int(shelf - ydp_from_shelf * dens))
+    tapdp(60, 25)      # the cat
+    sleep(0.6)
+    show("eso_cat_touched")
+    sleep(2)
+    tap_xy(int(sw - 100 * dens), int(shelf - 30 * dens))   # the crystal ball
+    sleep(1.2)
+    show("eso_ball_message")
+    sleep(5)
+    tap_xy(int(sw - 36 * dens), int(shelf - 40 * dens))    # the candle: out
+    sleep(0.8)
+    show("eso_candle_out")
+    tap_xy(int(sw - 36 * dens), int(shelf - 40 * dens))    # on again
+    sleep(1)
+    tap_xy(int(28 * dens), int(60 * dens + bar["b"][1] * 0 + 0))   # (the button of the background sound)
+    sleep(0.3)
+    # the sound button is at the top-left of the area under the top bar
+    top = find(rid="LL_diary_topbar_content")
+    ty = top["b"][3] if top else int(100 * dens)
+    tap_xy(int(28 * dens), int(ty + 28 * dens))
+    sleep(1)
+    show("eso_ambient_button")
+    tap_xy(int(sw - 46 * dens), int(ty + 52 * dens))      # the moon
+    sleep(0.6)
+    show("eso_moon_touched")
+    # ripple + quill
+    adb("shell", "input", "swipe", str(sw // 2), str(sh // 2), str(sw // 2 + 80), str(sh // 2 + 60), "400")
+    show("eso_ripple")
+    # an entry: the parchment page
+    entry = find(rid="TV_entries_item_title")
+    if entry:
+        tap_xy(entry["cx"], entry["cy"])
+        sleep(3)
+        show("eso_viewer", full=True)
+        close_viewer()
+    tap(rid="But_diary_topbar_calendar")
+    sleep(1.5)
+    show("eso_calendar_mid_turn")
+    sleep(2)
+    show("eso_calendar")
+    tap(rid="But_diary_topbar_diary")
+    sleep(3)
+    show("eso_new_entry", full=True)
+    # shake the phone is not possible here; the sounds that played:
+    sfx = adb("logcat", "-d", "-s", "Sfx:I", "Sfx:E").strip().splitlines()
+    played = [l.split("played ")[1].split(" ")[0] for l in sfx if "played " in l]
+    log("   eso: sounds played = %s" % sorted(set(played)))
+    log("   eso: Sfx problems = %r" % [l for l in sfx if " E " in l][:5])
+    crash = adb("logcat", "-d", "-b", "crash").strip()
+    log("   eso: crash buffer = %r" % crash[:600])
+    alive("esoteric theme")
+
+step("esoteric theme", esoteric_test)
 log("== done")
