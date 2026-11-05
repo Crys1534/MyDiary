@@ -59,6 +59,22 @@
         <item>No todo tiene que entenderse</item>
     </array>
 
+    <array name="esoteric_tarot_names">
+        <item>La Luna</item>
+        <item>La Estrella</item>
+        <item>El Sol</item>
+        <item>El Ermitaño</item>
+        <item>El Mago</item>
+        <item>La Emperatriz</item>
+    </array>
+
+    <array name="esoteric_ambient_names">
+        <item>Silencio</item>
+        <item>Música</item>
+        <item>Lluvia y truenos</item>
+        <item>Reloj antiguo</item>
+    </array>
+
     <array name="topic_type">
         <item>Contactos</item>
         <item>Diario</item>

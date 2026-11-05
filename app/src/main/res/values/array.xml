@@ -59,6 +59,22 @@
         <item>Not everything must be understood</item>
     </array>
 
+    <array name="esoteric_tarot_names">
+        <item>The Moon</item>
+        <item>The Star</item>
+        <item>The Sun</item>
+        <item>The Hermit</item>
+        <item>The Magician</item>
+        <item>The Empress</item>
+    </array>
+
+    <array name="esoteric_ambient_names">
+        <item>Silence</item>
+        <item>Music</item>
+        <item>Rain and thunder</item>
+        <item>Old clock</item>
+    </array>
+
     <array name="topic_type">
         <item>Contacts</item>
         <item>Diary</item>

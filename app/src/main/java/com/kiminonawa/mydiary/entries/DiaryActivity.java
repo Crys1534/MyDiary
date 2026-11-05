@@ -141,6 +141,75 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
         lp.addRule(android.widget.RelativeLayout.BELOW, R.id.LL_diary_topbar_content);
         lp.bottomMargin = getResources().getDimensionPixelSize(R.dimen.bottom_bar_height);
         ((android.view.ViewGroup) findViewById(R.id.LL_diary_topbar_content).getParent()).addView(esotericView, lp);
+        //The pages turn like the pages of an old book
+        ViewPager_diary_content.setPageTransformer(false, new ViewPager.PageTransformer() {
+            @Override
+            public void transformPage(android.view.View page, float position) {
+                if (position <= -1f || position >= 1f) {
+                    page.setRotationY(0f);
+                    page.setAlpha(position <= -1f || position >= 1f ? 1f : page.getAlpha());
+                    return;
+                }
+                page.setPivotX(position < 0 ? page.getWidth() : 0f);
+                page.setPivotY(page.getHeight() / 2f);
+                page.setRotationY(-position * 28f);
+                page.setAlpha(1f - Math.abs(position) * 0.5f);
+            }
+        });
+    }
+
+    // ---- shake the phone (Esoteric theme): stars fall
+    private android.hardware.SensorManager sensorManager;
+    private long lastShake = 0;
+    private final android.hardware.SensorEventListener shakeListener = new android.hardware.SensorEventListener() {
+        @Override
+        public void onSensorChanged(android.hardware.SensorEvent event) {
+            float g = (float) Math.sqrt(event.values[0] * event.values[0] + event.values[1] * event.values[1]
+                    + event.values[2] * event.values[2]) / android.hardware.SensorManager.GRAVITY_EARTH;
+            long now = android.os.SystemClock.elapsedRealtime();
+            if (g > 2.6f && now - lastShake > 2500 && esotericView != null) {
+                lastShake = now;
+                esotericView.shake();
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(android.hardware.Sensor sensor, int accuracy) {
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (esotericView != null) {
+            try {
+                sensorManager = (android.hardware.SensorManager) getSystemService(SENSOR_SERVICE);
+                android.hardware.Sensor accel = sensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_ACCELEROMETER);
+                if (accel != null) {
+                    sensorManager.registerListener(shakeListener, accel, android.hardware.SensorManager.SENSOR_DELAY_UI);
+                }
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(shakeListener);
+        }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(android.view.MotionEvent ev) {
+        if (esotericView != null) {
+            int a = ev.getActionMasked();
+            if (a == android.view.MotionEvent.ACTION_DOWN || a == android.view.MotionEvent.ACTION_MOVE) {
+                esotericView.touched(ev.getRawX(), ev.getRawY(), a == android.view.MotionEvent.ACTION_DOWN);
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override

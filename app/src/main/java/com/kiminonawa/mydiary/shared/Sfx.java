@@ -52,7 +52,15 @@ public final class Sfx {
         ESO_SHIMMER(R.raw.sfx_eso_shimmer),
         ESO_CANDLE_OUT(R.raw.sfx_eso_candle_out),
         ESO_CANDLE_ON(R.raw.sfx_eso_candle_on),
-        ESO_MEOW(R.raw.sfx_eso_meow);
+        ESO_MEOW(R.raw.sfx_eso_meow),
+        ESO_PARCHMENT(R.raw.sfx_eso_parchment),
+        ESO_BOWL(R.raw.sfx_eso_bowl),
+        ESO_RAVEN(R.raw.sfx_eso_raven),
+        ESO_CHIMES(R.raw.sfx_eso_chimes),
+        ESO_WHISPER(R.raw.sfx_eso_whisper),
+        ESO_QUILL(R.raw.sfx_eso_quill),
+        ESO_THUNDER(R.raw.sfx_eso_thunder),
+        ESO_HEARTBEAT(R.raw.sfx_eso_heartbeat);
 
         final int rawId;
 
@@ -108,12 +116,44 @@ public final class Sfx {
         }
     }
 
+    private static Sound esotericVersion(Sound sound) {
+        switch (sound) {
+            case PAGE_FLIP:
+            case PAGE_SOFT:
+            case RUSTLE:
+                return Sound.ESO_PARCHMENT;
+            case NOTEBOOK_OPEN:
+                return Sound.ESO_BOWL;
+            case NOTEBOOK_CLOSE:
+                return Sound.ESO_CANDLE_OUT;
+            case PEN_CLICK:
+            case PEN_TICK:
+            case PEN_WRITE:
+            case PENCIL_TAP:
+                return Sound.ESO_QUILL;
+            case SAVE:
+                return Sound.ESO_BELL;
+            case CRUMPLE:
+                return Sound.ESO_HEARTBEAT;
+            case CHECK:
+            case STAR:
+                return Sound.ESO_SHIMMER;
+            default:
+                return sound;
+        }
+    }
+
     /**
      * Plays a sound, when sounds are on in Settings.
      */
     public static void play(Context context, Sound sound) {
         if (context == null || sound == null) {
             return;
+        }
+        //Esoteric theme: the sounds of the diary become the sounds of the grimoire (and the sky reacts)
+        if (CategoryTheme.current() == CategoryTheme.ESOTERIC) {
+            EsotericView.onSound(sound);
+            sound = esotericVersion(sound);
         }
         try {
             if (pool == null) {

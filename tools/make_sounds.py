@@ -378,6 +378,144 @@ def eso_cat_meow():
     return finish(voice, 0.3)
 
 
+def _loop_fade(x, fade_s=1.5):
+    """Makes a long sound loop without a click: the end is mixed into the beginning."""
+    f = int(fade_s * SR)
+    head = x[:f] * np.linspace(0, 1, f) + x[-f:] * np.linspace(1, 0, f)
+    return np.concatenate([head, x[f:-f]])
+
+
+def eso_parchment():
+    """Old parchment turning: slow, dry, a little crackly."""
+    d = 0.75
+    n = int(d * SR)
+    body = bandpass(white(d), 500, 3500) * smooth_env(n, 0.18, 0.5) * 0.35
+    body += crackle(d, 160, 1500, 7000, 0.9, [0.3, 1, 0.7, 0.2])
+    body += lowpass(white(d), 300) * smooth_env(n, 0.3, 0.4) * 0.15
+    return finish(body, 0.34)
+
+
+def eso_bowl():
+    """A singing bowl: a soft strike and a long warm ring."""
+    d = 3.2
+    t = t_axis(d)
+    out = np.zeros(int(d * SR))
+    for f, a, tau in [(294, 1.0, 1.4), (294 * 2.71, 0.45, 0.8), (294 * 5.1, 0.15, 0.4), (297, 0.7, 1.3)]:
+        out += a * np.sin(2 * np.pi * f * t) * np.exp(-t / tau)
+    out *= (1 + 0.08 * np.sin(2 * np.pi * 3.1 * t))
+    return finish(out, 0.32)
+
+
+def eso_raven():
+    """A raven calling, far away and very quiet: a rough 'kraa'."""
+    out = np.zeros(int(1.0 * SR))
+    for start, dur, f0 in [(0.0, 0.28, 520), (0.4, 0.22, 470)]:
+        n = int(dur * SR)
+        t = t_axis(dur)
+        f = f0 * (1 - 0.35 * t / dur)
+        phase = 2 * np.pi * np.cumsum(f) / SR
+        rough = np.sign(np.sin(phase * 1.0)) * 0.4 + np.sin(phase) * 0.6
+        rough *= 0.7 + 0.3 * np.sin(2 * np.pi * 70 * t)
+        voice = bandpass(rough + 0.15 * white(dur), 350, 2600, 2) * smooth_env(n, 0.03, dur * 0.8)
+        out = at(out, voice, start)
+    return finish(lowpass(out, 3500), 0.22)
+
+
+def eso_chimes():
+    """Wind chimes: a few bright metal notes at random times."""
+    out = np.zeros(int(3.0 * SR))
+    notes = [1568, 1760, 2093, 2349, 2637, 1397]
+    times = [0.0, 0.22, 0.5, 0.95, 1.2, 1.9]
+    for i, (f, st) in enumerate(zip(notes, times)):
+        amp = 0.5 + 0.4 * rng.random()
+        out = at(out, (tone(f, 1.6, 0.45) + 0.3 * tone(f * 2.76, 1.6, 0.2)) * amp, st)
+    return finish(out, 0.26)
+
+
+def eso_whisper():
+    """Far away whispers: breath-shaped noise that swells twice."""
+    d = 2.2
+    n = int(d * SR)
+    t = t_axis(d)
+    breath = bandpass(white(d), 1800, 6500, 2)
+    voice = (0.5 + 0.5 * np.sin(2 * np.pi * 5 * t + 1.0)) ** 2 + 0.3
+    swell = smooth_env(n, 0.8, 1.2) * (0.6 + 0.4 * np.sin(2 * np.pi * 0.9 * t))
+    return finish(breath * voice * swell, 0.2)
+
+
+def eso_quill():
+    """A quill scratching the paper: short dry scratches."""
+    d = 0.32
+    n = int(d * SR)
+    s = bandpass(white(d), 2500, 8500, 2) * smooth_env(n, 0.05, 0.2)
+    s *= np.clip(lowpass(white(d), 40) * 6 + 0.9, 0.2, 1.5)
+    return finish(s, 0.26)
+
+
+def eso_thunder():
+    """Thunder far away: a long, low rumble."""
+    d = 3.6
+    n = int(d * SR)
+    t = t_axis(d)
+    rumble = lowpass(white(d), 140, 3) * 6
+    rumble *= smooth_env(n, 0.5, 3.0) * (0.7 + 0.3 * np.sin(2 * np.pi * 1.7 * t))
+    crack = bandpass(white(0.3), 600, 3000) * np.exp(-t_axis(0.3) / 0.08) * 0.5
+    return finish(at(rumble, crack, 0.0), 0.4)
+
+
+def eso_heartbeat():
+    """A slow heartbeat: lub-dub."""
+    out = np.zeros(int(1.1 * SR))
+    out = at(out, thump(75, 45, 0.18, 0.05, 0.05, 150), 0.0)
+    out = at(out, thump(65, 40, 0.16, 0.045, 0.05, 150) * 0.7, 0.24)
+    return finish(out, 0.4)
+
+
+def eso_ambient_music():
+    """Calm music for the background: a warm pad and slow harp-like notes, 36 s that loop."""
+    d = 36.0
+    n = int(d * SR)
+    t = t_axis(d)
+    pad = np.zeros(n)
+    chords = [(220.0, 261.63, 329.63), (196.0, 246.94, 293.66), (174.61, 220.0, 261.63), (196.0, 246.94, 329.63)]
+    seg = n // len(chords)
+    for i, ch in enumerate(chords):
+        tt = t[:seg]
+        env = np.sin(np.linspace(0, np.pi, seg)) ** 1.5
+        part = sum(np.sin(2 * np.pi * f * tt) + 0.3 * np.sin(2 * np.pi * f * 2.003 * tt) for f in ch) * env
+        pad[i * seg:(i + 1) * seg] += part * 0.12
+    out = pad
+    scale = [440.0, 523.25, 587.33, 659.25, 783.99, 880.0]
+    for k in range(34):
+        f = scale[int(rng.integers(0, len(scale)))] * (0.5 if k % 5 == 0 else 1)
+        out = at(out, (tone(f, 2.4, 0.7) + 0.25 * tone(f * 2, 2.4, 0.3)) * 0.22, k * 1.05 + rng.random() * 0.25)
+    out = out[:n]
+    return _loop_fade(finish(out, 0.3))
+
+
+def eso_ambient_rain():
+    """Soft rain with a few far thunders, 30 s that loop."""
+    d = 30.0
+    n = int(d * SR)
+    rain = bandpass(white(d), 1500, 9000, 2) * 0.35 + lowpass(white(d), 600) * 0.25
+    rain *= 0.8 + 0.2 * lowpass(white(d), 0.7) * 3
+    for st in (7.0, 19.0):
+        th = lowpass(white(3.4), 130, 3) * 6 * smooth_env(int(3.4 * SR), 0.4, 3.0)
+        rain = at(rain, th * 0.5, st)
+    return _loop_fade(finish(rain[:n], 0.3))
+
+
+def eso_ambient_clock():
+    """An old clock ticking softly, 8 s that loop (60 ticks per minute is one per second)."""
+    d = 8.0
+    out = np.zeros(int(d * SR))
+    for k in range(int(d)):
+        tk = bandpass(white(0.03), 800, 4500) * np.exp(-t_axis(0.03) / 0.006)
+        out = at(out, tk + thump(300, 180, 0.03, 0.01, 0.0, 800) * 0.4, k * 1.0)
+        out = at(out, (bandpass(white(0.025), 700, 3800) * np.exp(-t_axis(0.025) / 0.005)) * 0.6, k * 1.0 + 0.5)
+    return finish(out[:int(d * SR)], 0.25)
+
+
 SOUNDS = {
     "sfx_page_flip": page_flip,
     "sfx_page_soft": page_turn_soft,
@@ -404,6 +542,17 @@ SOUNDS = {
     "sfx_eso_candle_out": eso_candle_out,
     "sfx_eso_candle_on": eso_candle_on,
     "sfx_eso_meow": eso_cat_meow,
+    "sfx_eso_parchment": eso_parchment,
+    "sfx_eso_bowl": eso_bowl,
+    "sfx_eso_raven": eso_raven,
+    "sfx_eso_chimes": eso_chimes,
+    "sfx_eso_whisper": eso_whisper,
+    "sfx_eso_quill": eso_quill,
+    "sfx_eso_thunder": eso_thunder,
+    "sfx_eso_heartbeat": eso_heartbeat,
+    "eso_amb_music": eso_ambient_music,
+    "eso_amb_rain": eso_ambient_rain,
+    "eso_amb_clock": eso_ambient_clock,
 }
 
 
