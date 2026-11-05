@@ -1,0 +1,283 @@
+== launch
+-- 01_launch
+   [TV_release_note_title] text='Release note' desc='' TextView click=False @540,900
+   [TV_release_note_text] text='**0.3.0.170424_1_A\n -Fix bug\n -Support simple photo function' desc='' TextView click=False @540,1150
+   [CTV_release_note_knew] text="Don't show again" desc='' CheckedTextView click=True @540,1419
+   [But_release_note_ok] text='Ok' desc='' Button click=True @539,1537
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+-- 02_main
+   [TV_main_profile_username] text='Taki' desc='' TextView click=False @259,201
+   [TV_topic_title] text='緊急時以外かけちゃダメ！' desc='' TextView click=False @556,381
+   [TV_topic_count] text='1' desc='' TextView click=False @980,380
+   [TV_topic_title] text='DIARY' desc='' TextView click=False @556,539
+   [TV_topic_count] text='1' desc='' TextView click=False @980,538
+   [TV_topic_title] text='禁止事項 Ver.5' desc='' TextView click=False @556,697
+   [TV_topic_count] text='6' desc='' TextView click=False @980,696
+   [TV_topic_title] text='ゼッタイ禁止' desc='' TextView click=False @556,855
+   [TV_topic_count] text='5' desc='' TextView click=False @980,854
+== (skipped) search
+== (skipped) drag topics
+== relaunch
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+== (skipped) write an entry
+== (skipped) open the entries
+== (skipped) seed and scroll
+== (skipped) today
+== (skipped) calendar month
+== (skipped) cover and crop
+== (skipped) move and copy
+== (skipped) global search
+== (skipped) hide today card
+== (skipped) settings
+== (skipped) backup
+== (skipped) backup content
+== (skipped) camera
+== (skipped) cover-only photo and notebook sheet
+== (skipped) new features: audio from phone, drag, link, paper, full screen
+== (skipped) dark mode
+== esoteric theme
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+   eso: screen 1080x2400 density 2.62, theme set on topic 3
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+-- 03_eso_open_card_back
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,335
+   [TV_entries_item_time] text='October 5' desc='' TextView click=False @353,469
+   [TV_entries_item_title] text='東京生活3❤' desc='' TextView click=False @545,531
+   [TV_entries_year] text='2016' desc='' TextView click=False @540,328
+   [TV_entries_tag] text='#' desc='' TextView click=True @661,2284
+   [TV_entries_count] text='1 Entry' desc='' TextView click=False @981,2284
+-- 04_eso_card_turning
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,335
+   [TV_entries_item_time] text='October 5' desc='' TextView click=False @353,469
+   [TV_entries_item_title] text='東京生活3❤' desc='' TextView click=False @545,531
+   [TV_entries_year] text='2016' desc='' TextView click=False @540,328
+   [TV_entries_tag] text='#' desc='' TextView click=True @661,2284
+   [TV_entries_count] text='1 Entry' desc='' TextView click=False @981,2284
+-- 05_eso_card_front
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,335
+   [TV_entries_item_time] text='October 5' desc='' TextView click=False @353,469
+   [TV_entries_item_title] text='東京生活3❤' desc='' TextView click=False @545,531
+   [TV_entries_year] text='2016' desc='' TextView click=False @540,328
+   [TV_entries_tag] text='#' desc='' TextView click=True @661,2284
+   [TV_entries_count] text='1 Entry' desc='' TextView click=False @981,2284
+NOT FOUND: None android:id/button1 None
+-- 06_eso_entries
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [RL_entries_content] text='' desc='' RelativeLayout click=False @540,1306
+   [FastScroller_entries] text='' desc='' View click=False @540,1254
+   [RecyclerView_entries] text='' desc='' RecyclerView click=False @540,1254
+   [] text='' desc='' LinearLayout click=True @540,452
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,335
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,505
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,503
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,503
+   [] text='' desc='' LinearLayout click=False @545,503
+   [TV_entries_item_time] text='October 5' desc='' TextView click=False @353,469
+   [TV_entries_item_title] text='東京生活3❤' desc='' TextView click=False @545,531
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,503
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,444
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,444
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,444
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,553
+   [TV_entries_year] text='2016' desc='' TextView click=False @540,328
+   [entries_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [RL_entries_edit_bar] text='' desc='' RelativeLayout click=False @540,2284
+   [IV_entries_menu] text='' desc='' ImageView click=False @57,2284
+   [IV_entries_edit] text='' desc='' ImageView click=True @186,2284
+   [IV_entries_photo] text='' desc='' ImageView click=True @315,2284
+   [TV_entries_tag] text='#' desc='' TextView click=True @661,2284
+   [TV_entries_count] text='1 Entry' desc='' TextView click=False @981,2284
+   [] text='' desc='' View click=False @540,1254
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+-- 07_eso_cat_touched
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,335
+   [TV_entries_item_time] text='October 5' desc='' TextView click=False @353,469
+   [TV_entries_item_title] text='東京生活3❤' desc='' TextView click=False @545,531
+   [TV_entries_year] text='2016' desc='' TextView click=False @540,328
+   [TV_entries_tag] text='#' desc='' TextView click=True @661,2284
+   [TV_entries_count] text='1 Entry' desc='' TextView click=False @981,2284
+-- 08_eso_ball_message
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,335
+   [TV_entries_item_time] text='October 5' desc='' TextView click=False @353,469
+   [TV_entries_item_title] text='東京生活3❤' desc='' TextView click=False @545,531
+   [TV_entries_year] text='2016' desc='' TextView click=False @540,328
+   [TV_entries_tag] text='#' desc='' TextView click=True @661,2284
+   [TV_entries_count] text='1 Entry' desc='' TextView click=False @981,2284
+-- 09_eso_candle_out
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,335
+   [TV_entries_item_time] text='October 5' desc='' TextView click=False @353,469
+   [TV_entries_item_title] text='東京生活3❤' desc='' TextView click=False @545,531
+   [TV_entries_year] text='2016' desc='' TextView click=False @540,328
+   [TV_entries_tag] text='#' desc='' TextView click=True @661,2284
+   [TV_entries_count] text='1 Entry' desc='' TextView click=False @981,2284
+-- 10_eso_ambient_button
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,335
+   [TV_entries_item_time] text='October 5' desc='' TextView click=False @353,469
+   [TV_entries_item_title] text='東京生活3❤' desc='' TextView click=False @545,531
+   [TV_entries_year] text='2016' desc='' TextView click=False @540,328
+   [TV_entries_tag] text='#' desc='' TextView click=True @661,2284
+   [TV_entries_count] text='1 Entry' desc='' TextView click=False @981,2284
+-- 11_eso_moon_touched
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,335
+   [TV_entries_item_time] text='October 5' desc='' TextView click=False @353,469
+   [TV_entries_item_title] text='東京生活3❤' desc='' TextView click=False @545,531
+   [TV_entries_year] text='2016' desc='' TextView click=False @540,328
+   [TV_entries_tag] text='#' desc='' TextView click=True @661,2284
+   [TV_entries_count] text='1 Entry' desc='' TextView click=False @981,2284
+-- 12_eso_ripple
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,335
+   [TV_entries_item_time] text='October 5' desc='' TextView click=False @353,469
+   [TV_entries_item_title] text='東京生活3❤' desc='' TextView click=False @545,531
+   [TV_entries_year] text='2016' desc='' TextView click=False @540,328
+   [TV_entries_tag] text='#' desc='' TextView click=True @661,2284
+   [TV_entries_count] text='1 Entry' desc='' TextView click=False @981,2284
+-- 13_eso_viewer
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' RelativeLayout click=False @540,1232
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1180
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1180
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,848
+   [] text='' desc='' LinearLayout click=False @540,183
+   [IV_diary_weather] text='' desc='' ImageView click=False @47,191
+   [] text='' desc='' View click=False @431,191
+   [IV_diary_location_name_icon] text='' desc='' ImageView click=False @816,191
+   [TV_diary_location] text='Tokyo' desc='' TextView click=False @893,191
+   [IV_diary_close_dialog] text='' desc='' ImageView click=True @1006,191
+   [LL_diary_time_information] text='' desc='' LinearLayout click=False @540,847
+   [TV_diary_date] text='October 5' desc='' TextView click=False @540,783
+   [TV_diary_cover_title] text='東京生活3❤' desc='' TextView click=False @539,885
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,1502
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,1502
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1900
+   [] text='' desc='' RelativeLayout click=False @548,1900
+   [LL_diary_item_content] text='' desc='' LinearLayout click=False @548,1900
+   [] text='There are many coffee shops in Tokyo!' desc='' EditText click=False @548,1617
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_move] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_delete] text='' desc='' ImageView click=True @900,2284
+-- 14_eso_calendar_mid_turn
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+-- 15_eso_calendar
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+-- 16_eso_new_entry
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,996
+   [] text='' desc='' LinearLayout click=False @540,320
+   [IV_diary_weather] text='' desc='' ImageView click=False @47,328
+   [TV_diary_weather] text='sunny' desc='' TextView click=False @124,328
+   [] text='' desc='' View click=False @494,327
+   [IV_diary_location_name_icon] text='' desc='' ImageView click=False @840,328
+   [TV_diary_location] text='No Location' desc='' TextView click=True @963,328
+   [LL_diary_time_information] text='' desc='' LinearLayout click=True @540,996
+   [TV_diary_date] text='November 5' desc='' TextView click=False @540,996
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,1650
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,1650
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,1650
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1974
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @548,1788
+   [EDT_diary_title] text='Diary title' desc='' EditText click=True @397,1788
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @821,1787
+   [SP_diary_weather] text='' desc='' Spinner click=True @821,1787
+   [IV_spinner] text='' desc='' ImageView click=False @821,1787
+   [] text='' desc='' RelativeLayout click=False @548,2033
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @548,2033
+   [TV_diary_item_content_hint] text='Write your diary here' desc='' TextView click=False @548,2033
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @67,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @202,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @337,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @472,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @607,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @742,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @877,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1012,2284
+   [] text='' desc='' View click=False @540,1254
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   eso: sounds played = []
+   eso: Sfx problems = []
+   eso: crash buffer = ''
+   APP ALIVE (pid 7260) after 'esoteric theme'
+== done
