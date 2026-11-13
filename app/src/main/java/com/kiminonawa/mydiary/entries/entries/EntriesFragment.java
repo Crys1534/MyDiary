@@ -80,6 +80,7 @@ public class EntriesFragment extends BaseDiaryFragment implements
         TV_entries_edit_msg.setTextColor(ThemeManager.getInstance().getThemeMainColor(getActivity()));
 
         RecyclerView_entries = (RecyclerView) rootView.findViewById(R.id.RecyclerView_entries);
+        com.kiminonawa.mydiary.shared.EsotericStyle.styleList(RecyclerView_entries);
         TV_entries_count = (TextView) rootView.findViewById(R.id.TV_entries_count);
         RL_entries_edit_bar = (RelativeLayout) rootView.findViewById(R.id.RL_entries_edit_bar);
         RL_entries_edit_bar.setBackgroundColor(ThemeManager.getInstance().getThemeMainColor(getActivity()));

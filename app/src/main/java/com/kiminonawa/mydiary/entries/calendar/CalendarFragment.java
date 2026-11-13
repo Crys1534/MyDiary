@@ -112,6 +112,7 @@ public class CalendarFragment extends BaseDiaryFragment implements View.OnClickL
         FAB_calendar_change_mode.getDrawable()
                 .setColorFilter(themeManager.getThemeMainColor(getActivity()), PorterDuff.Mode.SRC_ATOP);
         FAB_calendar_change_mode.setOnClickListener(this);
+        com.kiminonawa.mydiary.shared.EsotericStyle.styleFab(FAB_calendar_change_mode);
         return rootView;
     }
 
@@ -270,7 +271,7 @@ public class CalendarFragment extends BaseDiaryFragment implements View.OnClickL
                         .setFirstDayOfWeek(Calendar.MONDAY)
                         .setCalendarDisplayMode(CalendarMode.MONTHS)
                         .commit();
-                if (ColorTools.isNight(getActivity())) {
+                if (ColorTools.isNight(getActivity()) || com.kiminonawa.mydiary.shared.EsotericStyle.isOn()) {
                     //The library draws dark numbers and arrows unless it is told otherwise
                     materialCalendarView.setDateTextAppearance(R.style.CalendarDateTextNight);
                     materialCalendarView.setArrowColor(ContextCompat.getColor(getActivity(), R.color.app_icon));

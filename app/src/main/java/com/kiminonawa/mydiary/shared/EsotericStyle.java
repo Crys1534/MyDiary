@@ -400,9 +400,9 @@ public final class EsotericStyle {
                 float step = (14 + rnd.nextFloat() * 34) * d;
                 float nx = Math.max(0, x - step);
                 boolean drop = rnd.nextInt(3) == 0;
-                float len = drop ? (16 + rnd.nextFloat() * 36) * d : (3 + rnd.nextFloat() * 7) * d;
+                float len = drop ? (10 + rnd.nextFloat() * 18) * d : (2 + rnd.nextFloat() * 5) * d;
                 float mid = (x + nx) / 2f;
-                float half = Math.max(2.5f * d, Math.min(step / 2f, (drop ? 3.2f : 6f) * d));
+                float half = Math.max(2f * d, Math.min(step / 2f, (drop ? 2.6f : 5f) * d));
                 path.lineTo(mid + half * 1.6f, band);
                 path.cubicTo(mid + half, band + len * 0.5f, mid + half, band + len, mid, band + len);
                 path.cubicTo(mid - half, band + len, mid - half, band + len * 0.5f, mid - half * 1.6f, band);
@@ -420,6 +420,85 @@ public final class EsotericStyle {
                 build(getWidth());
             }
             canvas.drawPath(path, paint);
+        }
+    }
+
+    /**
+     * A round red seal, as big as fits in the button (it stays round whatever the size of the button).
+     */
+    public static class SealDrawable extends Drawable {
+        private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final float density;
+
+        public SealDrawable(Context c) {
+            density = c.getResources().getDisplayMetrics().density;
+        }
+
+        @Override
+        public void draw(Canvas canvas) {
+            Rect b = getBounds();
+            float r = Math.min(b.width(), b.height()) / 2f - 5 * density;
+            if (r <= 0) return;
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(0x55FF1E32);
+            canvas.drawCircle(b.exactCenterX(), b.exactCenterY(), r + 3 * density, paint);
+            paint.setColor(BLOOD);
+            canvas.drawCircle(b.exactCenterX(), b.exactCenterY(), r, paint);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(density);
+            paint.setColor(RED_GLOW);
+            canvas.drawCircle(b.exactCenterX(), b.exactCenterY(), r, paint);
+        }
+
+        @Override
+        public void setAlpha(int alpha) {
+        }
+
+        @Override
+        public void setColorFilter(ColorFilter cf) {
+        }
+
+        @Override
+        public int getOpacity() {
+            return PixelFormat.TRANSLUCENT;
+        }
+    }
+
+    /**
+     * The calendar of one day: a black page, the month in red Cinzel, the day in white with a red glow.
+     */
+    public static int styleCalendarPaints(Context c, Paint month, Paint date, Paint day) {
+        month.setTypeface(cinzel(c));
+        month.setColor(RED_TEXT);
+        date.setTypeface(cormorantBold(c));
+        date.setColor(INK);
+        date.setShadowLayer(dp(c, 14), 0, 0, 0xCCFF1E32);
+        day.setTypeface(cinzel(c));
+        day.setColor(BONE);
+        if (Build.VERSION.SDK_INT >= 21) {
+            month.setLetterSpacing(0.3f);
+            day.setLetterSpacing(0.25f);
+        }
+        return 0xFF0B0809;
+    }
+
+    public static void styleFab(View fab) {
+        if (!isOn() || fab == null) return;
+        ViewCompat.setBackgroundTintList(fab, ColorStateList.valueOf(BLOOD));
+        if (fab instanceof ImageView) {
+            ((ImageView) fab).setColorFilter(INK);
+        }
+    }
+
+    /**
+     * The list of entries starts under the blood.
+     */
+    public static void styleList(View list) {
+        if (!isOn() || list == null) return;
+        list.setPadding(list.getPaddingLeft(), list.getPaddingTop() + Math.round(dp(list.getContext(), 24)),
+                list.getPaddingRight(), list.getPaddingBottom());
+        if (list instanceof ViewGroup) {
+            ((ViewGroup) list).setClipToPadding(false);
         }
     }
 
@@ -458,8 +537,15 @@ public final class EsotericStyle {
                 b.setLetterSpacing(0.12f);
             }
         }
-        gothic(title, 30, INK);
-        title.setIncludeFontPadding(false);
+        gothic(title, 27, INK);
+        int glow = Math.round(dp(c, 10));
+        title.setPadding(glow, 0, glow, Math.round(dp(c, 4)));
+        //a bit more room in the bar for the gothic name
+        ViewGroup.LayoutParams barLp = topBar.getLayoutParams();
+        if (barLp != null && barLp.height > 0) {
+            barLp.height += Math.round(dp(c, 16));
+            topBar.setLayoutParams(barLp);
+        }
         pager.setBackground(new NightDrawable(c, true));
         if (shadow != null) {
             shadow.setVisibility(View.GONE);
@@ -469,7 +555,7 @@ public final class EsotericStyle {
         if (parent instanceof RelativeLayout) {
             BloodDripView drip = new BloodDripView(c);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, Math.round(dp(c, 60)));
+                    ViewGroup.LayoutParams.MATCH_PARENT, Math.round(dp(c, 34)));
             lp.addRule(RelativeLayout.BELOW, topBar.getId());
             parent.addView(drip, lp);
         }
@@ -563,7 +649,12 @@ public final class EsotericStyle {
             content.setPadding(side, content.getPaddingTop(), side, content.getPaddingBottom());
         }
         View info = root.findViewById(R.id.RL_diary_info);
-        if (info != null) info.setBackground(new CoverDrawable(c));
+        if (info != null) {
+            info.setBackground(new CoverDrawable(c));
+            //room for the blood that drips from the bar
+            info.setPadding(info.getPaddingLeft(), info.getPaddingTop() + Math.round(dp(c, 22)),
+                    info.getPaddingRight(), info.getPaddingBottom());
+        }
 
         TextView month = (TextView) root.findViewById(R.id.TV_diary_month);
         if (month != null) {
@@ -575,13 +666,20 @@ public final class EsotericStyle {
             date.setTypeface(cormorantBold(c));
             date.setTextSize(TypedValue.COMPLEX_UNIT_SP, 76);
             date.setTextColor(INK);
-            date.setShadowLayer(dp(c, 16), 0, 0, 0xCCFF1E32);
+            date.setShadowLayer(dp(c, 12), 0, 0, 0xCCFF1E32);
+            int glowPad = Math.round(dp(c, 18));
+            date.setPadding(glowPad, glowPad / 2, glowPad, 0);
         }
         View dayAndTime = root.findViewById(R.id.LL_diary_day_and_time);
         if (dayAndTime != null) dayAndTime.setVisibility(View.VISIBLE);
         label((TextView) root.findViewById(R.id.TV_diary_day), 12, BONE, 0.25f);
         label((TextView) root.findViewById(R.id.TV_diary_time), 12, BONE, 0.25f);
-        gothic((TextView) root.findViewById(R.id.TV_diary_cover_title), 28, INK);
+        TextView coverTitle = (TextView) root.findViewById(R.id.TV_diary_cover_title);
+        gothic(coverTitle, 28, INK);
+        if (coverTitle != null) {
+            int glowPad = Math.round(dp(c, 12));
+            coverTitle.setPadding(glowPad, glowPad / 2, glowPad, glowPad / 2);
+        }
 
         for (int id : new int[]{R.id.TV_diary_weather, R.id.TV_diary_location}) {
             TextView tv = (TextView) root.findViewById(id);
@@ -612,6 +710,9 @@ public final class EsotericStyle {
             titleEdit.setTextColor(INK);
             titleEdit.setHintTextColor(HINT);
             ViewCompat.setBackgroundTintList(titleEdit, ColorStateList.valueOf(BLOOD));
+            if (titleEdit.getBackground() != null) {
+                titleEdit.getBackground().mutate().setColorFilter(BLOOD, android.graphics.PorterDuff.Mode.SRC_IN);
+            }
         }
         gothic((TextView) root.findViewById(R.id.TV_diary_title_content), 30, INK);
         TextView hint = (TextView) root.findViewById(R.id.TV_diary_item_content_hint);
@@ -633,11 +734,7 @@ public final class EsotericStyle {
         View save = root.findViewById(R.id.IV_diary_save);
         if (save instanceof ImageView) {
             //"Seal": the save button is a red seal
-            GradientDrawable seal = new GradientDrawable();
-            seal.setShape(GradientDrawable.OVAL);
-            seal.setColor(BLOOD);
-            seal.setStroke(Math.round(dp(c, 1)), RED_GLOW);
-            save.setBackground(seal);
+            save.setBackground(new SealDrawable(c));
             ((ImageView) save).setColorFilter(INK);
             save.setContentDescription(c.getString(R.string.esoteric_seal));
         }

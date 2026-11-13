@@ -65,6 +65,9 @@ public class CalendarFactory {
         dayPaint.setColor(ColorTools.readableOnSurface(context, ThemeManager.getInstance().getThemeDarkColor(context)));
         dayPaint.setTextAlign(Paint.Align.CENTER);
 
+        if (com.kiminonawa.mydiary.shared.EsotericStyle.isOn()) {
+            pageColor = com.kiminonawa.mydiary.shared.EsotericStyle.styleCalendarPaints(context, monthPaint, datePaint, dayPaint);
+        }
         textBaseX = width / 2;
         centerBaseLine = textRect.centerY() + (getTextHeight(datePaint) / 2) - datePaint.getFontMetrics().bottom;
         monthBaseLine = centerBaseLine + (datePaint.getFontMetrics().top - ScreenHelper.dpToPixel(mContext.getResources(), 5));
@@ -101,10 +104,16 @@ public class CalendarFactory {
         canvas.drawText(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)),
                 textBaseX, centerBaseLine, datePaint);
 
-        canvas.drawText(timeTools.getMonthsFullName()[calendar.get(Calendar.MONTH)],
+        String monthName = timeTools.getMonthsFullName()[calendar.get(Calendar.MONTH)];
+        String dayName = timeTools.getDaysFullName()[calendar.get(Calendar.DAY_OF_WEEK) - 1];
+        if (com.kiminonawa.mydiary.shared.EsotericStyle.isOn()) {
+            monthName = monthName.toUpperCase();
+            dayName = dayName.toUpperCase();
+        }
+        canvas.drawText(monthName,
                 textBaseX, monthBaseLine, monthPaint);
 
-        canvas.drawText(timeTools.getDaysFullName()[calendar.get(Calendar.DAY_OF_WEEK) - 1],
+        canvas.drawText(dayName,
                 textBaseX, dayBaseLine, dayPaint);
     }
 
