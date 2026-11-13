@@ -24,7 +24,8 @@ public class TitleTagsField {
     public TitleTagsField(View rootView, final DiaryCover cover, int lineColor) {
         title = (EditText) rootView.findViewById(R.id.EDT_diary_title);
         tags = (EditText) rootView.findViewById(R.id.EDT_diary_tags);
-        title.getBackground().mutate().setColorFilter(lineColor, PorterDuff.Mode.SRC_ATOP);
+        title.getBackground().mutate().setColorFilter(com.kiminonawa.mydiary.shared.EsotericStyle.isOn() ? com.kiminonawa.mydiary.shared.EsotericStyle.BLOOD : lineColor,
+                PorterDuff.Mode.SRC_ATOP);
         //The cover shows the title while it is written
         title.addTextChangedListener(new SimpleTextWatcher() {
             @Override
