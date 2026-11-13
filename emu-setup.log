@@ -1,0 +1,257 @@
+== machine
+Linux runnervmwuk1x 7.0.0-1019-azure #20-Ubuntu SMP PREEMPT Mon Oct 19 22:41:16 UTC 2026 x86_64 GNU/Linux
+4
+               total        used        free      shared  buff/cache   available
+Mem:           15983         991       14397          42         920       14991
+Swap:           3071           0        3071
+crw-rw-rw- 1 root kvm 10, 232 Nov 13 02:44 /dev/kvm
+uid=1001(runner) gid=1001(runner) groups=1001(runner),4(adm),100(users),113(docker),999(systemd-journal)
+SDK=/usr/local/lib/android/sdk SDKM=/usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager AVDM=/usr/local/lib/android/sdk/cmdline-tools/latest/bin/avdmanager JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
+yes: standard output: Broken pipe
+== install emulator + image system-images;android-34;google_apis;x86_64
+Loading package information...                                                  Loading local repository...                                                     [                                       ] 3% Loading local repository...        [                                       ] 3% Fetch remote repository...         [=                                      ] 3% Fetch remote repository...         [=                                      ] 4% Fetch remote repository...         [=                                      ] 5% Fetch remote repository...         [==                                     ] 5% Fetch remote repository...         [==                                     ] 6% Fetch remote repository...         [==                                     ] 7% Fetch remote repository...         [==                                     ] 7% Computing updates...               [===                                    ] 8% Computing updates...               [===                                    ] 10% Computing updates...              [===                                    ] 10% Installing Android Emulator       [===                                    ] 10% Downloading emulator-linux_x64-167[====                                   ] 10% Downloading emulator-linux_x64-167[====                                   ] 11% Downloading emulator-linux_x64-167[====                                   ] 12% Downloading emulator-linux_x64-167[=====                                  ] 13% Downloading emulator-linux_x64-167[=====                                  ] 14% Downloading emulator-linux_x64-167[=====                                  ] 15% Downloading emulator-linux_x64-167[======                                 ] 15% Downloading emulator-linux_x64-167[======                                 ] 16% Downloading emulator-linux_x64-167[======                                 ] 17% Downloading emulator-linux_x64-167[=======                                ] 18% Downloading emulator-linux_x64-167[=======                                ] 19% Downloading emulator-linux_x64-167[=======                                ] 20% Downloading emulator-linux_x64-167[========                               ] 20% Downloading emulator-linux_x64-167[========                               ] 21% Downloading emulator-linux_x64-167[========                               ] 21% Unzipping...                      [========                               ] 21% Unzipping... emulator/            [========                               ] 21% Unzipping... emulator/resources/  [========                               ] 21% Unzipping... emulator/qsn         [========                               ] 21% Unzipping... emulator/emulator    [========                               ] 21% Unzipping... emulator/netsimd     [========                               ] 22% Unzipping... emulator/netsimd     [========                               ] 22% Unzipping... emulator/bin64/      [========                               ] 22% Unzipping... emulator/qemu/       [========                               ] 22% Unzipping... emulator/NOTICE.txt  [========                               ] 22% Unzipping... emulator/crashpad_han[========                               ] 22% Unzipping... emulator/source.prope[========                               ] 22% Unzipping... emulator/nimble_bridg[========                               ] 22% Unzipping... emulator/LICENSE     [========                               ] 22% Unzipping... emulator/lib/        [========                               ] 22% Unzipping... emulator/qemu-img    [========                               ] 22% Unzipping... emulator/include/    [========                               ] 22% Unzipping... emulator/NOTICE.csv  [========                               ] 22% Unzipping... emulator/lib64/      [========                               ] 22% Unzipping... emulator/emulator-che[========                               ] 22% Unzipping... emulator/crashreport [========                               ] 22% Unzipping... emulator/mksdcard    [========                               ] 22% Unzipping... emulator/resources/To[========                               ] 22% Unzipping... emulator/resources/de[========                               ] 22% Unzipping... emulator/resources/To[========                               ] 22% Unzipping... emulator/resources/de[========                               ] 22% Unzipping... emulator/resources/To[========                               ] 22% Unzipping... emulator/resources/ma[========                               ] 22% Unzipping... emulator/resources/de[========                               ] 22% Unzipping... emulator/resources/sk[========                               ] 22% Unzipping... emulator/resources/de[========                               ] 22% Unzipping... emulator/resources/ma[========                               ] 22% Unzipping... emulator/resources/po[========                               ] 22% Unzipping... emulator/resources/ma[=========                              ] 23% Unzipping... emulator/resources/ma[=========                              ] 23% Unzipping... emulator/resources/sk[=========                              ] 23% Unzipping... emulator/resources/ma[=========                              ] 23% Unzipping... emulator/bin64/e2fsck[=========                              ] 23% Unzipping... emulator/bin64/fsck.e[=========                              ] 23% Unzipping... emulator/bin64/tune2f[=========                              ] 23% Unzipping... emulator/bin64/resize[=========                              ] 23% Unzipping... emulator/bin64/mkfs.e[=========                              ] 23% Unzipping... emulator/qemu/linux-x[=========                              ] 24% Unzipping... emulator/qemu/linux-x[=========                              ] 25% Unzipping... emulator/qemu/linux-x[==========                             ] 25% Unzipping... emulator/qemu/linux-x[==========                             ] 25% Unzipping... emulator/lib/emulator[==========                             ] 25% Unzipping... emulator/lib/rtc_serv[==========                             ] 25% Unzipping... emulator/lib/advanced[==========                             ] 25% Unzipping... emulator/lib/cmake/  [==========                             ] 25% Unzipping... emulator/lib/emulator[==========                             ] 25% Unzipping... emulator/lib/control_[==========                             ] 25% Unzipping... emulator/lib/emulated[==========                             ] 25% Unzipping... emulator/lib/rtc_serv[==========                             ] 25% Unzipping... emulator/lib/emu-orig[==========                             ] 25% Unzipping... emulator/lib/hardware[==========                             ] 25% Unzipping... emulator/lib/pkgconfi[==========                             ] 25% Unzipping... emulator/lib/pc-bios/[==========                             ] 25% Unzipping... emulator/lib/snapshot[==========                             ] 25% Unzipping... emulator/lib/adb_serv[==========                             ] 25% Unzipping... emulator/lib/hostapd.[==========                             ] 25% Unzipping... emulator/lib/grpc_end[==========                             ] 25% Unzipping... emulator/lib/ca-bundl[==========                             ] 25% Unzipping... emulator/lib/ui_contr[==========                             ] 25% Unzipping... emulator/lib/snapshot[==========                             ] 25% Unzipping... emulator/lib/ice_conf[==========                             ] 25% Unzipping... emulator/lib/libflatb[==========                             ] 26% Unzipping... emulator/lib/libflatb[==========                             ] 26% Unzipping... emulator/lib/emulator[==========                             ] 26% Unzipping... emulator/lib/waterfal[==========                             ] 26% Unzipping... emulator/lib/emulated[==========                             ] 26% Unzipping... emulator/lib/cmake/fl[==========                             ] 26% Unzipping... emulator/lib/pkgconfi[==========                             ] 26% Unzipping... emulator/lib/pc-bios/[==========                             ] 26% Unzipping... emulator/include/flat[==========                             ] 26% Unzipping... emulator/lib64/libgli[==========                             ] 26% Unzipping... emulator/lib64/libpro[==========                             ] 26% Unzipping... emulator/lib64/qt/   [==========                             ] 26% Unzipping... emulator/lib64/liband[==========                             ] 26% Unzipping... emulator/lib64/libgfx[==========                             ] 26% Unzipping... emulator/lib64/gles_l[==========                             ] 26% Unzipping... emulator/lib64/liband[==========                             ] 26% Unzipping... emulator/lib64/vulkan[==========                             ] 26% Unzipping... emulator/lib64/gles_s[==========                             ] 26% Unzipping... emulator/lib64/libemu[==========                             ] 26% Unzipping... emulator/lib64/libpro[==========                             ] 26% Unzipping... emulator/lib64/liband[==========                             ] 26% Unzipping... emulator/lib64/libtcm[==========                             ] 26% Unzipping... emulator/lib64/libima[==========                             ] 26% Unzipping... emulator/lib64/libc++[==========                             ] 26% Unzipping... emulator/lib64/liband[==========                             ] 26% Unzipping... emulator/lib64/libabs[==========                             ] 26% Unzipping... emulator/lib64/gles_a[==========                             ] 26% Unzipping... emulator/lib64/libsha[==========                             ] 26% Unzipping... emulator/lib64/libc++[==========                             ] 26% Unzipping... emulator/lib64/qt/res[==========                             ] 26% Unzipping... emulator/lib64/qt/lib[==========                             ] 26% Unzipping... emulator/lib64/qt/tra[==========                             ] 26% Unzipping... emulator/lib64/qt/plu[==========                             ] 26% Unzipping... emulator/lib64/qt/res[==========                             ] 27% Unzipping... emulator/lib64/qt/res[==========                             ] 27% Unzipping... emulator/lib64/qt/lib[===========                            ] 28% Unzipping... emulator/lib64/qt/lib[===========                            ] 29% Unzipping... emulator/lib64/qt/lib[===========                            ] 30% Unzipping... emulator/lib64/qt/lib[============                           ] 30% Unzipping... emulator/lib64/qt/lib[============                           ] 30% Unzipping... emulator/lib64/qt/tra[============                           ] 30% Unzipping... emulator/lib64/qt/plu[============                           ] 30% Unzipping... emulator/lib64/gles_l[============                           ] 31% Unzipping... emulator/lib64/gles_l[============                           ] 31% Unzipping... emulator/lib64/vulkan[============                           ] 32% Unzipping... emulator/lib64/vulkan[============                           ] 32% Unzipping... emulator/lib64/gles_s[============                           ] 32% Unzipping... emulator/lib64/gles_a[=============                          ] 33% Unzipping... emulator/lib64/gles_a[=====================                  ] 55% Unzipping... emulator/lib64/gles_a[=====================                  ] 55% Installing Google APIs Intel x86_6[=====================                  ] 55% Downloading x86_64-34_r14.zip... e[======================                 ] 55% Downloading x86_64-34_r14.zip... e[======================                 ] 56% Downloading x86_64-34_r14.zip... e[======================                 ] 57% Downloading x86_64-34_r14.zip... e[=======================                ] 58% Downloading x86_64-34_r14.zip... e[=======================                ] 59% Downloading x86_64-34_r14.zip... e[=======================                ] 60% Downloading x86_64-34_r14.zip... e[========================               ] 60% Downloading x86_64-34_r14.zip... e[========================               ] 61% Downloading x86_64-34_r14.zip... e[========================               ] 62% Downloading x86_64-34_r14.zip... e[=========================              ] 63% Downloading x86_64-34_r14.zip... e[=========================              ] 64% Downloading x86_64-34_r14.zip... e[=========================              ] 65% Downloading x86_64-34_r14.zip... e[==========================             ] 65% Downloading x86_64-34_r14.zip... e[==========================             ] 66% Downloading x86_64-34_r14.zip... e[==========================             ] 66% Unzipping... emulator/lib64/gles_a[==========================             ] 66% Unzipping... x86_64/NOTICE.txt    [==========================             ] 66% Unzipping... x86_64/VerifiedBootPa[==========================             ] 66% Unzipping... x86_64/advancedFeatur[==========================             ] 66% Unzipping... x86_64/build.prop    [==========================             ] 66% Unzipping... x86_64/encryptionkey.[==========================             ] 66% Unzipping... x86_64/kernel-ranchu [==========================             ] 66% Unzipping... x86_64/ramdisk.img   [==========================             ] 66% Unzipping... x86_64/source.propert[==========================             ] 66% Unzipping... x86_64/system.img    [==========================             ] 67% Unzipping... x86_64/system.img    [===========================            ] 68% Unzipping... x86_64/system.img    [===========================            ] 69% Unzipping... x86_64/system.img    [===========================            ] 70% Unzipping... x86_64/system.img    [============================           ] 70% Unzipping... x86_64/system.img    [============================           ] 71% Unzipping... x86_64/system.img    [============================           ] 72% Unzipping... x86_64/system.img    [=============================          ] 73% Unzipping... x86_64/system.img    [=============================          ] 74% Unzipping... x86_64/system.img    [=============================          ] 75% Unzipping... x86_64/system.img    [==============================         ] 75% Unzipping... x86_64/system.img    [==============================         ] 76% Unzipping... x86_64/system.img    [==============================         ] 77% Unzipping... x86_64/system.img    [==============================         ] 77% Unzipping... x86_64/userdata.img  [==============================         ] 77% Unzipping... x86_64/vendor.img    [==============================         ] 77% Unzipping... x86_64/data/local.pro[==============================         ] 77% Unzipping... x86_64/data/misc/Gold[==============================         ] 77% Unzipping... x86_64/data/misc/apns[==============================         ] 77% Unzipping... x86_64/data/misc/emul[==============================         ] 77% Unzipping... x86_64/data/misc/gcec[==============================         ] 77% Unzipping... x86_64/data/misc/mode[==============================         ] 77% Unzipping... x86_64/data/misc/pixe[==============================         ] 78% Unzipping... x86_64/data/misc/pixe[=======================================] 100% Unzipping... x86_64/data/misc/pix
+
+LICENSE
+NOTICE.csv
+NOTICE.txt
+bin64
+crashpad_handler
+crashreport
+emulator
+emulator-check
+include
+lib
+== create avd
+Error: Flag '-v' is not valid for 'create avd'.
+
+Usage:
+      avdmanager [global options] create avd [action options]
+      Global options:
+  -s --silent     : Silent mode, shows errors only.
+  -v --verbose    : Verbose mode, shows errors, warnings and all messages.
+     --clear-cache: Clear the SDK Manager repository manifest cache.
+  -h --help       : Help on a specific command.
+
+Action "create avd":
+  Creates a new Android Virtual Device.
+Options:
+  -c --sdcard  : Path to a shared SD card image, or size of a new sdcard for
+                 the new AVD.
+  -g --tag     : The sys-img tag to use for the AVD. The default is to
+                 auto-select if the platform has only one tag for its system
+                 images.
+  -p --path    : Directory where the new AVD will be created.
+  -k --package : Package path of the system image for this AVD (e.g.
+                 'system-images;android-19;google_apis;x86').
+  -n --name    : Name of the new AVD. [required]
+     --skin    : The optional name of a skin to use with this device.
+  -f --force   : Forces creation (overwrites an existing AVD)
+  -b --abi     : The ABI to use for the AVD. The default is to auto-select the
+                 ABI if the platform has only one ABI for its system images.
+  -d --device  : The optional device definition to use. Can be a device index
+                 or id.
+avdmanager did not create the AVD: writing it by hand
+total 16
+drwxr-xr-x 3 runner runner 4096 Nov 13 02:45 .
+drwxr-xr-x 3 runner runner 4096 Nov 13 02:45 ..
+drwxr-xr-x 2 runner runner 4096 Nov 13 02:45 test.avd
+-rw-r--r-- 1 runner runner  103 Nov 13 02:45 test.ini
+== start emulator
+* daemon not running; starting now at tcp:5037
+* daemon started successfully
+boot_completed=1
+Performing Streamed Install
+Success
+== launch
+-- 01_launch
+   [TV_release_note_title] text='Release note' desc='' TextView click=False @540,900
+   [TV_release_note_text] text='**0.3.0.170424_1_A\n -Fix bug\n -Support simple photo function' desc='' TextView click=False @540,1150
+   [CTV_release_note_knew] text="Don't show again" desc='' CheckedTextView click=True @540,1419
+   [But_release_note_ok] text='Ok' desc='' Button click=True @539,1537
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+-- 02_main
+   [TV_main_profile_username] text='Taki' desc='' TextView click=False @259,201
+   [TV_topic_title] text='緊急時以外かけちゃダメ！' desc='' TextView click=False @556,381
+   [TV_topic_count] text='1' desc='' TextView click=False @980,380
+   [TV_topic_title] text='DIARY' desc='' TextView click=False @556,539
+   [TV_topic_count] text='1' desc='' TextView click=False @980,538
+   [TV_topic_title] text='禁止事項 Ver.5' desc='' TextView click=False @556,697
+   [TV_topic_count] text='6' desc='' TextView click=False @980,696
+   [TV_topic_title] text='ゼッタイ禁止' desc='' TextView click=False @556,855
+   [TV_topic_count] text='5' desc='' TextView click=False @980,854
+== (skipped) search
+== (skipped) drag topics
+== relaunch
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+== (skipped) write an entry
+== (skipped) open the entries
+== (skipped) seed and scroll
+== (skipped) today
+== (skipped) calendar month
+== (skipped) cover and crop
+== (skipped) move and copy
+== (skipped) global search
+== (skipped) hide today card
+== (skipped) settings
+== (skipped) backup
+== (skipped) backup content
+== (skipped) camera
+== (skipped) cover-only photo and notebook sheet
+== (skipped) new features: audio from phone, drag, link, paper, full screen
+== (skipped) dark mode
+== esoteric theme
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+   eso: screen 1080x2400 density 2.62, theme set on topic 3
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+-- 03_eso_entries
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,159
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='ENTRIES' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='CALENDAR' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='DIARY' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,273
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1327
+   [RL_entries_content] text='' desc='' RelativeLayout click=False @540,1327
+   [FastScroller_entries] text='' desc='' View click=False @540,1275
+   [RecyclerView_entries] text='' desc='' RecyclerView click=False @540,1275
+   [] text='' desc='' LinearLayout click=True @540,580
+   [TV_entries_item_header] text='OCTOBER' desc='' TextView click=False @540,448
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,626
+   [] text='' desc='' LinearLayout click=False @540,626
+   [] text='' desc='' LinearLayout click=False @158,625
+   [TV_entries_item_eso_day] text='05' desc='' TextView click=False @158,605
+   [TV_entries_item_eso_weekday] text='WED' desc='' TextView click=False @158,689
+   [] text='' desc='' View click=False @254,625
+   [] text='' desc='' LinearLayout click=False @641,626
+   [] text='' desc='' LinearLayout click=False @641,585
+   [TV_entries_item_time] text='11:10' desc='' TextView click=False @555,585
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @903,585
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @840,585
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @903,585
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @966,585
+   [TV_entries_item_title] text='東京生活3❤' desc='' TextView click=False @641,652
+   [TV_entries_year] text='2016' desc='' TextView click=False @540,370
+   [RL_entries_edit_bar] text='' desc='' RelativeLayout click=False @540,2284
+   [IV_entries_menu] text='' desc='' ImageView click=False @57,2284
+   [IV_entries_edit] text='' desc='' ImageView click=True @186,2284
+   [IV_entries_photo] text='' desc='' ImageView click=True @315,2284
+   [TV_entries_tag] text='#' desc='' TextView click=True @651,2284
+   [TV_entries_count] text='1 Entry' desc='' TextView click=False @972,2284
+   [] text='' desc='' View click=False @540,362
+   [statusBarBackground] text='' desc='' View click=False @540,64
+-- 04_eso_viewer
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' RelativeLayout click=False @540,1232
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1180
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1180
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,848
+   [] text='' desc='' LinearLayout click=False @540,241
+   [IV_diary_weather] text='' desc='' ImageView click=False @47,249
+   [] text='' desc='' View click=False @428,249
+   [IV_diary_location_name_icon] text='' desc='' ImageView click=False @810,249
+   [TV_diary_location] text='Tokyo' desc='' TextView click=False @890,249
+   [IV_diary_close_dialog] text='' desc='' ImageView click=True @1006,249
+   [LL_diary_time_information] text='' desc='' LinearLayout click=False @540,848
+   [TV_diary_month] text='OCTOBER' desc='' TextView click=False @540,619
+   [TV_diary_date] text='5' desc='' TextView click=False @539,775
+   [LL_diary_day_and_time] text='' desc='' LinearLayout click=False @540,928
+   [TV_diary_day] text='WEDNESDAY  ·  ' desc='' TextView click=False @489,928
+   [TV_diary_time] text='11:10' desc='' TextView click=False @713,928
+   [TV_diary_cover_title] text='東京生活3❤' desc='' TextView click=False @539,1030
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,1502
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,1502
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1900
+   [] text='' desc='' RelativeLayout click=False @540,1900
+   [LL_diary_item_content] text='' desc='' LinearLayout click=False @540,1900
+   [] text='There are many coffee shops in Tokyo!' desc='' EditText click=False @540,1659
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_move] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_delete] text='' desc='' ImageView click=True @900,2284
+-- 05_eso_viewer_scrolled
+   [TV_diary_location] text='Tokyo' desc='' TextView click=False @890,249
+   [TV_diary_month] text='OCTOBER' desc='' TextView click=False @540,619
+   [TV_diary_date] text='5' desc='' TextView click=False @539,775
+   [TV_diary_day] text='WEDNESDAY  ·  ' desc='' TextView click=False @489,928
+   [TV_diary_time] text='11:10' desc='' TextView click=False @713,928
+   [TV_diary_cover_title] text='東京生活3❤' desc='' TextView click=False @539,1030
+   [] text='There are many coffee shops in Tokyo!' desc='' EditText click=False @540,1659
+-- 06_eso_calendar
+   [But_diary_topbar_entries] text='ENTRIES' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='CALENDAR' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='DIARY' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,273
+-- 07_eso_new_entry
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,159
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='ENTRIES' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='CALENDAR' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='DIARY' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,273
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1327
+   [] text='' desc='' RelativeLayout click=False @540,1327
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1275
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1275
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,1038
+   [] text='' desc='' LinearLayout click=False @540,423
+   [IV_diary_weather] text='' desc='' ImageView click=False @47,431
+   [TV_diary_weather] text='sunny' desc='' TextView click=False @123,431
+   [] text='' desc='' View click=False @489,431
+   [IV_diary_location_name_icon] text='' desc='' ImageView click=False @831,431
+   [TV_diary_location] text='No Location' desc='' TextView click=True @958,431
+   [LL_diary_time_information] text='' desc='' LinearLayout click=True @540,1038
+   [TV_diary_month] text='NOVEMBER' desc='' TextView click=False @540,884
+   [TV_diary_date] text='13' desc='' TextView click=False @540,1040
+   [LL_diary_day_and_time] text='' desc='' LinearLayout click=False @539,1193
+   [TV_diary_day] text='FRIDAY  ·  ' desc='' TextView click=False @480,1193
+   [TV_diary_time] text='02:48' desc='' TextView click=False @658,1193
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,1692
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,1692
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,1692
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1995
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,1839
+   [EDT_diary_title] text='Diary title' desc='' EditText click=True @392,1839
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @808,1839
+   [SP_diary_weather] text='' desc='' Spinner click=True @808,1839
+   [IV_spinner] text='' desc='' ImageView click=False @808,1839
+   [] text='' desc='' RelativeLayout click=False @540,2063
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,2063
+   [TV_diary_item_content_hint] text='Write your diary here' desc='' TextView click=False @539,2063
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @67,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @202,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @337,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @472,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @607,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @742,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @877,2284
+   [IV_diary_save] text='' desc='Seal' ImageView click=True @1012,2284
+   [] text='' desc='' View click=False @540,362
+   [statusBarBackground] text='' desc='' View click=False @540,64
+   eso: crash buffer = ''
+   APP ALIVE (pid 7166) after 'esoteric theme'
+== done
