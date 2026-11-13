@@ -308,4 +308,5 @@
     <string name="setting_paper_hint">See the text of your entries as if it were written on a sheet of a ruled notebook, with a paper texture. It is only a way of seeing them: nothing is changed in what you saved.</string>
     <string name="setting_paper_switch">Use the notebook sheet</string>
     <string name="setting_paper_sample">Dear diary:\nToday was a calm day. I went out for a walk and wrote this page by hand, with a pencil.</string>
+    <string name="esoteric_seal">Seal</string>
 </resources>

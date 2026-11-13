@@ -52,6 +52,19 @@ public class EntryCardHolder extends RecyclerView.ViewHolder {
         mood.setVisibility(View.GONE);
         bookmark.setColorFilter(themeColor);
         attachment.setColorFilter(themeColor);
+        //Esoteric theme: its own card (rv_entries_item_esoteric)
+        esoteric = rootView.findViewById(R.id.TV_entries_item_eso_day) != null;
+        thumbnailFrame = rootView.findViewById(R.id.LL_entries_item_day);
+        if (esoteric) {
+            com.kiminonawa.mydiary.shared.EsotericStyle.styleCard(rootView);
+        }
+    }
+
+    private final boolean esoteric;
+    private final View thumbnailFrame;
+
+    public boolean isEsoteric() {
+        return esoteric;
     }
 
     /**
@@ -66,6 +79,10 @@ public class EntryCardHolder extends RecyclerView.ViewHolder {
         } else {
             thumbnail.setController(null);
             thumbnail.setVisibility(View.GONE);
+        }
+        if (esoteric && thumbnailFrame != null) {
+            //The framed photo is only there when the entry has one
+            thumbnailFrame.setVisibility(thumbnail.getVisibility());
         }
     }
 }

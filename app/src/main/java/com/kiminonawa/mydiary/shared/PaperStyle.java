@@ -81,6 +81,10 @@ public final class PaperStyle {
      * Ruled lines for a text box of the entry, only if the person has the notebook sheet turned on.
      */
     public static void apply(Context context, FormatEditText editText) {
+        if (EsotericStyle.isOn()) {
+            EsotericStyle.styleText(editText);
+            return;
+        }
         if (isOn(context)) {
             applyAlways(context, editText);
         }

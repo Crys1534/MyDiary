@@ -113,6 +113,10 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
             diaryTitle = "Diary";
         }
         TV_diary_topbar_title.setText(diaryTitle);
+        //Esoteric theme: black bar, gothic name, blood
+        com.kiminonawa.mydiary.shared.EsotericStyle.styleCategoryScreen(this, LL_diary_topbar_content, SG_diary_topbar,
+                new RadioButton[]{But_diary_topbar_entries, But_diary_topbar_calendar, But_diary_topbar_diary},
+                TV_diary_topbar_title, findViewById(R.id.ViewPager_diary_content), findViewById(R.id.toolbar_shadow));
         //After SegmentedGroup was created
         initViewPager();
 
@@ -254,6 +258,9 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
         ViewPager_diary_content.addOnPageChangeListener(onPageChangeListener);
         ViewPager_diary_content.setBackground(
                 ThemeManager.getInstance().getEntriesBgDrawable(this, getTopicId()));
+        if (com.kiminonawa.mydiary.shared.EsotericStyle.isOn()) {
+            ViewPager_diary_content.setBackground(new com.kiminonawa.mydiary.shared.EsotericStyle.NightDrawable(this, true));
+        }
         if (!hasEntries) {
             ViewPager_diary_content.setCurrentItem(2);
             //Set Default Checked Item

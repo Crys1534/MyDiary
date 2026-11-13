@@ -77,5 +77,7 @@ public class EntryDateField implements DatePickerDialog.OnDateSetListener {
         cover.setDate(calendar);
         day.setText(timeTools.getDaysFullName()[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
         time.setText(hourFormat.format(calendar.getTime()));
+        //Esoteric theme: "NOVIEMBRE", a big "13", "VIERNES · 03:00"
+        com.kiminonawa.mydiary.shared.EsotericStyle.coverDate(month, day, calendar);
     }
 }

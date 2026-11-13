@@ -83,6 +83,7 @@ public class EntriesFragment extends BaseDiaryFragment implements
         TV_entries_count = (TextView) rootView.findViewById(R.id.TV_entries_count);
         RL_entries_edit_bar = (RelativeLayout) rootView.findViewById(R.id.RL_entries_edit_bar);
         RL_entries_edit_bar.setBackgroundColor(ThemeManager.getInstance().getThemeMainColor(getActivity()));
+        com.kiminonawa.mydiary.shared.EsotericStyle.styleBottomBar(RL_entries_edit_bar, rootView.findViewById(R.id.entries_edit_bar_shadow));
         return rootView;
     }
 

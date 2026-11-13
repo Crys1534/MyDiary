@@ -307,4 +307,5 @@
     <string name="setting_paper_hint">Ve el texto de tus entradas como si estuviera escrito en una hoja de libreta con renglones y textura de papel. Es solo una forma de verlas: no cambia nada de lo que guardaste.</string>
     <string name="setting_paper_switch">Usar hoja de libreta</string>
     <string name="setting_paper_sample">Querido diario:\nHoy fue un día tranquilo. Salí a caminar y escribí esta página a mano, con lápiz.</string>
+    <string name="esoteric_seal">Sellar</string>
 </resources>

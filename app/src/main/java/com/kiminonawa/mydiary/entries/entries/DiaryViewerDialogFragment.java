@@ -224,6 +224,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
 
         LinearLayout LL_diary_edit_bar = (LinearLayout) rootView.findViewById(R.id.LL_diary_edit_bar);
         LL_diary_edit_bar.setBackgroundColor(ThemeManager.getInstance().getThemeMainColor(getActivity()));
+        com.kiminonawa.mydiary.shared.EsotericStyle.stylePage(rootView);
 
         PB_diary_item_content_hint = (ProgressBar) rootView.findViewById(R.id.PB_diary_item_content_hint);
         LL_diary_item_content = (LinearLayout) rootView.findViewById(R.id.LL_diary_item_content);
@@ -446,6 +447,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         diaryInfoCursor.close();
         //Get diary detail
         loadDiaryItemContent(dbManager);
+        //Esoteric theme: the first letter big, gothic and red (only while reading)
+        com.kiminonawa.mydiary.shared.EsotericStyle.dropCap(LL_diary_item_content, isEditMode);
         diaryItemHelper.setThumbnailFileName(chosenThumbnail);
         updateCover();
         dbManager.closeDB();

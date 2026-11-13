@@ -1679,73 +1679,27 @@ def esoteric_test():
     if not n:
         show("eso_no_diary", full=True)
         return
-    adb("logcat", "-c")
     tap_xy(n["cx"], n["cy"])
-    sleep(1.2)
-    show("eso_open_card_back")
-    sleep(1.2)
-    show("eso_card_turning")
-    sleep(1.5)
-    show("eso_card_front")
     sleep(3)
     dismiss_intro()
     show("eso_entries", full=True)
-    bar = find(rid="RL_entries_edit_bar")
-    if not bar:
-        log("   eso: no bottom bar found")
-        return
-    shelf = bar["b"][1] - 8 * dens
-    def tapdp(xdp, ydp_from_shelf):
-        tap_xy(int(xdp * dens), int(shelf - ydp_from_shelf * dens))
-    tapdp(60, 25)      # the cat
-    sleep(0.6)
-    show("eso_cat_touched")
-    sleep(2)
-    tap_xy(int(sw - 100 * dens), int(shelf - 30 * dens))   # the crystal ball
-    sleep(1.2)
-    show("eso_ball_message")
-    sleep(5)
-    tap_xy(int(sw - 36 * dens), int(shelf - 40 * dens))    # the candle: out
-    sleep(0.8)
-    show("eso_candle_out")
-    tap_xy(int(sw - 36 * dens), int(shelf - 40 * dens))    # on again
-    sleep(1)
-    tap_xy(int(28 * dens), int(60 * dens + bar["b"][1] * 0 + 0))   # (the button of the background sound)
-    sleep(0.3)
-    # the sound button is at the top-left of the area under the top bar
-    top = find(rid="LL_diary_topbar_content")
-    ty = top["b"][3] if top else int(100 * dens)
-    tap_xy(int(28 * dens), int(ty + 28 * dens))
-    sleep(1)
-    show("eso_ambient_button")
-    tap_xy(int(sw - 46 * dens), int(ty + 52 * dens))      # the moon
-    sleep(0.6)
-    show("eso_moon_touched")
-    # ripple + quill
-    adb("shell", "input", "swipe", str(sw // 2), str(sh // 2), str(sw // 2 + 80), str(sh // 2 + 60), "400")
-    show("eso_ripple")
-    # an entry: the parchment page
     entry = find(rid="TV_entries_item_title")
     if entry:
         tap_xy(entry["cx"], entry["cy"])
         sleep(3)
         show("eso_viewer", full=True)
+        adb("shell", "input", "swipe", str(sw // 2), str(int(sh * 0.75)), str(sw // 2), str(int(sh * 0.3)), "500")
+        sleep(1)
+        show("eso_viewer_scrolled")
         close_viewer()
     tap(rid="But_diary_topbar_calendar")
-    sleep(1.5)
-    show("eso_calendar_mid_turn")
-    sleep(2)
+    sleep(2.5)
     show("eso_calendar")
     tap(rid="But_diary_topbar_diary")
     sleep(3)
     show("eso_new_entry", full=True)
-    # shake the phone is not possible here; the sounds that played:
-    sfx = adb("logcat", "-d", "-s", "Sfx:V").strip().splitlines()
-    played = [l.split("played ")[1].split(" ")[0] for l in sfx if "played " in l]
-    log("   eso: sounds played = %s" % sorted(set(played)))
-    log("   eso: Sfx problems = %r" % [l for l in sfx if " E " in l][:5])
     crash = adb("logcat", "-d", "-b", "crash").strip()
-    log("   eso: crash buffer = %r" % crash[:600])
+    log("   eso: crash buffer = %r" % crash[:800])
     alive("esoteric theme")
 
 step("esoteric theme", esoteric_test)

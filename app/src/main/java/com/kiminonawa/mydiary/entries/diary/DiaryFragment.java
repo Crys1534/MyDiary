@@ -135,6 +135,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         RL_diary_info.setBackgroundColor(mainColor);
         LinearLayout LL_diary_edit_bar = (LinearLayout) rootView.findViewById(R.id.LL_diary_edit_bar);
         LL_diary_edit_bar.setBackgroundColor(mainColor);
+        com.kiminonawa.mydiary.shared.EsotericStyle.stylePage(rootView);
 
         rootView.findViewById(R.id.LL_diary_time_information).setOnClickListener(this);
 

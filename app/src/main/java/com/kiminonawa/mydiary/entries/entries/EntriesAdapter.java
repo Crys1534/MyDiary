@@ -48,7 +48,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntryCardHolder> implem
     @Override
     public EntryCardHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.rv_entries_item, parent, false);
+                .inflate(com.kiminonawa.mydiary.shared.EsotericStyle.isOn() ? R.layout.rv_entries_item_esoteric : R.layout.rv_entries_item, parent, false);
         final EntryCardHolder holder = new EntryCardHolder(view, themeManager.getThemeDarkColor(mFragment.getActivity()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +104,13 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntryCardHolder> implem
         String tagsText = TagHelper.toDisplay(entity.getTags());
         holder.time.setText(timeTools.monthAndDay(calendar.getTimeInMillis())
                 + (tagsText.length() > 0 ? "   " + tagsText : ""));
+        if (holder.isEsoteric()) {
+            //The day is big on the left: here only the hour and the tags
+            com.kiminonawa.mydiary.shared.EsotericStyle.bindCardDay(holder.itemView, calendar);
+            holder.time.setText(String.format(java.util.Locale.US, "%02d:%02d",
+                    calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
+                    + (tagsText.length() > 0 ? "  ·  " + tagsText : ""));
+        }
         holder.title.setText(entity.getTitle());
         holder.title.setMaxLines(2);
         holder.snippet.setVisibility(View.GONE);

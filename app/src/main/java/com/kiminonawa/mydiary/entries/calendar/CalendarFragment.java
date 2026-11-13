@@ -103,6 +103,7 @@ public class CalendarFragment extends BaseDiaryFragment implements View.OnClickL
 
         RL_calendar_edit_bar = (RelativeLayout) rootView.findViewById(R.id.RL_calendar_edit_bar);
         RL_calendar_edit_bar.setBackgroundColor(themeManager.getThemeMainColor(getActivity()));
+        com.kiminonawa.mydiary.shared.EsotericStyle.styleBottomBar(RL_calendar_edit_bar, rootView.findViewById(R.id.calendar_edit_bar_shadow));
 
         RL_calendar_content = (RelativeLayout) rootView.findViewById(R.id.RL_calendar_content);
 

@@ -70,6 +70,7 @@ public class DiaryChecklist implements IDairyRow {
         editText.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         editText.setPadding(dp2, dp2, dp2, dp2);
         PaperStyle.apply(context, editText);
+        com.kiminonawa.mydiary.shared.EsotericStyle.styleCheckBox(checkBox);
         //Enter = next line of the list (the text still wraps in several lines)
         editText.setRawInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
