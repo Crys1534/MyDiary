@@ -51,18 +51,6 @@ public final class PaperStyle {
      * The part with the title, tags and text is made see-through so the paper is seen.
      */
     public static void applyToPage(Context context, View page, View content) {
-        //Esoteric theme: the page of the grimoire (old parchment)
-        if (page != null && CategoryTheme.current() == CategoryTheme.ESOTERIC) {
-            page.setBackground(new ParchmentDrawable(context.getResources().getDisplayMetrics().density,
-                    ColorTools.isNight(context)));
-            if (content != null) {
-                content.setBackgroundColor(Color.TRANSPARENT);
-                float d = context.getResources().getDisplayMetrics().density;
-                content.setPadding(Math.round(20 * d), content.getPaddingTop(),
-                        Math.round(14 * d), content.getPaddingBottom());
-            }
-            return;
-        }
         if (!isOn(context) || page == null) {
             return;
         }

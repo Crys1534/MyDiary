@@ -536,23 +536,7 @@ SOUNDS = {
     "sfx_tab": tab_tick,
     "sfx_lock": lock_click,
     "sfx_close": whoosh_close,
-    "sfx_eso_purr": eso_purr,
-    "sfx_eso_bell": eso_bell,
-    "sfx_eso_shimmer": eso_shimmer,
-    "sfx_eso_candle_out": eso_candle_out,
-    "sfx_eso_candle_on": eso_candle_on,
-    "sfx_eso_meow": eso_cat_meow,
-    "sfx_eso_parchment": eso_parchment,
-    "sfx_eso_bowl": eso_bowl,
-    "sfx_eso_raven": eso_raven,
-    "sfx_eso_chimes": eso_chimes,
-    "sfx_eso_whisper": eso_whisper,
-    "sfx_eso_quill": eso_quill,
-    "sfx_eso_thunder": eso_thunder,
-    "sfx_eso_heartbeat": eso_heartbeat,
     "eso_amb_music": eso_ambient_music,
-    "eso_amb_rain": eso_ambient_rain,
-    "eso_amb_clock": eso_ambient_clock,
 }
 
 
