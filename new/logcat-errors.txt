@@ -1,0 +1,279 @@
+--------- beginning of main
+11-20 20:05:05.207 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:05:05.207 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:05:05.207 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:05:07.261 E/FrameTracker( 6856): force finish cuj, time out: J<IME_INSETS_ANIMATION::0@0@com.kiminonawa.mydiary.fotos>
+11-20 20:05:10.557 E/WakeLock( 5741): DG:service ** IS FORCE-RELEASED ON TIMEOUT **
+11-20 20:05:11.599 E/FrameTracker( 6856): force finish cuj, time out: J<IME_INSETS_ANIMATION::1@0@com.kiminonawa.mydiary.fotos>
+11-20 20:05:15.073 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:05:15.073 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:05:15.073 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+--------- beginning of system
+11-20 20:05:15.078 E/Transition(  549): Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+11-20 20:05:15.168 E/.intentresolver( 7682): Not starting debugger since process cannot load the jdwp agent.
+11-20 20:05:15.341 E/ChooserActions( 7682): android.intent.action.GET_CONTENT is not supported.
+11-20 20:05:15.484 E/ule:PhotoPicker( 7715): Not starting debugger since process cannot load the jdwp agent.
+11-20 20:05:16.434 E/MetadataRetrieverClient(  484): failed to extract an album art
+11-20 20:05:16.434 E/MediaMetadataRetrieverJNI( 1770): getEmbeddedPicture: Call to getEmbeddedPicture failed.
+11-20 20:05:16.434 E/MetadataRetrieverClient(  484): failed to extract an album art
+11-20 20:05:16.437 E/MediaMetadataRetrieverJNI( 1770): getEmbeddedPicture: Call to getEmbeddedPicture failed.
+11-20 20:05:16.471 E/MetadataRetrieverClient(  484): failed to extract an album art
+11-20 20:05:16.471 E/MediaMetadataRetrieverJNI( 1770): getEmbeddedPicture: Call to getEmbeddedPicture failed.
+11-20 20:05:29.044 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:05:29.045 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:05:29.045 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:05:41.977 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:05:41.978 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:05:41.979 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:05:49.687 E/Binder  (  549): Outgoing transactions from this process must be FLAG_ONEWAY
+11-20 20:05:49.687 E/Binder  (  549): java.lang.Throwable
+11-20 20:05:49.687 E/Binder  (  549): 	at android.os.BinderProxy.transact(BinderProxy.java:541)
+11-20 20:05:49.687 E/Binder  (  549): 	at android.content.ContentProviderProxy.checkUriPermission(ContentProviderNative.java:962)
+11-20 20:05:49.687 E/Binder  (  549): 	at com.android.server.am.ContentProviderHelper.checkContentProviderUriPermission(ContentProviderHelper.java:1181)
+11-20 20:05:49.687 E/Binder  (  549): 	at com.android.server.am.ActivityManagerService$LocalService.checkContentProviderUriPermission(ActivityManagerService.java:17361)
+11-20 20:05:49.687 E/Binder  (  549): 	at com.android.server.uri.UriGrantsManagerService.checkHoldingPermissionsInternalUnlocked(UriGrantsManagerService.java:1012)
+11-20 20:05:49.687 E/Binder  (  549): 	at com.android.server.uri.UriGrantsManagerService.checkHoldingPermissionsUnlocked(UriGrantsManagerService.java:922)
+11-20 20:05:49.687 E/Binder  (  549): 	at com.android.server.uri.UriGrantsManagerService.checkGrantUriPermissionUnlocked(UriGrantsManagerService.java:1137)
+11-20 20:05:49.687 E/Binder  (  549): 	at com.android.server.uri.UriGrantsManagerService.checkGrantUriPermissionFromIntentUnlocked(UriGrantsManagerService.java:640)
+11-20 20:05:49.687 E/Binder  (  549): 	at com.android.server.uri.UriGrantsManagerService.-$$Nest$mcheckGrantUriPermissionFromIntentUnlocked(UriGrantsManagerService.java:0)
+11-20 20:05:49.687 E/Binder  (  549): 	at com.android.server.uri.UriGrantsManagerService$LocalService.checkGrantUriPermissionFromIntent(UriGrantsManagerService.java:1441)
+11-20 20:05:49.687 E/Binder  (  549): 	at com.android.server.wm.ActivityTaskManagerService.collectGrants(ActivityTaskManagerService.java:2166)
+11-20 20:05:49.687 E/Binder  (  549): 	at com.android.server.wm.ActivityClientController.finishActivity(ActivityClientController.java:440)
+11-20 20:05:49.687 E/Binder  (  549): 	at android.app.IActivityClientController$Stub.onTransact(IActivityClientController.java:778)
+11-20 20:05:49.687 E/Binder  (  549): 	at com.android.server.wm.ActivityClientController.onTransact(ActivityClientController.java:153)
+11-20 20:05:49.687 E/Binder  (  549): 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+11-20 20:05:49.687 E/Binder  (  549): 	at android.os.Binder.execTransact(Binder.java:1275)
+11-20 20:05:49.694 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:05:49.694 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:05:49.694 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:05:56.857 E/constellation( 5741): [api_verify_phone_operation] Failed to generate Client Signature
+11-20 20:05:56.857 E/constellation( 5741): acwp: Stored private key deleted
+11-20 20:05:56.857 E/constellation( 5741): 	at acos.e(:com.google.android.gms@231818047@23.18.18 (190800-535401451):4)
+11-20 20:05:56.857 E/constellation( 5741): 	at acos.d(:com.google.android.gms@231818047@23.18.18 (190800-535401451):1)
+11-20 20:05:56.857 E/constellation( 5741): 	at acoa.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):22)
+11-20 20:05:56.857 E/constellation( 5741): 	at acoa.f(:com.google.android.gms@231818047@23.18.18 (190800-535401451):12)
+11-20 20:05:56.857 E/constellation( 5741): 	at avsy.eo(:com.google.android.gms@231818047@23.18.18 (190800-535401451):1)
+11-20 20:05:56.857 E/constellation( 5741): 	at avtf.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):14)
+11-20 20:05:56.857 E/constellation( 5741): 	at dfhf.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+11-20 20:05:56.857 E/constellation( 5741): 	at aced.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):6)
+11-20 20:05:56.857 E/constellation( 5741): 	at aced.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):7)
+11-20 20:05:56.857 E/constellation( 5741): 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+11-20 20:05:56.857 E/constellation( 5741): 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+11-20 20:05:56.857 E/constellation( 5741): 	at acjn.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+11-20 20:05:56.857 E/constellation( 5741): 	at java.lang.Thread.run(Thread.java:1012)
+11-20 20:06:04.001 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:06:04.001 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:06:04.001 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:06:20.038 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:06:20.038 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:06:20.038 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:06:34.560 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:06:34.560 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:06:34.561 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:06:39.897 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:06:39.898 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:06:39.898 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:06:47.038 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:06:47.038 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:06:47.038 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:06:55.800 E/A       ( 1951): onError
+11-20 20:06:55.800 E/A       ( 1951): com.google.android.apps.gsa.shared.speech.a.m: errorCode: 65561, engine: 2
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.staticplugins.dc.a.e.a(PG:3)
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.s3.n.hh(PG:1)
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.cd.g.a.f.e(PG:2)
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:22)
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.speech.k.a.g.ks(PG:6)
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.s3.o.e(PG:14)
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.s3.p.run(PG:1)
+11-20 20:06:55.800 E/A       ( 1951): 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:487)
+11-20 20:06:55.800 E/A       ( 1951): 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.shared.util.c.a.e.run(PG:2)
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+11-20 20:06:55.800 E/A       ( 1951): 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+11-20 20:06:55.800 E/A       ( 1951): 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+11-20 20:06:55.800 E/A       ( 1951): 	at java.lang.Thread.run(Thread.java:1012)
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.shared.util.c.a.l.run(PG:5)
+11-20 20:06:55.800 E/A       ( 1951): Caused by: com.google.android.apps.gsa.shared.speech.a.o: errorCode: 65586, engine: 2
+11-20 20:06:55.800 E/A       ( 1951): 	... 15 more
+11-20 20:06:55.800 E/A       ( 1951): Caused by: com.google.android.apps.gsa.shared.speech.a.k: errorCode: 401, engine: 2
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.assistant.shared.n.h.a(PG:5)
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.s3.producers.j.hE(PG:2)
+11-20 20:06:55.800 E/A       ( 1951): 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:16)
+11-20 20:06:55.800 E/A       ( 1951): 	... 12 more
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): Exception in upload method
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): com.google.android.apps.gsa.shared.r.d: Error code: 262182
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.shared.ab.bk.d(PG:5)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.libraries.gsa.c.a.ar.d(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.libraries.gsa.c.a.bo.b(PG:5)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.libraries.gsa.c.a.e.a(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.libraries.gsa.c.a.a.run(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.bf.execute(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.i(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.l(PG:12)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.cancel(PG:8)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.m(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.j.a(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.l(PG:3)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.cancel(PG:8)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.m(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.j.a(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.l(PG:3)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.cancel(PG:8)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.m(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.j.a(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.l(PG:3)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.cancel(PG:8)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.m(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.j.a(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.l(PG:3)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.cancel(PG:8)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.m(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.c.a(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.l(PG:3)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.cancel(PG:8)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.bu.cancel(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.cancel(PG:17)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.staticplugins.bk.b.h.run(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.bf.execute(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.i(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.l(PG:12)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.cancel(PG:8)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.m(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.j.a(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.l(PG:3)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.cancel(PG:8)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.shared.util.c.aj.a(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.l(PG:3)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.cancel(PG:8)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.m(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.c.a(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.l(PG:3)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.common.util.concurrent.d.cancel(PG:8)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.s3.o.c(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.s3.r.a(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.staticplugins.dc.a.c.e(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.staticplugins.dc.a.c.c(PG:3)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.staticplugins.dc.a.e.a(PG:5)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.s3.n.hh(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.cd.g.a.f.e(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:22)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.speech.k.a.g.ks(PG:6)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.s3.o.e(PG:14)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.s3.p.run(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:487)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.shared.util.c.a.e.run(PG:2)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at java.lang.Thread.run(Thread.java:1012)
+11-20 20:06:55.800 E/cr_CronetUrlRequestContext( 1951): 	at com.google.android.apps.gsa.shared.util.c.a.l.run(PG:5)
+11-20 20:06:55.845 E/SettingsToPropertiesMapper(  549): key=persist.device_config.storage_native_boot.transcode_compat_manifest value=com.yelp.android,0,com.yy.biu,0,com.groupme.android,0,air.tv.douyu.android,0,com.baidu.mbaby,0,com.vlocker.locker,0,com.znxh.hyhuo,0,com.yixia.xiaokaxiu,0 exceeds system property max length.
+11-20 20:06:56.707 E/DeviceConfig(  549): Parsing int failed for location_mode
+11-20 20:06:58.845 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:06:58.845 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:06:58.845 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:07:08.218 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:07:08.219 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:07:08.219 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:07:15.199 E/GnssPsdsDownloader(  549): No Long-Term PSDS servers were specified in the GnssConfiguration
+11-20 20:07:23.074 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:07:23.074 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:07:23.074 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:07:23.078 E/Transition(  549): Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+11-20 20:07:23.578 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:07:23.767 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:07:26.078 E/TaskPersister(  549): File error accessing recents directory (directory doesn't exist?).
+11-20 20:07:32.468 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:07:32.670 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:07:35.899 E/TaskPersister(  549): File error accessing recents directory (directory doesn't exist?).
+11-20 20:07:36.869 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:07:36.869 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:07:36.869 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:07:44.189 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:07:44.189 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:07:44.189 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:07:59.506 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:07:59.506 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:07:59.506 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:08:06.847 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:08:06.847 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:08:06.847 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:08:11.734 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:08:11.734 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:08:11.734 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:08:15.885 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:08:15.885 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:08:15.885 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:08:16.107 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:08:16.179 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:08:19.381 E/TaskPersister(  549): File error accessing recents directory (directory doesn't exist?).
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): Error when converting version: messages.android_20230529_03_RC01_alldpi.x86_64.phone
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): java.lang.NumberFormatException: For input string: "messages"
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at java.lang.Long.parseLong(Long.java:751)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at java.lang.Long.parseLong(Long.java:876)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at com.google.android.apps.gsa.staticplugins.ad.h.c(PG:3)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at com.google.android.apps.gsa.staticplugins.ad.h.g(PG:3)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at com.google.android.apps.gsa.staticplugins.ad.h.d(PG:267)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at com.google.android.apps.gsa.staticplugins.ad.h.a(PG:38)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at com.google.android.apps.gsa.staticplugins.ad.p.a(PG:1)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at com.google.android.libraries.gsa.k.a.f.a(PG:2)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at com.google.common.util.concurrent.dx.a(PG:1)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at com.google.common.util.concurrent.cv.run(PG:4)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at com.google.common.util.concurrent.dz.run(PG:1)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at com.google.android.libraries.i.ae.run(PG:1)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at com.google.android.libraries.i.k.run(PG:2)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at com.google.android.libraries.i.p.run(PG:4)
+11-20 20:08:19.726 E/ApplicationPropertiesBu( 1951): 	at java.lang.Thread.run(Thread.java:1012)
+11-20 20:08:19.729 E/ApplicationPropertiesBu( 1951): Date 2021-12-06T00:00:00Z is out of expected range.
+11-20 20:08:19.729 E/ApplicationPropertiesBu( 1951): Date 2022-02-15T00:00:00Z is out of expected range.
+11-20 20:08:19.729 E/ApplicationPropertiesBu( 1951): Date 2022-02-22T00:00:00Z is out of expected range.
+11-20 20:08:21.718 E/PhenotypeModule( 1658): PhenotypeModule.handlePhenotypeConfigurationUpdates():268 Get empty configurations.
+11-20 20:08:21.725 E/NanoAppLogging( 5688): Failed to begin contexthub communication
+11-20 20:08:21.941 E/Pay     ( 5741): [Migration operation] Active tapandpay account not found! [CONTEXT service_id=198 ]
+11-20 20:08:24.805 E/system_server(  549): No package ID 7f found for resource ID 0x7f080107.
+11-20 20:08:24.805 E/system_server(  549): No package ID 7f found for resource ID 0x7f150560.
+11-20 20:08:29.035 E/HwDetectorWithState( 1827): a: 3
+11-20 20:08:29.280 E/BpTransactionCompletedListener(  428): Failed to transact (-32)
+11-20 20:08:32.206 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:08:32.339 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:08:33.111 E/TaskPersister(  549): File error accessing recents directory (directory doesn't exist?).
+11-20 20:08:34.805 E/system_server(  549): No package ID 7f found for resource ID 0x7f080107.
+11-20 20:08:34.805 E/system_server(  549): No package ID 7f found for resource ID 0x7f150560.
+11-20 20:08:37.003 E/TaskPersister(  549): File error accessing recents directory (directory doesn't exist?).
+11-20 20:08:39.935 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:08:39.935 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:08:39.936 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:08:44.439 E/FrameTracker( 9318): force finish cuj, time out: J<IME_INSETS_ANIMATION::1@0@com.kiminonawa.mydiary.fotos>
+11-20 20:08:44.456 E/FrameTracker( 9318): force finish cuj, time out: J<IME_INSETS_ANIMATION::0@0@com.kiminonawa.mydiary.fotos>
+11-20 20:08:50.677 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:08:50.677 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:08:50.677 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:08:55.985 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:08:55.985 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:08:55.985 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:08:55.988 E/Transition(  549): Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+11-20 20:08:56.477 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:08:56.529 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:08:58.989 E/TaskPersister(  549): File error accessing recents directory (directory doesn't exist?).
+11-20 20:09:15.832 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:09:15.832 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:09:15.833 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:09:21.846 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:09:21.991 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:09:25.122 E/TaskPersister(  549): File error accessing recents directory (directory doesn't exist?).
+11-20 20:09:28.439 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:09:28.439 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:09:28.439 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
+11-20 20:09:28.446 E/Transition(  549): Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+11-20 20:09:29.473 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:09:29.541 E/OpenGLRenderer(  900): Unable to match the desired swap behavior.
+11-20 20:09:31.445 E/TaskPersister(  549): File error accessing recents directory (directory doesn't exist?).
+11-20 20:09:40.159 E/WifiStaIfaceAidlImpl(  549): installApfPacketFilter failed with service-specific exception: android.os.ServiceSpecificException:  (code 4)
+11-20 20:09:41.183 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-20 20:09:41.183 E/android.hardware.audio@7.1-impl.ranchu(  367): pcmOpen:184 failure: nullptr
+11-20 20:09:41.183 E/android.hardware.audio@7.1-impl.ranchu(  367): create:239 failure: nullptr
