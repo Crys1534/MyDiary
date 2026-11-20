@@ -40,8 +40,9 @@ public class VideoPlayerActivity extends Activity {
         FrameLayout frame = new FrameLayout(this);
         frame.setBackgroundColor(Color.BLACK);
         videoView = new VideoView(this);
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+        //As big as the screen (the video keeps its shape)
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER);
         frame.addView(videoView, lp);
         frame.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1768,8 +1768,7 @@ def notes_features_test():
         show("notes_video_added", full=True)
         log("   NOTES: video row in the entry = %s" % bool(find(rid="IV_diary_video_frame")))
 
-    # --- the table
-    tap(rid="LL_diary_item_content")
+    # --- the table (at the end of the entry)
     close_keyboard()
     if tap(rid="IV_diary_table"):
         sleep(2)
