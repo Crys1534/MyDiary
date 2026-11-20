@@ -29,6 +29,16 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"
                 android:src="@drawable/ic_photo_library_white_36dp" />
+
+            <!-- Only videos of the gallery -->
+            <ImageView
+                android:id="@+id/IV_diary_photo_select_a_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:contentDescription="@string/video_choose"
+                android:src="@drawable/ic_video_library_white_36dp" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

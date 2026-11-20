@@ -237,7 +237,7 @@ public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
             //   This diary have 3 part , 1st is topic , 2nd is diary entries , 3rd is diary item (content)
             case ITopic.TYPE_DIARY:
                 //Select diary entries first
-                Cursor diaryEntriesCursor = dbManager.selectDiaryList(topicCursor.getLong(0));
+                Cursor diaryEntriesCursor = dbManager.selectDiaryList(topicCursor.getLong(0), true);
                 List<BUDiaryEntries> diaryEntriesItemList = new ArrayList<>();
 
                 for (int j = 0; j < diaryEntriesCursor.getCount(); j++) {
@@ -251,7 +251,7 @@ public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
                         diaryItemCursor.moveToNext();
                     }
                     diaryItemCursor.close();
-                    diaryEntriesItemList.add(
+                    BUDiaryEntries buEntry =
                             new BUDiaryEntries(diaryEntriesCursor.getLong(0),
                                     diaryEntriesCursor.getLong(1), diaryEntriesCursor.getString(2),
                                     diaryEntriesCursor.getInt(3), diaryEntriesCursor.getInt(4),
@@ -259,7 +259,12 @@ public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
                                     diaryEntriesCursor.getString(7),
                                     diaryEntriesCursor.getString(diaryEntriesCursor.getColumnIndex(DiaryEntry_V2.COLUMN_TAGS)),
                                     diaryEntriesCursor.getString(diaryEntriesCursor.getColumnIndex(DiaryEntry_V2.COLUMN_THUMBNAIL)),
-                                    diaryItemItemList));
+                                    diaryItemItemList);
+                    int pinnedColumn = diaryEntriesCursor.getColumnIndex(DiaryEntry_V2.COLUMN_PINNED);
+                    int hiddenColumn = diaryEntriesCursor.getColumnIndex(DiaryEntry_V2.COLUMN_HIDDEN);
+                    buEntry.setFlags(pinnedColumn >= 0 && diaryEntriesCursor.getInt(pinnedColumn) > 0,
+                            hiddenColumn >= 0 && diaryEntriesCursor.getInt(hiddenColumn) > 0);
+                    diaryEntriesItemList.add(buEntry);
                     diaryEntriesCursor.moveToNext();
                 }
                 diaryEntriesCursor.close();

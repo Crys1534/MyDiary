@@ -272,6 +272,26 @@ public class FileManager {
         }
     }
 
+    /**
+     * Opens the gallery to choose photos and videos (withPhotos true) or only videos, several at once.
+     */
+    public static void startBrowseMultipleMediaFiles(Fragment fragment, int requestCode, boolean withPhotos) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            if (withPhotos) {
+                intent.setType("*/*");
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/*", "video/*"});
+            } else {
+                intent.setType("video/*");
+            }
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            fragment.startActivityForResult(Intent.createChooser(intent, null), requestCode);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Log.e(TAG, ex.toString());
+        }
+    }
+
     public static void startBrowseImageFile(Activity activity, int requestCode) {
         try {
             Intent intentImage = new Intent();

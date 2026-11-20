@@ -192,6 +192,8 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
             Cursor diaryCursor = dbManager.selectDiaryList(topicId);
             int tagsColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_TAGS);
             int thumbnailColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_THUMBNAIL);
+            int pinnedColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_PINNED);
+            int hiddenColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_HIDDEN);
             for (int i = 0; i < diaryCursor.getCount(); i++) {
                 String title = diaryCursor.getString(2);
                 if ("".equals(title)) {
@@ -206,6 +208,8 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
                 if (tagsColumn >= 0) {
                     entity.setTags(diaryCursor.getString(tagsColumn));
                 }
+                entity.setFlags(pinnedColumn >= 0 && diaryCursor.getInt(pinnedColumn) > 0,
+                        hiddenColumn >= 0 && diaryCursor.getInt(hiddenColumn) > 0);
                 //The small picture (the one chosen as the cover, or else the first photo) and the first words
                 String chosenThumbnail = thumbnailColumn >= 0 ? diaryCursor.getString(thumbnailColumn) : null;
                 EntryPreview preview = EntryPreview.read(context, dbManager, topicId, entity.getId(), chosenThumbnail);

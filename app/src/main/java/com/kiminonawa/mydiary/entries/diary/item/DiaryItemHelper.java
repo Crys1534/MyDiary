@@ -634,6 +634,32 @@ public class DiaryItemHelper extends Observable {
     }
 
     /**
+     * A video of the phone (already in the folder of the entry) where the cursor is.
+     */
+    public DiaryVideo insertVideoAtFocus(View focusView, String fileName, java.io.File folder,
+                                         View.OnClickListener deleteListener) {
+        DiaryVideo video = new DiaryVideo(itemContentLayout.getContext());
+        video.setEditMode(true);
+        video.setDeleteClickListener(deleteListener);
+        video.setContent(fileName);
+        video.setFolder(folder);
+        insertBlockAtFocus(focusView, video);
+        return video;
+    }
+
+    /**
+     * A new table (3 columns, 3 rows) where the cursor is.
+     */
+    public DiaryTable insertTableAtFocus(View focusView, View.OnClickListener deleteListener) {
+        DiaryTable table = new DiaryTable(itemContentLayout.getContext());
+        table.setContent(null);
+        table.setEditMode(true);
+        table.setDeleteClickListener(deleteListener);
+        insertBlockAtFocus(focusView, table);
+        return table;
+    }
+
+    /**
      * Puts a row that is not text (an audio, a link) where the cursor is. The text after the cursor goes below it.
      * After it there is always a text box.
      */

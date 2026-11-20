@@ -58,7 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * Version 1 by Daxia：
      * First DB
      */
-    public static final int DATABASE_VERSION = 11;
+    public static final int DATABASE_VERSION = 12;
     public static final String DATABASE_NAME = "mydiary.db";
 
     private static final String TEXT_TYPE = " TEXT";
@@ -115,6 +115,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     DiaryEntry_V2.COLUMN_LOCATION + TEXT_TYPE + COMMA_SEP +
                     DiaryEntry_V2.COLUMN_TAGS + TEXT_TYPE + COMMA_SEP +
                     DiaryEntry_V2.COLUMN_THUMBNAIL + TEXT_TYPE + COMMA_SEP +
+                    DiaryEntry_V2.COLUMN_PINNED + INTEGER_TYPE + " DEFAULT 0" + COMMA_SEP +
+                    DiaryEntry_V2.COLUMN_HIDDEN + INTEGER_TYPE + " DEFAULT 0" + COMMA_SEP +
                     FOREIGN + " (" + DiaryEntry.COLUMN_REF_TOPIC__ID + ")" + REFERENCES + TopicEntry.TABLE_NAME + "(" + TopicEntry._ID + ")" +
                     " )";
 
@@ -249,6 +251,17 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
 
                 //The look (theme) of every category (this fork)
+                //Pinned and hidden entries (this fork)
+                if (oldVersion < 12) {
+                    if (!hasColumn(db, DiaryEntry_V2.TABLE_NAME, DiaryEntry_V2.COLUMN_PINNED)) {
+                        db.execSQL("ALTER TABLE " + DiaryEntry_V2.TABLE_NAME + " ADD COLUMN "
+                                + DiaryEntry_V2.COLUMN_PINNED + INTEGER_TYPE + " DEFAULT 0");
+                    }
+                    if (!hasColumn(db, DiaryEntry_V2.TABLE_NAME, DiaryEntry_V2.COLUMN_HIDDEN)) {
+                        db.execSQL("ALTER TABLE " + DiaryEntry_V2.TABLE_NAME + " ADD COLUMN "
+                                + DiaryEntry_V2.COLUMN_HIDDEN + INTEGER_TYPE + " DEFAULT 0");
+                    }
+                }
                 if (oldVersion < 11) {
                     if (!hasColumn(db, TopicEntry.TABLE_NAME, TopicEntry.COLUMN_THEME)) {
                         db.execSQL("ALTER TABLE " + TopicEntry.TABLE_NAME + " ADD COLUMN "

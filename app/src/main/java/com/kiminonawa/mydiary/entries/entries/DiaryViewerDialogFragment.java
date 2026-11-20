@@ -123,6 +123,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     private AreaPickerController areaPicker;
     private PhotoImporter photoImporter;
     private AudioFileImporter audioImporter;
+    private com.kiminonawa.mydiary.entries.diary.editor.VideoImporter videoImporter;
     //The photo that is being chosen is for the cover only (it is not put in the text)
     private boolean pickingCover = false;
     private FileManager diaryFileManager;
@@ -250,6 +251,13 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         });
         editorActions = new EditorActions(this, diaryItemHelper, LL_diary_item_content, areaPicker);
         photoImporter = new PhotoImporter(this, this);
+        videoImporter = new com.kiminonawa.mydiary.entries.diary.editor.VideoImporter(this,
+                new com.kiminonawa.mydiary.entries.diary.editor.VideoImporter.Listener() {
+                    @Override
+                    public void onVideoReady(String fileName) {
+                        editorActions.insertVideo(fileName);
+                    }
+                });
         audioImporter = new AudioFileImporter(this, new AudioFileImporter.Listener() {
             @Override
             public void onAudioReady(String fileName, String displayName) {
@@ -291,6 +299,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 diaryFileManager.clearDir();
                 photoImporter.setTargetFolder(diaryFileManager);
                 audioImporter.setTargetFolder(diaryFileManager);
+                videoImporter.setTargetFolder(diaryFileManager);
                 PB_diary_item_content_hint.setVisibility(View.VISIBLE);
                 mTask = new CopyDiaryToEditCacheTask(getActivity(), diaryFileManager, this);
                 //Make ths ProgressBar show 0.7s+.
@@ -527,6 +536,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             IV_diary_delete.setOnClickListener(this);
             IV_diary_move.setVisibility(View.VISIBLE);
             IV_diary_move.setOnClickListener(this);
+            View pinButton = rootView.findViewById(R.id.IV_diary_pin);
+            pinButton.setVisibility(View.VISIBLE);
+            pinButton.setOnClickListener(this);
             IV_diary_save.setVisibility(View.GONE);
 
             IV_diary_photo.setImageResource(R.drawable.ic_photo_white_24dp);
@@ -624,7 +636,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     }
 
     private void openPhotoBottomSheet() {
-        DiaryPhotoBottomSheet diaryPhotoBottomSheet = DiaryPhotoBottomSheet.newInstance(true);
+        DiaryPhotoBottomSheet diaryPhotoBottomSheet = DiaryPhotoBottomSheet.newInstance(true, !pickingCover);
         diaryPhotoBottomSheet.setTargetFragment(this, 0);
         diaryPhotoBottomSheet.show(getFragmentManager(), "diaryPhotoBottomSheet");
     }
@@ -652,6 +664,13 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             uris = new ArrayList<>(uris.subList(0, 1));
         }
         photoImporter.addUris(uris);
+    }
+
+    @Override
+    public void selectVideos(List<Uri> uris) {
+        if (!pickingCover) {
+            videoImporter.addUris(uris);
+        }
     }
 
     @Override
@@ -737,6 +756,9 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
             case R.id.IV_diary_move:
                 showMoveCopyMenu();
                 break;
+            case R.id.IV_diary_pin:
+                showPinHideMenu(v);
+                break;
             case R.id.IV_diary_delete:
                 DiaryDeleteDialogFragment diaryDeleteDialogFragment =
                         DiaryDeleteDialogFragment.newInstance(((DiaryActivity) getActivity()).getTopicId(), diaryId);
@@ -751,6 +773,52 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 }
                 break;
         }
+    }
+
+    /**
+     * The pin button: pin the entry at the top of the list (or unpin it) and hide it (or show it again).
+     */
+    private void showPinHideMenu(View anchor) {
+        final com.kiminonawa.mydiary.db.DBManager dbManager = new com.kiminonawa.mydiary.db.DBManager(getActivity());
+        boolean[] flags;
+        dbManager.opeDB();
+        try {
+            flags = dbManager.getDiaryFlags(diaryId);
+        } finally {
+            dbManager.closeDB();
+        }
+        final boolean pinned = flags[0], hidden = flags[1];
+        android.widget.PopupMenu menu = new android.widget.PopupMenu(getActivity(), anchor);
+        menu.getMenu().add(0, 1, 0, pinned ? R.string.diary_unpin : R.string.diary_pin);
+        menu.getMenu().add(0, 2, 1, hidden ? R.string.diary_unhide : R.string.diary_hide);
+        menu.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                dbManager.opeDB();
+                try {
+                    if (item.getItemId() == 1) {
+                        dbManager.setDiaryPinned(diaryId, !pinned);
+                    } else {
+                        dbManager.setDiaryHidden(diaryId, !hidden);
+                    }
+                } finally {
+                    dbManager.closeDB();
+                }
+                Sfx.play(getActivity(), Sfx.Sound.STAR);
+                int message = item.getItemId() == 1 ? (pinned ? R.string.toast_diary_unpinned : R.string.toast_diary_pinned)
+                        : (hidden ? R.string.toast_diary_unhidden : R.string.toast_diary_hidden);
+                Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                if (callback != null) {
+                    callback.updateDiary();
+                }
+                if (item.getItemId() == 2 && !hidden && !com.kiminonawa.mydiary.shared.HiddenEntries.isRevealed()) {
+                    //It is hidden now: it goes away
+                    dismiss();
+                }
+                return true;
+            }
+        });
+        menu.show();
     }
 
     /**

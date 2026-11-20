@@ -203,6 +203,12 @@ public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
                                         diary.getDiaryEntriesMood(), diary.getDiaryEntriesWeather(),
                                         diary.isDiaryEntriesAttachment(), newTopicId, diary.getDiaryEntriesLocation(),
                                         diary.getDiaryEntriesTags(), diary.getDiaryEntriesThumbnail());
+                        if (diary.isPinned()) {
+                            dbManager.setDiaryPinned(newDiaryId, true);
+                        }
+                        if (diary.isHidden()) {
+                            dbManager.setDiaryHidden(newDiaryId, true);
+                        }
                         //Write the diary item
                         for (int yi = 0; yi < diary.getDiaryItemList().size(); yi++) {
                             BUDiaryItem diaryItem = diary.getDiaryItemList().get(yi);

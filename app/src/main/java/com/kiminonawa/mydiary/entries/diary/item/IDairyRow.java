@@ -17,6 +17,10 @@ public interface IDairyRow {
     int TYPE_AUDIO = 4;
     //A link to a web page, shown as a card with the title, the description and the picture of the page; the content is the link
     int TYPE_LINK = 5;
+    //A video of the phone; the content is the name of the video file, in the folder of the entry (with the photos)
+    int TYPE_VIDEO = 6;
+    //A table; the content is a JSON text with the widths of the columns and the text of every cell (see DiaryTable)
+    int TYPE_TABLE = 7;
 
     void setContent(String content);
 

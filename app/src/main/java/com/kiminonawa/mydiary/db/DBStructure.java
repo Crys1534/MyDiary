@@ -34,6 +34,10 @@ public class DBStructure {
         public static final String COLUMN_TAGS = "diary_tags";
         //Added in db version 9: file name of the photo chosen as the cover / small picture ("" = the first photo)
         public static final String COLUMN_THUMBNAIL = "diary_thumbnail";
+        //Added in db version 12 (this fork): 1 = pinned at the top of the list
+        public static final String COLUMN_PINNED = "diary_pinned";
+        //Added in db version 12 (this fork): 1 = hidden (only seen after the secret of Settings, see HiddenEntries)
+        public static final String COLUMN_HIDDEN = "diary_hidden";
     }
 
     /**

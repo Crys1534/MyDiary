@@ -23,6 +23,22 @@ public class BUDiaryEntries {
     //File name of the photo chosen as the cover (missing in older backups: the first photo is used)
     private String diary_entries_thumbnail;
     private List<BUDiaryItem> diary_item_list;
+    //Pinned / hidden (this fork; null in an older backup)
+    private Integer diary_entries_pinned;
+    private Integer diary_entries_hidden;
+
+    public void setFlags(boolean pinned, boolean hidden) {
+        diary_entries_pinned = pinned ? 1 : 0;
+        diary_entries_hidden = hidden ? 1 : 0;
+    }
+
+    public boolean isPinned() {
+        return diary_entries_pinned != null && diary_entries_pinned > 0;
+    }
+
+    public boolean isHidden() {
+        return diary_entries_hidden != null && diary_entries_hidden > 0;
+    }
 
     public BUDiaryEntries(long diary_entries_id, long diary_entries_time, String diary_entries_title,
                           int diary_entries_mood, int diary_entries_weather,

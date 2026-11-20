@@ -147,7 +147,8 @@ public class DBManager {
     }
 
     public int getDiaryCountByTopicId(long topicId) {
-        Cursor cursor = db.rawQuery("SELECT COUNT (*) FROM " + DiaryEntry_V2.TABLE_NAME + " WHERE " + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + "=?",
+        Cursor cursor = db.rawQuery("SELECT COUNT (*) FROM " + DiaryEntry_V2.TABLE_NAME + " WHERE " + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + "=?"
+                        + com.kiminonawa.mydiary.shared.HiddenEntries.andNotHidden(""),
                 new String[]{String.valueOf(topicId)});
         int count = 0;
         if (null != cursor) {
@@ -377,9 +378,23 @@ public class DBManager {
     }
 
 
+    /**
+     * The entries of a topic that can be seen now (hidden ones only after the secret of Settings), the pinned ones
+     * first, then the newest first.
+     */
     public Cursor selectDiaryList(long topicId) {
-        Cursor c = db.query(DiaryEntry_V2.TABLE_NAME, null, DiaryEntry_V2.COLUMN_REF_TOPIC__ID + " = ?", new String[]{String.valueOf(topicId)}, null, null,
-                DiaryEntry_V2.COLUMN_TIME + " DESC , " + DiaryEntry_V2._ID + " DESC", null);
+        return selectDiaryList(topicId, false);
+    }
+
+    /**
+     * @param all true: also the hidden entries, and only by date (backup, deleting the topic)
+     */
+    public Cursor selectDiaryList(long topicId, boolean all) {
+        String where = DiaryEntry_V2.COLUMN_REF_TOPIC__ID + " = ?" + (all ? "" : com.kiminonawa.mydiary.shared.HiddenEntries.andNotHidden(""));
+        String order = (all ? "" : "IFNULL(" + DiaryEntry_V2.COLUMN_PINNED + ", 0) DESC, ")
+                + DiaryEntry_V2.COLUMN_TIME + " DESC , " + DiaryEntry_V2._ID + " DESC";
+        Cursor c = db.query(DiaryEntry_V2.TABLE_NAME, null, where, new String[]{String.valueOf(topicId)}, null, null,
+                order, null);
         if (c != null) {
             c.moveToFirst();
         }
@@ -405,6 +420,7 @@ public class DBManager {
                         + " FROM " + DiaryEntry_V2.TABLE_NAME
                         + " JOIN " + TopicEntry.TABLE_NAME
                         + " ON " + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + " = " + TopicEntry.TABLE_NAME + "." + TopicEntry._ID
+                        + " WHERE 1 = 1" + com.kiminonawa.mydiary.shared.HiddenEntries.andNotHidden("")
                         + " ORDER BY " + DiaryEntry_V2.COLUMN_TIME + " DESC",
                 null);
         if (c != null) {
@@ -431,6 +447,7 @@ public class DBManager {
                         + " = t." + TopicEntry._ID
                         + " LEFT JOIN " + DiaryItemEntry_V2.TABLE_NAME + " i ON i." + DiaryItemEntry_V2.COLUMN_REF_DIARY__ID
                         + " = d." + DiaryEntry_V2._ID + " AND i." + DiaryItemEntry_V2.COLUMN_TYPE + " IN (0, 3)"
+                        + " WHERE 1 = 1" + com.kiminonawa.mydiary.shared.HiddenEntries.andNotHidden("d.")
                         + " ORDER BY d." + DiaryEntry_V2.COLUMN_TIME + " DESC, d." + DiaryEntry_V2._ID
                         + " DESC, i." + DiaryItemEntry_V2.COLUMN_POSITION + " ASC",
                 null);
@@ -438,6 +455,42 @@ public class DBManager {
             c.moveToFirst();
         }
         return c;
+    }
+
+    /**
+     * Pins (or unpins) an entry at the top of the list of its topic.
+     */
+    public void setDiaryPinned(long diaryId, boolean pinned) {
+        ContentValues values = new ContentValues();
+        values.put(DiaryEntry_V2.COLUMN_PINNED, pinned ? 1 : 0);
+        db.update(DiaryEntry_V2.TABLE_NAME, values, DiaryEntry_V2._ID + " = ?", new String[]{String.valueOf(diaryId)});
+    }
+
+    /**
+     * Hides (or shows again) an entry.
+     */
+    public void setDiaryHidden(long diaryId, boolean hidden) {
+        ContentValues values = new ContentValues();
+        values.put(DiaryEntry_V2.COLUMN_HIDDEN, hidden ? 1 : 0);
+        db.update(DiaryEntry_V2.TABLE_NAME, values, DiaryEntry_V2._ID + " = ?", new String[]{String.valueOf(diaryId)});
+    }
+
+    /**
+     * @return {pinned, hidden} of an entry
+     */
+    public boolean[] getDiaryFlags(long diaryId) {
+        boolean[] flags = new boolean[2];
+        Cursor c = db.rawQuery("SELECT IFNULL(" + DiaryEntry_V2.COLUMN_PINNED + ", 0), IFNULL(" + DiaryEntry_V2.COLUMN_HIDDEN
+                + ", 0) FROM " + DiaryEntry_V2.TABLE_NAME + " WHERE " + DiaryEntry_V2._ID + " = ?", new String[]{String.valueOf(diaryId)});
+        try {
+            if (c.moveToFirst()) {
+                flags[0] = c.getInt(0) > 0;
+                flags[1] = c.getInt(1) > 0;
+            }
+        } finally {
+            c.close();
+        }
+        return flags;
     }
 
     public Cursor selectDiaryInfoByDiaryId(long diaryId) {

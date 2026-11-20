@@ -95,6 +95,10 @@ public class SaveDiaryTask extends BackgroundTask<Long, Integer> {
                             && DiaryAudio.localFileName(diaryItemHelper.get(i).getContent()) != null) {
                         //An audio of the phone: its file goes with the photos
                         savePhoto(DiaryAudio.localFileName(diaryItemHelper.get(i).getContent()));
+                    } else if (diaryItemHelper.get(i).getType() == IDairyRow.TYPE_VIDEO
+                            && diaryItemHelper.get(i).getContent().length() > 0) {
+                        //A video: its file goes with the photos
+                        savePhoto(diaryItemHelper.get(i).getContent());
                     }
                     //Save data
                     dbManager.insertDiaryContent(diaryItemHelper.get(i).getType(), i

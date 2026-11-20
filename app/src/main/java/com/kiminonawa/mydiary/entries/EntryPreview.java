@@ -117,6 +117,14 @@ public final class EntryPreview {
             String plain = RichText.strip(firstContent);
             return plain.substring(0, Math.min(maxLength, plain.length()));
         }
+        if (firstType == IDairyRow.TYPE_VIDEO) {
+            return context.getString(R.string.entries_summary_video);
+        }
+        if (firstType == IDairyRow.TYPE_TABLE) {
+            String plain = com.kiminonawa.mydiary.entries.diary.item.DiaryTable.plainText(firstContent);
+            return plain.length() > 0 ? plain.substring(0, Math.min(maxLength, plain.length()))
+                    : context.getString(R.string.entries_summary_table);
+        }
         if (firstType == IDairyRow.TYPE_LINK && firstContent.length() > 0) {
             return com.kiminonawa.mydiary.shared.LinkPreview.domainOf(firstContent);
         }

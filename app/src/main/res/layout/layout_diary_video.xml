@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A video inside a diary: a picture of the video, a play button in the middle and the length -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="210dp"
+    android:background="#FF000000">
+
+    <ImageView
+        android:id="@+id/IV_diary_video_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:background="@drawable/video_play_bg"
+        android:contentDescription="@string/video_play"
+        android:padding="14dp"
+        android:src="@drawable/ic_play_arrow_24dp"
+        android:tint="#FFFFFFFF" />
+
+    <TextView
+        android:id="@+id/TV_diary_video_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="8dp"
+        android:background="#99000000"
+        android:paddingBottom="2dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingTop="2dp"
+        android:textColor="#FFFFFFFF"
+        android:textSize="12dp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/IV_diary_video_delete"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="top|right"
+        android:background="@color/diary_photo_layout_delete_bg"
+        android:padding="6dp"
+        android:src="@drawable/ic_delete_white_24dp"
+        android:visibility="gone" />
+</FrameLayout>

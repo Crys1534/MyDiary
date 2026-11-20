@@ -43,6 +43,11 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
          * One or more pictures chosen from the gallery, to be added in order.
          */
         void selectPhotos(List<Uri> uris);
+
+        /**
+         * One or more videos chosen from the gallery, to be added in order.
+         */
+        void selectVideos(List<Uri> uris);
     }
 
     private RelativeLayout RL_diary_photo_dialog;
@@ -64,7 +69,15 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
 
 
     public static DiaryPhotoBottomSheet newInstance(boolean isEditMode) {
+        return newInstance(isEditMode, true);
+    }
+
+    /**
+     * @param allowVideo false when choosing the cover (only a photo can be the cover)
+     */
+    public static DiaryPhotoBottomSheet newInstance(boolean isEditMode, boolean allowVideo) {
         Bundle args = new Bundle();
+        args.putBoolean("allowVideo", allowVideo);
         DiaryPhotoBottomSheet fragment = new DiaryPhotoBottomSheet();
         args.putBoolean("isEditMode", isEditMode);
         fragment.setArguments(args);
@@ -89,6 +102,10 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
         return dialog;
     }
 
+    private boolean allowVideo() {
+        return getArguments() == null || getArguments().getBoolean("allowVideo", true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,6 +119,12 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
         IV_diary_photo_add_a_photo.setOnClickListener(this);
         IV_diary_photo_select_a_photo = (ImageView) rootView.findViewById(R.id.IV_diary_photo_select_a_photo);
         IV_diary_photo_select_a_photo.setOnClickListener(this);
+        View videoButton = rootView.findViewById(R.id.IV_diary_photo_select_a_video);
+        if (allowVideo()) {
+            videoButton.setOnClickListener(this);
+        } else {
+            videoButton.setVisibility(View.GONE);
+        }
 
         return rootView;
     }
@@ -132,8 +155,23 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
                         uris.add(data.getData());
                     }
                 }
+                //The gallery can give photos and videos together
+                List<Uri> videos = new ArrayList<>();
+                if (allowVideo() && getActivity() != null) {
+                    for (int i = uris.size() - 1; i >= 0; i--) {
+                        if (com.kiminonawa.mydiary.entries.diary.editor.VideoImporter.isVideo(
+                                getActivity().getContentResolver(), uris.get(i))) {
+                            videos.add(0, uris.remove(i));
+                        }
+                    }
+                }
+                if (!videos.isEmpty() && callBack != null) {
+                    callBack.selectVideos(videos);
+                }
                 //fix the ZenPhone C & HTC 626 crash issues
-                if (!uris.isEmpty() && callBack != null) {
+                if (!videos.isEmpty() && uris.isEmpty()) {
+                    //Only videos: nothing more to do
+                } else if (!uris.isEmpty() && callBack != null) {
                     callBack.selectPhotos(uris);
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.toast_photo_intent_error), Toast.LENGTH_LONG).show();
@@ -168,7 +206,16 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
                 }
                 break;
             case R.id.IV_diary_photo_select_a_photo:
-                FileManager.startBrowseMultipleImageFiles(this, REQUEST_SELECT_IMAGE_CODE);
+                if (allowVideo()) {
+                    //Photos and videos of the gallery
+                    FileManager.startBrowseMultipleMediaFiles(this, REQUEST_SELECT_IMAGE_CODE, true);
+                } else {
+                    FileManager.startBrowseMultipleImageFiles(this, REQUEST_SELECT_IMAGE_CODE);
+                }
+                break;
+            case R.id.IV_diary_photo_select_a_video:
+                //Only the videos of the gallery
+                FileManager.startBrowseMultipleMediaFiles(this, REQUEST_SELECT_IMAGE_CODE, false);
                 break;
         }
     }

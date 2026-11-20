@@ -698,7 +698,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 SPFManager.clearDiaryAutoSave(this, mainTopicAdapter.getList().get(position).getId());
                 //Because FOREIGN key is not work in this version,
                 //so delete diary item first , then delete diary
-                Cursor diaryCursor = dbManager.selectDiaryList(mainTopicAdapter.getList().get(position).getId());
+                Cursor diaryCursor = dbManager.selectDiaryList(mainTopicAdapter.getList().get(position).getId(), true);
                 for (int i = 0; i < diaryCursor.getCount(); i++) {
                     dbManager.delAllDiaryItemByDiaryId(diaryCursor.getLong(0));
                     diaryCursor.moveToNext();

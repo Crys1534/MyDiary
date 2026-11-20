@@ -8,7 +8,9 @@ import com.kiminonawa.mydiary.entries.diary.item.DiaryChecklist;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryItemHelper;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryLink;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryPhoto;
+import com.kiminonawa.mydiary.entries.diary.item.DiaryTable;
 import com.kiminonawa.mydiary.entries.diary.item.DiaryText;
+import com.kiminonawa.mydiary.entries.diary.item.DiaryVideo;
 import com.kiminonawa.mydiary.entries.diary.item.IDairyRow;
 import com.kiminonawa.mydiary.shared.FileManager;
 
@@ -71,6 +73,22 @@ public final class DiaryItemFactory {
                     link.setDeleteClickListener(actions);
                 }
                 row = link;
+                break;
+            case IDairyRow.TYPE_VIDEO:
+                DiaryVideo video = new DiaryVideo(activity);
+                video.setEditMode(editMode);
+                if (editMode) {
+                    video.setDeleteClickListener(actions);
+                }
+                video.setContent(content);
+                video.setFolder(new File(photoFolder));
+                return video;
+            case IDairyRow.TYPE_TABLE:
+                row = new DiaryTable(activity);
+                row.setEditMode(editMode);
+                if (editMode) {
+                    ((DiaryTable) row).setDeleteClickListener(actions);
+                }
                 break;
             case IDairyRow.TYPE_CHECKLIST:
                 row = new DiaryChecklist(activity, helper);

@@ -106,6 +106,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     private AreaPickerController areaPicker;
     private PhotoImporter photoImporter;
     private AudioFileImporter audioImporter;
+    private com.kiminonawa.mydiary.entries.diary.editor.VideoImporter videoImporter;
     //The photo that is being chosen is for the cover only (it is not put in the text)
     private boolean pickingCover = false;
     /**
@@ -181,6 +182,13 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         editorActions.bindBar(view);
         photoImporter = new PhotoImporter(this, this);
         photoImporter.setTargetFolder(diaryTempFileManager);
+        videoImporter = new com.kiminonawa.mydiary.entries.diary.editor.VideoImporter(this,
+                new com.kiminonawa.mydiary.entries.diary.editor.VideoImporter.Listener() {
+                    @Override
+                    public void onVideoReady(String fileName) {
+                        editorActions.insertVideo(fileName);
+                    }
+                });
         audioImporter = new AudioFileImporter(this, new AudioFileImporter.Listener() {
             @Override
             public void onAudioReady(String fileName, String displayName) {
@@ -188,6 +196,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
             }
         });
         audioImporter.setTargetFolder(diaryTempFileManager);
+        videoImporter.setTargetFolder(diaryTempFileManager);
         diaryCover.setPickAreaListener(new Runnable() {
             @Override
             public void run() {
@@ -432,7 +441,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     }
 
     private void openPhotoBottomSheet() {
-        DiaryPhotoBottomSheet diaryPhotoBottomSheet = DiaryPhotoBottomSheet.newInstance(false);
+        DiaryPhotoBottomSheet diaryPhotoBottomSheet = DiaryPhotoBottomSheet.newInstance(false, !pickingCover);
         diaryPhotoBottomSheet.setTargetFragment(this, 0);
         diaryPhotoBottomSheet.show(getFragmentManager(), "diaryPhotoBottomSheet");
     }
@@ -453,6 +462,13 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
             uris = new ArrayList<>(uris.subList(0, 1));
         }
         photoImporter.addUris(uris);
+    }
+
+    @Override
+    public void selectVideos(List<Uri> uris) {
+        if (!pickingCover) {
+            videoImporter.addUris(uris);
+        }
     }
 
     @Override

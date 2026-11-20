@@ -337,6 +337,7 @@
 
 
             <TextView
+                android:id="@+id/TV_setting_system_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

@@ -30,6 +30,20 @@ public class EntriesEntity implements Comparable<CalendarDay> {
     private RectF thumbnailArea;
     //Tags like ",school,trip," (see TagHelper)
     private String tags = "";
+    private boolean pinned, hidden;
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setFlags(boolean pinned, boolean hidden) {
+        this.pinned = pinned;
+        this.hidden = hidden;
+    }
 
 
     public EntriesEntity(long id, Date createDate, String title,

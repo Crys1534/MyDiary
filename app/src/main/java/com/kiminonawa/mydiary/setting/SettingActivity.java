@@ -108,6 +108,27 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         SP_setting_night = (Spinner) findViewById(R.id.SP_setting_night);
 
         But_setting_fix_photo_17_dir = (Button) findViewById(R.id.But_setting_fix_photo_17_dir);
+        //The secret: touching the word "System" 10 times shows (or hides again) the hidden entries
+        findViewById(R.id.TV_setting_system_title).setOnClickListener(new View.OnClickListener() {
+            private int taps = 0;
+            private long last = 0;
+
+            @Override
+            public void onClick(View v) {
+                long now = android.os.SystemClock.elapsedRealtime();
+                //The taps have to be one after the other (less than 1.5 s between them)
+                taps = now - last < 1500 ? taps + 1 : 1;
+                last = now;
+                if (taps >= com.kiminonawa.mydiary.shared.HiddenEntries.TAPS) {
+                    taps = 0;
+                    boolean shown = com.kiminonawa.mydiary.shared.HiddenEntries.toggle();
+                    com.kiminonawa.mydiary.shared.Haptics.saved(SettingActivity.this);
+                    android.widget.Toast.makeText(SettingActivity.this,
+                            shown ? R.string.hidden_entries_shown : R.string.hidden_entries_hidden,
+                            android.widget.Toast.LENGTH_LONG).show();
+                }
+            }
+        });
         But_setting_fix_photo_17_dir.setOnClickListener(this);
 
         But_setting_check_update = (Button) findViewById(R.id.But_setting_check_update);

@@ -88,12 +88,33 @@
             android:visibility="gone" />
 
         <ImageView
+            android:id="@+id/IV_diary_table"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/table_insert"
+            android:scaleType="center"
+            android:src="@drawable/ic_table_white_24dp"
+            android:visibility="gone" />
+
+        <ImageView
             android:id="@+id/IV_diary_move"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="center"
             android:src="@drawable/ic_drive_file_move_white_24dp"
+            android:visibility="gone" />
+
+        <!-- Only when reading an entry: pin it at the top / hide it -->
+        <ImageView
+            android:id="@+id/IV_diary_pin"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/diary_pin_menu"
+            android:scaleType="center"
+            android:src="@drawable/ic_push_pin_white_24dp"
             android:visibility="gone" />
 
         <!-- Only when reading an entry (not while writing it) -->

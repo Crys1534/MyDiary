@@ -91,7 +91,7 @@ public class EditorActions implements View.OnClickListener {
      */
     public void bindBar(View rootView) {
         int[] ids = {R.id.IV_diary_bold, R.id.IV_diary_italic, R.id.IV_diary_list,
-                R.id.IV_diary_checklist, R.id.IV_diary_audio, R.id.IV_diary_link};
+                R.id.IV_diary_checklist, R.id.IV_diary_audio, R.id.IV_diary_link, R.id.IV_diary_table};
         for (int id : ids) {
             View button = rootView.findViewById(id);
             button.setVisibility(View.VISIBLE);
@@ -146,6 +146,12 @@ public class EditorActions implements View.OnClickListener {
                     }
                 });
                 break;
+            case R.id.IV_diary_table:
+                Sfx.play(activity, Sfx.Sound.PEN_TICK);
+                diaryItemHelper.insertTableAtFocus(host.getFocusView(), EditorActions.this);
+                break;
+            case R.id.IV_diary_video_delete:
+            case R.id.IV_diary_table_delete:
             case R.id.IV_diary_link_delete:
                 Sfx.play(activity, Sfx.Sound.RUSTLE);
                 removeRow((int) v.getTag());
@@ -264,6 +270,15 @@ public class EditorActions implements View.OnClickListener {
             }
         });
         menu.show();
+    }
+
+    /**
+     * A video of the phone is ready in the folder of the entry: it goes where the cursor is.
+     */
+    public void insertVideo(String fileName) {
+        Activity activity = host.getEditorActivity();
+        Sfx.play(activity, Sfx.Sound.PHOTO);
+        diaryItemHelper.insertVideoAtFocus(host.getFocusView(), fileName, host.getPhotoFolder(), this);
     }
 
     /**

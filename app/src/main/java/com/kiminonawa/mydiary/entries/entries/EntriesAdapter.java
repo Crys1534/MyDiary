@@ -95,7 +95,8 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntryCardHolder> implem
 
         if (showHeader(position)) {
             holder.header.setVisibility(View.VISIBLE);
-            holder.header.setText(monthsFullName[calendar.get(Calendar.MONTH)]);
+            holder.header.setText(entity.isPinned() ? mFragment.getString(R.string.entries_pinned_header)
+                    : monthsFullName[calendar.get(Calendar.MONTH)]);
         } else {
             holder.header.setVisibility(View.GONE);
         }
@@ -111,7 +112,9 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntryCardHolder> implem
                     calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
                     + (tagsText.length() > 0 ? "  ·  " + tagsText : ""));
         }
-        holder.title.setText(entity.getTitle());
+        //A pin before the title of a pinned entry, an eye before a hidden one (only seen after the secret)
+        String marks = (entity.isPinned() ? "\uD83D\uDCCC " : "") + (entity.isHidden() ? "\uD83D\uDD12 " : "");
+        holder.title.setText(marks + entity.getTitle());
         holder.title.setMaxLines(2);
         holder.snippet.setVisibility(View.GONE);
 
@@ -127,6 +130,12 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntryCardHolder> implem
 
     private boolean showHeader(final int position) {
         if (position == 0) {
+            return true;
+        } else if (entriesList.get(position).isPinned()) {
+            //All the pinned entries are under one header
+            return false;
+        } else if (entriesList.get(position - 1).isPinned()) {
+            //The first entry after the pinned ones: its month
             return true;
         } else {
             Calendar previousCalendar = new GregorianCalendar();
