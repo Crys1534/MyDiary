@@ -121,7 +121,7 @@ public class DiaryTable implements IDairyRow {
     }
 
     private int dp(float v) {
-        return ScreenHelper.dpToPixel(context.getResources(), v);
+        return Math.round(v * context.getResources().getDisplayMetrics().density);
     }
 
     private int lineColor() {
