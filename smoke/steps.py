@@ -1649,6 +1649,235 @@ def dark_test():
 step("cover-only photo and notebook sheet", cover_photo_test)
 step("new features: audio from phone, drag, link, paper, full screen", features_test)
 step("dark mode", dark_test)
+
+def notes_db(label):
+    """Types of rows, pinned / hidden of every entry (from the database)."""
+    import sqlite3
+    path = pull_db("%s/notes_%s" % (OUT, label))
+    if not path:
+        log("   NOTES %s: no database" % label)
+        return []
+    con = sqlite3.connect(path)
+    rows = con.execute("select _id, diary_title, diary_ref_topic_id, ifnull(diary_pinned,0), ifnull(diary_hidden,0) "
+                       "from diary_entry_v2 order by _id").fetchall()
+    items = con.execute("select item_ref_diary_id, diary_item_type, substr(diary_item_content, 1, 120) "
+                        "from diary_item_entry_v2 where diary_item_type in (6, 7)").fetchall()
+    con.close()
+    log("   NOTES %s: entries=%r" % (label, rows))
+    log("   NOTES %s: video/table rows=%r" % (label, items))
+    return rows, items
+
+
+def notes_features_test():
+    """Videos from the gallery, a table with its column widths, pinning and hiding entries, and the secret of
+    Settings (10 taps on 'System')."""
+    video = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test-video.mp4")
+    for folder in ("Movies", "Download", "DCIM/Camera"):
+        adb("shell", "mkdir", "-p", "/sdcard/" + folder)
+        subprocess.run(["adb", "push", video, "/sdcard/%s/mi_video.mp4" % folder], capture_output=True)
+        adb("shell", "am", "broadcast", "-a", "android.intent.action.MEDIA_SCANNER_SCAN_FILE",
+            "-d", "file:///sdcard/%s/mi_video.mp4" % folder)
+    adb("shell", "content", "call", "--uri", "content://media", "--method", "scan_volume", "--arg", "external_primary")
+    sleep(4)
+    if not open_diary_topic():
+        return
+    tap(rid="But_diary_topbar_diary")
+    sleep(3)
+    dismiss_intro()
+    tap(rid="EDT_diary_title")
+    type_text("Prueba video y tabla")
+    close_keyboard()
+    tap(rid="LL_diary_item_content")
+    sleep(1)
+    type_text("antes del video")
+    close_keyboard()
+
+    # --- the video, with the button "photos and videos" of the gallery
+    adb("logcat", "-c")
+    if tap(rid="IV_diary_photo"):
+        sleep(2)
+        show("notes_photo_sheet", full=True)
+        log("   NOTES: video button in the sheet = %s" % bool(find(rid="IV_diary_photo_select_a_video")))
+        tap(rid="IV_diary_photo_select_a_photo")
+        sleep(4)
+        show("notes_gallery_photos_and_videos", full=True)
+        for label in ("Files", "Documents", "Photos"):
+            n = find(text=label, contains=False)
+            if n:
+                tap_xy(n["cx"], n["cy"])
+                sleep(3)
+                break
+        n = find(text="Just once", contains=False)
+        if n:
+            tap_xy(n["cx"], n["cy"])
+            sleep(3)
+        show("notes_gallery_open", full=True)
+        names = [x["text"] for x in nodes() if x["text"]]
+        log("   NOTES: texts in the gallery window = %r" % names[:40])
+        n = find(text="mi_video")
+        if not n:
+            for desc in ("Show roots", "Show drawer", "Open drawer"):
+                if tap(desc=desc):
+                    break
+            sleep(2)
+            for place in ("Videos", "Downloads", "Download", "Movies"):
+                if tap(text=place, contains=False):
+                    sleep(3)
+                    break
+            show("notes_gallery_place", full=True)
+            n = find(text="mi_video")
+        if n:
+            tap_xy(n["cx"], n["cy"])
+            sleep(2)
+            for label in ("Select", "Add", "Done", "OPEN", "Open"):
+                m = find(text=label, contains=False)
+                if m:
+                    tap_xy(m["cx"], m["cy"])
+                    break
+        else:
+            thumbs = [x for x in nodes() if x["rid"].endswith("icon_thumbnail")]
+            log("   NOTES: mi_video not found by name; thumbnails=%d" % len(thumbs))
+            if thumbs:
+                tap_xy(thumbs[0]["cx"], thumbs[0]["cy"])
+                sleep(2)
+                for label in ("Add (", "Add", "Select", "Done"):
+                    m = find(text=label, contains=label == "Add (")
+                    if m:
+                        tap_xy(m["cx"], m["cy"])
+                        break
+            else:
+                key(4)
+        sleep(6)
+        show("notes_video_added", full=True)
+        log("   NOTES: video row in the entry = %s" % bool(find(rid="IV_diary_video_frame")))
+
+    # --- the table
+    tap(rid="LL_diary_item_content")
+    close_keyboard()
+    if tap(rid="IV_diary_table"):
+        sleep(2)
+        show("notes_table_added", full=True)
+        cells = [x for x in nodes() if x["cls"].endswith("EditText") and x["b"][1] > 300]
+        log("   NOTES: edit boxes after the table = %d" % len(cells))
+        if not scroll_to_text("Column widths"):
+            log("   NOTES: no widths button")
+        if tap(text="Column widths", contains=False):
+            sleep(2)
+            show("notes_table_widths", full=True)
+            bars = [x for x in nodes() if x["cls"].endswith("SeekBar")]
+            log("   NOTES: sliders in the widths window = %d" % len(bars))
+            if bars:
+                x1, y1, x2, y2 = bars[0]["b"]
+                tap_xy(x1 + int((x2 - x1) * 0.7), (y1 + y2) // 2)
+                sleep(1)
+                show("notes_table_widths_changed", full=True)
+            tap(text="OK", contains=False)
+            sleep(2)
+        if tap(text="+ Row", contains=False):
+            sleep(1)
+        show("notes_table_after", full=True)
+    close_keyboard()
+    tap(rid="IV_diary_save")
+    sleep(5)
+    show("notes_saved", full=True)
+    rows, items = notes_db("after_save")
+    log("   NOTES: saved video rows=%d table rows=%d" % (len([i for i in items if i[1] == 6]), len([i for i in items if i[1] == 7])))
+    for i in items:
+        if i[1] == 6:
+            topic = [r for r in rows if r[0] == i[0]][0][2]
+            ls = adb("shell", "ls", "-la", "/sdcard/Android/data/%s/files/diary/%s/%s/" % (PKG, topic, i[0]))
+            log("   NOTES: files of the entry with the video = %r" % ls[:500])
+
+    # --- reading it: the video and the table
+    tap(rid="But_diary_topbar_entries")
+    sleep(3)
+    show("notes_list", full=True)
+    n = find(text="Prueba video y tabla")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(4)
+        show("notes_viewer", full=True)
+        adb("shell", "input", "swipe", "540", "1700", "540", "500", "400")
+        sleep(2)
+        show("notes_viewer_scrolled", full=True)
+        frame = find(rid="IV_diary_video_frame")
+        if frame:
+            tap_xy(frame["cx"], frame["cy"])
+            sleep(5)
+            show("notes_video_player", full=True)
+            log("   NOTES: player open = %s" % ("VideoPlayerActivity" in adb("shell", "dumpsys", "activity", "activities")[:200000]))
+            key(4)
+            sleep(2)
+        # --- pin it
+        if tap(rid="IV_diary_pin"):
+            sleep(1.5)
+            show("notes_pin_menu", full=True)
+            tap(text="Pin at the top", contains=False)
+            sleep(3)
+        close_viewer()
+        sleep(2)
+        show("notes_list_pinned", full=True)
+
+    # --- hide another entry
+    others = [x for x in nodes() if x["rid"].endswith("TV_entries_item_title") and "Prueba video" not in x["text"]]
+    hidden_title = None
+    if others:
+        hidden_title = others[0]["text"]
+        tap_xy(others[0]["cx"], others[0]["cy"])
+        sleep(4)
+        if tap(rid="IV_diary_pin"):
+            sleep(1.5)
+            tap(text="Hide this entry", contains=False)
+            sleep(3)
+        close_viewer()
+        sleep(2)
+    show("notes_list_after_hide", full=True)
+    log("   NOTES: hidden entry %r still in the list = %s" % (hidden_title, bool(hidden_title and find(text=hidden_title))))
+    notes_db("after_pin_hide")
+
+    # --- the secret: 10 taps on "System"
+    restart()
+    if tap(rid="IV_main_setting"):
+        sleep(2)
+        tap(rid="IV_main_setting_setting_page")
+        sleep(3)
+        if scroll_to("TV_setting_system_title", tries=10):
+            t = find(rid="TV_setting_system_title")
+            for _ in range(10):
+                adb("shell", "input", "tap", str(t["cx"]), str(t["cy"]))
+                sleep(0.25)
+            sleep(0.5)
+            show("notes_secret_toast", full=True)
+        else:
+            log("   NOTES: 'System' not found in Settings")
+        key(4)
+        sleep(2)
+    key(4)
+    sleep(1)
+    n = find(text="DIARY")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(3)
+        dismiss_intro()
+        tap(rid="But_diary_topbar_entries")
+        sleep(2)
+    show("notes_list_secret", full=True)
+    log("   NOTES: hidden entry %r visible after the secret = %s" % (hidden_title, bool(hidden_title and find(text=hidden_title))))
+    crash = adb("logcat", "-d", "-b", "crash").strip()
+    log("   NOTES: crash buffer = %r" % crash[:800])
+    alive("notes features")
+
+
+def scroll_to_text(text, tries=5):
+    for _ in range(tries):
+        if find(text=text, contains=False):
+            return True
+        adb("shell", "input", "swipe", "540", "1500", "540", "900", "300")
+        sleep(1)
+    return bool(find(text=text, contains=False))
+
+step("notes features", notes_features_test)
+
 def esoteric_test():
     """The Esoteric theme: the DIARY category is set to Esoteric in the database, then photographed."""
     import sqlite3
