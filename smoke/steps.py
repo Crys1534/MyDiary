@@ -1714,8 +1714,23 @@ def notes_features_test():
         show("notes_gallery_open", full=True)
         names = [x["text"] for x in nodes() if x["text"]]
         log("   NOTES: texts in the gallery window = %r" % names[:40])
-        n = find(text="mi_video")
-        if not n:
+        vids = [x for x in nodes() if x["desc"].startswith("Video")]
+        log("   NOTES: videos in the gallery = %d" % len(vids))
+        if vids:
+            tap_xy(vids[0]["cx"], vids[0]["cy"])
+            sleep(2)
+            show("notes_gallery_video_chosen", full=True)
+            for label in ("Add (", "Add", "Select", "Done"):
+                m = find(text=label, contains=label == "Add (")
+                if m:
+                    tap_xy(m["cx"], m["cy"])
+                    break
+            n = None
+        else:
+            n = find(text="mi_video")
+        if vids:
+            pass
+        elif not n:
             for desc in ("Show roots", "Show drawer", "Open drawer"):
                 if tap(desc=desc):
                     break
@@ -1726,7 +1741,9 @@ def notes_features_test():
                     break
             show("notes_gallery_place", full=True)
             n = find(text="mi_video")
-        if n:
+        if vids:
+            pass
+        elif n:
             tap_xy(n["cx"], n["cy"])
             sleep(2)
             for label in ("Select", "Add", "Done", "OPEN", "Open"):
