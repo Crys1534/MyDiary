@@ -338,4 +338,20 @@
     <string name="toast_diary_unhidden">The entry can be seen again</string>
     <string name="hidden_entries_shown">Hidden entries are visible now</string>
     <string name="hidden_entries_hidden">Hidden entries are hidden again</string>
+    <string name="photo_sheet_camera">Camera</string>
+    <string name="photo_sheet_photos">Photos</string>
+    <string name="photo_sheet_gallery">Gallery</string>
+    <string name="photo_sheet_videos">Videos</string>
+    <string name="gallery_choose_layout">Design of the gallery</string>
+    <string name="gallery_layout_2x2">2 × 2 (4 photos)</string>
+    <string name="gallery_layout_3x2">3 × 2 (6 photos)</string>
+    <string name="gallery_layout_1_2">1 big and 2 small (3 photos)</string>
+    <string name="gallery_change_layout">Design</string>
+    <string name="gallery_add_photos">+ Photos</string>
+    <string name="gallery_delete">Delete the gallery</string>
+    <string name="gallery_photo">Photo %1$d of the gallery</string>
+    <string name="gallery_remove_photo">Take this photo out of the gallery?</string>
+    <string name="gallery_remove_photo_yes">Take out</string>
+    <string name="gallery_too_many">Only %1$d photos are seen in this design. The others are kept: choose a bigger design to see them.</string>
+    <string name="entries_summary_gallery">**gallery**</string>
 </resources>

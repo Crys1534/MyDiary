@@ -54,6 +54,11 @@ public class EditorActions implements View.OnClickListener {
          * Opens the window to choose an audio file of the phone (see AudioFileImporter).
          */
         void pickAudioFile();
+
+        /**
+         * Opens the gallery of the phone to fill the empty places of a gallery of photos (see GalleryPicker).
+         */
+        void addPhotosToGallery(com.kiminonawa.mydiary.entries.diary.item.DiaryGallery gallery);
     }
 
     private static final String TAG = "EditorActions";
@@ -149,6 +154,11 @@ public class EditorActions implements View.OnClickListener {
             case R.id.IV_diary_table:
                 Sfx.play(activity, Sfx.Sound.PEN_TICK);
                 diaryItemHelper.insertTableAtFocus(host.getFocusView(), EditorActions.this);
+                break;
+            case R.id.IV_diary_gallery_delete:
+                Sfx.play(activity, Sfx.Sound.CRUMPLE);
+                removeRow((int) v.getTag());
+                host.onCoverChanged();
                 break;
             case R.id.IV_diary_video_delete:
             case R.id.IV_diary_table_delete:
@@ -270,6 +280,63 @@ public class EditorActions implements View.OnClickListener {
             }
         });
         menu.show();
+    }
+
+    /**
+     * Galleries of photos where the cursor is, one after the other: the photos are split in groups that fit the design.
+     */
+    public void insertGalleries(String layout, java.util.List<String> fileNames) {
+        if (fileNames.isEmpty()) {
+            host.onCoverChanged();
+            return;
+        }
+        Activity activity = host.getEditorActivity();
+        Sfx.play(activity, Sfx.Sound.PHOTO);
+        int capacity = com.kiminonawa.mydiary.entries.diary.item.DiaryGallery.capacity(layout);
+        View focus = host.getFocusView();
+        for (int start = 0; start < fileNames.size(); start += capacity) {
+            com.kiminonawa.mydiary.entries.diary.item.DiaryGallery gallery = newGallery(activity, layout);
+            gallery.addPhotos(fileNames.subList(start, Math.min(fileNames.size(), start + capacity)));
+            diaryItemHelper.insertBlockAtFocus(focus, gallery);
+            //The next gallery goes after this one (in the text box that is under it)
+            int next = gallery.getPosition() + 1;
+            focus = next < diaryItemHelper.getItemSize() ? diaryItemHelper.get(next).getView() : null;
+            if (focus != null) {
+                focus.requestFocus();
+            }
+        }
+        host.onCoverChanged();
+    }
+
+    /**
+     * A gallery ready to be written in (its buttons work).
+     */
+    public com.kiminonawa.mydiary.entries.diary.item.DiaryGallery newGallery(Activity activity, String layout) {
+        final com.kiminonawa.mydiary.entries.diary.item.DiaryGallery gallery =
+                new com.kiminonawa.mydiary.entries.diary.item.DiaryGallery(activity);
+        gallery.setFolder(host.getPhotoFolder());
+        gallery.setLayout(layout);
+        gallery.setEditMode(true);
+        setupGallery(gallery);
+        return gallery;
+    }
+
+    /**
+     * The buttons of a gallery while writing.
+     */
+    public void setupGallery(com.kiminonawa.mydiary.entries.diary.item.DiaryGallery gallery) {
+        gallery.setDeleteClickListener(this);
+        gallery.setEditor(new com.kiminonawa.mydiary.entries.diary.item.DiaryGallery.Editor() {
+            @Override
+            public void addPhotosToGallery(com.kiminonawa.mydiary.entries.diary.item.DiaryGallery g) {
+                host.addPhotosToGallery(g);
+            }
+
+            @Override
+            public void onGalleryChanged() {
+                host.onCoverChanged();
+            }
+        });
     }
 
     /**

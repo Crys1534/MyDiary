@@ -256,6 +256,14 @@ public class DiaryItemHelper extends Observable {
      */
     public String getThumbnailUriString() {
         DiaryPhoto photo = getThumbnailPhoto();
+        if (photo == null) {
+            //No photo alone: the first photo of the first gallery
+            for (IDairyRow row : diaryItemList) {
+                if (row instanceof DiaryGallery && !((DiaryGallery) row).getPhotoUris().isEmpty()) {
+                    return ((DiaryGallery) row).getPhotoUris().get(0).toString();
+                }
+            }
+        }
         return photo == null ? null : photo.getPhotoUriString();
     }
 
@@ -663,7 +671,7 @@ public class DiaryItemHelper extends Observable {
      * Puts a row that is not text (an audio, a link) where the cursor is. The text after the cursor goes below it.
      * After it there is always a text box.
      */
-    private void insertBlockAtFocus(View focusView, IDairyRow block) {
+    public void insertBlockAtFocus(View focusView, IDairyRow block) {
         Context context = itemContentLayout.getContext();
         int rowIndex = findRowByEditText(focusView);
         String rest = "";

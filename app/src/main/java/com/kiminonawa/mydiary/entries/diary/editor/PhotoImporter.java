@@ -28,6 +28,28 @@ public class PhotoImporter implements CopyPhotoTask.CopyPhotoCallBack {
         void onPhotoReady(String fileName);
     }
 
+    /**
+     * Photos copied as one group (a gallery): the listener gets all of them together, in order.
+     */
+    public interface BatchListener {
+        void onBatchReady(List<String> fileNames);
+    }
+
+    private static class Batch {
+        final BatchListener listener;
+        final List<String> files = new java.util.ArrayList<>();
+        int remaining;
+
+        Batch(BatchListener listener, int count) {
+            this.listener = listener;
+            this.remaining = count;
+        }
+    }
+
+    //For every picture waiting: the group it belongs to (null: a photo alone)
+    private final LinkedList<Batch> pendingBatches = new LinkedList<>();
+    private Batch currentBatch;
+
     private final Fragment host;
     private final Listener listener;
     private FileManager targetFolder;
@@ -54,6 +76,24 @@ public class PhotoImporter implements CopyPhotoTask.CopyPhotoCallBack {
         //The check "is it really a picture" is done while decoding (see CopyPhotoTask),
         //because the file name can't tell it reliably.
         pendingUris.addAll(uris);
+        for (int i = 0; i < uris.size(); i++) {
+            pendingBatches.add(null);
+        }
+        copyNext();
+    }
+
+    /**
+     * Pictures chosen for a gallery: they arrive together when all are copied.
+     */
+    public void addUrisAsBatch(List<Uri> uris, BatchListener listener) {
+        if (uris.isEmpty()) {
+            return;
+        }
+        Batch batch = new Batch(listener, uris.size());
+        pendingUris.addAll(uris);
+        for (int i = 0; i < uris.size(); i++) {
+            pendingBatches.add(batch);
+        }
         copyNext();
     }
 
@@ -73,6 +113,7 @@ public class PhotoImporter implements CopyPhotoTask.CopyPhotoCallBack {
         }
         isCopying = true;
         Uri uri = pendingUris.poll();
+        currentBatch = pendingBatches.isEmpty() ? null : pendingBatches.poll();
         new CopyPhotoTask(host.getActivity(), uri,
                 DiaryItemHelper.getVisibleWidth(host.getActivity()), DiaryItemHelper.getVisibleHeight(host.getActivity()),
                 targetFolder, this).execute();
@@ -81,11 +122,24 @@ public class PhotoImporter implements CopyPhotoTask.CopyPhotoCallBack {
     @Override
     public void onCopyCompiled(String fileName) {
         isCopying = false;
+        Batch batch = currentBatch;
+        currentBatch = null;
         if (host.getActivity() == null) {
             pendingUris.clear();
+            pendingBatches.clear();
             return;
         }
-        if (fileName != null) {
+        if (batch != null) {
+            if (fileName != null) {
+                batch.files.add(fileName);
+            } else {
+                Toast.makeText(host.getActivity(), host.getString(R.string.toast_photo_load_failed), Toast.LENGTH_LONG).show();
+            }
+            batch.remaining--;
+            if (batch.remaining <= 0 && !batch.files.isEmpty()) {
+                batch.listener.onBatchReady(batch.files);
+            }
+        } else if (fileName != null) {
             listener.onPhotoReady(fileName);
         } else {
             Toast.makeText(host.getActivity(), host.getString(R.string.toast_photo_load_failed), Toast.LENGTH_LONG).show();

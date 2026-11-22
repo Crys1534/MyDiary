@@ -2,4 +2,5 @@
 <resources>
     <!-- The delete button of a table in an entry (the view is made in code, see DiaryTable) -->
     <item name="IV_diary_table_delete" type="id" />
+    <item name="IV_diary_gallery_delete" type="id" />
 </resources>

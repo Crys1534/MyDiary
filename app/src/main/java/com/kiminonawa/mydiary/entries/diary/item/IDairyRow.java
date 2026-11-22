@@ -21,6 +21,8 @@ public interface IDairyRow {
     int TYPE_VIDEO = 6;
     //A table; the content is a JSON text with the widths of the columns and the text of every cell (see DiaryTable)
     int TYPE_TABLE = 7;
+    //Several photos together in a design (2x2, 3x2, one big and two small); the content is JSON (see DiaryGallery)
+    int TYPE_GALLERY = 8;
 
     void setContent(String content);
 

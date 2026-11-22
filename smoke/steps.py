@@ -1894,6 +1894,88 @@ def scroll_to_text(text, tries=5):
 
 step("notes features", notes_features_test)
 
+
+def gallery_test():
+    """A gallery of photos: its design (1 big and 2 small), 5 photos (they make 2 galleries), saved and read."""
+    import sqlite3
+    here = os.path.join(os.path.dirname(os.path.abspath(__file__)), "gallery")
+    adb("shell", "mkdir", "-p", "/sdcard/Pictures")
+    for i in range(5):
+        name = "foto_%d.jpg" % (i + 1)
+        subprocess.run(["adb", "push", os.path.join(here, name), "/sdcard/Pictures/" + name], capture_output=True)
+        adb("shell", "am", "broadcast", "-a", "android.intent.action.MEDIA_SCANNER_SCAN_FILE",
+            "-d", "file:///sdcard/Pictures/" + name)
+    adb("shell", "content", "call", "--uri", "content://media", "--method", "scan_volume", "--arg", "external_primary")
+    sleep(4)
+    if not open_diary_topic():
+        return
+    tap(rid="But_diary_topbar_diary")
+    sleep(3)
+    dismiss_intro()
+    tap(rid="EDT_diary_title")
+    type_text("Prueba galeria")
+    close_keyboard()
+    tap(rid="LL_diary_item_content")
+    sleep(1)
+    type_text("mis fotos")
+    close_keyboard()
+    if not tap(rid="IV_diary_photo"):
+        return
+    sleep(2)
+    show("gallery_sheet", full=True)
+    tap(rid="IV_diary_photo_gallery")
+    sleep(2)
+    show("gallery_choose_layout", full=True)
+    tap(text="1 big and 2 small", contains=True)
+    sleep(4)
+    photos = [x for x in nodes() if x["desc"].startswith("Photo")]
+    log("   GALLERY: photos in the picker = %d" % len(photos))
+    for x in photos[:5]:
+        tap_xy(x["cx"], x["cy"])
+        sleep(0.6)
+    show("gallery_picker_chosen", full=True)
+    m = find(text="Add (", contains=True) or find(text="Add", contains=False)
+    if m:
+        tap_xy(m["cx"], m["cy"])
+    sleep(8)
+    show("gallery_added", full=True)
+    adb("shell", "input", "swipe", "540", "1700", "540", "700", "400")
+    sleep(1.5)
+    show("gallery_added_scrolled", full=True)
+    tap(rid="IV_diary_save")
+    sleep(5)
+    path = pull_db("%s/gallery_db" % OUT)
+    if path:
+        con = sqlite3.connect(path)
+        rows = con.execute("select item_ref_diary_id, diary_item_type, diary_item_content from diary_item_entry_v2 "
+                           "where diary_item_type = 8").fetchall()
+        con.close()
+        log("   GALLERY: saved galleries = %r" % rows)
+    tap(rid="But_diary_topbar_entries")
+    sleep(3)
+    show("gallery_list", full=True)
+    n = find(text="Prueba galeria")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(4)
+        adb("shell", "input", "swipe", "540", "1700", "540", "600", "400")
+        sleep(2)
+        show("gallery_viewer", full=True)
+        cells = [x for x in nodes() if x["desc"].startswith("Photo") and "gallery" in x["desc"]]
+        log("   GALLERY: photos seen while reading = %d" % len(cells))
+        if cells:
+            tap_xy(cells[0]["cx"], cells[0]["cy"])
+            sleep(3)
+            show("gallery_photo_big", full=True)
+            key(4)
+            sleep(2)
+        close_viewer()
+    crash = adb("logcat", "-d", "-b", "crash").strip()
+    log("   GALLERY: crash buffer = %r" % crash[:800])
+    alive("gallery")
+
+step("gallery", gallery_test)
+
 def esoteric_test():
     """The Esoteric theme: the DIARY category is set to Esoteric in the database, then photographed."""
     import sqlite3

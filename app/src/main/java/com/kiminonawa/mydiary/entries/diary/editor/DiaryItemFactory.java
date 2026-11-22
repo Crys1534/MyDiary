@@ -83,6 +83,16 @@ public final class DiaryItemFactory {
                 video.setContent(content);
                 video.setFolder(new File(photoFolder));
                 return video;
+            case IDairyRow.TYPE_GALLERY:
+                com.kiminonawa.mydiary.entries.diary.item.DiaryGallery gallery =
+                        new com.kiminonawa.mydiary.entries.diary.item.DiaryGallery(activity);
+                gallery.setFolder(new File(photoFolder));
+                gallery.setContent(content);
+                gallery.setEditMode(editMode);
+                if (editMode) {
+                    actions.setupGallery(gallery);
+                }
+                return gallery;
             case IDairyRow.TYPE_TABLE:
                 row = new DiaryTable(activity);
                 row.setEditMode(editMode);

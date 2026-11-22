@@ -48,6 +48,11 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
          * One or more videos chosen from the gallery, to be added in order.
          */
         void selectVideos(List<Uri> uris);
+
+        /**
+         * A new gallery of photos: choose its design, then its photos.
+         */
+        void newGallery();
     }
 
     private RelativeLayout RL_diary_photo_dialog;
@@ -120,10 +125,14 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
         IV_diary_photo_select_a_photo = (ImageView) rootView.findViewById(R.id.IV_diary_photo_select_a_photo);
         IV_diary_photo_select_a_photo.setOnClickListener(this);
         View videoButton = rootView.findViewById(R.id.IV_diary_photo_select_a_video);
+        View galleryButton = rootView.findViewById(R.id.IV_diary_photo_gallery);
         if (allowVideo()) {
             videoButton.setOnClickListener(this);
+            galleryButton.setOnClickListener(this);
         } else {
-            videoButton.setVisibility(View.GONE);
+            //Choosing the cover: only one photo
+            ((View) videoButton.getParent()).setVisibility(View.GONE);
+            ((View) galleryButton.getParent()).setVisibility(View.GONE);
         }
 
         return rootView;
@@ -212,6 +221,12 @@ public class DiaryPhotoBottomSheet extends BottomSheetDialogFragment implements 
                 } else {
                     FileManager.startBrowseMultipleImageFiles(this, REQUEST_SELECT_IMAGE_CODE);
                 }
+                break;
+            case R.id.IV_diary_photo_gallery:
+                if (callBack != null) {
+                    callBack.newGallery();
+                }
+                dismiss();
                 break;
             case R.id.IV_diary_photo_select_a_video:
                 //Only the videos of the gallery

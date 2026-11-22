@@ -96,6 +96,12 @@ public class UpdateDiaryTask extends BackgroundTask<Long, Integer> {
                         && DiaryAudio.localFileName(diaryItemHelper.get(i).getContent()) != null) {
                     //An audio of the phone: its file goes with the photos
                     savePhoto(DiaryAudio.localFileName(diaryItemHelper.get(i).getContent()));
+                } else if (diaryItemHelper.get(i).getType() == IDairyRow.TYPE_GALLERY) {
+                    //The photos of a gallery go with the other photos
+                    for (String photo : com.kiminonawa.mydiary.entries.diary.item.DiaryGallery.photosOf(
+                            diaryItemHelper.get(i).getContent())) {
+                        savePhoto(photo);
+                    }
                 } else if (diaryItemHelper.get(i).getType() == IDairyRow.TYPE_VIDEO
                         && diaryItemHelper.get(i).getContent().length() > 0) {
                     //A video: its file goes with the photos

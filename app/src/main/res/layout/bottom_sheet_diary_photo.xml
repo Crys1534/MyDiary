@@ -1,44 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Camera, photos and videos of the gallery, only videos, and a gallery of photos in a design (each one with its name) -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/RL_diary_photo_dialog"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/bottom_dialog_height_1_line">
+    android:layout_height="96dp">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_dialog_height_1_line">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/IV_diary_photo_add_a_photo"
+                android:layout_width="56dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/photo_sheet_camera"
+                android:scaleType="center"
+                android:src="@drawable/ic_add_a_photo_white_36dp" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_add_a_photo_white_36dp" />
+                android:text="@string/photo_sheet_camera"
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/IV_diary_photo_select_a_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
+                android:layout_width="56dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/photo_sheet_photos"
+                android:scaleType="center"
                 android:src="@drawable/ic_photo_library_white_36dp" />
 
-            <!-- Only videos of the gallery -->
-            <ImageView
-                android:id="@+id/IV_diary_photo_select_a_video"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="20dp"
-                android:contentDescription="@string/video_choose"
-                android:src="@drawable/ic_video_library_white_36dp" />
+                android:text="@string/photo_sheet_photos"
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp" />
         </LinearLayout>
-    </ScrollView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/IV_diary_photo_gallery"
+                android:layout_width="56dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/photo_sheet_gallery"
+                android:scaleType="center"
+                android:src="@drawable/ic_gallery_grid_white_36dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/photo_sheet_gallery"
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/IV_diary_photo_select_a_video"
+                android:layout_width="56dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/video_choose"
+                android:scaleType="center"
+                android:src="@drawable/ic_video_library_white_36dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/photo_sheet_videos"
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

@@ -122,6 +122,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     private EditorActions editorActions;
     private AreaPickerController areaPicker;
     private PhotoImporter photoImporter;
+    private com.kiminonawa.mydiary.entries.diary.editor.GalleryPicker galleryPicker;
     private AudioFileImporter audioImporter;
     private com.kiminonawa.mydiary.entries.diary.editor.VideoImporter videoImporter;
     //The photo that is being chosen is for the cover only (it is not put in the text)
@@ -251,6 +252,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         });
         editorActions = new EditorActions(this, diaryItemHelper, LL_diary_item_content, areaPicker);
         photoImporter = new PhotoImporter(this, this);
+        galleryPicker = new com.kiminonawa.mydiary.entries.diary.editor.GalleryPicker(this, photoImporter, editorActions);
         videoImporter = new com.kiminonawa.mydiary.entries.diary.editor.VideoImporter(this,
                 new com.kiminonawa.mydiary.entries.diary.editor.VideoImporter.Listener() {
                     @Override
@@ -328,6 +330,10 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         }
         //The audio file that was chosen on the phone
         if (audioImporter != null && audioImporter.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+        //The photos of a gallery
+        if (galleryPicker != null && galleryPicker.onActivityResult(requestCode, resultCode, data)) {
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -422,6 +428,16 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     @Override
     public void pickAudioFile() {
         audioImporter.pick();
+    }
+
+    @Override
+    public void addPhotosToGallery(com.kiminonawa.mydiary.entries.diary.item.DiaryGallery gallery) {
+        galleryPicker.addTo(gallery);
+    }
+
+    @Override
+    public void newGallery() {
+        galleryPicker.startNew();
     }
 
     private void initData() {
@@ -572,6 +588,21 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                     ((DiaryPhoto) diaryItem).setDraweeViewPositionTag(photoCount);
                     photoCount++;
                     diaryPhotoFileList.add(Uri.parse(FileManager.FILE_HEADER + photoFolder + "/" + content));
+                } else if (diaryItem instanceof com.kiminonawa.mydiary.entries.diary.item.DiaryGallery) {
+                    //Reading: tap a photo of the gallery to see it big (with all the photos of the entry)
+                    com.kiminonawa.mydiary.entries.diary.item.DiaryGallery gallery =
+                            (com.kiminonawa.mydiary.entries.diary.item.DiaryGallery) diaryItem;
+                    final int firstIndex = photoCount;
+                    for (Uri uri : gallery.getPhotoUris()) {
+                        diaryPhotoFileList.add(uri);
+                        photoCount++;
+                    }
+                    gallery.setPhotoClickListener(new com.kiminonawa.mydiary.entries.diary.item.DiaryGallery.PhotoClick() {
+                        @Override
+                        public void onPhotoClick(int indexInGallery) {
+                            openPhotoViewer(firstIndex + indexInGallery);
+                        }
+                    });
                 } else if (diaryItem instanceof DiaryChecklist) {
                     //Not editing: the text can't be changed, but the boxes can be ticked (saved right away)
                     ((DiaryChecklist) diaryItem).setToggleListener(new DiaryChecklist.ToggleListener() {
@@ -726,12 +757,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 dateField.openPicker(getFragmentManager());
                 break;
             case R.id.SDV_diary_new_photo:
-                int draweeViewPosition = (int) v.getTag();
-                Intent gotoPhotoDetailViewer = new Intent(getActivity(), PhotoDetailViewerActivity.class);
-                gotoPhotoDetailViewer.putParcelableArrayListExtra(
-                        PhotoDetailViewerActivity.DIARY_PHOTO_FILE_LIST, diaryPhotoFileList);
-                gotoPhotoDetailViewer.putExtra(PhotoDetailViewerActivity.SELECT_POSITION, draweeViewPosition);
-                getActivity().startActivity(gotoPhotoDetailViewer);
+                openPhotoViewer((int) v.getTag());
                 break;
             case R.id.IV_diary_photo:
                 if (isEditMode) {
@@ -773,6 +799,17 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 }
                 break;
         }
+    }
+
+    /**
+     * Shows the photos of the entry big, starting with this one.
+     */
+    private void openPhotoViewer(int index) {
+        Intent gotoPhotoDetailViewer = new Intent(getActivity(), PhotoDetailViewerActivity.class);
+        gotoPhotoDetailViewer.putParcelableArrayListExtra(
+                PhotoDetailViewerActivity.DIARY_PHOTO_FILE_LIST, diaryPhotoFileList);
+        gotoPhotoDetailViewer.putExtra(PhotoDetailViewerActivity.SELECT_POSITION, index);
+        getActivity().startActivity(gotoPhotoDetailViewer);
     }
 
     /**

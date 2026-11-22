@@ -52,6 +52,8 @@ public final class EntryPreview {
         RectF chosenPhotoArea = null;
         //The photo that was chosen from the cover (it is not shown inside the entry)
         String coverOnlyPhoto = null;
+        //The first photo of the first gallery (the cover when there is no photo alone)
+        String galleryPhoto = null;
         RectF coverOnlyArea = null;
         Cursor content = dbManager.selectDiaryContentByDiaryId(diaryId);
         if (content != null) {
@@ -86,6 +88,12 @@ public final class EntryPreview {
                         chosenPhoto = text;
                         chosenPhotoArea = cover;
                     }
+                } else if (type == IDairyRow.TYPE_GALLERY && galleryPhoto == null) {
+                    java.util.List<String> inGallery =
+                            com.kiminonawa.mydiary.entries.diary.item.DiaryGallery.photosOf(text);
+                    if (!inGallery.isEmpty()) {
+                        galleryPhoto = inGallery.get(0);
+                    }
                 } else if (type == IDairyRow.TYPE_TEXT && preview.firstText.length() == 0) {
                     String plain = RichText.strip(text);
                     if (plain != null && plain.trim().length() > 0) {
@@ -97,6 +105,9 @@ public final class EntryPreview {
         }
         //The chosen photo, else the photo picked from the cover, else the first photo of the text
         String file = chosenPhoto != null ? chosenPhoto : (coverOnlyPhoto != null ? coverOnlyPhoto : firstPhoto);
+        if (file == null) {
+            file = galleryPhoto;
+        }
         if (file != null) {
             preview.thumbnailPath = new FileManager(context, topicId, diaryId).getDirAbsolutePath() + "/" + file;
             preview.thumbnailArea = chosenPhoto != null ? chosenPhotoArea
@@ -116,6 +127,9 @@ public final class EntryPreview {
         if (firstType == IDairyRow.TYPE_TEXT) {
             String plain = RichText.strip(firstContent);
             return plain.substring(0, Math.min(maxLength, plain.length()));
+        }
+        if (firstType == IDairyRow.TYPE_GALLERY) {
+            return context.getString(R.string.entries_summary_gallery);
         }
         if (firstType == IDairyRow.TYPE_VIDEO) {
             return context.getString(R.string.entries_summary_video);

@@ -105,6 +105,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     private EditorActions editorActions;
     private AreaPickerController areaPicker;
     private PhotoImporter photoImporter;
+    private com.kiminonawa.mydiary.entries.diary.editor.GalleryPicker galleryPicker;
     private AudioFileImporter audioImporter;
     private com.kiminonawa.mydiary.entries.diary.editor.VideoImporter videoImporter;
     //The photo that is being chosen is for the cover only (it is not put in the text)
@@ -181,6 +182,7 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         editorActions = new EditorActions(this, diaryItemHelper, LL_diary_item_content, areaPicker);
         editorActions.bindBar(view);
         photoImporter = new PhotoImporter(this, this);
+        galleryPicker = new com.kiminonawa.mydiary.entries.diary.editor.GalleryPicker(this, photoImporter, editorActions);
         photoImporter.setTargetFolder(diaryTempFileManager);
         videoImporter = new com.kiminonawa.mydiary.entries.diary.editor.VideoImporter(this,
                 new com.kiminonawa.mydiary.entries.diary.editor.VideoImporter.Listener() {
@@ -267,6 +269,10 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
         if (audioImporter != null && audioImporter.onActivityResult(requestCode, resultCode, data)) {
             return;
         }
+        //The photos of a gallery
+        if (galleryPicker != null && galleryPicker.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -311,6 +317,16 @@ public class DiaryFragment extends BaseDiaryFragment implements View.OnClickList
     @Override
     public void pickAudioFile() {
         audioImporter.pick();
+    }
+
+    @Override
+    public void addPhotosToGallery(com.kiminonawa.mydiary.entries.diary.item.DiaryGallery gallery) {
+        galleryPicker.addTo(gallery);
+    }
+
+    @Override
+    public void newGallery() {
+        galleryPicker.startNew();
     }
 
     /**

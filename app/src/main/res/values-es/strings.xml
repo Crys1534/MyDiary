@@ -337,4 +337,20 @@
     <string name="toast_diary_unhidden">La nota se ve otra vez</string>
     <string name="hidden_entries_shown">Las notas ocultas ya se ven</string>
     <string name="hidden_entries_hidden">Las notas ocultas se escondieron otra vez</string>
+    <string name="photo_sheet_camera">Cámara</string>
+    <string name="photo_sheet_photos">Fotos</string>
+    <string name="photo_sheet_gallery">Galería</string>
+    <string name="photo_sheet_videos">Videos</string>
+    <string name="gallery_choose_layout">Diseño de la galería</string>
+    <string name="gallery_layout_2x2">2 × 2 (4 fotos)</string>
+    <string name="gallery_layout_3x2">3 × 2 (6 fotos)</string>
+    <string name="gallery_layout_1_2">1 grande y 2 pequeñas (3 fotos)</string>
+    <string name="gallery_change_layout">Diseño</string>
+    <string name="gallery_add_photos">+ Fotos</string>
+    <string name="gallery_delete">Borrar la galería</string>
+    <string name="gallery_photo">Foto %1$d de la galería</string>
+    <string name="gallery_remove_photo">¿Quitar esta foto de la galería?</string>
+    <string name="gallery_remove_photo_yes">Quitar</string>
+    <string name="gallery_too_many">En este diseño solo se ven %1$d fotos. Las demás se guardan: elige un diseño más grande para verlas.</string>
+    <string name="entries_summary_gallery">**galería**</string>
 </resources>
