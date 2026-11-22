@@ -44,7 +44,11 @@ public class DiaryGallery implements IDairyRow {
     public static final String LAYOUT_2X2 = "2x2";
     public static final String LAYOUT_3X2 = "3x2";
     public static final String LAYOUT_1_2 = "1+2";
-    public static final String[] LAYOUTS = {LAYOUT_2X2, LAYOUT_3X2, LAYOUT_1_2};
+    //One big photo with 4 small ones beside it (2 × 2)
+    public static final String LAYOUT_1_4 = "1+4";
+    //One big photo on top with 6 small ones under it (3 × 2)
+    public static final String LAYOUT_1_6 = "1+6";
+    public static final String[] LAYOUTS = {LAYOUT_2X2, LAYOUT_3X2, LAYOUT_1_2, LAYOUT_1_4, LAYOUT_1_6};
 
     public interface Editor {
         /**
@@ -167,16 +171,25 @@ public class DiaryGallery implements IDairyRow {
             return 6;
         } else if (LAYOUT_1_2.equals(layout)) {
             return 3;
+        } else if (LAYOUT_1_4.equals(layout)) {
+            return 5;
+        } else if (LAYOUT_1_6.equals(layout)) {
+            return 7;
         }
         return 4;
     }
 
     private static int columns(String layout) {
-        return LAYOUT_2X2.equals(layout) ? 2 : 3;
+        if (LAYOUT_2X2.equals(layout)) {
+            return 2;
+        } else if (LAYOUT_1_4.equals(layout)) {
+            return 4;
+        }
+        return 3;
     }
 
     private static int rows(String layout) {
-        return 2;
+        return LAYOUT_1_6.equals(layout) ? 4 : 2;
     }
 
     /**
@@ -187,6 +200,11 @@ public class DiaryGallery implements IDairyRow {
             return new int[][]{{0, 0, 1, 1}, {1, 0, 1, 1}, {2, 0, 1, 1}, {0, 1, 1, 1}, {1, 1, 1, 1}, {2, 1, 1, 1}};
         } else if (LAYOUT_1_2.equals(layout)) {
             return new int[][]{{0, 0, 2, 2}, {2, 0, 1, 1}, {2, 1, 1, 1}};
+        } else if (LAYOUT_1_4.equals(layout)) {
+            return new int[][]{{0, 0, 2, 2}, {2, 0, 1, 1}, {3, 0, 1, 1}, {2, 1, 1, 1}, {3, 1, 1, 1}};
+        } else if (LAYOUT_1_6.equals(layout)) {
+            return new int[][]{{0, 0, 3, 2}, {0, 2, 1, 1}, {1, 2, 1, 1}, {2, 2, 1, 1},
+                    {0, 3, 1, 1}, {1, 3, 1, 1}, {2, 3, 1, 1}};
         }
         return new int[][]{{0, 0, 1, 1}, {1, 0, 1, 1}, {0, 1, 1, 1}, {1, 1, 1, 1}};
     }
@@ -196,6 +214,10 @@ public class DiaryGallery implements IDairyRow {
             return context.getString(R.string.gallery_layout_3x2);
         } else if (LAYOUT_1_2.equals(layout)) {
             return context.getString(R.string.gallery_layout_1_2);
+        } else if (LAYOUT_1_4.equals(layout)) {
+            return context.getString(R.string.gallery_layout_1_4);
+        } else if (LAYOUT_1_6.equals(layout)) {
+            return context.getString(R.string.gallery_layout_1_6);
         }
         return context.getString(R.string.gallery_layout_2x2);
     }

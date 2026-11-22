@@ -354,4 +354,6 @@
     <string name="gallery_remove_photo_yes">Take out</string>
     <string name="gallery_too_many">Only %1$d photos are seen in this design. The others are kept: choose a bigger design to see them.</string>
     <string name="entries_summary_gallery">**gallery**</string>
+    <string name="gallery_layout_1_4">1 big and 4 small (5 photos)</string>
+    <string name="gallery_layout_1_6">1 big and 6 small (7 photos)</string>
 </resources>

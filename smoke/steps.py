@@ -1926,7 +1926,7 @@ def gallery_test():
     tap(rid="IV_diary_photo_gallery")
     sleep(2)
     show("gallery_choose_layout", full=True)
-    tap(text="1 big and 2 small", contains=True)
+    tap(text="1 big and 4 small", contains=True)
     sleep(4)
     photos = [x for x in nodes() if x["desc"].startswith("Photo")]
     log("   GALLERY: photos in the picker = %d" % len(photos))

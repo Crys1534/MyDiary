@@ -353,4 +353,6 @@
     <string name="gallery_remove_photo_yes">Quitar</string>
     <string name="gallery_too_many">En este diseño solo se ven %1$d fotos. Las demás se guardan: elige un diseño más grande para verlas.</string>
     <string name="entries_summary_gallery">**galería**</string>
+    <string name="gallery_layout_1_4">1 grande y 4 pequeñas (5 fotos)</string>
+    <string name="gallery_layout_1_6">1 grande y 6 pequeñas (7 fotos)</string>
 </resources>
