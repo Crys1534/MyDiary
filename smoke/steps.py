@@ -2119,11 +2119,14 @@ def notebook_menu(title):
     for t in titles:
         if t["text"] == title:
             # the "..." of the same notebook: above the label, the nearest one
+            # the "..." of the same notebook: above its label, the nearest one (same column)
             best = None
             for m in menus:
-                if m["cy"] < t["cy"] and abs(m["cx"] - t["cx"]) < 500:
-                    if best is None or t["cy"] - m["cy"] < t["cy"] - best["cy"]:
-                        best = m
+                if m["cy"] < t["cy"] and abs(m["cx"] - t["cx"]) < 300:
+                    d = (t["cy"] - m["cy"]) + abs(m["cx"] - t["cx"])
+                    if best is None or d < best[0]:
+                        best = (d, m)
+            best = best[1] if best else None
             if best:
                 tap_xy(best["cx"], best["cy"])
                 sleep(1)
