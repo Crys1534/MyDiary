@@ -29,13 +29,14 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             android:gravity="bottom"
-            android:orientation="horizontal"
-            android:paddingBottom="14dp"
-            android:paddingLeft="16dp">
+            android:orientation="horizontal">
 
+            <!-- Margins, not padding: fitsSystemWindows replaces the padding of its view -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:layout_marginLeft="16dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
