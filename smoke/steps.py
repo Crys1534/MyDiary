@@ -2056,7 +2056,8 @@ def notebooks_shortcut_test():
     if not entry:
         show("nb_no_entry", full=True)
         return
-    entry_title = entry["text"]
+    # without the marks of the list (pinned, hidden, shortcut)
+    entry_title = entry["text"].replace("\U0001F4CC", "").replace("\U0001F512", "").replace("\U0001F517", "").strip()
     tap_xy(entry["cx"], entry["cy"])
     sleep(3)
     if not tap(rid="IV_diary_move"):
