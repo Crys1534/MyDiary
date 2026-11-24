@@ -1,0 +1,1 @@
+launch,write an entry,seed,cover and crop,folders

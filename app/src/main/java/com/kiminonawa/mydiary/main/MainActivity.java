@@ -458,19 +458,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Init topic adapter
         //The notebooks, two in each row
-        final androidx.recyclerview.widget.GridLayoutManager grid = new androidx.recyclerview.widget.GridLayoutManager(this, 2);
-        //A category with others inside takes the whole row
-        grid.setSpanSizeLookup(new androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                RecyclerView.Adapter<?> adapter = RecyclerView_topic.getAdapter();
-                if (adapter == null || position < 0 || position >= adapter.getItemCount()) {
-                    return 1;
-                }
-                return mainTopicAdapter.getSpanSize(adapter.getItemViewType(position));
-            }
-        });
-        RecyclerView_topic.setLayoutManager(grid);
+        RecyclerView_topic.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(this, 2));
         RecyclerView_topic.setHasFixedSize(true);
         mainTopicAdapter = new MainTopicAdapter(this, topicList, dbManager);
         mWrappedAdapter = mainTopicAdapter;

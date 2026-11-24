@@ -210,4 +210,12 @@ public class MemoActivity extends AppCompatActivity implements
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         touchHelper.startDrag(viewHolder);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //The categories inside this one
+        com.kiminonawa.mydiary.main.SubTopicRow.show(this,
+                (androidx.recyclerview.widget.RecyclerView) findViewById(R.id.RV_memo_subtopics), topicId);
+    }
 }

@@ -39,9 +39,6 @@ import java.util.List;
 public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.TopicViewHolder> implements
         Filterable, DraggableItemAdapter<MainTopicAdapter.TopicViewHolder> {
 
-    private static final int VIEW_NOTEBOOK = 0;
-    //A category with categories inside: its notebook and a row with the ones inside
-    private static final int VIEW_FOLDER = 1;
 
     //The categories that are inside another one: topic id -> the one they are inside of
     private final java.util.Map<Long, Long> parents = new java.util.HashMap<>();
@@ -152,25 +149,9 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
         return originalTopicList;
     }
 
-    /**
-     * A category with others inside takes the two columns.
-     */
-    public int getSpanSize(int viewType) {
-        return viewType == VIEW_FOLDER ? 2 : 1;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (topicFilter.isFilter()) {
-            return VIEW_NOTEBOOK;
-        }
-        return childrenOf(filteredTopicList.get(position)).isEmpty() ? VIEW_NOTEBOOK : VIEW_FOLDER;
-    }
-
     @Override
     public TopicViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(viewType == VIEW_FOLDER ? R.layout.rv_topic_folder : R.layout.rv_topic_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_topic_item, parent, false);
         return new TopicViewHolder(view);
     }
 
@@ -188,18 +169,6 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
     public void onBindViewHolder(final TopicViewHolder holder, final int position) {
         final ITopic topic = filteredTopicList.get(position);
         bindNotebook(holder.notebookViews, topic);
-        if (holder.childrenRow != null) {
-            List<ITopic> inside = childrenOf(topic);
-            holder.insideTitle.setText(activity.getString(R.string.topic_folder_inside, inside.size()));
-            boolean dark = (activity.getResources().getConfiguration().uiMode
-                    & android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES;
-            holder.insideTitle.setTextColor(dark ? 0xFFD8CCB8 : 0xFF6B5240);
-            android.graphics.drawable.GradientDrawable shelf = new android.graphics.drawable.GradientDrawable();
-            shelf.setColor(dark ? 0x14FFFFFF : 0x14000000);
-            shelf.setCornerRadius(12 * activity.getResources().getDisplayMetrics().density);
-            holder.shelf.setBackground(shelf);
-            holder.childrenRow.setAdapter(new ChildrenAdapter(inside));
-        }
         //Click event
         holder.notebookViews.notebook.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,14 +189,7 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
 
         //The notebook: its color, the darker spine on the left
         int color = topic.getColor();
-        android.graphics.drawable.GradientDrawable cover = new android.graphics.drawable.GradientDrawable();
-        cover.setColor(color);
-        float small = 6 * density, big = 12 * density;
-        cover.setCornerRadii(new float[]{small, small, big, big, big, big, small, small});
-        android.graphics.drawable.GradientDrawable spine = new android.graphics.drawable.GradientDrawable();
-        spine.setColor(0x38000000);
-        spine.setCornerRadii(new float[]{small, small, 0, 0, 0, 0, small, small});
-        holder.notebook.setBackground(new NotebookDrawable(cover, spine, (int) (10 * density)));
+        holder.notebook.setBackground(NotebookDrawable.of(color, density, 1f));
 
         //The photo taped on the cover, a little crooked (each notebook a bit different)
         holder.photo.setRotation(tilts[(int) (Math.abs(topic.getId()) % tilts.length)]);
@@ -262,6 +224,12 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
         holder.title.setText(topic.getTitle());
         holder.title.setTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, topic.getTitle().length() > 16 ? 14 : 17);
         holder.count.setText(String.valueOf(topic.getCount()));
+        //It has categories inside (they are seen when it is opened)
+        int inside = topicFilter.isFilter() ? 0 : childrenOf(topic).size();
+        if (holder.folderBadge != null) {
+            holder.folderBadge.setVisibility(inside > 0 ? View.VISIBLE : View.GONE);
+            holder.folderBadge.setText("\uD83D\uDCC1 " + inside);
+        }
         holder.root.setContentDescription(topic.getTitle() + ", " + topic.getCount());
 
         holder.menu.setOnClickListener(new View.OnClickListener() {
@@ -270,49 +238,6 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
                 showTopicMenu(v, topic);
             }
         });
-    }
-
-    /**
-     * The row with the categories inside another one.
-     */
-    private class ChildrenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        private final List<ITopic> inside;
-
-        ChildrenAdapter(List<ITopic> inside) {
-            this.inside = inside;
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_topic_item, parent, false);
-            //A bit less than half of the screen: the next one peeks, so it can be seen that the row moves
-            ViewGroup.LayoutParams params = view.getLayoutParams();
-            params.width = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.44f);
-            view.setLayoutParams(params);
-            final NotebookViews views = new NotebookViews(view);
-            RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(view) {
-            };
-            view.setTag(views);
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            final ITopic topic = inside.get(position);
-            NotebookViews views = (NotebookViews) holder.itemView.getTag();
-            bindNotebook(views, topic);
-            views.notebook.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    gotoTopic(topic);
-                }
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return inside.size();
-        }
     }
 
     /**
@@ -343,7 +268,11 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
                 menu.getMenu().add(0, 8, 6, R.string.topic_banner_remove);
             }
         }
-        menu.getMenu().add(0, 2, 7, R.string.dialog_button_delete);
+        final List<ITopic> insideTopics = childrenOf(topic);
+        if (!insideTopics.isEmpty() && !inside) {
+            menu.getMenu().add(0, 9, 7, activity.getString(R.string.topic_inside_manage, insideTopics.size()));
+        }
+        menu.getMenu().add(0, 2, 8, R.string.dialog_button_delete);
         menu.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(android.view.MenuItem item) {
@@ -378,11 +307,34 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
                     case 8:
                         activity.removeTopicArt(topic, TopicArt.BANNER);
                         break;
+                    case 9:
+                        chooseInside(anchor, insideTopics);
+                        break;
                 }
                 return true;
             }
         });
         menu.show();
+    }
+
+    /**
+     * The categories inside this one: choose one to edit it, its photo, its banner, take it out...
+     */
+    private void chooseInside(final View anchor, final List<ITopic> insideTopics) {
+        String[] names = new String[insideTopics.size()];
+        for (int i = 0; i < names.length; i++) {
+            names[i] = insideTopics.get(i).getTitle();
+        }
+        new androidx.appcompat.app.AlertDialog.Builder(activity)
+                .setTitle(R.string.topic_inside_choose)
+                .setItems(names, new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface dialog, int which) {
+                        showTopicMenu(anchor, insideTopics.get(which));
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     /**
@@ -397,7 +349,9 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
         final List<ITopic> folders = new ArrayList<>();
         ITopic current = parentOf(topic);
         for (ITopic candidate : originalTopicList) {
-            if (candidate.getId() != topic.getId() && parentOf(candidate) == null && candidate != current) {
+            //(the contacts have no row for the categories inside)
+            if (candidate.getId() != topic.getId() && parentOf(candidate) == null && candidate != current
+                    && candidate.getType() != ITopic.TYPE_CONTACTS) {
                 folders.add(candidate);
             }
         }
@@ -431,25 +385,6 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
             parents.remove(topic.getId());
         }
         notifyDataSetChanged(true);
-    }
-
-    /**
-     * The notebook with its spine: only the left part is darker.
-     */
-    private static class NotebookDrawable extends android.graphics.drawable.LayerDrawable {
-        private final int spineWidth;
-
-        NotebookDrawable(android.graphics.drawable.Drawable cover, android.graphics.drawable.Drawable spine,
-                         int spineWidth) {
-            super(new android.graphics.drawable.Drawable[]{cover, spine});
-            this.spineWidth = spineWidth;
-        }
-
-        @Override
-        protected void onBoundsChange(android.graphics.Rect bounds) {
-            super.onBoundsChange(bounds);
-            getDrawable(1).setBounds(bounds.left, bounds.top, bounds.left + spineWidth, bounds.bottom);
-        }
     }
 
     public void gotoTopic(ITopic topic) {
@@ -538,9 +473,10 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
         final View root, notebook, photo, label, menu;
         final com.facebook.drawee.view.SimpleDraweeView coverImage;
         final ImageView icon;
-        final TextView title, count;
+        final TextView title, count, folderBadge;
 
         NotebookViews(View rootView) {
+            folderBadge = (TextView) rootView.findViewById(R.id.TV_topic_folder_badge);
             root = rootView;
             notebook = rootView.findViewById(R.id.FL_topic_notebook);
             photo = rootView.findViewById(R.id.FL_topic_photo);
@@ -556,23 +492,10 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
     protected class TopicViewHolder extends AbstractDraggableItemViewHolder {
 
         final NotebookViews notebookViews;
-        //Only for a category with others inside
-        final RecyclerView childrenRow;
-        final TextView insideTitle;
-        final View shelf;
 
         protected TopicViewHolder(View rootView) {
             super(rootView);
-            View notebookRoot = rootView.findViewById(R.id.IN_topic_folder_notebook);
-            notebookViews = new NotebookViews(notebookRoot != null ? notebookRoot : rootView);
-            childrenRow = (RecyclerView) rootView.findViewById(R.id.RV_topic_folder_children);
-            insideTitle = (TextView) rootView.findViewById(R.id.TV_topic_folder_inside);
-            shelf = rootView.findViewById(R.id.LL_topic_folder_shelf);
-            if (childrenRow != null) {
-                childrenRow.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(
-                        rootView.getContext(), androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false));
-                childrenRow.setNestedScrollingEnabled(false);
-            }
+            notebookViews = new NotebookViews(rootView);
         }
     }
 

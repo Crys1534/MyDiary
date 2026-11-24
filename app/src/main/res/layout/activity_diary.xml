@@ -74,11 +74,26 @@
     </LinearLayout>
 
 
+
+    <!-- The categories that are inside this one (a row of small notebooks) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RV_diary_subtopics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/LL_diary_topbar_content"
+        android:background="@color/app_surface"
+        android:clipToPadding="false"
+        android:paddingBottom="6dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="4dp"
+        android:visibility="gone" />
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/ViewPager_diary_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/LL_diary_topbar_content" />
+        android:layout_below="@+id/RV_diary_subtopics" />
 
     <View
         android:id="@+id/toolbar_shadow"

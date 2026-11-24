@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A small notebook of the row of the categories that are inside a category -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="132dp"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingBottom="4dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="6dp">
+
+    <FrameLayout
+        android:id="@+id/FL_topic_notebook"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:clipChildren="false"
+        android:elevation="4dp">
+
+        <View
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:background="#4D000000" />
+
+        <FrameLayout
+            android:id="@+id/FL_topic_photo"
+            android:layout_width="56dp"
+            android:layout_height="52dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="7dp"
+            android:background="#FFFDF8"
+            android:elevation="3dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:paddingTop="3dp">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/IV_topic_cover"
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                app:actualImageScaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/IV_topic_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="24dp"
+            android:layout_height="9dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="3dp"
+            android:background="#BFFFF5C8"
+            android:elevation="4dp"
+            android:rotation="-4" />
+
+        <LinearLayout
+            android:id="@+id/LL_topic_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="18dp"
+            android:elevation="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="1dp">
+
+            <TextView
+                android:id="@+id/TV_topic_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:textColor="#2B1D12"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/TV_topic_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:maxLines="1"
+                android:textColor="#6B5240"
+                android:textSize="10dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </FrameLayout>
+</FrameLayout>

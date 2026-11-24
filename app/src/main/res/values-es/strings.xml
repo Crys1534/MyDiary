@@ -360,8 +360,7 @@
     <string name="shortcut_saved">Ahora también sale en %d categorías más</string>
     <string name="main_header_count">%1$d diarios · %2$d entradas</string>
     <string name="topic_menu">Editar o borrar</string>
-    <string name="topic_folder_inside">Dentro (%d)</string>
-    <string name="topic_move_into">Meter en otra categoría…</string>
+        <string name="topic_move_into">Meter en otra categoría…</string>
     <string name="topic_move_other_folder">Mover a otra categoría…</string>
     <string name="topic_move_out">Sacar a la pantalla principal</string>
     <string name="topic_move_into_title">Meter \"%s\" dentro de:</string>
@@ -373,4 +372,6 @@
     <string name="topic_cover_saved">Foto de portada guardada</string>
     <string name="topic_banner_saved">Banner guardado</string>
     <string name="topic_move_no_other">No hay otra categoría donde meterla</string>
+    <string name="topic_inside_manage">Categorías de dentro (%d)…</string>
+    <string name="topic_inside_choose">Categorías de dentro:</string>
 </resources>

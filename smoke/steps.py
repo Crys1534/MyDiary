@@ -2179,8 +2179,34 @@ def folders_art_test():
             tap(text="DIARY")
             sleep(2)
     show("fa_main_folder", full=True)
-    inside = find(rid="TV_topic_folder_inside")
-    log("   folders: row title = %r" % (inside["text"] if inside else None))
+    badge = find(rid="TV_topic_folder_badge")
+    log("   folders: badge = %r, Otro diario on main = %s" % (badge["text"] if badge else None,
+                                                             bool(find(text="Otro diario"))))
+    # inside DIARY: the row with the categories inside it
+    n = find(text="DIARY")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(3)
+        dismiss_intro()
+        tap(rid="But_diary_topbar_entries")
+        sleep(2)
+        show("fa_diary_row", full=True)
+        row_titles = [x["text"] for x in nodes() if x["rid"].endswith("TV_topic_title")]
+        log("   folders: row in DIARY = %s" % row_titles)
+        m = find(text="Otro diario")
+        if m:
+            tap_xy(m["cx"], m["cy"])
+            sleep(3)
+            dismiss_intro()
+            show("fa_sub_opened", full=True)
+            alive("subcategory opened")
+            key(4)
+            sleep(2)
+        tap(rid="But_diary_topbar_calendar")
+        sleep(2)
+        show("fa_diary_calendar_no_row")
+        key(4)
+        sleep(2)
     alive("folder")
     # the cover of DIARY
     if notebook_menu("DIARY"):
@@ -2206,11 +2232,18 @@ def folders_art_test():
         alive("diary with banner")
         key(4)
         sleep(2)
-    # take it out again
+    # take it out again: from the "..." of DIARY, its categories inside
     restart()
-    if notebook_menu("Otro diario") and tap_menu_item("Take out"):
-        sleep(2)
+    if notebook_menu("DIARY") and tap_menu_item("Categories inside"):
+        sleep(1)
+        show("fa_inside_dialog", full=True)
+        tap(text="Otro diario")
+        sleep(1)
+        show("fa_inside_menu", full=True)
+        if tap_menu_item("Take out"):
+            sleep(2)
     show("fa_main_out", full=True)
+    log("   folders: Otro diario back on main = %s" % bool(find(text="Otro diario")))
 
 
 step("notebooks and shortcut", notebooks_shortcut_test)

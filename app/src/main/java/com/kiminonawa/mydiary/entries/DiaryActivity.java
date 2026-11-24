@@ -142,6 +142,12 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
     @Override
     protected void onResume() {
         super.onResume();
+        //The categories inside this one (they can change in the main screen)
+        androidx.recyclerview.widget.RecyclerView row =
+                (androidx.recyclerview.widget.RecyclerView) findViewById(R.id.RV_diary_subtopics);
+        com.kiminonawa.mydiary.main.SubTopicRow.show(this, row, topicId);
+        com.kiminonawa.mydiary.main.SubTopicRow.setShown(row, ViewPager_diary_content == null
+                || ViewPager_diary_content.getCurrentItem() == 0);
         if (com.kiminonawa.mydiary.shared.CategoryTheme.current() == com.kiminonawa.mydiary.shared.CategoryTheme.ESOTERIC) {
             com.kiminonawa.mydiary.shared.EsotericMusic.start(this);
         }
@@ -359,6 +365,9 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
     private ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
+            //The row of the categories inside this one: only with the list of entries
+            com.kiminonawa.mydiary.main.SubTopicRow.setShown(
+                    (androidx.recyclerview.widget.RecyclerView) findViewById(R.id.RV_diary_subtopics), position == 0);
             //The Diary tab is the page of the notebook where a new entry begins: the sound of a page turning
             if (silentNextPage) {
                 silentNextPage = false;

@@ -361,8 +361,7 @@
     <string name="shortcut_saved">Shown in %d more diaries</string>
     <string name="main_header_count">%1$d diaries · %2$d entries</string>
     <string name="topic_menu">Edit or delete</string>
-    <string name="topic_folder_inside">Inside (%d)</string>
-    <string name="topic_move_into">Put inside another category…</string>
+        <string name="topic_move_into">Put inside another category…</string>
     <string name="topic_move_other_folder">Move to another category…</string>
     <string name="topic_move_out">Take out to the main screen</string>
     <string name="topic_move_into_title">Put \"%s\" inside:</string>
@@ -374,4 +373,6 @@
     <string name="topic_cover_saved">Cover photo saved</string>
     <string name="topic_banner_saved">Banner saved</string>
     <string name="topic_move_no_other">There is no other category to put it in</string>
+    <string name="topic_inside_manage">Categories inside (%d)…</string>
+    <string name="topic_inside_choose">Categories inside:</string>
 </resources>
