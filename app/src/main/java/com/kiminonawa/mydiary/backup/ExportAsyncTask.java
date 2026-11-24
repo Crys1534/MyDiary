@@ -264,6 +264,7 @@ public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
                     int hiddenColumn = diaryEntriesCursor.getColumnIndex(DiaryEntry_V2.COLUMN_HIDDEN);
                     buEntry.setFlags(pinnedColumn >= 0 && diaryEntriesCursor.getInt(pinnedColumn) > 0,
                             hiddenColumn >= 0 && diaryEntriesCursor.getInt(hiddenColumn) > 0);
+                    buEntry.setShortcutTopics(dbManager.getShortcutTopics(diaryEntriesCursor.getLong(0)));
                     diaryEntriesItemList.add(buEntry);
                     diaryEntriesCursor.moveToNext();
                 }

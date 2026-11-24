@@ -147,9 +147,12 @@ public class DBManager {
     }
 
     public int getDiaryCountByTopicId(long topicId) {
-        Cursor cursor = db.rawQuery("SELECT COUNT (*) FROM " + DiaryEntry_V2.TABLE_NAME + " WHERE " + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + "=?"
+        //Its own entries and the shortcuts of entries of other diaries
+        Cursor cursor = db.rawQuery("SELECT COUNT (*) FROM " + DiaryEntry_V2.TABLE_NAME + " WHERE (" + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + "=?"
+                        + " OR " + DiaryEntry_V2._ID + " IN (SELECT " + DBStructure.ShortcutEntry.COLUMN_DIARY_ID + " FROM "
+                + DBStructure.ShortcutEntry.TABLE_NAME + " WHERE " + DBStructure.ShortcutEntry.COLUMN_TOPIC_ID + " = ?)" + ")"
                         + com.kiminonawa.mydiary.shared.HiddenEntries.andNotHidden(""),
-                new String[]{String.valueOf(topicId)});
+                new String[]{String.valueOf(topicId), String.valueOf(topicId)});
         int count = 0;
         if (null != cursor) {
             if (cursor.getCount() > 0) {
@@ -191,6 +194,7 @@ public class DBManager {
     }
 
     public long delTopic(long topicId) {
+        db.delete(DBStructure.ShortcutEntry.TABLE_NAME, DBStructure.ShortcutEntry.COLUMN_TOPIC_ID + " = ?", new String[]{String.valueOf(topicId)});
         return db.delete(
                 TopicEntry.TABLE_NAME,
                 TopicEntry._ID + " = ?"
@@ -302,7 +306,70 @@ public class DBManager {
     /**
      * Moves a diary to another diary topic (its lines stay with it).
      */
+    /**
+     * The other diaries where an entry is also shown (its shortcuts).
+     */
+    public java.util.List<Long> getShortcutTopics(long diaryId) {
+        java.util.List<Long> list = new java.util.ArrayList<>();
+        Cursor c = db.rawQuery("SELECT " + DBStructure.ShortcutEntry.COLUMN_TOPIC_ID + " FROM " + DBStructure.ShortcutEntry.TABLE_NAME
+                + " WHERE " + DBStructure.ShortcutEntry.COLUMN_DIARY_ID + " = ?", new String[]{String.valueOf(diaryId)});
+        try {
+            while (c.moveToNext()) {
+                list.add(c.getLong(0));
+            }
+        } finally {
+            c.close();
+        }
+        return list;
+    }
+
+    /**
+     * Shows an entry in exactly these other diaries (it replaces the shortcuts it had).
+     */
+    public void setShortcutTopics(long diaryId, java.util.List<Long> topicIds) {
+        db.delete(DBStructure.ShortcutEntry.TABLE_NAME, DBStructure.ShortcutEntry.COLUMN_DIARY_ID + " = ?", new String[]{String.valueOf(diaryId)});
+        long home = getDiaryTopicId(diaryId);
+        for (Long topicId : topicIds) {
+            if (topicId == null || topicId == home) {
+                continue;
+            }
+            ContentValues values = new ContentValues();
+            values.put(DBStructure.ShortcutEntry.COLUMN_DIARY_ID, diaryId);
+            values.put(DBStructure.ShortcutEntry.COLUMN_TOPIC_ID, topicId);
+            db.insert(DBStructure.ShortcutEntry.TABLE_NAME, null, values);
+        }
+    }
+
+    /**
+     * The diary an entry belongs to (where its photos are), -1 if it does not exist.
+     */
+    public long getDiaryTopicId(long diaryId) {
+        Cursor c = db.rawQuery("SELECT " + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + " FROM " + DiaryEntry_V2.TABLE_NAME
+                + " WHERE " + DiaryEntry_V2._ID + " = ?", new String[]{String.valueOf(diaryId)});
+        try {
+            return c.moveToFirst() ? c.getLong(0) : -1;
+        } finally {
+            c.close();
+        }
+    }
+
+    /**
+     * All the entries that can be seen now (not hidden), for the main screen.
+     */
+    public int getVisibleDiaryCount() {
+        Cursor c = db.rawQuery("SELECT COUNT(*) FROM " + DiaryEntry_V2.TABLE_NAME + " WHERE 1 = 1"
+                + com.kiminonawa.mydiary.shared.HiddenEntries.andNotHidden(""), null);
+        try {
+            return c.moveToFirst() ? c.getInt(0) : 0;
+        } finally {
+            c.close();
+        }
+    }
+
     public long updateDiaryTopic(long diaryId, long newTopicId) {
+        //Moved into a diary where it had a shortcut: it is there for real now
+        db.delete(DBStructure.ShortcutEntry.TABLE_NAME, DBStructure.ShortcutEntry.COLUMN_DIARY_ID + " = ? AND " + DBStructure.ShortcutEntry.COLUMN_TOPIC_ID + " = ?",
+                new String[]{String.valueOf(diaryId), String.valueOf(newTopicId)});
         ContentValues values = new ContentValues();
         values.put(DiaryEntry_V2.COLUMN_REF_TOPIC__ID, newTopicId);
         return db.update(
@@ -357,6 +424,7 @@ public class DBManager {
     }
 
     public long delDiary(long diaryId) {
+        db.delete(DBStructure.ShortcutEntry.TABLE_NAME, DBStructure.ShortcutEntry.COLUMN_DIARY_ID + " = ?", new String[]{String.valueOf(diaryId)});
         return db.delete(
                 DiaryEntry_V2.TABLE_NAME,
                 DiaryEntry_V2._ID + " = ?"
@@ -364,6 +432,10 @@ public class DBManager {
     }
 
     public long delAllDiaryInTopic(long topicId) {
+        //The shortcuts of its entries, and the shortcuts that pointed to it
+        db.execSQL("DELETE FROM " + DBStructure.ShortcutEntry.TABLE_NAME + " WHERE " + DBStructure.ShortcutEntry.COLUMN_TOPIC_ID + " = ? OR "
+                + DBStructure.ShortcutEntry.COLUMN_DIARY_ID + " IN (SELECT " + DiaryEntry_V2._ID + " FROM " + DiaryEntry_V2.TABLE_NAME
+                + " WHERE " + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + " = ?)", new Object[]{topicId, topicId});
         return db.delete(
                 DiaryEntry_V2.TABLE_NAME,
                 DiaryEntry_V2.COLUMN_REF_TOPIC__ID + " = ?"
@@ -390,10 +462,16 @@ public class DBManager {
      * @param all true: also the hidden entries, and only by date (backup, deleting the topic)
      */
     public Cursor selectDiaryList(long topicId, boolean all) {
-        String where = DiaryEntry_V2.COLUMN_REF_TOPIC__ID + " = ?" + (all ? "" : com.kiminonawa.mydiary.shared.HiddenEntries.andNotHidden(""));
+        //all: only its own entries; else also the shortcuts of entries of other diaries
+        String where = all ? DiaryEntry_V2.COLUMN_REF_TOPIC__ID + " = ?"
+                : "(" + DiaryEntry_V2.COLUMN_REF_TOPIC__ID + " = ?" + " OR " + DiaryEntry_V2._ID + " IN (SELECT " + DBStructure.ShortcutEntry.COLUMN_DIARY_ID + " FROM "
+                + DBStructure.ShortcutEntry.TABLE_NAME + " WHERE " + DBStructure.ShortcutEntry.COLUMN_TOPIC_ID + " = ?)" + ")"
+                + com.kiminonawa.mydiary.shared.HiddenEntries.andNotHidden("");
         String order = (all ? "" : "IFNULL(" + DiaryEntry_V2.COLUMN_PINNED + ", 0) DESC, ")
                 + DiaryEntry_V2.COLUMN_TIME + " DESC , " + DiaryEntry_V2._ID + " DESC";
-        Cursor c = db.query(DiaryEntry_V2.TABLE_NAME, null, where, new String[]{String.valueOf(topicId)}, null, null,
+        String[] args = all ? new String[]{String.valueOf(topicId)}
+                : new String[]{String.valueOf(topicId), String.valueOf(topicId)};
+        Cursor c = db.query(DiaryEntry_V2.TABLE_NAME, null, where, args, null, null,
                 order, null);
         if (c != null) {
             c.moveToFirst();

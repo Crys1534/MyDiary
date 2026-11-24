@@ -194,6 +194,7 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
             int thumbnailColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_THUMBNAIL);
             int pinnedColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_PINNED);
             int hiddenColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_HIDDEN);
+            int topicColumn = diaryCursor.getColumnIndex(DBStructure.DiaryEntry_V2.COLUMN_REF_TOPIC__ID);
             for (int i = 0; i < diaryCursor.getCount(); i++) {
                 String title = diaryCursor.getString(2);
                 if ("".equals(title)) {
@@ -212,7 +213,12 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
                         hiddenColumn >= 0 && diaryCursor.getInt(hiddenColumn) > 0);
                 //The small picture (the one chosen as the cover, or else the first photo) and the first words
                 String chosenThumbnail = thumbnailColumn >= 0 ? diaryCursor.getString(thumbnailColumn) : null;
-                EntryPreview preview = EntryPreview.read(context, dbManager, topicId, entity.getId(), chosenThumbnail);
+                //An entry of another diary shown here (shortcut): its photos are in its own diary
+                long homeTopic = topicColumn >= 0 ? diaryCursor.getLong(topicColumn) : topicId;
+                if (homeTopic != topicId) {
+                    entity.setHomeTopicId(homeTopic);
+                }
+                EntryPreview preview = EntryPreview.read(context, dbManager, homeTopic, entity.getId(), chosenThumbnail);
                 if (preview.hasItems) {
                     entity.setThumbnailPath(preview.thumbnailPath);
                     entity.setThumbnailArea(preview.thumbnailArea);

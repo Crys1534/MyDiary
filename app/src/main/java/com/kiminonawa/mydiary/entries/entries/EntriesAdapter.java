@@ -113,7 +113,8 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntryCardHolder> implem
                     + (tagsText.length() > 0 ? "  ·  " + tagsText : ""));
         }
         //A pin before the title of a pinned entry, an eye before a hidden one (only seen after the secret)
-        String marks = (entity.isPinned() ? "\uD83D\uDCCC " : "") + (entity.isHidden() ? "\uD83D\uDD12 " : "");
+        String marks = (entity.isPinned() ? "\uD83D\uDCCC " : "") + (entity.isHidden() ? "\uD83D\uDD12 " : "")
+                + (entity.isShortcut() ? "\uD83D\uDD17 " : "");
         holder.title.setText(marks + entity.getTitle());
         holder.title.setMaxLines(2);
         holder.snippet.setVisibility(View.GONE);

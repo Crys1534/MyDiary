@@ -17,19 +17,15 @@ import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemViewHolder;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.annotation.DraggableItemStateFlags;
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemAdapter;
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants;
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction;
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionDefault;
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultActionMoveToSwipedDirection;
-import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
+import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemViewHolder;
 import com.kiminonawa.mydiary.R;
 import com.kiminonawa.mydiary.contacts.ContactsActivity;
 import com.kiminonawa.mydiary.db.DBManager;
 import com.kiminonawa.mydiary.entries.DiaryActivity;
 import com.kiminonawa.mydiary.main.topic.ITopic;
 import com.kiminonawa.mydiary.memo.MemoActivity;
-import com.kiminonawa.mydiary.shared.ThemeManager;
+import com.kiminonawa.mydiary.shared.FileManager;
+import com.kiminonawa.mydiary.entries.diary.area.AreaImage;
 import com.kiminonawa.mydiary.shared.ViewTools;
 
 import java.util.ArrayList;
@@ -40,8 +36,28 @@ import java.util.List;
  */
 
 public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.TopicViewHolder> implements
-        Filterable, DraggableItemAdapter<MainTopicAdapter.TopicViewHolder>,
-        SwipeableItemAdapter<MainTopicAdapter.TopicViewHolder> {
+        Filterable, DraggableItemAdapter<MainTopicAdapter.TopicViewHolder> {
+
+    //The photo of the newest entry of each diary that has one (topic id -> path and area)
+    private final java.util.Map<Long, Cover> covers = new java.util.HashMap<>();
+    private android.graphics.Typeface handwriting;
+    private final int[] tilts = {-4, 3, -2, 4, -3, 2};
+
+    public static class Cover {
+        public final String path;
+        public final android.graphics.RectF area;
+
+        public Cover(String path, android.graphics.RectF area) {
+            this.path = path;
+            this.area = area;
+        }
+    }
+
+    public void setCovers(java.util.Map<Long, Cover> newCovers) {
+        covers.clear();
+        covers.putAll(newCovers);
+        super.notifyDataSetChanged();
+    }
 
 
     private List<ITopic> originalTopicList;
@@ -96,52 +112,121 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
 
     @Override
     public void onBindViewHolder(final TopicViewHolder holder, final int position) {
+        final ITopic topic = filteredTopicList.get(position);
+        float density = activity.getResources().getDisplayMetrics().density;
 
-        holder.getSwipeableContainerView().setBackground(ThemeManager.getInstance().getTopicItemSelectDrawable(activity));
-        holder.getTopicLeftSettingView().setBackgroundColor(ThemeManager.getInstance().getThemeMainColor(activity));
-        holder.getIconView().setImageResource(filteredTopicList.get(position).getIcon());
-        //A topic color chosen for a white page (black...) is made lighter in dark mode
-        int topicColor = com.kiminonawa.mydiary.shared.ColorTools.readableOnSurface(activity,
-                filteredTopicList.get(position).getColor());
-        holder.getIconView().setColorFilter(topicColor);
-        holder.getTitleView().setText(filteredTopicList.get(position).getTitle());
-        holder.getTitleView().setTextColor(topicColor);
-        holder.getTVCount().setText(String.valueOf(filteredTopicList.get(position).getCount()));
-        holder.getTVCount().setTextColor(topicColor);
-        holder.getArrow().setColorFilter(topicColor);
+        //The notebook: its color, the darker spine on the left
+        int color = topic.getColor();
+        android.graphics.drawable.GradientDrawable cover = new android.graphics.drawable.GradientDrawable();
+        cover.setColor(color);
+        float small = 6 * density, big = 12 * density;
+        cover.setCornerRadii(new float[]{small, small, big, big, big, big, small, small});
+        android.graphics.drawable.GradientDrawable spine = new android.graphics.drawable.GradientDrawable();
+        spine.setColor(0x38000000);
+        spine.setCornerRadii(new float[]{small, small, 0, 0, 0, 0, small, small});
+        holder.notebook.setBackground(new NotebookDrawable(cover, spine, (int) (10 * density)));
 
-        // set swiping properties
-        holder.setMaxRightSwipeAmount(0.3f);
-        holder.setMaxLeftSwipeAmount(0);
-        holder.setSwipeItemHorizontalSlideAmount(filteredTopicList.get(position).isPinned() ? 0.3f : 0);
+        //The photo taped on the cover, a little crooked (each notebook a bit different)
+        holder.photo.setRotation(tilts[(int) (Math.abs(topic.getId()) % tilts.length)]);
+        Cover photo = covers.get(topic.getId());
+        if (photo != null) {
+            holder.coverImage.setVisibility(View.VISIBLE);
+            holder.icon.setVisibility(View.GONE);
+            AreaImage.show(holder.coverImage, android.net.Uri.parse(FileManager.FILE_HEADER + photo.path), photo.area,
+                    (int) (80 * density), (int) (68 * density));
+        } else {
+            //Without a photo: the color of the notebook and its icon
+            holder.coverImage.setController(null);
+            holder.coverImage.setVisibility(View.INVISIBLE);
+            holder.icon.setVisibility(View.VISIBLE);
+            holder.icon.setImageResource(topic.getIcon());
+            holder.icon.setColorFilter(color);
+        }
+
+        //The label (the emojis of the name are kept)
+        android.graphics.drawable.GradientDrawable label = new android.graphics.drawable.GradientDrawable();
+        label.setColor(0xFFFBF5E8);
+        label.setCornerRadius(3 * density);
+        holder.label.setBackground(label);
+        if (handwriting == null) {
+            try {
+                handwriting = android.graphics.Typeface.createFromAsset(activity.getAssets(), "fonts/nb_caveat.ttf");
+            } catch (RuntimeException e) {
+                handwriting = android.graphics.Typeface.DEFAULT_BOLD;
+            }
+        }
+        holder.title.setTypeface(handwriting);
+        holder.title.setText(topic.getTitle());
+        holder.title.setTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, topic.getTitle().length() > 16 ? 16 : 20);
+        holder.count.setText(String.valueOf(topic.getCount()));
+        holder.itemView.setContentDescription(topic.getTitle() + ", " + topic.getCount());
 
         //Click event
-        holder.getRLTopic().setOnClickListener(new View.OnClickListener() {
+        holder.notebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gotoTopic(filteredTopicList.get(position).getType(), position);
+                int at = holder.getAdapterPosition();
+                if (at != RecyclerView.NO_POSITION) {
+                    gotoTopic(filteredTopicList.get(at).getType(), at);
+                }
             }
         });
-        holder.getTopicLeftSettingEditView().setOnClickListener(new View.OnClickListener() {
+        holder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TopicDetailDialogFragment createTopicDialogFragment =
-                        TopicDetailDialogFragment.newInstance(true, position, filteredTopicList.get(position).getId(),
-                                filteredTopicList.get(position).getTitle(), filteredTopicList.get(position).getType(),
-                                filteredTopicList.get(position).getColor());
-                createTopicDialogFragment.show(activity.getSupportFragmentManager(),
-                        "createTopicDialogFragment");
+                int at = holder.getAdapterPosition();
+                if (at != RecyclerView.NO_POSITION) {
+                    showTopicMenu(v, at);
+                }
             }
         });
+    }
 
-        holder.getTopicLeftSettingDeleteView().setOnClickListener(new View.OnClickListener() {
+    /**
+     * The "..." of a notebook: edit it or delete it.
+     */
+    private void showTopicMenu(View anchor, final int position) {
+        android.widget.PopupMenu menu = new android.widget.PopupMenu(activity, anchor);
+        menu.getMenu().add(0, 1, 0, R.string.cover_tags_edit);
+        menu.getMenu().add(0, 2, 1, R.string.dialog_button_delete);
+        menu.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
             @Override
-            public void onClick(View v) {
-                TopicDeleteDialogFragment topicDeleteDialogFragment =
-                        TopicDeleteDialogFragment.newInstance(position, filteredTopicList.get(position).getTitle());
-                topicDeleteDialogFragment.show(activity.getSupportFragmentManager(), "topicDeleteDialogFragment");
+            public boolean onMenuItemClick(android.view.MenuItem item) {
+                ITopic topic = filteredTopicList.get(position);
+                if (item.getItemId() == 1) {
+                    TopicDetailDialogFragment createTopicDialogFragment =
+                            TopicDetailDialogFragment.newInstance(true, position, topic.getId(),
+                                    topic.getTitle(), topic.getType(), topic.getColor());
+                    createTopicDialogFragment.show(activity.getSupportFragmentManager(),
+                            "createTopicDialogFragment");
+                } else {
+                    TopicDeleteDialogFragment topicDeleteDialogFragment =
+                            TopicDeleteDialogFragment.newInstance(position, topic.getTitle());
+                    topicDeleteDialogFragment.show(activity.getSupportFragmentManager(), "topicDeleteDialogFragment");
+                }
+                return true;
             }
         });
+        menu.show();
+    }
+
+    /**
+     * The notebook with its spine: only the left part is darker.
+     */
+    private static class NotebookDrawable extends android.graphics.drawable.LayerDrawable {
+        private final int spineWidth;
+
+        NotebookDrawable(android.graphics.drawable.Drawable cover, android.graphics.drawable.Drawable spine,
+                         int spineWidth) {
+            super(new android.graphics.drawable.Drawable[]{cover, spine});
+            this.spineWidth = spineWidth;
+        }
+
+        @Override
+        protected void onBoundsChange(android.graphics.Rect bounds) {
+            super.onBoundsChange(bounds);
+            getDrawable(1).setBounds(bounds.left, bounds.top, bounds.left + spineWidth, bounds.bottom);
+        }
     }
 
     public void gotoTopic(final int type, final int position) {
@@ -174,56 +259,12 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
         return topicFilter;
     }
 
-    /*
-     * Swipe
-     */
-
-    @Override
-    public int onGetSwipeReactionType(TopicViewHolder holder, int position, int x, int y) {
-        if (ViewTools.hitTest(holder.getSwipeableContainerView(), x, y)) {
-            return SwipeableItemConstants.REACTION_CAN_SWIPE_BOTH_H;
-        } else {
-            return SwipeableItemConstants.REACTION_CAN_NOT_SWIPE_BOTH_H;
-        }
-    }
-
-    @Override
-    public void onSetSwipeBackground(TopicViewHolder holder, int position, int type) {
-        if (type == SwipeableItemConstants.DRAWABLE_SWIPE_NEUTRAL_BACKGROUND) {
-            holder.getTopicLeftSettingView().setVisibility(View.GONE);
-        } else {
-            holder.getTopicLeftSettingView().setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public SwipeResultAction onSwipeItem(TopicViewHolder holder, int position, int result) {
-        switch (result) {
-            // swipe right --- pin
-            case SwipeableItemConstants.RESULT_SWIPED_RIGHT:
-                return new SwipeRightResultAction(this, position);
-            // other --- do nothing
-            case SwipeableItemConstants.RESULT_SWIPED_LEFT:
-            case SwipeableItemConstants.RESULT_CANCELED:
-            default:
-                if (position != RecyclerView.NO_POSITION) {
-                    return new UnpinResultAction(this, position);
-                } else {
-                    return null;
-                }
-        }
-    }
-
     @Override
     public boolean onCheckCanStartDrag(TopicViewHolder holder, int position, int x, int y) {
 
         // x, y --- relative from the itemView's top-left
-        final View containerView = holder.getSwipeableContainerView();
-
-        final int offsetX = containerView.getLeft() + (int) (ViewCompat.getTranslationX(containerView) + 0.5f);
-        final int offsetY = containerView.getTop() + (int) (ViewCompat.getTranslationY(containerView) + 0.5f);
-
-        return !topicFilter.isFilter() && ViewTools.hitTest(containerView, x - offsetX, y - offsetY);
+        //A notebook is moved by holding it (not while searching)
+        return !topicFilter.isFilter();
     }
 
     @Override
@@ -261,154 +302,23 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
         return true;
     }
 
-    private static class SwipeRightResultAction extends SwipeResultActionMoveToSwipedDirection {
-        private MainTopicAdapter mAdapter;
-        private final int mPosition;
+    protected class TopicViewHolder extends AbstractDraggableItemViewHolder {
 
-        public SwipeRightResultAction(MainTopicAdapter adapter, int position) {
-            mAdapter = adapter;
-            mPosition = position;
-        }
-
-        @Override
-        protected void onPerformAction() {
-
-            super.onPerformAction();
-
-            ITopic item = mAdapter.getList().get(mPosition);
-
-            if (!item.isPinned()) {
-                item.setPinned(true);
-                mAdapter.notifyItemChanged(mPosition);
-            }
-        }
-
-        @Override
-        protected void onSlideAnimationEnd() {
-
-            super.onSlideAnimationEnd();
-        }
-
-        @Override
-        protected void onCleanUp() {
-            super.onCleanUp();
-            // clear the references
-            mAdapter = null;
-        }
-    }
-
-    private static class UnpinResultAction extends SwipeResultActionDefault {
-        private MainTopicAdapter mAdapter;
-        private final int mPosition;
-
-        UnpinResultAction(MainTopicAdapter adapter, int position) {
-            mAdapter = adapter;
-            mPosition = position;
-        }
-
-        @Override
-        protected void onPerformAction() {
-            super.onPerformAction();
-
-            ITopic item = mAdapter.getList().get(mPosition);
-            if (item.isPinned()) {
-                item.setPinned(false);
-                mAdapter.notifyItemChanged(mPosition);
-            }
-        }
-
-        @Override
-        protected void onSlideAnimationEnd() {
-            super.onSlideAnimationEnd();
-        }
-
-        @Override
-        protected void onCleanUp() {
-            super.onCleanUp();
-            // clear the references
-            mAdapter = null;
-        }
-    }
-
-
-    protected class TopicViewHolder extends AbstractSwipeableItemViewHolder implements DraggableItemViewHolder {
-
-        @DraggableItemStateFlags
-        private int mDragStateFlags;
-
-        private ImageView IV_topic_icon;
-        private TextView TV_topic_title;
-        private TextView TV_topic_count;
-        private ImageView IV_topic_arrow_right;
-        private RelativeLayout RL_topic_view;
-        private LinearLayout LL_topic_left_setting;
-        private RelativeLayout RL_topic_content;
-        private ImageView IV_topic_left_setting_edit, IV_topic_left_setting_delete;
+        final View notebook, photo, label, menu;
+        final com.facebook.drawee.view.SimpleDraweeView coverImage;
+        final ImageView icon;
+        final TextView title, count;
 
         protected TopicViewHolder(View rootView) {
             super(rootView);
-            this.RL_topic_content = (RelativeLayout) rootView.findViewById(R.id.RL_topic_content);
-            this.IV_topic_icon = (ImageView) rootView.findViewById(R.id.IV_topic_icon);
-            this.TV_topic_title = (TextView) rootView.findViewById(R.id.TV_topic_title);
-            this.TV_topic_count = (TextView) rootView.findViewById(R.id.TV_topic_count);
-            this.IV_topic_arrow_right = (ImageView) rootView.findViewById(R.id.IV_topic_arrow_right);
-
-            //Left setting view
-            this.RL_topic_view = (RelativeLayout) rootView.findViewById(R.id.RL_topic_view);
-            this.LL_topic_left_setting = (LinearLayout) rootView.findViewById(R.id.LL_topic_left_setting);
-            this.IV_topic_left_setting_edit = (ImageView) rootView.findViewById(R.id.IV_topic_left_setting_edit);
-            this.IV_topic_left_setting_delete = (ImageView) rootView.findViewById(R.id.IV_topic_left_setting_delete);
-
-
-        }
-
-        @Override
-        public View getSwipeableContainerView() {
-            return RL_topic_content;
-        }
-
-        @Override
-        public void setDragStateFlags(@DraggableItemStateFlags int flags) {
-            mDragStateFlags = flags;
-        }
-
-        @Override
-        @DraggableItemStateFlags
-        public int getDragStateFlags() {
-            return mDragStateFlags;
-        }
-
-        protected ImageView getIconView() {
-            return IV_topic_icon;
-        }
-
-
-        protected RelativeLayout getRLTopic() {
-            return RL_topic_view;
-        }
-
-        protected TextView getTitleView() {
-            return TV_topic_title;
-        }
-
-        protected TextView getTVCount() {
-            return TV_topic_count;
-        }
-
-        protected ImageView getArrow() {
-            return IV_topic_arrow_right;
-        }
-
-        protected View getTopicLeftSettingView() {
-            return LL_topic_left_setting;
-        }
-
-        protected View getTopicLeftSettingEditView() {
-            return IV_topic_left_setting_edit;
-        }
-
-        protected View getTopicLeftSettingDeleteView() {
-            return IV_topic_left_setting_delete;
+            notebook = rootView.findViewById(R.id.FL_topic_notebook);
+            photo = rootView.findViewById(R.id.FL_topic_photo);
+            label = rootView.findViewById(R.id.LL_topic_label);
+            menu = rootView.findViewById(R.id.IV_topic_menu);
+            coverImage = (com.facebook.drawee.view.SimpleDraweeView) rootView.findViewById(R.id.IV_topic_cover);
+            icon = (ImageView) rootView.findViewById(R.id.IV_topic_icon);
+            title = (TextView) rootView.findViewById(R.id.TV_topic_title);
+            count = (TextView) rootView.findViewById(R.id.TV_topic_count);
         }
     }
 

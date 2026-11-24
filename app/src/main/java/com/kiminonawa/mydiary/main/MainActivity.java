@@ -33,7 +33,6 @@ import com.github.amlcurran.showcaseview.targets.Target;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 import com.kiminonawa.mydiary.shared.Sfx;
@@ -76,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<ITopic> topicList;
 
     //swipe
-    private RecyclerViewSwipeManager mRecyclerViewSwipeManager;
     private RecyclerView.Adapter mWrappedAdapter;
     private RecyclerViewTouchActionGuardManager mRecyclerViewTouchActionGuardManager;
 
@@ -107,6 +105,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private LinearLayout LL_main_profile;
     private TextView TV_main_profile_username;
+    //The header: the banner and "10 diaries · 267 entries"
+    private ImageView IV_main_banner;
+    private TextView TV_main_profile_count;
+    private int coversLoadSequence = 0;
     private EditText EDT_main_topic_search;
     //Notes with the searched word (of every topic), shown over the topics
     private RecyclerView RecyclerView_search_results;
@@ -134,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         IV_main_profile_picture = (ImageView) findViewById(R.id.IV_main_profile_picture);
         TV_main_profile_username = (TextView) findViewById(R.id.TV_main_profile_username);
+        IV_main_banner = (ImageView) findViewById(R.id.IV_main_banner);
+        TV_main_profile_count = (TextView) findViewById(R.id.TV_main_profile_count);
 
         EDT_main_topic_search = (EditText) findViewById(R.id.EDT_main_topic_search);
         EDT_main_topic_search.addTextChangedListener(this);
@@ -296,10 +300,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mRecyclerViewDragDropManager.release();
             mRecyclerViewDragDropManager = null;
         }
-        if (mRecyclerViewSwipeManager != null) {
-            mRecyclerViewSwipeManager.release();
-            mRecyclerViewSwipeManager = null;
-        }
 
         if (mRecyclerViewTouchActionGuardManager != null) {
             mRecyclerViewTouchActionGuardManager.release();
@@ -346,7 +346,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             YourNameIs = themeManager.getThemeUserName(MainActivity.this);
         }
         TV_main_profile_username.setText(YourNameIs);
-        LL_main_profile.setBackground(themeManager.getProfileBgDrawable(this));
+        //The banner fills the header without being stretched
+        IV_main_banner.setImageDrawable(themeManager.getProfileBgDrawable(this));
     }
 
     private void initBottomBar() {
@@ -405,29 +406,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
             }
         }
+        int diaries = 0;
+        for (ITopic topic : topicList) {
+            if (topic.getType() == ITopic.TYPE_DIARY) {
+                diaries++;
+            }
+        }
+        int entries = dbManager.getVisibleDiaryCount();
         dbManager.closeDB();
+        TV_main_profile_count.setText(getString(R.string.main_header_count, diaries, entries));
         mWrappedAdapter.notifyDataSetChanged();
+        loadCovers();
+    }
+
+    /**
+     * The photo of each notebook: the newest entry of the diary that has a photo (read in the background).
+     */
+    private void loadCovers() {
+        final int sequence = ++coversLoadSequence;
+        final List<Long> diaryTopics = new ArrayList<>();
+        for (ITopic topic : topicList) {
+            if (topic.getType() == ITopic.TYPE_DIARY) {
+                diaryTopics.add(topic.getId());
+            }
+        }
+        final android.content.Context context = getApplicationContext();
+        new com.kiminonawa.mydiary.shared.BackgroundTask<Void, java.util.Map<Long, MainTopicAdapter.Cover>>() {
+            @Override
+            protected java.util.Map<Long, MainTopicAdapter.Cover> doInBackground(Void... params) {
+                return TopicCovers.read(context, diaryTopics);
+            }
+
+            @Override
+            protected void onPostExecute(java.util.Map<Long, MainTopicAdapter.Cover> covers) {
+                if (isFinishing() || sequence != coversLoadSequence || mainTopicAdapter == null) {
+                    return;
+                }
+                mainTopicAdapter.setCovers(covers);
+            }
+        }.execute();
     }
 
 
     private void initTopicAdapter() {
 
-        // For swipe
-
-        // swipe manager
-        mRecyclerViewSwipeManager = new RecyclerViewSwipeManager();
-
-        // touch guard manager  (this class is required to suppress scrolling while swipe-dismiss animation is running)
+        // touch guard manager  (this class is required to suppress scrolling while an animation is running)
         mRecyclerViewTouchActionGuardManager = new RecyclerViewTouchActionGuardManager();
         mRecyclerViewTouchActionGuardManager.setInterceptVerticalScrollingWhileAnimationRunning(true);
         mRecyclerViewTouchActionGuardManager.setEnabled(true);
 
         //Init topic adapter
-        LinearLayoutManager lmr = new LinearLayoutManager(this);
-        RecyclerView_topic.setLayoutManager(lmr);
+        //The notebooks, two in each row
+        RecyclerView_topic.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(this, 2));
         RecyclerView_topic.setHasFixedSize(true);
         mainTopicAdapter = new MainTopicAdapter(this, topicList, dbManager);
-        mWrappedAdapter = mRecyclerViewSwipeManager.createWrappedAdapter(mainTopicAdapter);
+        mWrappedAdapter = mainTopicAdapter;
 
 
         //The animator of the old list library needs a class that Android does not have any more
@@ -459,7 +492,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //
         // priority: TouchActionGuard > Swipe > DragAndDrop
         mRecyclerViewTouchActionGuardManager.attachRecyclerView(RecyclerView_topic);
-        mRecyclerViewSwipeManager.attachRecyclerView(RecyclerView_topic);
 
         mRecyclerViewDragDropManager.attachRecyclerView(RecyclerView_topic);
     }

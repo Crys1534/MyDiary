@@ -118,6 +118,8 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
      * diary content & info
      */
     private long diaryId;
+    //The diary where the entry really is (its photos are there): it can be opened from a shortcut in another diary
+    private long homeTopicId;
     private DiaryItemHelper diaryItemHelper;
     private EditorActions editorActions;
     private AreaPickerController areaPicker;
@@ -294,6 +296,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
         super.onViewCreated(view, savedInstanceState);
         callback = (DiaryViewerCallback) getTargetFragment();
         diaryId = getArguments().getLong("diaryId", -1L);
+        homeTopicId = findHomeTopicId();
         //Init the object
         if (diaryId != -1) {
             if (isEditMode) {
@@ -311,11 +314,11 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                     @Override
                     public void run() {
                         //Copy the file into editCash
-                        mTask.execute(((DiaryActivity) getActivity()).getTopicId(), diaryId);
+                        mTask.execute(homeTopicId, diaryId);
                     }
                 }, 700);
             } else {
-                diaryFileManager = new FileManager(getActivity(), ((DiaryActivity) getActivity()).getTopicId(), diaryId);
+                diaryFileManager = new FileManager(getActivity(), homeTopicId, diaryId);
                 diaryPhotoFileList = new ArrayList<>();
                 initData();
             }
@@ -641,7 +644,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 locationField.getName(), titleTags.getTags(),
                 //Check  attachment
                 diaryItemHelper.getNowPhotoCount() > 0,
-                diaryItemHelper, diaryFileManager, this).execute(((DiaryActivity) getActivity()).getTopicId(), diaryId);
+                diaryItemHelper, diaryFileManager, this).execute(homeTopicId, diaryId);
 
     }
 
@@ -766,7 +769,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 } else {
                     //Show the gallery
                     Intent gotoPhotoOverviewIntent = new Intent(getActivity(), PhotoOverviewActivity.class);
-                    gotoPhotoOverviewIntent.putExtra(PhotoOverviewActivity.PHOTO_OVERVIEW_TOPIC_ID, ((DiaryActivity) getActivity()).getTopicId());
+                    gotoPhotoOverviewIntent.putExtra(PhotoOverviewActivity.PHOTO_OVERVIEW_TOPIC_ID, homeTopicId);
                     gotoPhotoOverviewIntent.putExtra(PhotoOverviewActivity.PHOTO_OVERVIEW_DIARY_ID, diaryId);
                     getActivity().startActivity(gotoPhotoOverviewIntent);
                 }
@@ -787,7 +790,7 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
                 break;
             case R.id.IV_diary_delete:
                 DiaryDeleteDialogFragment diaryDeleteDialogFragment =
-                        DiaryDeleteDialogFragment.newInstance(((DiaryActivity) getActivity()).getTopicId(), diaryId);
+                        DiaryDeleteDialogFragment.newInstance(homeTopicId, diaryId);
                 diaryDeleteDialogFragment.setTargetFragment(this, 0);
                 diaryDeleteDialogFragment.show(getFragmentManager(), "diaryDeleteDialogFragment");
                 break;
@@ -861,22 +864,97 @@ public class DiaryViewerDialogFragment extends DialogFragment implements View.On
     /**
      * The "move / copy" button: first the choice (move or copy), then the diary.
      */
+    private long findHomeTopicId() {
+        long activityTopic = ((DiaryActivity) getActivity()).getTopicId();
+        if (diaryId == -1) {
+            return activityTopic;
+        }
+        DBManager dbManager = new DBManager(getActivity());
+        dbManager.opeDB();
+        try {
+            long home = dbManager.getDiaryTopicId(diaryId);
+            return home > 0 ? home : activityTopic;
+        } finally {
+            dbManager.closeDB();
+        }
+    }
+
     private void showMoveCopyMenu() {
         android.widget.PopupMenu menu = new android.widget.PopupMenu(getActivity(), IV_diary_move);
         menu.getMenu().add(0, 1, 0, R.string.diary_move_menu_move);
         menu.getMenu().add(0, 2, 1, R.string.diary_move_menu_copy);
+        menu.getMenu().add(0, 3, 2, R.string.shortcut_menu);
         menu.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                chooseDiaryForMoveCopy(item.getItemId() == 1);
+                if (item.getItemId() == 3) {
+                    chooseShortcutDiaries();
+                } else {
+                    chooseDiaryForMoveCopy(item.getItemId() == 1);
+                }
                 return true;
             }
         });
         menu.show();
     }
 
+    /**
+     * "Shortcut": the entry stays in its diary and is also shown in the other diaries chosen here.
+     */
+    private void chooseShortcutDiaries() {
+        final java.util.List<DiaryMover.TopicOption> topics = new java.util.ArrayList<>();
+        for (DiaryMover.TopicOption option : DiaryMover.diaryTopics(getActivity())) {
+            if (option.id != homeTopicId) {
+                topics.add(option);
+            }
+        }
+        if (topics.isEmpty()) {
+            Toast.makeText(getActivity(), R.string.diary_move_no_other, Toast.LENGTH_LONG).show();
+            return;
+        }
+        DBManager dbManager = new DBManager(getActivity());
+        dbManager.opeDB();
+        java.util.List<Long> current = dbManager.getShortcutTopics(diaryId);
+        dbManager.closeDB();
+        String[] names = new String[topics.size()];
+        final boolean[] checked = new boolean[topics.size()];
+        for (int i = 0; i < names.length; i++) {
+            names[i] = topics.get(i).name;
+            checked[i] = current.contains(topics.get(i).id);
+        }
+        new androidx.appcompat.app.AlertDialog.Builder(getActivity())
+                .setTitle(R.string.shortcut_title)
+                .setMultiChoiceItems(names, checked, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        checked[which] = isChecked;
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        java.util.List<Long> chosen = new java.util.ArrayList<>();
+                        for (int i = 0; i < checked.length; i++) {
+                            if (checked[i]) {
+                                chosen.add(topics.get(i).id);
+                            }
+                        }
+                        DBManager db = new DBManager(getActivity());
+                        db.opeDB();
+                        db.setShortcutTopics(diaryId, chosen);
+                        db.closeDB();
+                        Toast.makeText(getActivity(), getString(R.string.shortcut_saved, chosen.size()),
+                                Toast.LENGTH_SHORT).show();
+                        //The list of this diary changes (an entry opened from a shortcut can leave it)
+                        ((DiaryActivity) getActivity()).loadEntries();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
     private void chooseDiaryForMoveCopy(final boolean move) {
-        final long currentTopicId = ((DiaryActivity) getActivity()).getTopicId();
+        final long currentTopicId = homeTopicId;
         final java.util.List<DiaryMover.TopicOption> topics = new java.util.ArrayList<>();
         for (DiaryMover.TopicOption option : DiaryMover.diaryTopics(getActivity())) {
             if (!move || option.id != currentTopicId) {

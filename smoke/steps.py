@@ -2029,5 +2029,88 @@ def esoteric_test():
     log("   eso: crash buffer = %r" % crash[:800])
     alive("esoteric theme")
 
+
+def notebooks_shortcut_test():
+    """The main screen with notebooks (header with the banner and the counts), the "..." menu of a notebook,
+    and a shortcut: an entry of DIARY is also shown in another diary."""
+    import sqlite3
+    restart()
+    show("nb_main", full=True)
+    n = find(rid="TV_main_profile_count")
+    log("   nb: header count = %r" % (n["text"] if n else None))
+    titles = [x["text"] for x in nodes() if x["rid"].endswith("TV_topic_title")]
+    log("   nb: notebooks = %s" % titles)
+    adb("shell", "input", "swipe", "500", "1600", "500", "700", "500")
+    sleep(1)
+    show("nb_main_scrolled")
+    adb("shell", "input", "swipe", "500", "700", "500", "1600", "500")
+    sleep(1)
+    if tap(rid="IV_topic_menu"):
+        sleep(1)
+        show("nb_topic_menu")
+        key(4)
+        sleep(1)
+    if not open_diary_topic():
+        return
+    entry = find(rid="TV_entries_item_title")
+    if not entry:
+        show("nb_no_entry", full=True)
+        return
+    entry_title = entry["text"]
+    tap_xy(entry["cx"], entry["cy"])
+    sleep(3)
+    if not tap(rid="IV_diary_move"):
+        log("   nb: NO MOVE BUTTON")
+        return
+    sleep(1)
+    show("nb_move_menu")
+    if not tap_menu_item("Also show in"):
+        return
+    sleep(1)
+    show("nb_shortcut_dialog", full=True)
+    boxes = [x for x in nodes() if "CheckedTextView" in x["cls"]]
+    log("   nb: choices = %s" % [b["text"] for b in boxes])
+    if not boxes:
+        return
+    target = boxes[0]["text"]
+    tap_xy(boxes[0]["cx"], boxes[0]["cy"])
+    if len(boxes) > 1:
+        tap_xy(boxes[1]["cx"], boxes[1]["cy"])
+    sleep(0.5)
+    show("nb_shortcut_checked")
+    tap(text="OK")
+    sleep(2)
+    show("nb_shortcut_saved", full=True)
+    alive("shortcut saved")
+    close_viewer()
+    path = pull_db("%s/nb" % OUT)
+    if path:
+        con = sqlite3.connect(path)
+        log("   nb DB shortcuts: %s" % con.execute("select s.shortcut_diary_id, t.topic_name from diary_shortcut s join topic_entry t on t._id = s.shortcut_topic_id").fetchall())
+        con.close()
+    restart()
+    show("nb_main_after", full=True)
+    n = find(text=target)
+    if not n:
+        log("   nb: target notebook %r not found" % target)
+        return
+    tap_xy(n["cx"], n["cy"])
+    sleep(3)
+    dismiss_intro()
+    tap(rid="But_diary_topbar_entries")
+    sleep(2)
+    show("nb_target_list", full=True)
+    e = find(text=entry_title)
+    if e:
+        tap_xy(e["cx"], e["cy"])
+        sleep(3)
+        show("nb_target_viewer", full=True)
+        alive("shortcut viewer")
+        close_viewer()
+    else:
+        log("   nb: the entry %r is not in %r" % (entry_title, target))
+
+
+step("notebooks and shortcut", notebooks_shortcut_test)
 step("esoteric theme", esoteric_test)
 log("== done")

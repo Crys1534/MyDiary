@@ -30,4 +30,6 @@
     <color name="contacts_photo_tint">#76767C</color>
     <color name="setting_hint_text_color">#A0A0A6</color>
     <color name="backup_hint_text_color">#A0A0A6</color>
+    <!-- The desk under the notebooks of the main screen -->
+    <color name="main_desk">#1C1814</color>
 </resources>

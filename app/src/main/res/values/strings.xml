@@ -356,4 +356,9 @@
     <string name="entries_summary_gallery">**gallery**</string>
     <string name="gallery_layout_1_4">1 big and 4 small (5 photos)</string>
     <string name="gallery_layout_1_6">1 big and 6 small (7 photos)</string>
+    <string name="shortcut_menu">Also show in other diaries…</string>
+    <string name="shortcut_title">Also show this entry in:</string>
+    <string name="shortcut_saved">Shown in %d more diaries</string>
+    <string name="main_header_count">%1$d diaries · %2$d entries</string>
+    <string name="topic_menu">Edit or delete</string>
 </resources>

@@ -58,7 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * Version 1 by Daxia：
      * First DB
      */
-    public static final int DATABASE_VERSION = 12;
+    public static final int DATABASE_VERSION = 13;
     public static final String DATABASE_NAME = "mydiary.db";
 
     private static final String TEXT_TYPE = " TEXT";
@@ -67,6 +67,13 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String COMMA_SEP = ",";
     private static final String FOREIGN = " FOREIGN KEY ";
     private static final String REFERENCES = " REFERENCES ";
+
+    //Shortcuts: an entry also shown in other diaries (version 13, this fork)
+    private static final String SQL_CREATE_SHORTCUTS =
+            "CREATE TABLE IF NOT EXISTS " + DBStructure.ShortcutEntry.TABLE_NAME + " ("
+                    + DBStructure.ShortcutEntry._ID + " INTEGER PRIMARY KEY,"
+                    + DBStructure.ShortcutEntry.COLUMN_DIARY_ID + " INTEGER,"
+                    + DBStructure.ShortcutEntry.COLUMN_TOPIC_ID + " INTEGER)";
 
     private static final String SQL_CREATE_TOPIC_ENTRIES =
             "CREATE TABLE " + TopicEntry.TABLE_NAME + " (" +
@@ -178,6 +185,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_MEMO_ORDER);
 
         db.execSQL(SQL_CREATE_CONTACTS_ENTRIES);
+        db.execSQL(SQL_CREATE_SHORTCUTS);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -250,7 +258,10 @@ public class DBHelper extends SQLiteOpenHelper {
                     }
                 }
 
-                //The look (theme) of every category (this fork)
+                //Shortcuts: an entry in more diaries (this fork)
+                if (oldVersion < 13) {
+                    db.execSQL(SQL_CREATE_SHORTCUTS);
+                }
                 //Pinned and hidden entries (this fork)
                 if (oldVersion < 12) {
                     if (!hasColumn(db, DiaryEntry_V2.TABLE_NAME, DiaryEntry_V2.COLUMN_PINNED)) {
@@ -262,6 +273,7 @@ public class DBHelper extends SQLiteOpenHelper {
                                 + DiaryEntry_V2.COLUMN_HIDDEN + INTEGER_TYPE + " DEFAULT 0");
                     }
                 }
+                //The look (theme) of every category (this fork)
                 if (oldVersion < 11) {
                     if (!hasColumn(db, TopicEntry.TABLE_NAME, TopicEntry.COLUMN_THEME)) {
                         db.execSQL("ALTER TABLE " + TopicEntry.TABLE_NAME + " ADD COLUMN "

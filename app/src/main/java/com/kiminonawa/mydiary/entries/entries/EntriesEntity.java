@@ -40,6 +40,21 @@ public class EntriesEntity implements Comparable<CalendarDay> {
         return hidden;
     }
 
+    //Shown here from another diary ("shortcut"): its photos are in the diary homeTopicId
+    private long homeTopicId = -1;
+
+    public boolean isShortcut() {
+        return homeTopicId >= 0;
+    }
+
+    public long getHomeTopicId() {
+        return homeTopicId;
+    }
+
+    public void setHomeTopicId(long homeTopicId) {
+        this.homeTopicId = homeTopicId;
+    }
+
     public void setFlags(boolean pinned, boolean hidden) {
         this.pinned = pinned;
         this.hidden = hidden;

@@ -5,38 +5,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/LL_main_profile"
+    <!-- The header: the banner, the profile picture, the name and how many diaries and entries there are -->
+    <FrameLayout
+        android:id="@+id/FL_main_header"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/top_bar_height"
-        android:layout_alignParentTop="true"
-        android:fitsSystemWindows="true"
-        android:orientation="horizontal">
+        android:layout_height="@dimen/main_header_height"
+        android:layout_alignParentTop="true">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/IV_main_profile_picture"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_person_picture_default"
-            app:civ_border_color="@android:color/white"
-            app:civ_border_width="2dp" />
+        <ImageView
+            android:id="@+id/IV_main_banner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
 
-        <TextView
-            android:id="@+id/TV_main_profile_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:shadowColor="@color/textview_shadow"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="3"
-            android:textColor="@android:color/white"
-            android:textSize="20dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/main_header_shade" />
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/LL_main_profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            android:paddingBottom="14dp"
+            android:paddingLeft="16dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/IV_main_profile_picture"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:src="@drawable/ic_person_picture_default"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="2dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/TV_main_profile_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:shadowColor="@color/textview_shadow"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="3"
+                    android:textColor="@android:color/white"
+                    android:textSize="21dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/TV_main_profile_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:shadowColor="@color/textview_shadow"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:textColor="#E9ECF2"
+                    android:textSize="13dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
 
 
     <!-- "A day like today": the diaries written on this day in other years -->
@@ -44,8 +80,8 @@
         android:id="@+id/LL_main_today_wrap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/LL_main_profile"
-        android:background="@color/app_surface"
+        android:layout_below="@id/FL_main_header"
+        android:background="@color/main_desk"
         android:orientation="vertical">
 
         <LinearLayout
@@ -125,9 +161,12 @@
         android:layout_height="match_parent"
         android:layout_above="@id/RL_main_bottom_bar"
         android:layout_below="@id/LL_main_today_wrap"
-        android:background="@color/app_surface"
+        android:background="@color/main_desk"
+        android:clipToPadding="false"
         android:paddingBottom="10dp"
-        android:paddingTop="10dp" />
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="6dp" />
 
     <!-- Appears over the topics while something is written in the search box -->
     <androidx.recyclerview.widget.RecyclerView
@@ -135,7 +174,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/RL_main_bottom_bar"
-        android:layout_below="@id/LL_main_profile"
+        android:layout_below="@id/FL_main_header"
         android:background="@color/app_surface"
         android:clipToPadding="false"
         android:paddingBottom="10dp"
@@ -148,7 +187,7 @@
         android:id="@+id/profile_shadow"
         android:layout_width="match_parent"
         android:layout_height="@dimen/shadow_height_5dp"
-        android:layout_below="@id/LL_main_profile"
+        android:layout_below="@id/FL_main_header"
         android:background="@drawable/view_bottom_shadow" />
 
     <View

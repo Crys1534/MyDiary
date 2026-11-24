@@ -27,6 +27,17 @@ public class BUDiaryEntries {
     private Integer diary_entries_pinned;
     private Integer diary_entries_hidden;
 
+    //The ids (in the backup) of the other diaries where it is also shown: shortcuts (null in an older backup)
+    private List<Long> diary_entries_shortcuts;
+
+    public List<Long> getShortcutTopics() {
+        return diary_entries_shortcuts;
+    }
+
+    public void setShortcutTopics(List<Long> topics) {
+        diary_entries_shortcuts = (topics == null || topics.isEmpty()) ? null : topics;
+    }
+
     public void setFlags(boolean pinned, boolean hidden) {
         diary_entries_pinned = pinned ? 1 : 0;
         diary_entries_hidden = hidden ? 1 : 0;

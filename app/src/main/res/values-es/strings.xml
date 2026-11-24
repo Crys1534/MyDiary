@@ -355,4 +355,9 @@
     <string name="entries_summary_gallery">**galería**</string>
     <string name="gallery_layout_1_4">1 grande y 4 pequeñas (5 fotos)</string>
     <string name="gallery_layout_1_6">1 grande y 6 pequeñas (7 fotos)</string>
+    <string name="shortcut_menu">Acceso directo en otras categorías…</string>
+    <string name="shortcut_title">Mostrar también esta entrada en:</string>
+    <string name="shortcut_saved">Ahora también sale en %d categorías más</string>
+    <string name="main_header_count">%1$d diarios · %2$d entradas</string>
+    <string name="topic_menu">Editar o borrar</string>
 </resources>

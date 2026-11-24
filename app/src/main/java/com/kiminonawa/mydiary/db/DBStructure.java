@@ -98,4 +98,14 @@ public class DBStructure {
         public static final String COLUMN_REF_TOPIC__ID = "contacts_ref_topic_id";
 
     }
+
+    /**
+     * Added in db version 13 (this fork): an entry that is also shown in other diaries ("shortcuts"). The entry stays
+     * in its own diary (its photos too); here are the other diaries where it appears.
+     */
+    public static class ShortcutEntry implements android.provider.BaseColumns {
+        public static final String TABLE_NAME = "diary_shortcut";
+        public static final String COLUMN_DIARY_ID = "shortcut_diary_id";
+        public static final String COLUMN_TOPIC_ID = "shortcut_topic_id";
+    }
 }

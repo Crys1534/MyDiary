@@ -82,4 +82,6 @@
     <color name="OOBE_bg_color">#e570A3B4</color>
 
 
+    <!-- The desk under the notebooks of the main screen -->
+    <color name="main_desk">#ECE3D3</color>
 </resources>

@@ -158,6 +158,17 @@ public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
             for (int i = 0; i < backupManager.getBackup_topic_list().size(); i++) {
                 saveTopicIntoDB(backupManager.getBackup_topic_list().get(i));
             }
+            //The shortcuts, now that all the diaries have their new id
+            for (java.util.Map.Entry<Long, java.util.List<Long>> link : pendingShortcuts.entrySet()) {
+                java.util.List<Long> newTopics = new java.util.ArrayList<>();
+                for (Long oldTopic : link.getValue()) {
+                    Long newTopic = newTopicIds.get(oldTopic);
+                    if (newTopic != null) {
+                        newTopics.add(newTopic);
+                    }
+                }
+                dbManager.setShortcutTopics(link.getKey(), newTopics);
+            }
             //Re-sort the topic
 
             //Check update success
@@ -172,6 +183,10 @@ public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
         return importSuccessful;
     }
 
+    //Old topic id (in the backup) -> new id, and new diary id -> old ids of its shortcut diaries
+    private final java.util.Map<Long, Long> newTopicIds = new java.util.HashMap<>();
+    private final java.util.Map<Long, java.util.List<Long>> pendingShortcuts = new java.util.HashMap<>();
+
     private void saveTopicIntoDB(BackupManager.BackupTopicListBean backupTopic) throws IOException {
 
         long newTopicId = dbManager.insertTopic(
@@ -179,6 +194,7 @@ public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
                 backupTopic.getTopic_type(),
                 backupTopic.getTopic_color(),
                 backupTopic.getTopic_theme());
+        newTopicIds.put(backupTopic.getTopic_id(), newTopicId);
         //The background picture of the topic
         restoreTopicBackground(backupTopic.getTopic_type(), backupTopic.getTopic_id(), newTopicId);
 
@@ -208,6 +224,9 @@ public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
                         }
                         if (diary.isHidden()) {
                             dbManager.setDiaryHidden(newDiaryId, true);
+                        }
+                        if (diary.getShortcutTopics() != null) {
+                            pendingShortcuts.put(newDiaryId, diary.getShortcutTopics());
                         }
                         //Write the diary item
                         for (int yi = 0; yi < diary.getDiaryItemList().size(); yi++) {
