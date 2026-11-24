@@ -158,6 +158,14 @@ public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
             for (int i = 0; i < backupManager.getBackup_topic_list().size(); i++) {
                 saveTopicIntoDB(backupManager.getBackup_topic_list().get(i));
             }
+            //The categories inside other categories, now that all have their new id
+            for (BackupManager.BackupTopicListBean topic : backupManager.getBackup_topic_list()) {
+                Long newTopic = newTopicIds.get(topic.getTopic_id());
+                Long newParent = newTopicIds.get(topic.getTopic_parent());
+                if (topic.getTopic_parent() > 0 && newTopic != null && newParent != null) {
+                    dbManager.setTopicParent(newTopic, newParent);
+                }
+            }
             //The shortcuts, now that all the diaries have their new id
             for (java.util.Map.Entry<Long, java.util.List<Long>> link : pendingShortcuts.entrySet()) {
                 java.util.List<Long> newTopics = new java.util.ArrayList<>();
@@ -271,17 +279,24 @@ public class ImportAsyncTask extends BackgroundTask<Void, Boolean> {
                 kindFolder = "diary";
                 break;
         }
-        File source = new File(backupFileManager.getDirAbsolutePath() + "/" + kindFolder + "/"
-                + oldTopicId + "/" + ThemeManager.CUSTOM_TOPIC_BG_FILENAME);
-        if (!source.isFile()) {
-            return;
-        }
-        try {
-            File target = ThemeManager.getInstance().getTopicBgSavePathFile(mContext, newTopicId, topicType);
-            FileUtils.copyFile(source, target);
-        } catch (Exception e) {
-            //The notes are more important than a background: go on
-            Log.e(TAG, "can't restore the background of a topic", e);
+        String folder = backupFileManager.getDirAbsolutePath() + "/" + kindFolder + "/" + oldTopicId + "/";
+        //The background, the photo of the cover and the banner of the category
+        String[] names = {ThemeManager.CUSTOM_TOPIC_BG_FILENAME, com.kiminonawa.mydiary.shared.TopicArt.COVER,
+                com.kiminonawa.mydiary.shared.TopicArt.BANNER};
+        for (String name : names) {
+            File source = new File(folder + name);
+            if (!source.isFile()) {
+                continue;
+            }
+            try {
+                File target = ThemeManager.CUSTOM_TOPIC_BG_FILENAME.equals(name)
+                        ? ThemeManager.getInstance().getTopicBgSavePathFile(mContext, newTopicId, topicType)
+                        : com.kiminonawa.mydiary.shared.TopicArt.file(mContext, topicType, newTopicId, name);
+                FileUtils.copyFile(source, target);
+            } catch (Exception e) {
+                //The notes are more important than a picture: go on
+                Log.e(TAG, "can't restore a picture of a topic", e);
+            }
         }
     }
 

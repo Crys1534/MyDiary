@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A category with categories inside: its notebook (full width) and, under it, a row with the ones inside -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/IN_topic_folder_notebook"
+        layout="@layout/rv_topic_item" />
+
+    <LinearLayout
+        android:id="@+id/LL_topic_folder_shelf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="-4dp"
+        android:orientation="vertical"
+        android:paddingBottom="2dp"
+        android:paddingTop="6dp">
+
+        <TextView
+            android:id="@+id/TV_topic_folder_inside"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:textSize="12dp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RV_topic_folder_children"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingLeft="2dp"
+            android:paddingRight="8dp" />
+    </LinearLayout>
+</LinearLayout>

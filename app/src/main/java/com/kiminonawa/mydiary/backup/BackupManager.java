@@ -122,6 +122,16 @@ public class BackupManager {
         private int topic_order;
         //The look of the category (null in a backup of an older version: classic)
         private Integer topic_theme;
+        //The id (in the backup) of the category it is inside of (null: on the main screen)
+        private Long topic_parent;
+
+        public long getTopic_parent() {
+            return topic_parent == null ? 0 : topic_parent;
+        }
+
+        public void setTopic_parent(long parent) {
+            this.topic_parent = parent > 0 ? parent : null;
+        }
         private List<BUContactsEntries> contacts_topic_entries_list;
         private List<BUDiaryEntries> diary_topic_entries_list;
         private List<BUMemoEntries> memo_topic_entries_list;

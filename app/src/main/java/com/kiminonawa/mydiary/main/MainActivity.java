@@ -382,6 +382,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             topicCursor.moveToNext();
         }
         topicCursor.close();
+        //The categories that are inside other categories
+        mainTopicAdapter.setParents(dbManager.getTopicParents());
     }
 
     private void loadProfilePicture() {
@@ -424,11 +426,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void loadCovers() {
         final int sequence = ++coversLoadSequence;
-        final List<Long> diaryTopics = new ArrayList<>();
+        //Every category (id and kind): a photo chosen for it, or the newest photo of a diary
+        final List<long[]> diaryTopics = new ArrayList<>();
         for (ITopic topic : topicList) {
-            if (topic.getType() == ITopic.TYPE_DIARY) {
-                diaryTopics.add(topic.getId());
-            }
+            diaryTopics.add(new long[]{topic.getId(), topic.getType()});
         }
         final android.content.Context context = getApplicationContext();
         new com.kiminonawa.mydiary.shared.BackgroundTask<Void, java.util.Map<Long, MainTopicAdapter.Cover>>() {
@@ -457,7 +458,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Init topic adapter
         //The notebooks, two in each row
-        RecyclerView_topic.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(this, 2));
+        final androidx.recyclerview.widget.GridLayoutManager grid = new androidx.recyclerview.widget.GridLayoutManager(this, 2);
+        //A category with others inside takes the whole row
+        grid.setSpanSizeLookup(new androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                RecyclerView.Adapter<?> adapter = RecyclerView_topic.getAdapter();
+                if (adapter == null || position < 0 || position >= adapter.getItemCount()) {
+                    return 1;
+                }
+                return mainTopicAdapter.getSpanSize(adapter.getItemViewType(position));
+            }
+        });
+        RecyclerView_topic.setLayoutManager(grid);
         RecyclerView_topic.setHasFixedSize(true);
         mainTopicAdapter = new MainTopicAdapter(this, topicList, dbManager);
         mWrappedAdapter = mainTopicAdapter;
@@ -581,7 +594,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             + "/" + newTopicBgFileName),
                             outputFile);
                     //Enter the topic
-                    mainTopicAdapter.gotoTopic(mainTopicAdapter.getList().get(position).getType(), position);
+                    mainTopicAdapter.gotoTopic(mainTopicAdapter.getList().get(position));
                 } catch (IOException e) {
                     Toast.makeText(this, getString(R.string.topic_topic_bg_fail), Toast.LENGTH_LONG).show();
                     e.printStackTrace();
@@ -613,6 +626,104 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 MainSettingDialogFragment mainSettingDialogFragment = new MainSettingDialogFragment();
                 mainSettingDialogFragment.show(getSupportFragmentManager(), "mainSettingDialogFragment");
                 break;
+        }
+    }
+
+    private static final int REQUEST_TOPIC_ART = 7411;
+    //The category and the picture (cover or banner) that is being chosen
+    private long artTopicId = -1;
+    private int artTopicType;
+    private String artKind;
+
+    /**
+     * Choose a photo of the gallery for the cover of the notebook or for the banner of a category.
+     */
+    public void chooseTopicArt(ITopic topic, String kind) {
+        artTopicId = topic.getId();
+        artTopicType = topic.getType();
+        artKind = kind;
+        FileManager.startBrowseImageFile(this, REQUEST_TOPIC_ART);
+    }
+
+    public void removeTopicArt(ITopic topic, String kind) {
+        File file = com.kiminonawa.mydiary.shared.TopicArt.file(this, topic.getType(), topic.getId(), kind);
+        if (file.exists()) {
+            file.delete();
+        }
+        evictFromCache(file);
+        loadCovers();
+    }
+
+    private void evictFromCache(File file) {
+        try {
+            com.facebook.drawee.backends.pipeline.Fresco.getImagePipeline()
+                    .evictFromCache(android.net.Uri.parse(FileManager.FILE_HEADER + file.getAbsolutePath()));
+        } catch (RuntimeException ignored) {
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong("artTopicId", artTopicId);
+        outState.putInt("artTopicType", artTopicType);
+        outState.putString("artKind", artKind);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        artTopicId = savedInstanceState.getLong("artTopicId", -1);
+        artTopicType = savedInstanceState.getInt("artTopicType");
+        artKind = savedInstanceState.getString("artKind");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_TOPIC_ART && resultCode == RESULT_OK && artTopicId != -1 && artKind != null) {
+            if (data == null || data.getData() == null) {
+                Toast.makeText(this, getString(R.string.toast_photo_intent_error), Toast.LENGTH_LONG).show();
+                return;
+            }
+            FileManager tempFileManager = new FileManager(this, FileManager.TEMP_DIR);
+            tempFileManager.clearDir();
+            android.net.Uri localSource = FileManager.copyUriToTempFile(this, data.getData(),
+                    new File(tempFileManager.getDirAbsolutePath()));
+            if (localSource == null) {
+                Toast.makeText(this, getString(R.string.toast_photo_intent_error), Toast.LENGTH_LONG).show();
+                return;
+            }
+            com.yalantis.ucrop.UCrop.Options options = new com.yalantis.ucrop.UCrop.Options();
+            options.setToolbarColor(themeManager.getThemeMainColor(this));
+            options.setStatusBarColor(themeManager.getThemeDarkColor(this));
+            boolean banner = com.kiminonawa.mydiary.shared.TopicArt.BANNER.equals(artKind);
+            com.yalantis.ucrop.UCrop.of(localSource, android.net.Uri.fromFile(
+                    new File(tempFileManager.getDir() + "/" + FileManager.createRandomFileName())))
+                    .withAspectRatio(banner ? 3 : 6, banner ? 1 : 5)
+                    .withMaxResultSize(banner ? 1500 : 720, banner ? 500 : 600)
+                    .withOptions(options)
+                    .start(this);
+        } else if (requestCode == com.yalantis.ucrop.UCrop.REQUEST_CROP && resultCode == RESULT_OK
+                && artTopicId != -1 && artKind != null && data != null) {
+            android.net.Uri result = com.yalantis.ucrop.UCrop.getOutput(data);
+            File target = com.kiminonawa.mydiary.shared.TopicArt.file(this, artTopicType, artTopicId, artKind);
+            try {
+                if (result == null || result.getPath() == null) {
+                    throw new IOException("no crop");
+                }
+                if (target.exists()) {
+                    target.delete();
+                }
+                FileUtils.moveFile(new File(result.getPath()), target);
+                evictFromCache(target);
+                Toast.makeText(this, com.kiminonawa.mydiary.shared.TopicArt.BANNER.equals(artKind)
+                        ? R.string.topic_banner_saved : R.string.topic_cover_saved, Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                Toast.makeText(this, getString(R.string.topic_topic_bg_fail), Toast.LENGTH_LONG).show();
+            }
+            artTopicId = -1;
+            loadCovers();
         }
     }
 
@@ -705,7 +816,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Update filter list
         mainTopicAdapter.getList().get(position).setTitle(newTopicTitle);
         mainTopicAdapter.getList().get(position).setColor(color);
-        mainTopicAdapter.notifyDataSetChanged(false);
+        mainTopicAdapter.notifyDataSetChanged(true);
 
         updateTopicBg(position, topicBgStatus, newTopicBgFileName);
         //Clear the filter
@@ -749,20 +860,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
         dbManager.delTopic(mainTopicAdapter.getList().get(position).getId());
+        //The categories that were inside it are on the main screen now
+        mainTopicAdapter.setParents(dbManager.getTopicParents());
         //Don't delete the topic order, it will be refreshed next moving time.
         dbManager.closeDB();
-        //Search for remove the topiclist
-        for (int i = 0; i < topicList.size(); i++) {
-            if (topicList.get(i).getId() == mainTopicAdapter.getList().get(position).getId()) {
-                topicList.remove(i);
-                break;
-            }
-        }
-        //remove the filter list
-        mainTopicAdapter.getList().remove(position);
-        //Notify recycle view
-        mainTopicAdapter.notifyItemRemoved(position);
-        mainTopicAdapter.notifyItemRangeChanged(position, mainTopicAdapter.getItemCount());
+        //(getList() is topicList: all the categories)
+        topicList.remove(position);
+        mainTopicAdapter.notifyDataSetChanged(true);
+        countTopicContent();
         //Clear the filter
         EDT_main_topic_search.setText("");
     }

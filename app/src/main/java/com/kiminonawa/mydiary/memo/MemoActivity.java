@@ -93,6 +93,11 @@ public class MemoActivity extends AppCompatActivity implements
             diaryTitle = "Memo";
         }
         TV_memo_topbar_title.setText(diaryTitle);
+        //The banner of the category, if it has one
+        if (com.kiminonawa.mydiary.shared.TopicArt.applyBanner(this, RL_memo_topbar_content, TV_memo_topbar_title,
+                com.kiminonawa.mydiary.main.topic.ITopic.TYPE_MEMO, topicId, 130)) {
+            RL_memo_topbar_content.setAlpha(1f);
+        }
 
         RecyclerView_memo = (RecyclerView) findViewById(R.id.RecyclerView_memo);
         rootView = findViewById(R.id.Layout_memo_item_add);

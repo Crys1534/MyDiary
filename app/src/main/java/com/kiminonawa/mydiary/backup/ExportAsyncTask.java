@@ -230,7 +230,7 @@ public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
                 memoEntriesCursor.close();
                 //Create the BUmemo
                 topic = new BackupManager.BackupTopicListBean(topicCursor.getLong(0), topicCursor.getString(1),
-                        topicCursor.getInt(7), topicCursor.getInt(5));
+                        topicOrder(topicCursor), topicCursor.getInt(5));
                 topic.setTopic_type(ITopic.TYPE_MEMO);
                 topic.setMemo_topic_entries_list(memoEntriesItemList);
                 break;
@@ -272,7 +272,7 @@ public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
 
                 //Create the BUDiary
                 topic = new BackupManager.BackupTopicListBean(topicCursor.getLong(0), topicCursor.getString(1),
-                        topicCursor.getInt(7), topicCursor.getInt(5));
+                        topicOrder(topicCursor), topicCursor.getInt(5));
                 topic.setTopic_type(ITopic.TYPE_DIARY);
                 topic.setDiary_topic_entries_list(diaryEntriesItemList);
                 break;
@@ -290,7 +290,7 @@ public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
                 contactsEntriesCursor.close();
                 //Create the BUmemo
                 topic = new BackupManager.BackupTopicListBean(topicCursor.getLong(0), topicCursor.getString(1),
-                        topicCursor.getInt(7), topicCursor.getInt(5));
+                        topicOrder(topicCursor), topicCursor.getInt(5));
                 topic.setTopic_type(ITopic.TYPE_CONTACTS);
                 topic.setContacts_topic_entries_list(contactsEntriesItemList);
                 break;
@@ -298,9 +298,19 @@ public class ExportAsyncTask extends BackgroundTask<Void, Boolean> {
         if (topic != null) {
             int themeColumn = topicCursor.getColumnIndex(DBStructure.TopicEntry.COLUMN_THEME);
             topic.setTopic_theme(themeColumn >= 0 ? topicCursor.getInt(themeColumn) : 0);
+            int parentColumn = topicCursor.getColumnIndex(DBStructure.TopicEntry.COLUMN_PARENT);
+            topic.setTopic_parent(parentColumn >= 0 ? topicCursor.getLong(parentColumn) : 0);
         }
         return topic;
 
+    }
+
+    /**
+     * The place of the category on the main screen (by the name of the column: the table has more columns now).
+     */
+    private static int topicOrder(Cursor topicCursor) {
+        int column = topicCursor.getColumnIndex(DBStructure.TopicOrderEntry.COLUMN_ORDER);
+        return column >= 0 && !topicCursor.isNull(column) ? topicCursor.getInt(column) : 0;
     }
 
 }

@@ -58,7 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * Version 1 by Daxia：
      * First DB
      */
-    public static final int DATABASE_VERSION = 13;
+    public static final int DATABASE_VERSION = 14;
     public static final String DATABASE_NAME = "mydiary.db";
 
     private static final String TEXT_TYPE = " TEXT";
@@ -83,7 +83,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     TopicEntry.COLUMN_ORDER + INTEGER_TYPE + COMMA_SEP +
                     TopicEntry.COLUMN_SUBTITLE + TEXT_TYPE + COMMA_SEP +
                     TopicEntry.COLUMN_COLOR + INTEGER_TYPE + COMMA_SEP +
-                    TopicEntry.COLUMN_THEME + INTEGER_TYPE +
+                    TopicEntry.COLUMN_THEME + INTEGER_TYPE + COMMA_SEP +
+                    TopicEntry.COLUMN_PARENT + INTEGER_TYPE + " DEFAULT 0" +
                     " )";
 
     private static final String SQL_CREATE_TOPIC_ORDER =
@@ -278,6 +279,14 @@ public class DBHelper extends SQLiteOpenHelper {
                     if (!hasColumn(db, TopicEntry.TABLE_NAME, TopicEntry.COLUMN_THEME)) {
                         db.execSQL("ALTER TABLE " + TopicEntry.TABLE_NAME + " ADD COLUMN "
                                 + TopicEntry.COLUMN_THEME + INTEGER_TYPE);
+                    }
+                }
+
+                //Categories inside other categories (this fork)
+                if (oldVersion < 14) {
+                    if (!hasColumn(db, TopicEntry.TABLE_NAME, TopicEntry.COLUMN_PARENT)) {
+                        db.execSQL("ALTER TABLE " + TopicEntry.TABLE_NAME + " ADD COLUMN "
+                                + TopicEntry.COLUMN_PARENT + INTEGER_TYPE + " DEFAULT 0");
                     }
                 }
 

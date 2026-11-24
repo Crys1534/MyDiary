@@ -117,6 +117,14 @@ public class DiaryActivity extends AppCompatActivity implements RadioGroup.OnChe
         com.kiminonawa.mydiary.shared.EsotericStyle.styleCategoryScreen(this, LL_diary_topbar_content, SG_diary_topbar,
                 new RadioButton[]{But_diary_topbar_entries, But_diary_topbar_calendar, But_diary_topbar_diary},
                 TV_diary_topbar_title, findViewById(R.id.ViewPager_diary_content), findViewById(R.id.toolbar_shadow));
+        //The banner of the category, if it has one
+        if (com.kiminonawa.mydiary.shared.TopicArt.applyBanner(this, LL_diary_topbar_content, TV_diary_topbar_title,
+                com.kiminonawa.mydiary.main.topic.ITopic.TYPE_DIARY, topicId, 150)) {
+            LL_diary_topbar_content.setGravity(android.view.Gravity.BOTTOM | android.view.Gravity.CENTER_HORIZONTAL);
+            LL_diary_topbar_content.setPadding(LL_diary_topbar_content.getPaddingLeft(),
+                    LL_diary_topbar_content.getPaddingTop(), LL_diary_topbar_content.getPaddingRight(),
+                    (int) (10 * getResources().getDisplayMetrics().density));
+        }
         //After SegmentedGroup was created
         initViewPager();
 

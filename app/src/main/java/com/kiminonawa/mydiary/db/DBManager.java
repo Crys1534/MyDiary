@@ -193,7 +193,37 @@ public class DBManager {
         return count;
     }
 
+    /**
+     * The categories that are inside another one: topic id -> the id of the one they are inside of.
+     */
+    public java.util.Map<Long, Long> getTopicParents() {
+        java.util.Map<Long, Long> parents = new java.util.HashMap<>();
+        Cursor c = db.rawQuery("SELECT " + TopicEntry._ID + ", " + TopicEntry.COLUMN_PARENT + " FROM "
+                + TopicEntry.TABLE_NAME + " WHERE " + TopicEntry.COLUMN_PARENT + " > 0", null);
+        try {
+            while (c.moveToNext()) {
+                parents.put(c.getLong(0), c.getLong(1));
+            }
+        } finally {
+            c.close();
+        }
+        return parents;
+    }
+
+    /**
+     * Puts a category inside another one (parentId 0: back on the main screen).
+     */
+    public void setTopicParent(long topicId, long parentId) {
+        ContentValues values = new ContentValues();
+        values.put(TopicEntry.COLUMN_PARENT, parentId);
+        db.update(TopicEntry.TABLE_NAME, values, TopicEntry._ID + " = ?", new String[]{String.valueOf(topicId)});
+    }
+
     public long delTopic(long topicId) {
+        //What was inside it goes back to the main screen
+        ContentValues released = new ContentValues();
+        released.put(TopicEntry.COLUMN_PARENT, 0);
+        db.update(TopicEntry.TABLE_NAME, released, TopicEntry.COLUMN_PARENT + " = ?", new String[]{String.valueOf(topicId)});
         db.delete(DBStructure.ShortcutEntry.TABLE_NAME, DBStructure.ShortcutEntry.COLUMN_TOPIC_ID + " = ?", new String[]{String.valueOf(topicId)});
         return db.delete(
                 TopicEntry.TABLE_NAME,

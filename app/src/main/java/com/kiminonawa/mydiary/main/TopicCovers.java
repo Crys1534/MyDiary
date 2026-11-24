@@ -28,12 +28,24 @@ final class TopicCovers {
         String chosenThumbnail;
     }
 
-    static Map<Long, MainTopicAdapter.Cover> read(Context context, List<Long> topicIds) {
+    static Map<Long, MainTopicAdapter.Cover> read(Context context, List<long[]> topics) {
         Map<Long, MainTopicAdapter.Cover> covers = new HashMap<>();
         DBManager dbManager = new DBManager(context);
         dbManager.opeDB();
         try {
-            for (Long topicId : topicIds) {
+            for (long[] topic : topics) {
+                long topicId = topic[0];
+                int type = (int) topic[1];
+                //A photo the person chose for the cover
+                java.io.File chosen = com.kiminonawa.mydiary.shared.TopicArt.file(context, type, topicId,
+                        com.kiminonawa.mydiary.shared.TopicArt.COVER);
+                if (chosen.isFile()) {
+                    covers.put(topicId, new MainTopicAdapter.Cover(chosen.getAbsolutePath(), null));
+                    continue;
+                }
+                if (type != com.kiminonawa.mydiary.main.topic.ITopic.TYPE_DIARY) {
+                    continue;
+                }
                 MainTopicAdapter.Cover cover = readOne(context, dbManager, topicId);
                 if (cover != null) {
                     covers.put(topicId, cover);

@@ -25,6 +25,7 @@ import com.kiminonawa.mydiary.entries.DiaryActivity;
 import com.kiminonawa.mydiary.main.topic.ITopic;
 import com.kiminonawa.mydiary.memo.MemoActivity;
 import com.kiminonawa.mydiary.shared.FileManager;
+import com.kiminonawa.mydiary.shared.TopicArt;
 import com.kiminonawa.mydiary.entries.diary.area.AreaImage;
 import com.kiminonawa.mydiary.shared.ViewTools;
 
@@ -37,6 +38,15 @@ import java.util.List;
 
 public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.TopicViewHolder> implements
         Filterable, DraggableItemAdapter<MainTopicAdapter.TopicViewHolder> {
+
+    private static final int VIEW_NOTEBOOK = 0;
+    //A category with categories inside: its notebook and a row with the ones inside
+    private static final int VIEW_FOLDER = 1;
+
+    //The categories that are inside another one: topic id -> the one they are inside of
+    private final java.util.Map<Long, Long> parents = new java.util.HashMap<>();
+    //What is inside each category of the main screen (in the order of the list)
+    private final java.util.Map<Long, List<ITopic>> children = new java.util.HashMap<>();
 
     //The photo of the newest entry of each diary that has one (topic id -> path and area)
     private final java.util.Map<Long, Cover> covers = new java.util.HashMap<>();
@@ -80,23 +90,87 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
         setHasStableIds(true);
     }
 
+    public void setParents(java.util.Map<Long, Long> newParents) {
+        parents.clear();
+        parents.putAll(newParents);
+    }
+
+    /**
+     * The category this one is inside of, or null when it is on the main screen.
+     */
+    public ITopic parentOf(ITopic topic) {
+        Long parentId = parents.get(topic.getId());
+        if (parentId == null) {
+            return null;
+        }
+        for (ITopic candidate : originalTopicList) {
+            //Only one level: a category inside one that is itself inside another goes to the main screen
+            if (candidate.getId() == parentId && candidate.getId() != topic.getId() && !parents.containsKey(candidate.getId())) {
+                return candidate;
+            }
+        }
+        return null;
+    }
+
+    public List<ITopic> childrenOf(ITopic topic) {
+        List<ITopic> list = children.get(topic.getId());
+        return list == null ? new ArrayList<ITopic>() : list;
+    }
+
+    /**
+     * The categories of the main screen and what is inside each one, again.
+     */
+    private void rebuild() {
+        children.clear();
+        filteredTopicList.clear();
+        for (ITopic topic : originalTopicList) {
+            ITopic parent = parentOf(topic);
+            if (parent == null) {
+                filteredTopicList.add(topic);
+            } else {
+                List<ITopic> list = children.get(parent.getId());
+                if (list == null) {
+                    list = new ArrayList<>();
+                    children.put(parent.getId(), list);
+                }
+                list.add(topic);
+            }
+        }
+    }
 
     public void notifyDataSetChanged(boolean clear) {
         if (clear) {
-            filteredTopicList.clear();
-            filteredTopicList.addAll(originalTopicList);
+            rebuild();
         }
         super.notifyDataSetChanged();
     }
 
+    /**
+     * All the categories (the ones inside others too): the positions of the dialogs of edit and delete are of this list.
+     */
     public List<ITopic> getList() {
-        return filteredTopicList;
+        return originalTopicList;
+    }
+
+    /**
+     * A category with others inside takes the two columns.
+     */
+    public int getSpanSize(int viewType) {
+        return viewType == VIEW_FOLDER ? 2 : 1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (topicFilter.isFilter()) {
+            return VIEW_NOTEBOOK;
+        }
+        return childrenOf(filteredTopicList.get(position)).isEmpty() ? VIEW_NOTEBOOK : VIEW_FOLDER;
     }
 
     @Override
     public TopicViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.rv_topic_item, parent, false);
+                .inflate(viewType == VIEW_FOLDER ? R.layout.rv_topic_folder : R.layout.rv_topic_item, parent, false);
         return new TopicViewHolder(view);
     }
 
@@ -113,6 +187,35 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
     @Override
     public void onBindViewHolder(final TopicViewHolder holder, final int position) {
         final ITopic topic = filteredTopicList.get(position);
+        bindNotebook(holder.notebookViews, topic);
+        if (holder.childrenRow != null) {
+            List<ITopic> inside = childrenOf(topic);
+            holder.insideTitle.setText(activity.getString(R.string.topic_folder_inside, inside.size()));
+            boolean dark = (activity.getResources().getConfiguration().uiMode
+                    & android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES;
+            holder.insideTitle.setTextColor(dark ? 0xFFD8CCB8 : 0xFF6B5240);
+            android.graphics.drawable.GradientDrawable shelf = new android.graphics.drawable.GradientDrawable();
+            shelf.setColor(dark ? 0x14FFFFFF : 0x14000000);
+            shelf.setCornerRadius(12 * activity.getResources().getDisplayMetrics().density);
+            holder.shelf.setBackground(shelf);
+            holder.childrenRow.setAdapter(new ChildrenAdapter(inside));
+        }
+        //Click event
+        holder.notebookViews.notebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int at = holder.getAdapterPosition();
+                if (at != RecyclerView.NO_POSITION) {
+                    gotoTopic(filteredTopicList.get(at));
+                }
+            }
+        });
+    }
+
+    /**
+     * One notebook: its color, the photo taped on the cover, the label with the name and the "..." menu.
+     */
+    private void bindNotebook(final NotebookViews holder, final ITopic topic) {
         float density = activity.getResources().getDisplayMetrics().density;
 
         //The notebook: its color, the darker spine on the left
@@ -157,57 +260,177 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
         }
         holder.title.setTypeface(handwriting);
         holder.title.setText(topic.getTitle());
-        holder.title.setTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, topic.getTitle().length() > 16 ? 16 : 20);
+        holder.title.setTextSize(android.util.TypedValue.COMPLEX_UNIT_DIP, topic.getTitle().length() > 16 ? 14 : 17);
         holder.count.setText(String.valueOf(topic.getCount()));
-        holder.itemView.setContentDescription(topic.getTitle() + ", " + topic.getCount());
+        holder.root.setContentDescription(topic.getTitle() + ", " + topic.getCount());
 
-        //Click event
-        holder.notebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int at = holder.getAdapterPosition();
-                if (at != RecyclerView.NO_POSITION) {
-                    gotoTopic(filteredTopicList.get(at).getType(), at);
-                }
-            }
-        });
         holder.menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int at = holder.getAdapterPosition();
-                if (at != RecyclerView.NO_POSITION) {
-                    showTopicMenu(v, at);
-                }
+                showTopicMenu(v, topic);
             }
         });
     }
 
     /**
-     * The "..." of a notebook: edit it or delete it.
+     * The row with the categories inside another one.
      */
-    private void showTopicMenu(View anchor, final int position) {
+    private class ChildrenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private final List<ITopic> inside;
+
+        ChildrenAdapter(List<ITopic> inside) {
+            this.inside = inside;
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_topic_item, parent, false);
+            //A bit less than half of the screen: the next one peeks, so it can be seen that the row moves
+            ViewGroup.LayoutParams params = view.getLayoutParams();
+            params.width = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.44f);
+            view.setLayoutParams(params);
+            final NotebookViews views = new NotebookViews(view);
+            RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(view) {
+            };
+            view.setTag(views);
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            final ITopic topic = inside.get(position);
+            NotebookViews views = (NotebookViews) holder.itemView.getTag();
+            bindNotebook(views, topic);
+            views.notebook.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoTopic(topic);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return inside.size();
+        }
+    }
+
+    /**
+     * The "..." of a notebook: edit, delete, put it inside another category, its photo and its banner.
+     */
+    private void showTopicMenu(View anchor, final ITopic topic) {
+        final int position = originalTopicList.indexOf(topic);
+        if (position < 0) {
+            return;
+        }
+        final boolean inside = parentOf(topic) != null;
+        final boolean hasCover = TopicArt.has(activity, topic.getType(), topic.getId(), TopicArt.COVER);
+        final boolean hasBanner = TopicArt.has(activity, topic.getType(), topic.getId(), TopicArt.BANNER);
+        final boolean canHaveBanner = topic.getType() != ITopic.TYPE_CONTACTS;
         android.widget.PopupMenu menu = new android.widget.PopupMenu(activity, anchor);
         menu.getMenu().add(0, 1, 0, R.string.cover_tags_edit);
-        menu.getMenu().add(0, 2, 1, R.string.dialog_button_delete);
+        menu.getMenu().add(0, 3, 1, inside ? R.string.topic_move_other_folder : R.string.topic_move_into);
+        if (inside) {
+            menu.getMenu().add(0, 4, 2, R.string.topic_move_out);
+        }
+        menu.getMenu().add(0, 5, 3, R.string.topic_cover_choose);
+        if (hasCover) {
+            menu.getMenu().add(0, 6, 4, R.string.topic_cover_remove);
+        }
+        if (canHaveBanner) {
+            menu.getMenu().add(0, 7, 5, R.string.topic_banner_choose);
+            if (hasBanner) {
+                menu.getMenu().add(0, 8, 6, R.string.topic_banner_remove);
+            }
+        }
+        menu.getMenu().add(0, 2, 7, R.string.dialog_button_delete);
         menu.setOnMenuItemClickListener(new android.widget.PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(android.view.MenuItem item) {
-                ITopic topic = filteredTopicList.get(position);
-                if (item.getItemId() == 1) {
-                    TopicDetailDialogFragment createTopicDialogFragment =
-                            TopicDetailDialogFragment.newInstance(true, position, topic.getId(),
-                                    topic.getTitle(), topic.getType(), topic.getColor());
-                    createTopicDialogFragment.show(activity.getSupportFragmentManager(),
-                            "createTopicDialogFragment");
-                } else {
-                    TopicDeleteDialogFragment topicDeleteDialogFragment =
-                            TopicDeleteDialogFragment.newInstance(position, topic.getTitle());
-                    topicDeleteDialogFragment.show(activity.getSupportFragmentManager(), "topicDeleteDialogFragment");
+                switch (item.getItemId()) {
+                    case 1:
+                        TopicDetailDialogFragment createTopicDialogFragment =
+                                TopicDetailDialogFragment.newInstance(true, position, topic.getId(),
+                                        topic.getTitle(), topic.getType(), topic.getColor());
+                        createTopicDialogFragment.show(activity.getSupportFragmentManager(),
+                                "createTopicDialogFragment");
+                        break;
+                    case 2:
+                        TopicDeleteDialogFragment topicDeleteDialogFragment =
+                                TopicDeleteDialogFragment.newInstance(position, topic.getTitle());
+                        topicDeleteDialogFragment.show(activity.getSupportFragmentManager(), "topicDeleteDialogFragment");
+                        break;
+                    case 3:
+                        chooseFolder(topic);
+                        break;
+                    case 4:
+                        setParent(topic, 0);
+                        break;
+                    case 5:
+                        activity.chooseTopicArt(topic, TopicArt.COVER);
+                        break;
+                    case 6:
+                        activity.removeTopicArt(topic, TopicArt.COVER);
+                        break;
+                    case 7:
+                        activity.chooseTopicArt(topic, TopicArt.BANNER);
+                        break;
+                    case 8:
+                        activity.removeTopicArt(topic, TopicArt.BANNER);
+                        break;
                 }
                 return true;
             }
         });
         menu.show();
+    }
+
+    /**
+     * Put a category inside another one of the main screen.
+     */
+    private void chooseFolder(final ITopic topic) {
+        if (!childrenOf(topic).isEmpty()) {
+            //Only one level of folders
+            android.widget.Toast.makeText(activity, R.string.topic_move_has_children, android.widget.Toast.LENGTH_LONG).show();
+            return;
+        }
+        final List<ITopic> folders = new ArrayList<>();
+        ITopic current = parentOf(topic);
+        for (ITopic candidate : originalTopicList) {
+            if (candidate.getId() != topic.getId() && parentOf(candidate) == null && candidate != current) {
+                folders.add(candidate);
+            }
+        }
+        if (folders.isEmpty()) {
+            android.widget.Toast.makeText(activity, R.string.topic_move_no_other, android.widget.Toast.LENGTH_LONG).show();
+            return;
+        }
+        String[] names = new String[folders.size()];
+        for (int i = 0; i < names.length; i++) {
+            names[i] = folders.get(i).getTitle();
+        }
+        new androidx.appcompat.app.AlertDialog.Builder(activity)
+                .setTitle(activity.getString(R.string.topic_move_into_title, topic.getTitle()))
+                .setItems(names, new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface dialog, int which) {
+                        setParent(topic, folders.get(which).getId());
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void setParent(ITopic topic, long parentId) {
+        dbManager.opeDB();
+        dbManager.setTopicParent(topic.getId(), parentId);
+        dbManager.closeDB();
+        if (parentId > 0) {
+            parents.put(topic.getId(), parentId);
+        } else {
+            parents.remove(topic.getId());
+        }
+        notifyDataSetChanged(true);
     }
 
     /**
@@ -229,25 +452,25 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
         }
     }
 
-    public void gotoTopic(final int type, final int position) {
-        switch (type) {
+    public void gotoTopic(ITopic topic) {
+        switch (topic.getType()) {
             case ITopic.TYPE_CONTACTS:
                 Intent goContactsPageIntent = new Intent(activity, ContactsActivity.class);
-                goContactsPageIntent.putExtra("topicId", filteredTopicList.get(position).getId());
-                goContactsPageIntent.putExtra("diaryTitle", filteredTopicList.get(position).getTitle());
+                goContactsPageIntent.putExtra("topicId", topic.getId());
+                goContactsPageIntent.putExtra("diaryTitle", topic.getTitle());
                 activity.startActivity(goContactsPageIntent);
                 break;
             case ITopic.TYPE_DIARY:
                 Intent goEntriesPageIntent = new Intent(activity, DiaryActivity.class);
-                goEntriesPageIntent.putExtra("topicId", filteredTopicList.get(position).getId());
-                goEntriesPageIntent.putExtra("diaryTitle", filteredTopicList.get(position).getTitle());
+                goEntriesPageIntent.putExtra("topicId", topic.getId());
+                goEntriesPageIntent.putExtra("diaryTitle", topic.getTitle());
                 goEntriesPageIntent.putExtra("has_entries", true);
                 activity.startActivity(goEntriesPageIntent);
                 break;
             case ITopic.TYPE_MEMO:
                 Intent goMemoPageIntent = new Intent(activity, MemoActivity.class);
-                goMemoPageIntent.putExtra("topicId", filteredTopicList.get(position).getId());
-                goMemoPageIntent.putExtra("diaryTitle", filteredTopicList.get(position).getTitle());
+                goMemoPageIntent.putExtra("topicId", topic.getId());
+                goMemoPageIntent.putExtra("diaryTitle", topic.getTitle());
                 activity.startActivity(goMemoPageIntent);
                 break;
         }
@@ -261,8 +484,6 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
 
     @Override
     public boolean onCheckCanStartDrag(TopicViewHolder holder, int position, int x, int y) {
-
-        // x, y --- relative from the itemView's top-left
         //A notebook is moved by holding it (not while searching)
         return !topicFilter.isFilter();
     }
@@ -277,14 +498,22 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
         if (fromPosition == toPosition) {
             return;
         }
-
-        //modify the original list
-        final ITopic originalItem = originalTopicList.remove(fromPosition);
-        originalTopicList.add(toPosition, originalItem);
-
-        //Modify the filter list
-        final ITopic filteredItem = filteredTopicList.remove(fromPosition);
-        filteredTopicList.add(toPosition, filteredItem);
+        //The categories of the main screen in their new order
+        final ITopic moved = filteredTopicList.remove(fromPosition);
+        filteredTopicList.add(toPosition, moved);
+        //All the list: each one followed by the ones inside it
+        List<ITopic> ordered = new ArrayList<>();
+        for (ITopic topic : filteredTopicList) {
+            ordered.add(topic);
+            ordered.addAll(childrenOf(topic));
+        }
+        for (ITopic topic : originalTopicList) {
+            if (!ordered.contains(topic)) {
+                ordered.add(topic);
+            }
+        }
+        originalTopicList.clear();
+        originalTopicList.addAll(ordered);
 
         //save the new topic order
         int orderNumber = originalTopicList.size();
@@ -302,15 +531,17 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
         return true;
     }
 
-    protected class TopicViewHolder extends AbstractDraggableItemViewHolder {
-
-        final View notebook, photo, label, menu;
+    /**
+     * The views of one notebook.
+     */
+    private static class NotebookViews {
+        final View root, notebook, photo, label, menu;
         final com.facebook.drawee.view.SimpleDraweeView coverImage;
         final ImageView icon;
         final TextView title, count;
 
-        protected TopicViewHolder(View rootView) {
-            super(rootView);
+        NotebookViews(View rootView) {
+            root = rootView;
             notebook = rootView.findViewById(R.id.FL_topic_notebook);
             photo = rootView.findViewById(R.id.FL_topic_photo);
             label = rootView.findViewById(R.id.LL_topic_label);
@@ -319,6 +550,29 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
             icon = (ImageView) rootView.findViewById(R.id.IV_topic_icon);
             title = (TextView) rootView.findViewById(R.id.TV_topic_title);
             count = (TextView) rootView.findViewById(R.id.TV_topic_count);
+        }
+    }
+
+    protected class TopicViewHolder extends AbstractDraggableItemViewHolder {
+
+        final NotebookViews notebookViews;
+        //Only for a category with others inside
+        final RecyclerView childrenRow;
+        final TextView insideTitle;
+        final View shelf;
+
+        protected TopicViewHolder(View rootView) {
+            super(rootView);
+            View notebookRoot = rootView.findViewById(R.id.IN_topic_folder_notebook);
+            notebookViews = new NotebookViews(notebookRoot != null ? notebookRoot : rootView);
+            childrenRow = (RecyclerView) rootView.findViewById(R.id.RV_topic_folder_children);
+            insideTitle = (TextView) rootView.findViewById(R.id.TV_topic_folder_inside);
+            shelf = rootView.findViewById(R.id.LL_topic_folder_shelf);
+            if (childrenRow != null) {
+                childrenRow.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(
+                        rootView.getContext(), androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false));
+                childrenRow.setNestedScrollingEnabled(false);
+            }
         }
     }
 
@@ -371,9 +625,14 @@ public class MainTopicAdapter extends RecyclerView.Adapter<MainTopicAdapter.Topi
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            adapter.filteredTopicList.clear();
-            adapter.filteredTopicList.addAll((ArrayList<ITopic>) results.values);
-            adapter.notifyDataSetChanged(false);
+            if (isFilter) {
+                //Searching: every category that matches, the ones inside others too
+                adapter.filteredTopicList.clear();
+                adapter.filteredTopicList.addAll((ArrayList<ITopic>) results.values);
+                adapter.notifyDataSetChanged(false);
+            } else {
+                adapter.notifyDataSetChanged(true);
+            }
         }
     }
 }

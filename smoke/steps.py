@@ -2112,6 +2112,108 @@ def notebooks_shortcut_test():
         log("   nb: the entry %r is not in %r" % (entry_title, target))
 
 
+def notebook_menu(title):
+    """Opens the "..." of the notebook with this name on the main screen (the first one that has it)."""
+    titles = [x for x in nodes() if x["rid"].endswith("TV_topic_title")]
+    menus = [x for x in nodes() if x["rid"].endswith("IV_topic_menu")]
+    for t in titles:
+        if t["text"] == title:
+            # the "..." of the same notebook: above the label, the nearest one
+            best = None
+            for m in menus:
+                if m["cy"] < t["cy"] and abs(m["cx"] - t["cx"]) < 500:
+                    if best is None or t["cy"] - m["cy"] < t["cy"] - best["cy"]:
+                        best = m
+            if best:
+                tap_xy(best["cx"], best["cy"])
+                sleep(1)
+                return True
+    log("   folders: no menu for %r (titles %s)" % (title, [t["text"] for t in titles]))
+    return False
+
+
+def choose_gallery_picture(name, index=1):
+    """In the chooser of the system: a picture of the phone (by its place in the grid)."""
+    sleep(3)
+    show("fa_chooser_%s" % name, full=True)
+    for label in ("Files", "Documents", "Photos"):
+        n = find(text=label, contains=False)
+        if n:
+            tap_xy(n["cx"], n["cy"])
+            sleep(3)
+            break
+    n = find(text="Just once", contains=False)
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(3)
+    show("fa_picker_%s" % name, full=True)
+    thumbs = [n for n in nodes() if n["rid"].endswith("icon_thumbnail")]
+    log("   folders: picker thumbnails: %d" % len(thumbs))
+    if not thumbs:
+        key(4)
+        return False
+    pick = thumbs[min(index, len(thumbs) - 1)]
+    tap_xy(pick["cx"], pick["cy"])
+    sleep(2)
+    for label in ("Add (", "Add", "Select", "Done"):
+        n = find(text=label, contains=label == "Add (")
+        if n:
+            tap_xy(n["cx"], n["cy"])
+            break
+    sleep(4)
+    show("fa_crop_%s" % name, full=True)
+    crop_confirm()
+    sleep(4)
+    return True
+
+
+def folders_art_test():
+    """A category inside another one (the row under it), a photo of the gallery for the cover and a banner."""
+    restart()
+    show("fa_start", full=True)
+    if notebook_menu("Otro diario"):
+        show("fa_menu", full=True)
+        if tap_menu_item("Put inside another"):
+            sleep(1)
+            show("fa_folder_dialog", full=True)
+            tap(text="DIARY")
+            sleep(2)
+    show("fa_main_folder", full=True)
+    inside = find(rid="TV_topic_folder_inside")
+    log("   folders: row title = %r" % (inside["text"] if inside else None))
+    alive("folder")
+    # the cover of DIARY
+    if notebook_menu("DIARY"):
+        show("fa_menu_diary", full=True)
+        if tap_menu_item("Choose cover photo"):
+            choose_gallery_picture("cover", 1)
+    show("fa_main_cover", full=True)
+    alive("cover")
+    # the banner of DIARY
+    if notebook_menu("DIARY") and tap_menu_item("Choose banner"):
+        choose_gallery_picture("banner", 2)
+    show("fa_main_banner", full=True)
+    alive("banner")
+    # the files in the folder of the category
+    out = adb("shell", "ls", "-la", "/sdcard/Android/data/%s/files/diary/" % PKG)
+    log("   folders: diary dirs:\n%s" % out)
+    n = find(text="DIARY")
+    if n:
+        tap_xy(n["cx"], n["cy"])
+        sleep(3)
+        dismiss_intro()
+        show("fa_diary_banner", full=True)
+        alive("diary with banner")
+        key(4)
+        sleep(2)
+    # take it out again
+    restart()
+    if notebook_menu("Otro diario") and tap_menu_item("Take out"):
+        sleep(2)
+    show("fa_main_out", full=True)
+
+
 step("notebooks and shortcut", notebooks_shortcut_test)
+step("folders, cover and banner", folders_art_test)
 step("esoteric theme", esoteric_test)
 log("== done")
