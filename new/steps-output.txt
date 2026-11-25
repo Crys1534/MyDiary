@@ -1,0 +1,2648 @@
+== launch
+-- 01_launch
+   [TV_release_note_title] text='Release note' desc='' TextView click=False @540,900
+   [TV_release_note_text] text='**0.3.0.170424_1_A\n -Fix bug\n -Support simple photo function' desc='' TextView click=False @540,1150
+   [CTV_release_note_knew] text="Don't show again" desc='' CheckedTextView click=True @540,1419
+   [But_release_note_ok] text='Ok' desc='' Button click=True @539,1537
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+-- 02_main
+   [TV_main_profile_username] text='Taki' desc='' TextView click=False @262,265
+   [TV_main_profile_count] text='1 diaries · 1 entries' desc='' TextView click=False @353,325
+   [RL_topic_view] text='' desc='緊急時以外かけちゃダメ！, 1' FrameLayout click=False @280,617
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,475
+   [TV_topic_title] text='緊急時以外かけちゃダメ！' desc='' TextView click=False @253,743
+   [TV_topic_count] text='1' desc='' TextView click=False @421,742
+   [RL_topic_view] text='' desc='DIARY, 1' FrameLayout click=False @799,617
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @935,475
+   [TV_topic_title] text='DIARY' desc='' TextView click=False @772,747
+   [TV_topic_count] text='1' desc='' TextView click=False @940,746
+   [RL_topic_view] text='' desc='禁止事項 Ver.5, 6' FrameLayout click=False @280,1032
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,890
+   [TV_topic_title] text='禁止事項 Ver.5' desc='' TextView click=False @253,1158
+   [TV_topic_count] text='6' desc='' TextView click=False @421,1157
+   [RL_topic_view] text='' desc='ゼッタイ禁止, 5' FrameLayout click=False @799,1032
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @935,890
+   [TV_topic_title] text='ゼッタイ禁止' desc='' TextView click=False @772,1158
+   [TV_topic_count] text='5' desc='' TextView click=False @940,1157
+== (skipped) search
+== (skipped) drag topics
+== relaunch
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+== write an entry
+NOT FOUND: None android:id/button1 None
+-- 03_new_diary
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,996
+   [] text='' desc='' LinearLayout click=False @540,320
+   [IV_diary_weather] text='' desc='' ImageView click=False @47,328
+   [TV_diary_weather] text='sunny' desc='' TextView click=False @124,328
+   [] text='' desc='' View click=False @494,327
+   [IV_diary_location_name_icon] text='' desc='' ImageView click=False @840,328
+   [TV_diary_location] text='No Location' desc='' TextView click=True @963,328
+   [LL_diary_time_information] text='' desc='' LinearLayout click=True @540,996
+   [TV_diary_date] text='November 25' desc='' TextView click=False @539,996
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,1650
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,1650
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,1650
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1974
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,1788
+   [EDT_diary_title] text='Diary title' desc='' EditText click=True @380,1788
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @830,1787
+   [SP_diary_weather] text='' desc='' Spinner click=True @830,1787
+   [IV_spinner] text='' desc='' ImageView click=False @830,1787
+   [] text='' desc='' RelativeLayout click=False @540,2033
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,2033
+   [TV_diary_item_content_hint] text='Write your diary here' desc='' TextView click=False @540,2033
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   tags box visible (must be False): False
+NOT FOUND: None IV_diary_cover_tag_add None
+   NO PENCIL IN THE NEW ENTRY
+-- 04_title_tags_typed
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_diary_weather] text='sunny' desc='' TextView click=False @124,328
+   [TV_diary_location] text='No Location' desc='' TextView click=True @963,328
+   [TV_diary_date] text='November 25' desc='' TextView click=False @539,936
+   [TV_diary_cover_title] text='Prueba negrita' desc='' TextView click=False @540,1033
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,1650
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,1788
+   [TV_diary_item_content_hint] text='Write your diary here' desc='' TextView click=False @540,2033
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+-- 05_text_typed
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1254
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,348
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,348
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @830,347
+   [SP_diary_weather] text='' desc='' Spinner click=True @830,347
+   [IV_spinner] text='' desc='' ImageView click=False @830,347
+   [] text='' desc='' RelativeLayout click=False @540,1313
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1313
+   [] text='hola mundo bonito' desc='' EditText click=True @540,443
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   EDIT BAR with keyboard: IV_diary_bold at y=2284 (screen height 2400, keyboard shown=True)
+   EDIT BAR with keyboard: IV_diary_checklist at y=2284 (screen height 2400, keyboard shown=True)
+   EDIT BAR with keyboard: IV_diary_save at y=2284 (screen height 2400, keyboard shown=True)
+-- 06_word_selected
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,348
+   [] text='hola mundo bonito' desc='' EditText click=True @540,443
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   keyboard closed: True
+-- 07_word_selected_keyboard_closed
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_diary_weather] text='sunny' desc='' TextView click=False @124,328
+   [TV_diary_location] text='No Location' desc='' TextView click=True @963,328
+   [TV_diary_date] text='November 25' desc='' TextView click=False @539,936
+   [TV_diary_cover_title] text='Prueba negrita' desc='' TextView click=False @540,1033
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,1650
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,1788
+   [] text='hola mundo bonito' desc='' EditText click=True @540,1883
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+-- 08_bold_done
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_diary_weather] text='sunny' desc='' TextView click=False @124,328
+   [TV_diary_location] text='No Location' desc='' TextView click=True @963,328
+   [TV_diary_date] text='November 25' desc='' TextView click=False @539,936
+   [TV_diary_cover_title] text='Prueba negrita' desc='' TextView click=False @540,1033
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,1650
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,1788
+   [] text='hola mundo bonito' desc='' EditText click=True @540,1883
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+-- 09_italic_done
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_diary_weather] text='sunny' desc='' TextView click=False @124,328
+   [TV_diary_location] text='No Location' desc='' TextView click=True @963,328
+   [TV_diary_date] text='November 25' desc='' TextView click=False @539,936
+   [TV_diary_cover_title] text='Prueba negrita' desc='' TextView click=False @540,1033
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,1650
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,1788
+   [] text='hola mundo bonito' desc='' EditText click=True @540,1883
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+-- 10_list_bullets_menu_done
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,996
+   [] text='' desc='' LinearLayout click=False @540,320
+   [IV_diary_weather] text='' desc='' ImageView click=False @47,328
+   [TV_diary_weather] text='sunny' desc='' TextView click=False @124,328
+   [] text='' desc='' View click=False @494,327
+   [IV_diary_location_name_icon] text='' desc='' ImageView click=False @840,328
+   [TV_diary_location] text='No Location' desc='' TextView click=True @963,328
+   [LL_diary_time_information] text='' desc='' LinearLayout click=True @540,995
+   [TV_diary_date] text='November 25' desc='' TextView click=False @539,936
+   [TV_diary_cover_title] text='Prueba negrita' desc='' TextView click=False @540,1033
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,1650
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,1650
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,1650
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1974
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,1788
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,1788
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @830,1787
+   [SP_diary_weather] text='' desc='' Spinner click=True @830,1787
+   [IV_spinner] text='' desc='' ImageView click=False @830,1787
+   [] text='' desc='' RelativeLayout click=False @540,2033
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,2033
+   [] text='hola mundo bonito\n\ue004' desc='' EditText click=True @540,1911
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+-- 11_lists_typed
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1254
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,348
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,348
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @830,347
+   [SP_diary_weather] text='' desc='' Spinner click=True @830,347
+   [IV_spinner] text='' desc='' ImageView click=False @830,347
+   [] text='' desc='' RelativeLayout click=False @540,1313
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1313
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,691
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+-- 12_lists_keyboard_closed
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_diary_date] text='November 25' desc='' TextView click=False @539,753
+   [TV_diary_cover_title] text='Prueba negrita' desc='' TextView click=False @540,850
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,1467
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,1605
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,1948
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   APP ALIVE (pid 6544) after 'lists'
+-- 13_checklist_typed
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1254
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,348
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,348
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @830,347
+   [SP_diary_weather] text='' desc='' Spinner click=True @830,347
+   [IV_spinner] text='' desc='' ImageView click=False @830,347
+   [] text='' desc='' RelativeLayout click=False @540,1313
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1313
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,691
+   [] text='' desc='' LinearLayout click=False @540,1017
+   [] text='' desc='' CheckBox click=True @55,1017
+   [] text='comprar pan' desc='' EditText click=True @540,1016
+   [] text='' desc='' ImageView click=True @1025,1017
+   [] text='' desc='' LinearLayout click=False @540,1101
+   [] text='' desc='' CheckBox click=True @55,1101
+   [] text='llamar a mama' desc='' EditText click=True @540,1100
+   [] text='' desc='' ImageView click=True @1025,1101
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+-- 14_keyboard_closed
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,823
+   [LL_diary_time_information] text='' desc='' LinearLayout click=True @540,650
+   [TV_diary_date] text='November 25' desc='' TextView click=False @539,591
+   [TV_diary_cover_title] text='Prueba negrita' desc='' TextView click=False @540,688
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,1305
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,1305
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,1305
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1801
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,1443
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,1443
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @830,1442
+   [SP_diary_weather] text='' desc='' Spinner click=True @830,1442
+   [IV_spinner] text='' desc='' ImageView click=False @830,1442
+   [] text='' desc='' RelativeLayout click=False @540,1867
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1867
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,1786
+   [] text='' desc='' LinearLayout click=False @540,2112
+   [] text='' desc='' CheckBox click=True @55,2112
+   [] text='comprar pan' desc='' EditText click=True @540,2111
+   [] text='' desc='' ImageView click=True @1025,2112
+   [] text='' desc='' LinearLayout click=False @540,2193
+   [] text='' desc='' CheckBox click=True @55,2193
+   [] text='llamar a mama' desc='' EditText click=True @540,2195
+   [] text='' desc='' ImageView click=True @1025,2193
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+-- 15_photo_sheet_foto_ancha
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' LinearLayout click=False @540,1232
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' FrameLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [container] text='' desc='' FrameLayout click=False @540,1232
+   [coordinator] text='' desc='' ViewGroup click=False @540,1232
+   [touch_outside] text='' desc='' View click=True @540,1232
+   [design_bottom_sheet] text='' desc='' FrameLayout click=False @540,2211
+   [RL_diary_photo_dialog] text='' desc='' RelativeLayout click=False @540,2211
+   [] text='' desc='' ScrollView click=False @540,2211
+   [] text='' desc='' LinearLayout click=False @540,2169
+   [] text='' desc='' LinearLayout click=False @135,2169
+   [IV_diary_photo_add_a_photo] text='' desc='Camera' ImageView click=True @134,2148
+   [] text='Camera' desc='' TextView click=False @134,2232
+   [] text='' desc='' LinearLayout click=False @405,2169
+   [IV_diary_photo_select_a_photo] text='' desc='Photos' ImageView click=True @404,2148
+   [] text='Photos' desc='' TextView click=False @404,2232
+   [] text='' desc='' LinearLayout click=False @675,2169
+   [IV_diary_photo_gallery] text='' desc='Gallery' ImageView click=True @674,2148
+   [] text='Gallery' desc='' TextView click=False @674,2232
+   [] text='' desc='' LinearLayout click=False @945,2169
+   [IV_diary_photo_select_a_video] text='' desc='Choose videos' ImageView click=True @944,2148
+   [] text='Videos' desc='' TextView click=False @945,2232
+-- 16_photo_chooser_foto_ancha
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' ViewGroup click=False @540,1232
+   [bottom_sheet] text='' desc='' LinearLayout click=False @540,1232
+   [drag_bar] text='' desc='' ImageView click=False @540,175
+   [privacy_text] text='This app can only access the photos you select' desc='' TextView click=False @540,263
+   [] text='' desc='' FrameLayout click=False @540,1331
+   [fragment_container] text='' desc='' FrameLayout click=False @540,1331
+   [picker_tab_viewpager] text='' desc='' ViewPager click=False @540,1415
+   [] text='' desc='' RecyclerView click=False @540,1415
+   [] text='' desc='' FrameLayout click=False @540,1415
+   [] text='' desc='' FrameLayout click=False @540,1415
+   [picker_tab_recyclerview] text='' desc='' GridView click=False @540,1415
+   [date_header_title] text='Recent' desc='' TextView click=False @540,566
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:37\u202fAM' FrameLayout click=True @177,817
+   [] text='' desc='' CardView click=False @177,817
+   [] text='' desc='' FrameLayout click=False @177,817
+   [icon_thumbnail] text='' desc='' ImageView click=False @177,817
+   [overlay_gradient] text='' desc='' FrameLayout click=False @177,692
+   [icon_check] text='' desc='' ImageView click=False @47,687
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @539,817
+   [] text='' desc='' CardView click=False @539,817
+   [] text='' desc='' FrameLayout click=False @539,817
+   [icon_thumbnail] text='' desc='' ImageView click=False @539,817
+   [overlay_gradient] text='' desc='' FrameLayout click=False @539,692
+   [icon_check] text='' desc='' ImageView click=False @409,687
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @902,817
+   [] text='' desc='' CardView click=False @902,817
+   [] text='' desc='' FrameLayout click=False @902,817
+   [icon_thumbnail] text='' desc='' ImageView click=False @902,817
+   [overlay_gradient] text='' desc='' FrameLayout click=False @902,692
+   [icon_check] text='' desc='' ImageView click=False @772,687
+   [] text='' desc='' LinearLayout click=False @540,409
+   [toolbar] text='' desc='' ViewGroup click=False @540,409
+   [] text='' desc='Cancel' ImageButton click=True @73,408
+   [tab_layout] text='' desc='' HorizontalScrollView click=False @540,409
+   [] text='' desc='' LinearLayout click=False @540,409
+   [] text='' desc='Photos' LinearLayout click=False @403,409
+   [] text='Photos' desc='' TextView click=False @403,408
+   [] text='' desc='Albums' LinearLayout click=True @676,409
+   [] text='Albums' desc='' TextView click=False @676,408
+   [] text='' desc='' LinearLayoutCompat click=False @1027,408
+   [] text='' desc='More options' ImageView click=True @1027,408
+-- 17_photo_picker_foto_ancha
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' ViewGroup click=False @540,1232
+   [bottom_sheet] text='' desc='' LinearLayout click=False @540,1232
+   [drag_bar] text='' desc='' ImageView click=False @540,175
+   [privacy_text] text='This app can only access the photos you select' desc='' TextView click=False @540,263
+   [] text='' desc='' FrameLayout click=False @540,1331
+   [fragment_container] text='' desc='' FrameLayout click=False @540,1331
+   [picker_tab_viewpager] text='' desc='' ViewPager click=False @540,1415
+   [] text='' desc='' RecyclerView click=False @540,1415
+   [] text='' desc='' FrameLayout click=False @540,1415
+   [] text='' desc='' FrameLayout click=False @540,1415
+   [picker_tab_recyclerview] text='' desc='' GridView click=False @540,1415
+   [date_header_title] text='Recent' desc='' TextView click=False @540,566
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:37\u202fAM' FrameLayout click=True @177,817
+   [] text='' desc='' CardView click=False @177,817
+   [] text='' desc='' FrameLayout click=False @177,817
+   [icon_thumbnail] text='' desc='' ImageView click=False @177,817
+   [overlay_gradient] text='' desc='' FrameLayout click=False @177,692
+   [icon_check] text='' desc='' ImageView click=False @47,687
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @539,817
+   [] text='' desc='' CardView click=False @539,817
+   [] text='' desc='' FrameLayout click=False @539,817
+   [icon_thumbnail] text='' desc='' ImageView click=False @539,817
+   [overlay_gradient] text='' desc='' FrameLayout click=False @539,692
+   [icon_check] text='' desc='' ImageView click=False @409,687
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @902,817
+   [] text='' desc='' CardView click=False @902,817
+   [] text='' desc='' FrameLayout click=False @902,817
+   [icon_thumbnail] text='' desc='' ImageView click=False @902,817
+   [overlay_gradient] text='' desc='' FrameLayout click=False @902,692
+   [icon_check] text='' desc='' ImageView click=False @772,687
+   [] text='' desc='' LinearLayout click=False @540,409
+   [toolbar] text='' desc='' ViewGroup click=False @540,409
+   [] text='' desc='Cancel' ImageButton click=True @73,408
+   [tab_layout] text='' desc='' HorizontalScrollView click=False @540,409
+   [] text='' desc='' LinearLayout click=False @540,409
+   [] text='' desc='Photos' LinearLayout click=False @403,409
+   [] text='Photos' desc='' TextView click=False @403,408
+   [] text='' desc='Albums' LinearLayout click=True @676,409
+   [] text='Albums' desc='' TextView click=False @676,408
+   [] text='' desc='' LinearLayoutCompat click=False @1027,408
+   [] text='' desc='More options' ImageView click=True @1027,408
+   picker thumbnails: 3
+-- 18_photo_added_foto_ancha
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,378
+   [SDV_diary_cover] text='' desc='' ImageView click=False @540,378
+   [V_diary_cover_overlay] text='' desc='' View click=False @540,378
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,414
+   [IV_diary_cover_crop] text='' desc='' ImageView click=True @165,414
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,414
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,414
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1356
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,552
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,552
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @830,551
+   [SP_diary_weather] text='' desc='' Spinner click=True @830,551
+   [IV_spinner] text='' desc='' ImageView click=False @830,551
+   [] text='' desc='' RelativeLayout click=False @540,1421
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1421
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,895
+   [] text='' desc='' LinearLayout click=False @540,1221
+   [] text='' desc='' CheckBox click=True @55,1221
+   [] text='comprar pan' desc='' EditText click=True @540,1220
+   [] text='' desc='' ImageView click=True @1025,1221
+   [] text='' desc='' LinearLayout click=False @540,1305
+   [] text='' desc='' CheckBox click=True @55,1305
+   [] text='llamar a mama' desc='' EditText click=True @540,1304
+   [] text='' desc='' ImageView click=True @1025,1305
+   [] text='' desc='' LinearLayout click=False @540,1753
+   [] text='' desc='' RelativeLayout click=False @540,1753
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,1753
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,1426
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,1426
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,1410
+   [] text='' desc='' EditText click=True @540,2195
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+-- 19_photo_sheet_foto_alta
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' LinearLayout click=False @540,1232
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' FrameLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [container] text='' desc='' FrameLayout click=False @540,1232
+   [coordinator] text='' desc='' ViewGroup click=False @540,1232
+   [touch_outside] text='' desc='' View click=True @540,1232
+   [design_bottom_sheet] text='' desc='' FrameLayout click=False @540,2211
+   [RL_diary_photo_dialog] text='' desc='' RelativeLayout click=False @540,2211
+   [] text='' desc='' ScrollView click=False @540,2211
+   [] text='' desc='' LinearLayout click=False @540,2169
+   [] text='' desc='' LinearLayout click=False @135,2169
+   [IV_diary_photo_add_a_photo] text='' desc='Camera' ImageView click=True @134,2148
+   [] text='Camera' desc='' TextView click=False @134,2232
+   [] text='' desc='' LinearLayout click=False @405,2169
+   [IV_diary_photo_select_a_photo] text='' desc='Photos' ImageView click=True @404,2148
+   [] text='Photos' desc='' TextView click=False @404,2232
+   [] text='' desc='' LinearLayout click=False @675,2169
+   [IV_diary_photo_gallery] text='' desc='Gallery' ImageView click=True @674,2148
+   [] text='Gallery' desc='' TextView click=False @674,2232
+   [] text='' desc='' LinearLayout click=False @945,2169
+   [IV_diary_photo_select_a_video] text='' desc='Choose videos' ImageView click=True @944,2148
+   [] text='Videos' desc='' TextView click=False @945,2232
+-- 20_photo_chooser_foto_alta
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' ViewGroup click=False @540,1232
+   [bottom_sheet] text='' desc='' LinearLayout click=False @540,1232
+   [drag_bar] text='' desc='' ImageView click=False @540,175
+   [privacy_text] text='This app can only access the photos you select' desc='' TextView click=False @540,263
+   [] text='' desc='' FrameLayout click=False @540,1331
+   [fragment_container] text='' desc='' FrameLayout click=False @540,1331
+   [picker_tab_viewpager] text='' desc='' ViewPager click=False @540,1415
+   [] text='' desc='' RecyclerView click=False @540,1415
+   [] text='' desc='' FrameLayout click=False @540,1415
+   [] text='' desc='' FrameLayout click=False @540,1415
+   [picker_tab_recyclerview] text='' desc='' GridView click=False @540,1415
+   [date_header_title] text='Recent' desc='' TextView click=False @540,566
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:13:23\u202fAM' FrameLayout click=True @177,817
+   [] text='' desc='' CardView click=False @177,817
+   [] text='' desc='' FrameLayout click=False @177,817
+   [icon_thumbnail] text='' desc='' ImageView click=False @177,817
+   [overlay_gradient] text='' desc='' FrameLayout click=False @177,692
+   [icon_check] text='' desc='' ImageView click=False @47,687
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @539,817
+   [] text='' desc='' CardView click=False @539,817
+   [] text='' desc='' FrameLayout click=False @539,817
+   [icon_thumbnail] text='' desc='' ImageView click=False @539,817
+   [overlay_gradient] text='' desc='' FrameLayout click=False @539,692
+   [icon_check] text='' desc='' ImageView click=False @409,687
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @902,817
+   [] text='' desc='' CardView click=False @902,817
+   [] text='' desc='' FrameLayout click=False @902,817
+   [icon_thumbnail] text='' desc='' ImageView click=False @902,817
+   [overlay_gradient] text='' desc='' FrameLayout click=False @902,692
+   [icon_check] text='' desc='' ImageView click=False @772,687
+   [] text='' desc='' LinearLayout click=False @540,409
+   [toolbar] text='' desc='' ViewGroup click=False @540,409
+   [] text='' desc='Cancel' ImageButton click=True @73,408
+   [tab_layout] text='' desc='' HorizontalScrollView click=False @540,409
+   [] text='' desc='' LinearLayout click=False @540,409
+   [] text='' desc='Photos' LinearLayout click=False @403,409
+   [] text='Photos' desc='' TextView click=False @403,408
+   [] text='' desc='Albums' LinearLayout click=True @676,409
+   [] text='Albums' desc='' TextView click=False @676,408
+   [] text='' desc='' LinearLayoutCompat click=False @1027,408
+   [] text='' desc='More options' ImageView click=True @1027,408
+-- 21_photo_picker_foto_alta
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' ViewGroup click=False @540,1232
+   [bottom_sheet] text='' desc='' LinearLayout click=False @540,1232
+   [drag_bar] text='' desc='' ImageView click=False @540,175
+   [privacy_text] text='This app can only access the photos you select' desc='' TextView click=False @540,263
+   [] text='' desc='' FrameLayout click=False @540,1331
+   [fragment_container] text='' desc='' FrameLayout click=False @540,1331
+   [picker_tab_viewpager] text='' desc='' ViewPager click=False @540,1415
+   [] text='' desc='' RecyclerView click=False @540,1415
+   [] text='' desc='' FrameLayout click=False @540,1415
+   [] text='' desc='' FrameLayout click=False @540,1415
+   [picker_tab_recyclerview] text='' desc='' GridView click=False @540,1415
+   [date_header_title] text='Recent' desc='' TextView click=False @540,566
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:13:23\u202fAM' FrameLayout click=True @177,817
+   [] text='' desc='' CardView click=False @177,817
+   [] text='' desc='' FrameLayout click=False @177,817
+   [icon_thumbnail] text='' desc='' ImageView click=False @177,817
+   [overlay_gradient] text='' desc='' FrameLayout click=False @177,692
+   [icon_check] text='' desc='' ImageView click=False @47,687
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @539,817
+   [] text='' desc='' CardView click=False @539,817
+   [] text='' desc='' FrameLayout click=False @539,817
+   [icon_thumbnail] text='' desc='' ImageView click=False @539,817
+   [overlay_gradient] text='' desc='' FrameLayout click=False @539,692
+   [icon_check] text='' desc='' ImageView click=False @409,687
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @902,817
+   [] text='' desc='' CardView click=False @902,817
+   [] text='' desc='' FrameLayout click=False @902,817
+   [icon_thumbnail] text='' desc='' ImageView click=False @902,817
+   [overlay_gradient] text='' desc='' FrameLayout click=False @902,692
+   [icon_check] text='' desc='' ImageView click=False @772,687
+   [] text='' desc='' LinearLayout click=False @540,409
+   [toolbar] text='' desc='' ViewGroup click=False @540,409
+   [] text='' desc='Cancel' ImageButton click=True @73,408
+   [tab_layout] text='' desc='' HorizontalScrollView click=False @540,409
+   [] text='' desc='' LinearLayout click=False @540,409
+   [] text='' desc='Photos' LinearLayout click=False @403,409
+   [] text='Photos' desc='' TextView click=False @403,408
+   [] text='' desc='Albums' LinearLayout click=True @676,409
+   [] text='Albums' desc='' TextView click=False @676,408
+   [] text='' desc='' LinearLayoutCompat click=False @1027,408
+   [] text='' desc='More options' ImageView click=True @1027,408
+   picker thumbnails: 3
+-- 22_photo_added_foto_alta
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1254
+   [] text='' desc='' RelativeLayout click=False @540,1254
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1254
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,285
+   [] text='' desc='' LinearLayout click=False @540,336
+   [] text='' desc='' CheckBox click=True @55,336
+   [] text='comprar pan' desc='' EditText click=True @540,335
+   [] text='' desc='' ImageView click=True @1025,336
+   [] text='' desc='' LinearLayout click=False @540,420
+   [] text='' desc='' CheckBox click=True @55,420
+   [] text='llamar a mama' desc='' EditText click=True @540,419
+   [] text='' desc='' ImageView click=True @1025,420
+   [] text='' desc='' LinearLayout click=False @540,868
+   [] text='' desc='' RelativeLayout click=False @540,868
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,868
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,541
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,541
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,525
+   [] text='' desc='' EditText click=True @540,1310
+   [] text='' desc='' LinearLayout click=False @540,1753
+   [] text='' desc='' RelativeLayout click=False @540,1753
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,1753
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,1426
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,1426
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,1410
+   [] text='' desc='' EditText click=True @540,2195
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   stars found: 2
+-- 23_photos_in_diary
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1254
+   [] text='' desc='' RelativeLayout click=False @540,1254
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1254
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,285
+   [] text='' desc='' LinearLayout click=False @540,336
+   [] text='' desc='' CheckBox click=True @55,336
+   [] text='comprar pan' desc='' EditText click=True @540,335
+   [] text='' desc='' ImageView click=True @1025,336
+   [] text='' desc='' LinearLayout click=False @540,420
+   [] text='' desc='' CheckBox click=True @55,420
+   [] text='llamar a mama' desc='' EditText click=True @540,419
+   [] text='' desc='' ImageView click=True @1025,420
+   [] text='' desc='' LinearLayout click=False @540,868
+   [] text='' desc='' RelativeLayout click=False @540,868
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,868
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,541
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,541
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,525
+   [] text='' desc='' EditText click=True @540,1310
+   [] text='' desc='' LinearLayout click=False @540,1753
+   [] text='' desc='' RelativeLayout click=False @540,1753
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,1753
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,1426
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,1426
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,1410
+   [] text='' desc='' EditText click=True @540,2195
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+-- 24_second_star_pressed
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,285
+   [] text='comprar pan' desc='' EditText click=True @540,335
+   [] text='llamar a mama' desc='' EditText click=True @540,419
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+-- 25_cover_with_photo
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,463
+   [SDV_diary_cover] text='' desc='' ImageView click=False @540,463
+   [V_diary_cover_overlay] text='' desc='' View click=False @540,463
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,584
+   [IV_diary_cover_crop] text='' desc='' ImageView click=True @165,584
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,584
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,584
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1441
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,722
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,722
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @830,721
+   [SP_diary_weather] text='' desc='' Spinner click=True @830,721
+   [IV_spinner] text='' desc='' ImageView click=False @830,721
+   [] text='' desc='' RelativeLayout click=False @540,1506
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1506
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,1065
+   [] text='' desc='' LinearLayout click=False @540,1391
+   [] text='' desc='' CheckBox click=True @55,1391
+   [] text='comprar pan' desc='' EditText click=True @540,1390
+   [] text='' desc='' ImageView click=True @1025,1391
+   [] text='' desc='' LinearLayout click=False @540,1475
+   [] text='' desc='' CheckBox click=True @55,1475
+   [] text='llamar a mama' desc='' EditText click=True @540,1474
+   [] text='' desc='' ImageView click=True @1025,1475
+   [] text='' desc='' LinearLayout click=False @540,1874
+   [] text='' desc='' RelativeLayout click=False @540,1880
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,1880
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,1596
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,1596
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,1580
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+-- 26_audio_dialog_mp3
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' LinearLayout click=False @540,1232
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' FrameLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [parentPanel] text='' desc='' LinearLayoutCompat click=False @540,1232
+   [topPanel] text='' desc='' LinearLayout click=False @540,908
+   [title_template] text='' desc='' LinearLayout click=False @540,898
+   [alertTitle] text='Add audio' desc='' TextView click=False @540,921
+   [titleDividerNoCustom] text='' desc='' View click=False @540,967
+   [contentPanel] text='' desc='' FrameLayout click=False @540,1129
+   [scrollView] text='' desc='' ScrollView click=False @540,1129
+   [] text='' desc='' LinearLayout click=False @540,1129
+   [message] text='Paste the link of the audio, or choose an audio file that is' desc='' TextView click=False @540,1129
+   [customPanel] text='' desc='' FrameLayout click=False @540,1343
+   [custom] text='' desc='' FrameLayout click=False @540,1339
+   [] text='' desc='' FrameLayout click=False @540,1339
+   [] text='https://drive.google.com/file/d/…' desc='' EditText click=True @540,1339
+   [buttonPanel] text='' desc='' ScrollView click=False @540,1516
+   [] text='' desc='' LinearLayout click=False @540,1516
+   [button3] text='FROM MY PHONE' desc='' Button click=True @280,1544
+   [button2] text='CANCEL' desc='' Button click=True @709,1544
+   [button1] text='OK' desc='' Button click=True @894,1544
+-- 27_audio_added_mp3
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,649
+   [SDV_diary_cover] text='' desc='' ImageView click=False @540,649
+   [V_diary_cover_overlay] text='' desc='' View click=False @540,649
+   [LL_diary_time_information] text='' desc='' LinearLayout click=True @540,334
+   [TV_diary_cover_title] text='Prueba negrita' desc='' TextView click=False @540,339
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,956
+   [IV_diary_cover_crop] text='' desc='' ImageView click=True @165,956
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,956
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,956
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1627
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,1094
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,1094
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @830,1093
+   [SP_diary_weather] text='' desc='' Spinner click=True @830,1093
+   [IV_spinner] text='' desc='' ImageView click=False @830,1093
+   [] text='' desc='' RelativeLayout click=False @540,1692
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1692
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,1437
+   [] text='' desc='' LinearLayout click=False @540,1763
+   [] text='' desc='' CheckBox click=True @55,1763
+   [] text='comprar pan' desc='' EditText click=True @540,1762
+   [] text='' desc='' ImageView click=True @1025,1763
+   [] text='' desc='' LinearLayout click=False @540,1847
+   [] text='' desc='' CheckBox click=True @55,1847
+   [] text='llamar a mama' desc='' EditText click=True @540,1846
+   [] text='' desc='' ImageView click=True @1025,1847
+   [] text='' desc='' LinearLayout click=False @540,2060
+   [] text='' desc='' RelativeLayout click=False @540,2066
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,2066
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,1968
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,1968
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,1952
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   audios on the screen: 1, before: ['Tap play to listen']
+   tapping the lowest play button @92,2033
+   t+2s (mp3): ['0:01 / 6:12'] []
+   t+4s (mp3): ['0:09 / 6:12'] []
+   t+6s (mp3): ['0:18 / 6:12'] []
+   t+8s (mp3): ['0:24 / 6:12'] []
+   t+10s (mp3): ['0:32 / 6:12'] []
+   t+12s (mp3): ['0:39 / 6:12'] []
+   t+14s (mp3): ['0:46 / 6:12'] []
+   t+16s (mp3): ['0:54 / 6:12'] []
+   t+18s (mp3): ['1:01 / 6:12'] []
+   t+20s (mp3): ['1:08 / 6:12'] []
+-- 28_audio_playing_mp3
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1254
+   [] text='' desc='' RelativeLayout click=False @540,1247
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1247
+   [] text='' desc='' LinearLayout click=False @540,656
+   [] text='' desc='' RelativeLayout click=False @540,650
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,650
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,313
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,313
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,297
+   [] text='' desc='' EditText click=True @540,1072
+   [] text='' desc='' LinearLayout click=False @540,1515
+   [] text='' desc='' RelativeLayout click=False @540,1515
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,1515
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,1188
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,1188
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,1172
+   [] text='' desc='' LinearLayout click=False @540,2033
+   [IV_diary_audio_play] text='' desc='' ImageView click=True @92,2033
+   [] text='' desc='' LinearLayout click=False @513,2033
+   [WV_diary_audio_wave] text='' desc='' View click=False @513,2009
+   [TV_diary_audio_time] text='1:15 / 6:12' desc='' TextView click=False @513,2088
+   [IV_diary_audio_open] text='' desc='' ImageView click=True @903,2033
+   [IV_diary_audio_delete] text='' desc='' ImageView click=True @998,2033
+   [] text='' desc='' EditText click=True @540,2182
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   APP ALIVE (pid 6544) after 'audio mp3'
+-- 29_audio_dialog_m4a
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' LinearLayout click=False @540,1232
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' FrameLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [parentPanel] text='' desc='' LinearLayoutCompat click=False @540,1232
+   [topPanel] text='' desc='' LinearLayout click=False @540,908
+   [title_template] text='' desc='' LinearLayout click=False @540,898
+   [alertTitle] text='Add audio' desc='' TextView click=False @540,921
+   [titleDividerNoCustom] text='' desc='' View click=False @540,967
+   [contentPanel] text='' desc='' FrameLayout click=False @540,1129
+   [scrollView] text='' desc='' ScrollView click=False @540,1129
+   [] text='' desc='' LinearLayout click=False @540,1129
+   [message] text='Paste the link of the audio, or choose an audio file that is' desc='' TextView click=False @540,1129
+   [customPanel] text='' desc='' FrameLayout click=False @540,1343
+   [custom] text='' desc='' FrameLayout click=False @540,1339
+   [] text='' desc='' FrameLayout click=False @540,1339
+   [] text='https://drive.google.com/file/d/…' desc='' EditText click=True @540,1339
+   [buttonPanel] text='' desc='' ScrollView click=False @540,1516
+   [] text='' desc='' LinearLayout click=False @540,1516
+   [button3] text='FROM MY PHONE' desc='' Button click=True @280,1544
+   [button2] text='CANCEL' desc='' Button click=True @709,1544
+   [button1] text='OK' desc='' Button click=True @894,1544
+-- 30_audio_added_m4a
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,536
+   [SDV_diary_cover] text='' desc='' ImageView click=False @540,536
+   [V_diary_cover_overlay] text='' desc='' View click=False @540,536
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,731
+   [IV_diary_cover_crop] text='' desc='' ImageView click=True @165,731
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,731
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,731
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1514
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,869
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,869
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @830,868
+   [SP_diary_weather] text='' desc='' Spinner click=True @830,868
+   [IV_spinner] text='' desc='' ImageView click=False @830,868
+   [] text='' desc='' RelativeLayout click=False @540,1580
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1580
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,1212
+   [] text='' desc='' LinearLayout click=False @540,1538
+   [] text='' desc='' CheckBox click=True @55,1538
+   [] text='comprar pan' desc='' EditText click=True @540,1537
+   [] text='' desc='' ImageView click=True @1025,1538
+   [] text='' desc='' LinearLayout click=False @540,1692
+   [IV_diary_audio_play] text='' desc='' ImageView click=True @92,1692
+   [] text='' desc='' LinearLayout click=False @513,1692
+   [WV_diary_audio_wave] text='' desc='' View click=False @513,1668
+   [TV_diary_audio_time] text='Tap play to listen' desc='' TextView click=False @513,1747
+   [IV_diary_audio_open] text='' desc='' ImageView click=True @903,1692
+   [IV_diary_audio_delete] text='' desc='' ImageView click=True @998,1692
+   [] text='' desc='' EditText click=True @540,1841
+   [] text='' desc='' LinearLayout click=False @540,1920
+   [] text='' desc='' CheckBox click=True @55,1920
+   [] text='llamar a mama' desc='' EditText click=True @540,1919
+   [] text='' desc='' ImageView click=True @1025,1920
+   [] text='' desc='' LinearLayout click=False @540,2097
+   [] text='' desc='' RelativeLayout click=False @540,2102
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,2102
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,2041
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,2041
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,2025
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   audios on the screen: 1, before: ['1:16 / 6:12']
+   tapping the lowest play button @92,2033
+   t+2s (m4a): ['1:21 / 6:12'] []
+   t+4s (m4a): ['1:28 / 6:12'] []
+   t+6s (m4a): ['1:35 / 6:12'] []
+   t+8s (m4a): ['1:42 / 6:12'] []
+   t+10s (m4a): ['1:49 / 6:12'] []
+-- 31_audio_playing_m4a
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1254
+   [] text='' desc='' RelativeLayout click=False @540,1247
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1247
+   [] text='' desc='' LinearLayout click=False @540,656
+   [] text='' desc='' RelativeLayout click=False @540,650
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,650
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,313
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,313
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,297
+   [] text='' desc='' EditText click=True @540,1072
+   [] text='' desc='' LinearLayout click=False @540,1515
+   [] text='' desc='' RelativeLayout click=False @540,1515
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,1515
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,1188
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,1188
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,1172
+   [] text='' desc='' LinearLayout click=False @540,2033
+   [IV_diary_audio_play] text='' desc='' ImageView click=True @92,2033
+   [] text='' desc='' LinearLayout click=False @513,2033
+   [WV_diary_audio_wave] text='' desc='' View click=False @513,2009
+   [TV_diary_audio_time] text='1:59 / 6:12' desc='' TextView click=False @513,2088
+   [IV_diary_audio_open] text='' desc='' ImageView click=True @903,2033
+   [IV_diary_audio_delete] text='' desc='' ImageView click=True @998,2033
+   [] text='' desc='' EditText click=True @540,2182
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   APP ALIVE (pid 6544) after 'audio m4a'
+-- 32_audio_dialog_page
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' LinearLayout click=False @540,1232
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' FrameLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [parentPanel] text='' desc='' LinearLayoutCompat click=False @540,1232
+   [topPanel] text='' desc='' LinearLayout click=False @540,908
+   [title_template] text='' desc='' LinearLayout click=False @540,898
+   [alertTitle] text='Add audio' desc='' TextView click=False @540,921
+   [titleDividerNoCustom] text='' desc='' View click=False @540,967
+   [contentPanel] text='' desc='' FrameLayout click=False @540,1129
+   [scrollView] text='' desc='' ScrollView click=False @540,1129
+   [] text='' desc='' LinearLayout click=False @540,1129
+   [message] text='Paste the link of the audio, or choose an audio file that is' desc='' TextView click=False @540,1129
+   [customPanel] text='' desc='' FrameLayout click=False @540,1343
+   [custom] text='' desc='' FrameLayout click=False @540,1339
+   [] text='' desc='' FrameLayout click=False @540,1339
+   [] text='https://drive.google.com/file/d/…' desc='' EditText click=True @540,1339
+   [buttonPanel] text='' desc='' ScrollView click=False @540,1516
+   [] text='' desc='' LinearLayout click=False @540,1516
+   [button3] text='FROM MY PHONE' desc='' Button click=True @280,1544
+   [button2] text='CANCEL' desc='' Button click=True @709,1544
+   [button1] text='OK' desc='' Button click=True @894,1544
+-- 33_audio_added_page
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,387
+   [SDV_diary_cover] text='' desc='' ImageView click=False @540,387
+   [V_diary_cover_overlay] text='' desc='' View click=False @540,387
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,433
+   [IV_diary_cover_crop] text='' desc='' ImageView click=True @165,433
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,433
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,433
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1365
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,571
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,571
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @830,570
+   [SP_diary_weather] text='' desc='' Spinner click=True @830,570
+   [IV_spinner] text='' desc='' ImageView click=False @830,570
+   [] text='' desc='' RelativeLayout click=False @540,1431
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1431
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,914
+   [] text='' desc='' LinearLayout click=False @540,1240
+   [] text='' desc='' CheckBox click=True @55,1240
+   [] text='comprar pan' desc='' EditText click=True @540,1239
+   [] text='' desc='' ImageView click=True @1025,1240
+   [] text='' desc='' LinearLayout click=False @540,1394
+   [IV_diary_audio_play] text='' desc='' ImageView click=True @92,1394
+   [] text='' desc='' LinearLayout click=False @513,1394
+   [WV_diary_audio_wave] text='' desc='' View click=False @513,1370
+   [TV_diary_audio_time] text='Tap play to listen' desc='' TextView click=False @513,1449
+   [IV_diary_audio_open] text='' desc='' ImageView click=True @903,1394
+   [IV_diary_audio_delete] text='' desc='' ImageView click=True @998,1394
+   [] text='' desc='' EditText click=True @540,1543
+   [] text='' desc='' LinearLayout click=False @540,1692
+   [IV_diary_audio_play] text='' desc='' ImageView click=True @92,1692
+   [] text='' desc='' LinearLayout click=False @513,1692
+   [WV_diary_audio_wave] text='' desc='' View click=False @513,1668
+   [TV_diary_audio_time] text='Tap play to listen' desc='' TextView click=False @513,1747
+   [IV_diary_audio_open] text='' desc='' ImageView click=True @903,1692
+   [IV_diary_audio_delete] text='' desc='' ImageView click=True @998,1692
+   [] text='' desc='' EditText click=True @540,1841
+   [] text='' desc='' LinearLayout click=False @540,1920
+   [] text='' desc='' CheckBox click=True @55,1920
+   [] text='llamar a mama' desc='' EditText click=True @540,1919
+   [] text='' desc='' ImageView click=True @1025,1920
+   [] text='' desc='' LinearLayout click=False @540,2097
+   [] text='' desc='' RelativeLayout click=False @540,2102
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,2102
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,2041
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,2041
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,2025
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   audios on the screen: 1, before: ['2:01 / 6:12']
+   tapping the lowest play button @92,2033
+   t+2s (page): ['2:05 / 6:12'] []
+   t+4s (page): ['2:11 / 6:12'] []
+   t+6s (page): ['2:19 / 6:12'] []
+   t+8s (page): ['2:25 / 6:12'] []
+   t+10s (page): ['2:34 / 6:12'] []
+-- 34_audio_playing_page
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1254
+   [] text='' desc='' RelativeLayout click=False @540,1247
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,1247
+   [] text='' desc='' LinearLayout click=False @540,656
+   [] text='' desc='' RelativeLayout click=False @540,650
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,650
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,313
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,313
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,297
+   [] text='' desc='' EditText click=True @540,1072
+   [] text='' desc='' LinearLayout click=False @540,1515
+   [] text='' desc='' RelativeLayout click=False @540,1515
+   [SDV_diary_new_photo] text='' desc='' ImageView click=False @540,1515
+   [IV_diary_photo_thumbnail] text='' desc='' ImageView click=True @81,1188
+   [IV_diary_photo_crop] text='' desc='' ImageView click=True @197,1188
+   [IV_diary_photo_delete] text='' desc='' ImageView click=True @1014,1172
+   [] text='' desc='' LinearLayout click=False @540,2033
+   [IV_diary_audio_play] text='' desc='' ImageView click=True @92,2033
+   [] text='' desc='' LinearLayout click=False @513,2033
+   [WV_diary_audio_wave] text='' desc='' View click=False @513,2009
+   [TV_diary_audio_time] text='2:40 / 6:12' desc='' TextView click=False @513,2088
+   [IV_diary_audio_open] text='' desc='' ImageView click=True @903,2033
+   [IV_diary_audio_delete] text='' desc='' ImageView click=True @998,2033
+   [] text='' desc='' EditText click=True @540,2182
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   APP ALIVE (pid 6544) after 'audio page'
+-- 35_location_dialog
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' LinearLayout click=False @540,1232
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' FrameLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [parentPanel] text='' desc='' LinearLayoutCompat click=False @540,1232
+   [topPanel] text='' desc='' LinearLayout click=False @540,1087
+   [title_template] text='' desc='' LinearLayout click=False @540,1087
+   [alertTitle] text='Place' desc='' TextView click=False @540,1110
+   [customPanel] text='' desc='' FrameLayout click=False @540,1209
+   [custom] text='' desc='' FrameLayout click=False @540,1205
+   [] text='' desc='' FrameLayout click=False @540,1205
+   [] text='Type the name of the place' desc='' EditText click=True @540,1205
+   [buttonPanel] text='' desc='' ScrollView click=False @540,1354
+   [] text='' desc='' LinearLayout click=False @540,1354
+   [button3] text='USE MY LOCATION' desc='' Button click=True @290,1354
+   [button2] text='CANCEL' desc='' Button click=True @709,1354
+   [button1] text='OK' desc='' Button click=True @894,1354
+-- 36_location_permission_dialog
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' ScrollView click=False @540,1232
+   [grant_singleton] text='' desc='' LinearLayout click=True @540,1232
+   [grant_dialog] text='' desc='' LinearLayout click=True @540,1232
+   [content_container] text='' desc='' LinearLayout click=False @540,729
+   [] text='' desc='' LinearLayout click=False @540,721
+   [permission_icon] text='' desc='' ImageView click=False @540,639
+   [permission_message] text='Allow MyDiary Fotos to access this device’s location?' desc='' TextView click=False @540,779
+   [permission_location_accuracy] text='' desc='' LinearLayout click=False @540,1147
+   [permission_location_accuracy_radio_group] text='' desc='' RadioGroup click=False @540,1115
+   [permission_location_accuracy_radio_fine] text='Precise' desc='' RadioButton click=True @327,1115
+   [permission_location_accuracy_radio_coarse] text='Approximate' desc='' RadioButton click=True @752,1115
+   [] text='' desc='' LinearLayout click=False @540,1649
+   [permission_allow_foreground_only_button] text='While using the app' desc='' Button click=True @540,1463
+   [permission_allow_one_time_button] text='Only this time' desc='' Button click=True @540,1620
+   [permission_deny_button] text='Don’t allow' desc='' Button click=True @540,1777
+-- 37_location_after
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [] text='' desc='' RelativeLayout click=False @540,1306
+   [ScrollView_diary_content] text='' desc='' ScrollView click=False @540,1254
+   [RL_diary_page] text='' desc='' RelativeLayout click=False @540,1254
+   [RL_diary_info] text='' desc='' RelativeLayout click=False @540,996
+   [SDV_diary_cover] text='' desc='' ImageView click=False @540,996
+   [V_diary_cover_overlay] text='' desc='' View click=False @540,996
+   [] text='' desc='' LinearLayout click=False @540,320
+   [IV_diary_weather] text='' desc='' ImageView click=False @47,328
+   [TV_diary_weather] text='sunny' desc='' TextView click=False @124,328
+   [] text='' desc='' View click=False @307,327
+   [IV_diary_location_name_icon] text='' desc='' ImageView click=False @466,328
+   [TV_diary_location] text='Madrid, Comunidad de Madrid, Spain' desc='' TextView click=True @776,328
+   [LL_diary_time_information] text='' desc='' LinearLayout click=True @540,995
+   [TV_diary_date] text='November 25' desc='' TextView click=False @539,936
+   [TV_diary_cover_title] text='Prueba negrita' desc='' TextView click=False @540,1033
+   [IV_diary_cover_photo] text='' desc='Choose a photo for the cover' ImageView click=True @65,1650
+   [IV_diary_cover_crop] text='' desc='' ImageView click=True @165,1650
+   [LL_diary_cover_tags] text='' desc='' LinearLayout click=False @1014,1650
+   [IV_diary_cover_tag_add] text='' desc='' ImageView click=True @1014,1650
+   [RL_diary_content] text='' desc='' LinearLayout click=False @540,1974
+   [RL_diary_title_content] text='' desc='' LinearLayout click=False @540,1788
+   [EDT_diary_title] text='Prueba negrita' desc='' EditText click=True @380,1788
+   [RL_diary_weather] text='' desc='' RelativeLayout click=False @830,1787
+   [SP_diary_weather] text='' desc='' Spinner click=True @830,1787
+   [IV_spinner] text='' desc='' ImageView click=False @830,1787
+   [] text='' desc='' RelativeLayout click=False @540,2039
+   [LL_diary_item_content] text='' desc='' LinearLayout click=True @540,2039
+   [] text='hola mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005ter' desc='' EditText click=True @540,2039
+   [diary_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [LL_diary_edit_bar] text='' desc='' LinearLayout click=False @540,2284
+   [IV_diary_photo] text='' desc='' ImageView click=True @60,2284
+   [IV_diary_bold] text='' desc='' ImageView click=True @180,2284
+   [IV_diary_italic] text='' desc='' ImageView click=True @300,2284
+   [IV_diary_list] text='' desc='' ImageView click=True @420,2284
+   [IV_diary_checklist] text='' desc='' ImageView click=True @540,2284
+   [IV_diary_audio] text='' desc='' ImageView click=True @660,2284
+   [IV_diary_link] text='' desc='' ImageView click=True @780,2284
+   [IV_diary_table] text='' desc='Insert a table' ImageView click=True @900,2284
+   [IV_diary_save] text='' desc='' ImageView click=True @1020,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+-- 38_after_save
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_header] text='November' desc='' TextView click=False @540,335
+   [TV_entries_item_time] text='November 25' desc='' TextView click=False @384,471
+   [TV_entries_item_title] text='Prueba negrita' desc='' TextView click=False @545,530
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,688
+   [TV_entries_item_time] text='October 5' desc='' TextView click=False @353,822
+   [TV_entries_item_title] text='東京生活3❤' desc='' TextView click=False @545,884
+   [TV_entries_tag] text='#' desc='' TextView click=True @642,2284
+   [TV_entries_count] text='2 Entries' desc='' TextView click=False @963,2284
+   DB item: (1, 0, 'There are many coffee shops in Tokyo!')
+   DB item: (2, 0, '\ue000\ue002hola\ue001\ue003 mundo bonito\n\ue004uno\n\ue004dos\nsin lista\n\ue005primero\n\ue005segundo\n\ue005tercero\nfin numeros\n\ue006una cita de prueba bastante larga para que se rompa en varias lineas y se vea el')
+   DB item: (2, 3, '0comprar pan')
+   DB item: (2, 4, 'https://example.com/')
+   DB item: (2, 0, '')
+   DB item: (2, 4, 'https://raw.githubusercontent.com/Crys1534/MyDiary/master/smoke/test-audio.m4a')
+   DB item: (2, 0, '')
+   DB item: (2, 3, '0llamar a mama')
+   DB item: (2, 1, 'a504b646-efcc-4936-ae6a-c0dcbe83f023')
+   DB item: (2, 0, '')
+   DB item: (2, 1, '0f17583c-9194-4865-b76b-d1dd0156fab7')
+   DB item: (2, 4, 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')
+   DB item: (2, 0, '')
+   DB entry: (1, '東京生活3❤', '', 'Tokyo', '')
+   DB entry: (2, 'Prueba negrita', '', 'Madrid, Comunidad de Madrid, Spain', '0f17583c-9194-4865-b76b-d1dd0156fab7')
+== (skipped) open the entries
+== seed and scroll
+   seed: topics = [(1, 'ゼッタイ禁止', 2), (2, '禁止事項 Ver.5', 2), (3, 'DIARY', 1), (4, '緊急時以外かけちゃダメ！', 0)]
+   seed: second diary 'Otro diario' = topic 5
+   seed push: rc=0 err=''
+   seed: databases/ = total 56 | -rw-rw---- 1 u0_a192 u0_a192 49152 2026-11-25 02:19 mydiary.db | -rw-rw---- 1 u0_a192 u0_a192     0 2026-11-25 02:19 mydiary.db-journal
+   seed: 60 entries added to topic 3
+   seed photo: /sdcard/Android/data/com.kiminonawa.mydiary.fotos/files/diary/3/65/seedphoto0.png -> rc=0 smoke-out/new/seedphoto0.png: 1 file pushed, 0 skipped. 65.6 MB/s (5673 bytes in 0.000s)
+   seed photo: /sdcard/Android/data/com.kiminonawa.mydiary.fotos/files/diary/3/66/seedphoto1.png -> rc=0 smoke-out/new/seedphoto1.png: 1 file pushed, 0 skipped. 76.1 MB/s (5659 bytes in 0.000s)
+   seed photo: /sdcard/Android/data/com.kiminonawa.mydiary.fotos/files/diary/3/67/seedphoto2.png -> rc=0 smoke-out/new/seedphoto2.png: 1 file pushed, 0 skipped. 65.7 MB/s (5553 bytes in 0.000s)
+-- 39_after_seed_first_open
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' LinearLayout click=False @540,1232
+   [RL_release_note] text='' desc='' RelativeLayout click=False @540,1101
+   [TV_release_note_title] text='Release note' desc='' TextView click=False @540,900
+   [] text='' desc='' ScrollView click=False @540,1150
+   [TV_release_note_text] text='**0.3.0.170424_1_A\n -Fix bug\n -Support simple photo function' desc='' TextView click=False @540,1150
+   [] text='' desc='' RelativeLayout click=False @540,1495
+   [CTV_release_note_knew] text="Don't show again" desc='' CheckedTextView click=True @540,1419
+   [But_release_note_ok] text='Ok' desc='' Button click=True @539,1537
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+-- 40_seed_entries_list
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [RL_entries_content] text='' desc='' RelativeLayout click=False @540,1306
+   [FastScroller_entries] text='' desc='' View click=False @540,1254
+   [RecyclerView_entries] text='' desc='' RecyclerView click=False @540,1254
+   [] text='' desc='' LinearLayout click=True @540,452
+   [TV_entries_item_header] text='November' desc='' TextView click=False @540,335
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,505
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,503
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,503
+   [SDV_entries_item_thumbnail] text='' desc='' ImageView click=False @133,503
+   [] text='' desc='' LinearLayout click=False @545,503
+   [TV_entries_item_time] text='November 25' desc='' TextView click=False @384,471
+   [TV_entries_item_title] text='Prueba negrita' desc='' TextView click=False @545,530
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,503
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,444
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,444
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,444
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,553
+   [] text='' desc='' LinearLayout click=True @540,746
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,739
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,737
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,737
+   [SDV_entries_item_thumbnail] text='' desc='' ImageView click=False @133,737
+   [] text='' desc='' LinearLayout click=False @545,737
+   [TV_entries_item_time] text='November 24' desc='' TextView click=False @384,705
+   [TV_entries_item_title] text='Foto del dia 1' desc='' TextView click=False @545,764
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,737
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,678
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,678
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,678
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,787
+   [] text='' desc='' LinearLayout click=True @540,980
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,973
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,971
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,971
+   [SDV_entries_item_thumbnail] text='' desc='' ImageView click=False @133,971
+   [] text='' desc='' LinearLayout click=False @545,971
+   [TV_entries_item_time] text='November 23   playa' desc='' TextView click=False @441,939
+   [TV_entries_item_title] text='Foto del dia 2' desc='' TextView click=False @545,998
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,971
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,912
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,912
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,912
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,1021
+   [] text='' desc='' LinearLayout click=True @540,1214
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,1207
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,1205
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,1205
+   [SDV_entries_item_thumbnail] text='' desc='' ImageView click=False @133,1205
+   [] text='' desc='' LinearLayout click=False @545,1205
+   [TV_entries_item_time] text='November 21' desc='' TextView click=False @384,1173
+   [TV_entries_item_title] text='Foto del dia 3' desc='' TextView click=False @545,1232
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,1205
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,1146
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,1146
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,1146
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,1255
+   [] text='' desc='' LinearLayout click=True @540,1507
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,1390
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,1560
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,1558
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,1558
+   [] text='' desc='' LinearLayout click=False @545,1558
+   [TV_entries_item_time] text='October 4' desc='' TextView click=False @353,1526
+   [TV_entries_item_title] text='Nota de prueba 60' desc='' TextView click=False @545,1585
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,1558
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,1499
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,1499
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,1499
+   [] text='' desc='' LinearLayout click=True @540,1860
+   [TV_entries_item_header] text='September' desc='' TextView click=False @539,1743
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,1913
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,1911
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,1911
+   [] text='' desc='' LinearLayout click=False @545,1911
+   [TV_entries_item_time] text='September 17' desc='' TextView click=False @389,1879
+   [TV_entries_item_title] text='Nota de prueba 59' desc='' TextView click=False @545,1938
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,1911
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,1852
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,1852
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,1852
+   [] text='' desc='' LinearLayout click=True @540,2134
+   [TV_entries_item_header] text='August' desc='' TextView click=False @539,2096
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,2194
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,2194
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,2194
+   [] text='' desc='' LinearLayout click=False @545,2194
+   [TV_entries_item_time] text='August 31   prueba' desc='' TextView click=False @427,2219
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,2194
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,2205
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,2205
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,2205
+   [entries_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [RL_entries_edit_bar] text='' desc='' RelativeLayout click=False @540,2284
+   [IV_entries_menu] text='' desc='' ImageView click=False @57,2284
+   [IV_entries_edit] text='' desc='' ImageView click=True @186,2284
+   [IV_entries_photo] text='' desc='' ImageView click=True @315,2284
+   [TV_entries_tag] text='#' desc='' TextView click=True @629,2284
+   [TV_entries_count] text='67 Entries' desc='' TextView click=False @950,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   APP ALIVE (pid 11488) after 'seed list'
+-- 41_seed_scrolled_handle
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_title] text='Prueba negrita' desc='' TextView click=False @545,300
+   [TV_entries_item_time] text='November 24' desc='' TextView click=False @384,470
+   [TV_entries_item_title] text='Foto del dia 1' desc='' TextView click=False @545,529
+   [TV_entries_item_time] text='November 23   playa' desc='' TextView click=False @441,704
+   [TV_entries_item_title] text='Foto del dia 2' desc='' TextView click=False @545,763
+   [TV_entries_item_time] text='November 21' desc='' TextView click=False @384,938
+   [TV_entries_item_title] text='Foto del dia 3' desc='' TextView click=False @545,997
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,1155
+   [TV_entries_item_time] text='October 4' desc='' TextView click=False @353,1291
+   [TV_entries_item_title] text='Nota de prueba 60' desc='' TextView click=False @545,1350
+   [TV_entries_item_header] text='September' desc='' TextView click=False @539,1508
+   [TV_entries_item_time] text='September 17' desc='' TextView click=False @389,1644
+   [TV_entries_item_title] text='Nota de prueba 59' desc='' TextView click=False @545,1703
+   [TV_entries_item_header] text='August' desc='' TextView click=False @539,1861
+   [TV_entries_item_time] text='August 31   prueba' desc='' TextView click=False @427,1997
+   [TV_entries_item_title] text='Nota de prueba 58' desc='' TextView click=False @545,2056
+   [TV_entries_item_time] text='August 14' desc='' TextView click=False @356,2219
+   [TV_entries_tag] text='#' desc='' TextView click=True @629,2284
+   [TV_entries_count] text='67 Entries' desc='' TextView click=False @950,2284
+-- 42_seed_dragging_handle
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_header] text='November' desc='' TextView click=False @540,335
+   [TV_entries_item_time] text='November 25' desc='' TextView click=False @384,471
+   [TV_entries_item_title] text='Prueba negrita' desc='' TextView click=False @545,530
+   [TV_entries_item_time] text='November 24' desc='' TextView click=False @384,705
+   [TV_entries_item_title] text='Foto del dia 1' desc='' TextView click=False @545,764
+   [TV_entries_item_time] text='November 23   playa' desc='' TextView click=False @441,939
+   [TV_entries_item_title] text='Foto del dia 2' desc='' TextView click=False @545,998
+   [TV_entries_item_time] text='November 21' desc='' TextView click=False @384,1173
+   [TV_entries_item_title] text='Foto del dia 3' desc='' TextView click=False @545,1232
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,1390
+   [TV_entries_item_time] text='October 4' desc='' TextView click=False @353,1526
+   [TV_entries_item_title] text='Nota de prueba 60' desc='' TextView click=False @545,1585
+   [TV_entries_item_header] text='September' desc='' TextView click=False @539,1743
+   [TV_entries_item_time] text='September 17' desc='' TextView click=False @389,1879
+   [TV_entries_item_title] text='Nota de prueba 59' desc='' TextView click=False @545,1938
+   [TV_entries_item_header] text='August' desc='' TextView click=False @539,2096
+   [TV_entries_item_time] text='August 31   prueba' desc='' TextView click=False @427,2219
+   [TV_entries_tag] text='#' desc='' TextView click=True @629,2284
+   [TV_entries_count] text='67 Entries' desc='' TextView click=False @950,2284
+-- 43_seed_after_drag
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [TV_entries_item_header] text='November' desc='' TextView click=False @540,335
+   [TV_entries_item_time] text='November 25' desc='' TextView click=False @384,471
+   [TV_entries_item_title] text='Prueba negrita' desc='' TextView click=False @545,530
+   [TV_entries_item_time] text='November 24' desc='' TextView click=False @384,705
+   [TV_entries_item_title] text='Foto del dia 1' desc='' TextView click=False @545,764
+   [TV_entries_item_time] text='November 23   playa' desc='' TextView click=False @441,939
+   [TV_entries_item_title] text='Foto del dia 2' desc='' TextView click=False @545,998
+   [TV_entries_item_time] text='November 21' desc='' TextView click=False @384,1173
+   [TV_entries_item_title] text='Foto del dia 3' desc='' TextView click=False @545,1232
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,1390
+   [TV_entries_item_time] text='October 4' desc='' TextView click=False @353,1526
+   [TV_entries_item_title] text='Nota de prueba 60' desc='' TextView click=False @545,1585
+   [TV_entries_item_header] text='September' desc='' TextView click=False @539,1743
+   [TV_entries_item_time] text='September 17' desc='' TextView click=False @389,1879
+   [TV_entries_item_title] text='Nota de prueba 59' desc='' TextView click=False @545,1938
+   [TV_entries_item_header] text='August' desc='' TextView click=False @539,2096
+   [TV_entries_item_time] text='August 31   prueba' desc='' TextView click=False @427,2219
+   [TV_entries_tag] text='#' desc='' TextView click=True @629,2284
+   [TV_entries_count] text='67 Entries' desc='' TextView click=False @950,2284
+   APP ALIVE (pid 11488) after 'seed drag'
+== (skipped) today
+== (skipped) calendar month
+== (skipped) cover and crop
+== (skipped) move and copy
+== (skipped) global search
+== (skipped) hide today card
+== (skipped) settings
+== (skipped) backup
+== (skipped) backup content
+== (skipped) camera
+== (skipped) cover-only photo and notebook sheet
+== (skipped) new features: audio from phone, drag, link, paper, full screen
+== (skipped) dark mode
+== (skipped) notes features
+== (skipped) gallery
+== (skipped) notebooks and shortcut
+== folders, cover and banner
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+-- 44_fa_start
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [activity_main] text='' desc='' RelativeLayout click=False @540,1168
+   [FL_main_header] text='' desc='' FrameLayout click=False @540,197
+   [IV_main_banner] text='' desc='' ImageView click=False @540,197
+   [] text='' desc='' View click=False @540,197
+   [LL_main_profile] text='' desc='' LinearLayout click=True @540,197
+   [] text='' desc='' LinearLayout click=False @278,288
+   [IV_main_profile_picture] text='' desc='' ImageView click=False @110,288
+   [] text='' desc='' LinearLayout click=False @363,288
+   [TV_main_profile_username] text='Taki' desc='' TextView click=False @262,265
+   [TV_main_profile_count] text='2 diaries · 67 entries' desc='' TextView click=False @363,325
+   [LL_main_today_wrap] text='' desc='' LinearLayout click=False @540,490
+   [LL_main_today] text='' desc='' LinearLayout click=True @540,506
+   [TV_main_today_title] text='A day like today' desc='' TextView click=False @540,480
+   [TV_main_today_subtitle] text='2 entries written on this day in other years' desc='' TextView click=False @540,537
+   [profile_shadow] text='' desc='' View click=False @540,400
+   [RecyclerView_topic] text='' desc='' GridView click=False @540,1409
+   [RL_topic_view] text='' desc='緊急時以外かけちゃダメ！, 1' FrameLayout click=False @280,809
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @280,809
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @213,754
+   [IV_topic_icon] text='' desc='' ImageView click=False @212,749
+   [V_topic_tape] text='' desc='' View click=False @207,650
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,667
+   [LL_topic_label] text='' desc='' LinearLayout click=False @270,935
+   [TV_topic_title] text='緊急時以外かけちゃダメ！' desc='' TextView click=False @253,935
+   [TV_topic_count] text='1' desc='' TextView click=False @421,934
+   [V_topic_band] text='' desc='' View click=False @475,809
+   [RL_topic_view] text='' desc='DIARY, 67' FrameLayout click=False @799,809
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @799,809
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @732,754
+   [IV_topic_cover] text='' desc='' ImageView click=False @732,749
+   [V_topic_tape] text='' desc='' View click=False @726,650
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @935,667
+   [LL_topic_label] text='' desc='' LinearLayout click=False @789,939
+   [TV_topic_title] text='DIARY' desc='' TextView click=False @763,939
+   [TV_topic_count] text='67' desc='' TextView click=False @931,938
+   [V_topic_band] text='' desc='' View click=False @994,809
+   [RL_topic_view] text='' desc='禁止事項 Ver.5, 6' FrameLayout click=False @280,1224
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @280,1224
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @213,1169
+   [IV_topic_icon] text='' desc='' ImageView click=False @212,1164
+   [V_topic_tape] text='' desc='' View click=False @207,1065
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,1082
+   [LL_topic_label] text='' desc='' LinearLayout click=False @270,1350
+   [TV_topic_title] text='禁止事項 Ver.5' desc='' TextView click=False @253,1350
+   [TV_topic_count] text='6' desc='' TextView click=False @421,1349
+   [V_topic_band] text='' desc='' View click=False @475,1224
+   [RL_topic_view] text='' desc='ゼッタイ禁止, 5' FrameLayout click=False @799,1224
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @799,1224
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @732,1169
+   [IV_topic_icon] text='' desc='' ImageView click=False @732,1164
+   [V_topic_tape] text='' desc='' View click=False @726,1065
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @935,1082
+   [LL_topic_label] text='' desc='' LinearLayout click=False @789,1350
+   [TV_topic_title] text='ゼッタイ禁止' desc='' TextView click=False @772,1350
+   [TV_topic_count] text='5' desc='' TextView click=False @940,1349
+   [V_topic_band] text='' desc='' View click=False @994,1224
+   [RL_topic_view] text='' desc='Otro diario, 0' FrameLayout click=False @280,1639
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @280,1639
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @213,1584
+   [IV_topic_icon] text='' desc='' ImageView click=False @213,1579
+   [V_topic_tape] text='' desc='' View click=False @207,1480
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,1497
+   [LL_topic_label] text='' desc='' LinearLayout click=False @270,1769
+   [TV_topic_title] text='Otro diario' desc='' TextView click=False @253,1769
+   [TV_topic_count] text='0' desc='' TextView click=False @421,1768
+   [V_topic_band] text='' desc='' View click=False @475,1639
+   [search_shadow] text='' desc='' View click=False @540,2228
+   [RL_main_bottom_bar] text='' desc='' RelativeLayout click=False @540,2284
+   [EDT_main_topic_search] text='' desc='' EditText click=True @495,2284
+   [IV_main_setting] text='' desc='' ImageView click=True @1022,2284
+-- 45_fa_menu
+   [] text='' desc='' FrameLayout click=False @683,1857
+   [] text='' desc='' FrameLayout click=False @683,1857
+   [] text='' desc='' ListView click=False @683,1857
+   [] text='' desc='' LinearLayout click=False @683,1605
+   [content] text='' desc='' LinearLayout click=False @683,1605
+   [] text='' desc='' RelativeLayout click=False @683,1604
+   [title] text='Edit' desc='' TextView click=False @683,1604
+   [] text='' desc='' LinearLayout click=False @683,1731
+   [content] text='' desc='' LinearLayout click=False @683,1731
+   [] text='' desc='' RelativeLayout click=False @683,1730
+   [title] text='Put inside another category…' desc='' TextView click=False @683,1730
+   [] text='' desc='' LinearLayout click=False @683,1857
+   [content] text='' desc='' LinearLayout click=False @683,1857
+   [] text='' desc='' RelativeLayout click=False @683,1856
+   [title] text='Choose cover photo…' desc='' TextView click=False @683,1856
+   [] text='' desc='' LinearLayout click=False @683,1983
+   [content] text='' desc='' LinearLayout click=False @683,1983
+   [] text='' desc='' RelativeLayout click=False @683,1982
+   [title] text='Choose banner…' desc='' TextView click=False @683,1982
+   [] text='' desc='' LinearLayout click=False @683,2109
+   [content] text='' desc='' LinearLayout click=False @683,2109
+   [] text='' desc='' RelativeLayout click=False @683,2108
+   [title] text='Delete' desc='' TextView click=False @683,2108
+-- 46_fa_folder_dialog
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' LinearLayout click=False @540,1232
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' FrameLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [parentPanel] text='' desc='' LinearLayoutCompat click=False @540,1232
+   [topPanel] text='' desc='' LinearLayout click=False @540,961
+   [title_template] text='' desc='' LinearLayout click=False @540,951
+   [alertTitle] text='Put "Otro diario" inside:' desc='' TextView click=False @540,974
+   [titleDividerNoCustom] text='' desc='' View click=False @540,1020
+   [contentPanel] text='' desc='' FrameLayout click=False @540,1220
+   [select_dialog_listview] text='' desc='' ListView click=False @540,1220
+   [text1] text='DIARY' desc='' TextView click=False @540,1094
+   [text1] text='禁止事項 Ver.5' desc='' TextView click=False @540,1220
+   [text1] text='ゼッタイ禁止' desc='' TextView click=False @540,1346
+   [buttonPanel] text='' desc='' ScrollView click=False @540,1491
+   [] text='' desc='' LinearLayout click=False @540,1491
+   [button2] text='CANCEL' desc='' Button click=True @877,1491
+-- 47_fa_main_folder
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [activity_main] text='' desc='' RelativeLayout click=False @540,1168
+   [FL_main_header] text='' desc='' FrameLayout click=False @540,197
+   [IV_main_banner] text='' desc='' ImageView click=False @540,197
+   [] text='' desc='' View click=False @540,197
+   [LL_main_profile] text='' desc='' LinearLayout click=True @540,197
+   [] text='' desc='' LinearLayout click=False @278,288
+   [IV_main_profile_picture] text='' desc='' ImageView click=False @110,288
+   [] text='' desc='' LinearLayout click=False @363,288
+   [TV_main_profile_username] text='Taki' desc='' TextView click=False @262,265
+   [TV_main_profile_count] text='2 diaries · 67 entries' desc='' TextView click=False @363,325
+   [LL_main_today_wrap] text='' desc='' LinearLayout click=False @540,490
+   [LL_main_today] text='' desc='' LinearLayout click=True @540,506
+   [TV_main_today_title] text='A day like today' desc='' TextView click=False @540,480
+   [TV_main_today_subtitle] text='2 entries written on this day in other years' desc='' TextView click=False @540,537
+   [profile_shadow] text='' desc='' View click=False @540,400
+   [RecyclerView_topic] text='' desc='' GridView click=False @540,1409
+   [RL_topic_view] text='' desc='緊急時以外かけちゃダメ！, 1' FrameLayout click=False @280,809
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @280,809
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @213,754
+   [IV_topic_icon] text='' desc='' ImageView click=False @212,749
+   [V_topic_tape] text='' desc='' View click=False @207,650
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,667
+   [LL_topic_label] text='' desc='' LinearLayout click=False @270,935
+   [TV_topic_title] text='緊急時以外かけちゃダメ！' desc='' TextView click=False @253,935
+   [TV_topic_count] text='1' desc='' TextView click=False @421,934
+   [V_topic_band] text='' desc='' View click=False @475,809
+   [RL_topic_view] text='' desc='DIARY, 67' FrameLayout click=False @799,809
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @799,809
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @732,754
+   [IV_topic_cover] text='' desc='' ImageView click=False @732,749
+   [V_topic_tape] text='' desc='' View click=False @726,650
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @935,667
+   [TV_topic_folder_badge] text='📁 1' desc='' TextView click=False @931,752
+   [LL_topic_label] text='' desc='' LinearLayout click=False @789,939
+   [TV_topic_title] text='DIARY' desc='' TextView click=False @763,939
+   [TV_topic_count] text='67' desc='' TextView click=False @931,938
+   [V_topic_band] text='' desc='' View click=False @994,809
+   [RL_topic_view] text='' desc='禁止事項 Ver.5, 6' FrameLayout click=False @280,1224
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @280,1224
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @213,1169
+   [IV_topic_icon] text='' desc='' ImageView click=False @212,1164
+   [V_topic_tape] text='' desc='' View click=False @207,1065
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,1082
+   [LL_topic_label] text='' desc='' LinearLayout click=False @270,1350
+   [TV_topic_title] text='禁止事項 Ver.5' desc='' TextView click=False @253,1350
+   [TV_topic_count] text='6' desc='' TextView click=False @421,1349
+   [V_topic_band] text='' desc='' View click=False @475,1224
+   [RL_topic_view] text='' desc='ゼッタイ禁止, 5' FrameLayout click=False @799,1224
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @799,1224
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @732,1169
+   [IV_topic_icon] text='' desc='' ImageView click=False @732,1164
+   [V_topic_tape] text='' desc='' View click=False @726,1065
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @935,1082
+   [LL_topic_label] text='' desc='' LinearLayout click=False @789,1350
+   [TV_topic_title] text='ゼッタイ禁止' desc='' TextView click=False @772,1350
+   [TV_topic_count] text='5' desc='' TextView click=False @940,1349
+   [V_topic_band] text='' desc='' View click=False @994,1224
+   [search_shadow] text='' desc='' View click=False @540,2228
+   [RL_main_bottom_bar] text='' desc='' RelativeLayout click=False @540,2284
+   [EDT_main_topic_search] text='' desc='' EditText click=True @495,2284
+   [IV_main_setting] text='' desc='' ImageView click=True @1022,2284
+   folders: badge = '📁 1', Otro diario on main = False
+NOT FOUND: None android:id/button1 None
+-- 48_fa_diary_row
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   [RV_diary_subtopics] text='' desc='' RecyclerView click=False @540,429
+   [] text='' desc='Otro diario, 0' FrameLayout click=False @194,426
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @194,429
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @149,389
+   [IV_topic_icon] text='' desc='' ImageView click=False @149,386
+   [] text='' desc='' View click=False @149,323
+   [LL_topic_label] text='' desc='' LinearLayout click=False @187,514
+   [TV_topic_title] text='Otro diario' desc='' TextView click=False @174,515
+   [TV_topic_count] text='0' desc='' TextView click=False @287,515
+   [] text='' desc='' View click=False @323,429
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1459
+   [RL_entries_content] text='' desc='' RelativeLayout click=False @540,1459
+   [FastScroller_entries] text='' desc='' View click=False @540,1407
+   [RecyclerView_entries] text='' desc='' RecyclerView click=False @540,1407
+   [] text='' desc='' LinearLayout click=True @540,758
+   [TV_entries_item_header] text='November' desc='' TextView click=False @540,641
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,811
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,809
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,809
+   [SDV_entries_item_thumbnail] text='' desc='' ImageView click=False @133,809
+   [] text='' desc='' LinearLayout click=False @545,809
+   [TV_entries_item_time] text='November 25' desc='' TextView click=False @384,777
+   [TV_entries_item_title] text='Prueba negrita' desc='' TextView click=False @545,836
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,809
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,750
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,750
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,750
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,859
+   [] text='' desc='' LinearLayout click=True @540,1052
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,1045
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,1043
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,1043
+   [SDV_entries_item_thumbnail] text='' desc='' ImageView click=False @133,1043
+   [] text='' desc='' LinearLayout click=False @545,1043
+   [TV_entries_item_time] text='November 24' desc='' TextView click=False @384,1011
+   [TV_entries_item_title] text='Foto del dia 1' desc='' TextView click=False @545,1070
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,1043
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,984
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,984
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,984
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,1093
+   [] text='' desc='' LinearLayout click=True @540,1286
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,1279
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,1277
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,1277
+   [SDV_entries_item_thumbnail] text='' desc='' ImageView click=False @133,1277
+   [] text='' desc='' LinearLayout click=False @545,1277
+   [TV_entries_item_time] text='November 23   playa' desc='' TextView click=False @441,1245
+   [TV_entries_item_title] text='Foto del dia 2' desc='' TextView click=False @545,1304
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,1277
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,1218
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,1218
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,1218
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,1327
+   [] text='' desc='' LinearLayout click=True @540,1520
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,1513
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,1511
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,1511
+   [SDV_entries_item_thumbnail] text='' desc='' ImageView click=False @133,1511
+   [] text='' desc='' LinearLayout click=False @545,1511
+   [TV_entries_item_time] text='November 21' desc='' TextView click=False @384,1479
+   [TV_entries_item_title] text='Foto del dia 3' desc='' TextView click=False @545,1538
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,1511
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,1452
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,1452
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,1452
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,1561
+   [] text='' desc='' LinearLayout click=True @540,1813
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,1696
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,1866
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,1864
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,1864
+   [] text='' desc='' LinearLayout click=False @545,1864
+   [TV_entries_item_time] text='October 4' desc='' TextView click=False @353,1832
+   [TV_entries_item_title] text='Nota de prueba 60' desc='' TextView click=False @545,1891
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,1864
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,1805
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,1805
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,1805
+   [] text='' desc='' LinearLayout click=True @540,2111
+   [TV_entries_item_header] text='September' desc='' TextView click=False @539,2049
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,2170
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,2170
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,2170
+   [] text='' desc='' LinearLayout click=False @545,2170
+   [TV_entries_item_time] text='September 17' desc='' TextView click=False @389,2185
+   [TV_entries_item_title] text='Nota de prueba 59' desc='' TextView click=False @545,2224
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,2170
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,2158
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,2158
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,2158
+   [entries_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [RL_entries_edit_bar] text='' desc='' RelativeLayout click=False @540,2284
+   [IV_entries_menu] text='' desc='' ImageView click=False @57,2284
+   [IV_entries_edit] text='' desc='' ImageView click=True @186,2284
+   [IV_entries_photo] text='' desc='' ImageView click=True @315,2284
+   [TV_entries_tag] text='#' desc='' TextView click=True @629,2284
+   [TV_entries_count] text='67 Entries' desc='' TextView click=False @950,2284
+   folders: row in DIARY = ['Otro diario']
+NOT FOUND: None android:id/button1 None
+-- 49_fa_sub_opened
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,138
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,171
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='Otro diario' desc='' TextView click=False @539,252
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1306
+   [RL_entries_content] text='' desc='' RelativeLayout click=False @540,1306
+   [RecyclerView_entries] text='' desc='' RecyclerView click=False @540,1254
+   [FastScroller_entries] text='' desc='' View click=False @540,1254
+   [entries_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [RL_entries_edit_bar] text='' desc='' RelativeLayout click=False @540,2284
+   [IV_entries_menu] text='' desc='' ImageView click=False @57,2284
+   [IV_entries_edit] text='' desc='' ImageView click=True @186,2284
+   [IV_entries_photo] text='' desc='' ImageView click=True @315,2284
+   [TV_entries_tag] text='#' desc='' TextView click=True @642,2284
+   [TV_entries_count] text='0 Entries' desc='' TextView click=False @963,2284
+   [toolbar_shadow] text='' desc='' View click=False @540,282
+   APP ALIVE (pid 12047) after 'subcategory opened'
+-- 50_fa_diary_calendar_no_row
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,171
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,171
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,171
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,252
+   APP ALIVE (pid 12047) after 'folder'
+-- 51_fa_menu_diary
+   [] text='' desc='' FrameLayout click=False @769,1090
+   [] text='' desc='' FrameLayout click=False @769,1090
+   [] text='' desc='' ListView click=False @769,1090
+   [] text='' desc='' LinearLayout click=False @769,775
+   [content] text='' desc='' LinearLayout click=False @769,775
+   [] text='' desc='' RelativeLayout click=False @769,774
+   [title] text='Edit' desc='' TextView click=False @769,774
+   [] text='' desc='' LinearLayout click=False @769,901
+   [content] text='' desc='' LinearLayout click=False @769,901
+   [] text='' desc='' RelativeLayout click=False @769,900
+   [title] text='Put inside another category…' desc='' TextView click=False @769,900
+   [] text='' desc='' LinearLayout click=False @769,1027
+   [content] text='' desc='' LinearLayout click=False @769,1027
+   [] text='' desc='' RelativeLayout click=False @769,1026
+   [title] text='Choose cover photo…' desc='' TextView click=False @769,1026
+   [] text='' desc='' LinearLayout click=False @769,1153
+   [content] text='' desc='' LinearLayout click=False @769,1153
+   [] text='' desc='' RelativeLayout click=False @769,1152
+   [title] text='Choose banner…' desc='' TextView click=False @769,1152
+   [] text='' desc='' LinearLayout click=False @769,1279
+   [content] text='' desc='' LinearLayout click=False @769,1279
+   [] text='' desc='' RelativeLayout click=False @769,1278
+   [title] text='Categories inside (1)…' desc='' TextView click=False @769,1278
+   [] text='' desc='' LinearLayout click=False @769,1405
+   [content] text='' desc='' LinearLayout click=False @769,1405
+   [] text='' desc='' RelativeLayout click=False @769,1404
+   [title] text='Delete' desc='' TextView click=False @769,1404
+-- 52_fa_chooser_cover
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' ViewGroup click=False @540,1232
+   [bottom_sheet] text='' desc='' LinearLayout click=False @540,1617
+   [drag_bar] text='' desc='' ImageView click=False @540,944
+   [privacy_text] text='This app can only access the photos you select' desc='' TextView click=False @540,1032
+   [] text='' desc='' FrameLayout click=False @540,1715
+   [fragment_container] text='' desc='' FrameLayout click=False @540,1715
+   [picker_tab_viewpager] text='' desc='' ViewPager click=False @540,1799
+   [] text='' desc='' RecyclerView click=False @540,1799
+   [] text='' desc='' FrameLayout click=False @540,1799
+   [] text='' desc='' FrameLayout click=False @540,1799
+   [picker_tab_recyclerview] text='' desc='' GridView click=False @540,1799
+   [date_header_title] text='Recent' desc='' TextView click=False @540,1335
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:22:27\u202fAM' FrameLayout click=True @177,1586
+   [] text='' desc='' CardView click=False @177,1586
+   [] text='' desc='' FrameLayout click=False @177,1586
+   [icon_thumbnail] text='' desc='' ImageView click=False @177,1586
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @539,1586
+   [] text='' desc='' CardView click=False @539,1586
+   [] text='' desc='' FrameLayout click=False @539,1586
+   [icon_thumbnail] text='' desc='' ImageView click=False @539,1586
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @902,1586
+   [] text='' desc='' CardView click=False @902,1586
+   [] text='' desc='' FrameLayout click=False @902,1586
+   [icon_thumbnail] text='' desc='' ImageView click=False @902,1586
+   [] text='' desc='' LinearLayout click=False @540,1178
+   [toolbar] text='' desc='' ViewGroup click=False @540,1178
+   [] text='' desc='Cancel' ImageButton click=True @73,1177
+   [tab_layout] text='' desc='' HorizontalScrollView click=False @540,1178
+   [] text='' desc='' LinearLayout click=False @540,1178
+   [] text='' desc='Photos' LinearLayout click=False @403,1178
+   [] text='Photos' desc='' TextView click=False @403,1177
+   [] text='' desc='Albums' LinearLayout click=True @676,1178
+   [] text='Albums' desc='' TextView click=False @676,1177
+   [] text='' desc='' LinearLayoutCompat click=False @1027,1177
+   [] text='' desc='More options' ImageView click=True @1027,1177
+-- 53_fa_picker_cover
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' ViewGroup click=False @540,1232
+   [bottom_sheet] text='' desc='' LinearLayout click=False @540,1617
+   [drag_bar] text='' desc='' ImageView click=False @540,944
+   [privacy_text] text='This app can only access the photos you select' desc='' TextView click=False @540,1032
+   [] text='' desc='' FrameLayout click=False @540,1715
+   [fragment_container] text='' desc='' FrameLayout click=False @540,1715
+   [picker_tab_viewpager] text='' desc='' ViewPager click=False @540,1799
+   [] text='' desc='' RecyclerView click=False @540,1799
+   [] text='' desc='' FrameLayout click=False @540,1799
+   [] text='' desc='' FrameLayout click=False @540,1799
+   [picker_tab_recyclerview] text='' desc='' GridView click=False @540,1799
+   [date_header_title] text='Recent' desc='' TextView click=False @540,1335
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:22:27\u202fAM' FrameLayout click=True @177,1586
+   [] text='' desc='' CardView click=False @177,1586
+   [] text='' desc='' FrameLayout click=False @177,1586
+   [icon_thumbnail] text='' desc='' ImageView click=False @177,1586
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @539,1586
+   [] text='' desc='' CardView click=False @539,1586
+   [] text='' desc='' FrameLayout click=False @539,1586
+   [icon_thumbnail] text='' desc='' ImageView click=False @539,1586
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @902,1586
+   [] text='' desc='' CardView click=False @902,1586
+   [] text='' desc='' FrameLayout click=False @902,1586
+   [icon_thumbnail] text='' desc='' ImageView click=False @902,1586
+   [] text='' desc='' LinearLayout click=False @540,1178
+   [toolbar] text='' desc='' ViewGroup click=False @540,1178
+   [] text='' desc='Cancel' ImageButton click=True @73,1177
+   [tab_layout] text='' desc='' HorizontalScrollView click=False @540,1178
+   [] text='' desc='' LinearLayout click=False @540,1178
+   [] text='' desc='Photos' LinearLayout click=False @403,1178
+   [] text='Photos' desc='' TextView click=False @403,1177
+   [] text='' desc='Albums' LinearLayout click=True @676,1178
+   [] text='Albums' desc='' TextView click=False @676,1177
+   [] text='' desc='' LinearLayoutCompat click=False @1027,1177
+   [] text='' desc='More options' ImageView click=True @1027,1177
+   folders: picker thumbnails: 3
+-- 54_fa_crop_cover
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [ucrop_photobox] text='' desc='' RelativeLayout click=False @540,1232
+   [toolbar] text='' desc='' ViewGroup click=False @540,201
+   [] text='' desc='Navigate up' ImageButton click=True @73,201
+   [toolbar_title] text='Edit Photo' desc='' TextView click=False @540,201
+   [] text='' desc='' LinearLayoutCompat click=False @1017,201
+   [menu_crop] text='' desc='Crop' Button click=True @1017,201
+   [] text='' desc='' View click=False @540,1306
+   [ucrop_frame] text='' desc='' FrameLayout click=False @540,1127
+   [ucrop] text='' desc='' FrameLayout click=False @540,1127
+   [image_view_crop] text='' desc='' ImageView click=False @540,1127
+   [view_overlay] text='' desc='' View click=False @540,1127
+   [image_view_logo] text='' desc='' ImageView click=False @539,1127
+   [wrapper_controls] text='' desc='' FrameLayout click=False @540,2064
+   [layout_scale_wheel] text='' desc='' RelativeLayout click=False @540,2064
+   [text_view_scale] text='166%' desc='' TextView click=False @540,2029
+   [scale_scroll_wheel] text='' desc='' View click=False @540,2100
+   [] text='' desc='' ImageView click=False @540,2144
+   [wrapper_states] text='' desc='' LinearLayout click=False @540,2242
+   [state_scale] text='' desc='' FrameLayout click=True @270,2242
+   [image_view_state_scale] text='' desc='' ImageView click=False @269,2242
+   [state_rotate] text='' desc='' FrameLayout click=True @810,2242
+   [image_view_state_rotate] text='' desc='' ImageView click=False @809,2242
+   [statusBarBackground] text='' desc='' View click=False @540,64
+   crop confirm found by rid=menu_crop @1017,201
+-- 55_fa_main_cover
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [activity_main] text='' desc='' RelativeLayout click=False @540,1168
+   [FL_main_header] text='' desc='' FrameLayout click=False @540,197
+   [IV_main_banner] text='' desc='' ImageView click=False @540,197
+   [] text='' desc='' View click=False @540,197
+   [LL_main_profile] text='' desc='' LinearLayout click=True @540,197
+   [] text='' desc='' LinearLayout click=False @278,288
+   [IV_main_profile_picture] text='' desc='' ImageView click=False @110,288
+   [] text='' desc='' LinearLayout click=False @363,288
+   [TV_main_profile_username] text='Taki' desc='' TextView click=False @262,265
+   [TV_main_profile_count] text='2 diaries · 67 entries' desc='' TextView click=False @363,325
+   [LL_main_today_wrap] text='' desc='' LinearLayout click=False @540,490
+   [LL_main_today] text='' desc='' LinearLayout click=True @540,506
+   [TV_main_today_title] text='A day like today' desc='' TextView click=False @540,480
+   [TV_main_today_subtitle] text='2 entries written on this day in other years' desc='' TextView click=False @540,537
+   [profile_shadow] text='' desc='' View click=False @540,400
+   [RecyclerView_topic] text='' desc='' GridView click=False @540,1409
+   [RL_topic_view] text='' desc='緊急時以外かけちゃダメ！, 1' FrameLayout click=False @280,809
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @280,809
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @213,754
+   [IV_topic_icon] text='' desc='' ImageView click=False @212,749
+   [V_topic_tape] text='' desc='' View click=False @207,650
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,667
+   [LL_topic_label] text='' desc='' LinearLayout click=False @270,935
+   [TV_topic_title] text='緊急時以外かけちゃダメ！' desc='' TextView click=False @253,935
+   [TV_topic_count] text='1' desc='' TextView click=False @421,934
+   [V_topic_band] text='' desc='' View click=False @475,809
+   [RL_topic_view] text='' desc='DIARY, 67' FrameLayout click=False @799,809
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @799,809
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @732,754
+   [IV_topic_cover] text='' desc='' ImageView click=False @732,749
+   [V_topic_tape] text='' desc='' View click=False @726,650
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @935,667
+   [TV_topic_folder_badge] text='📁 1' desc='' TextView click=False @931,752
+   [LL_topic_label] text='' desc='' LinearLayout click=False @789,939
+   [TV_topic_title] text='DIARY' desc='' TextView click=False @763,939
+   [TV_topic_count] text='67' desc='' TextView click=False @931,938
+   [V_topic_band] text='' desc='' View click=False @994,809
+   [RL_topic_view] text='' desc='禁止事項 Ver.5, 6' FrameLayout click=False @280,1224
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @280,1224
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @213,1169
+   [IV_topic_icon] text='' desc='' ImageView click=False @212,1164
+   [V_topic_tape] text='' desc='' View click=False @207,1065
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,1082
+   [LL_topic_label] text='' desc='' LinearLayout click=False @270,1350
+   [TV_topic_title] text='禁止事項 Ver.5' desc='' TextView click=False @253,1350
+   [TV_topic_count] text='6' desc='' TextView click=False @421,1349
+   [V_topic_band] text='' desc='' View click=False @475,1224
+   [RL_topic_view] text='' desc='ゼッタイ禁止, 5' FrameLayout click=False @799,1224
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @799,1224
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @732,1169
+   [IV_topic_icon] text='' desc='' ImageView click=False @732,1164
+   [V_topic_tape] text='' desc='' View click=False @726,1065
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @935,1082
+   [LL_topic_label] text='' desc='' LinearLayout click=False @789,1350
+   [TV_topic_title] text='ゼッタイ禁止' desc='' TextView click=False @772,1350
+   [TV_topic_count] text='5' desc='' TextView click=False @940,1349
+   [V_topic_band] text='' desc='' View click=False @994,1224
+   [search_shadow] text='' desc='' View click=False @540,2228
+   [RL_main_bottom_bar] text='' desc='' RelativeLayout click=False @540,2284
+   [EDT_main_topic_search] text='' desc='' EditText click=True @495,2284
+   [IV_main_setting] text='' desc='' ImageView click=True @1022,2284
+   APP ALIVE (pid 12047) after 'cover'
+-- 56_fa_chooser_banner
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' ViewGroup click=False @540,1232
+   [bottom_sheet] text='' desc='' LinearLayout click=False @540,1617
+   [drag_bar] text='' desc='' ImageView click=False @540,944
+   [privacy_text] text='This app can only access the photos you select' desc='' TextView click=False @540,1032
+   [] text='' desc='' FrameLayout click=False @540,1715
+   [fragment_container] text='' desc='' FrameLayout click=False @540,1715
+   [picker_tab_viewpager] text='' desc='' ViewPager click=False @540,1799
+   [] text='' desc='' RecyclerView click=False @540,1799
+   [] text='' desc='' FrameLayout click=False @540,1799
+   [] text='' desc='' FrameLayout click=False @540,1799
+   [picker_tab_recyclerview] text='' desc='' GridView click=False @540,1799
+   [date_header_title] text='Recent' desc='' TextView click=False @540,1335
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:23:20\u202fAM' FrameLayout click=True @177,1586
+   [] text='' desc='' CardView click=False @177,1586
+   [] text='' desc='' FrameLayout click=False @177,1586
+   [icon_thumbnail] text='' desc='' ImageView click=False @177,1586
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @539,1586
+   [] text='' desc='' CardView click=False @539,1586
+   [] text='' desc='' FrameLayout click=False @539,1586
+   [icon_thumbnail] text='' desc='' ImageView click=False @539,1586
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @902,1586
+   [] text='' desc='' CardView click=False @902,1586
+   [] text='' desc='' FrameLayout click=False @902,1586
+   [icon_thumbnail] text='' desc='' ImageView click=False @902,1586
+   [] text='' desc='' LinearLayout click=False @540,1178
+   [toolbar] text='' desc='' ViewGroup click=False @540,1178
+   [] text='' desc='Cancel' ImageButton click=True @73,1177
+   [tab_layout] text='' desc='' HorizontalScrollView click=False @540,1178
+   [] text='' desc='' LinearLayout click=False @540,1178
+   [] text='' desc='Photos' LinearLayout click=False @403,1178
+   [] text='Photos' desc='' TextView click=False @403,1177
+   [] text='' desc='Albums' LinearLayout click=True @676,1178
+   [] text='Albums' desc='' TextView click=False @676,1177
+   [] text='' desc='' LinearLayoutCompat click=False @1027,1177
+   [] text='' desc='More options' ImageView click=True @1027,1177
+-- 57_fa_picker_banner
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' ViewGroup click=False @540,1232
+   [bottom_sheet] text='' desc='' LinearLayout click=False @540,1617
+   [drag_bar] text='' desc='' ImageView click=False @540,944
+   [privacy_text] text='This app can only access the photos you select' desc='' TextView click=False @540,1032
+   [] text='' desc='' FrameLayout click=False @540,1715
+   [fragment_container] text='' desc='' FrameLayout click=False @540,1715
+   [picker_tab_viewpager] text='' desc='' ViewPager click=False @540,1799
+   [] text='' desc='' RecyclerView click=False @540,1799
+   [] text='' desc='' FrameLayout click=False @540,1799
+   [] text='' desc='' FrameLayout click=False @540,1799
+   [picker_tab_recyclerview] text='' desc='' GridView click=False @540,1799
+   [date_header_title] text='Recent' desc='' TextView click=False @540,1335
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:23:20\u202fAM' FrameLayout click=True @177,1586
+   [] text='' desc='' CardView click=False @177,1586
+   [] text='' desc='' FrameLayout click=False @177,1586
+   [icon_thumbnail] text='' desc='' ImageView click=False @177,1586
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @539,1586
+   [] text='' desc='' CardView click=False @539,1586
+   [] text='' desc='' FrameLayout click=False @539,1586
+   [icon_thumbnail] text='' desc='' ImageView click=False @539,1586
+   [] text='' desc='Photo taken on Nov 25, 2026, 2:12:27\u202fAM' FrameLayout click=True @902,1586
+   [] text='' desc='' CardView click=False @902,1586
+   [] text='' desc='' FrameLayout click=False @902,1586
+   [icon_thumbnail] text='' desc='' ImageView click=False @902,1586
+   [] text='' desc='' LinearLayout click=False @540,1178
+   [toolbar] text='' desc='' ViewGroup click=False @540,1178
+   [] text='' desc='Cancel' ImageButton click=True @73,1177
+   [tab_layout] text='' desc='' HorizontalScrollView click=False @540,1178
+   [] text='' desc='' LinearLayout click=False @540,1178
+   [] text='' desc='Photos' LinearLayout click=False @403,1178
+   [] text='Photos' desc='' TextView click=False @403,1177
+   [] text='' desc='Albums' LinearLayout click=True @676,1178
+   [] text='Albums' desc='' TextView click=False @676,1177
+   [] text='' desc='' LinearLayoutCompat click=False @1027,1177
+   [] text='' desc='More options' ImageView click=True @1027,1177
+   folders: picker thumbnails: 3
+-- 58_fa_crop_banner
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [ucrop_photobox] text='' desc='' RelativeLayout click=False @540,1232
+   [toolbar] text='' desc='' ViewGroup click=False @540,201
+   [] text='' desc='Navigate up' ImageButton click=True @73,201
+   [toolbar_title] text='Edit Photo' desc='' TextView click=False @540,201
+   [] text='' desc='' LinearLayoutCompat click=False @1017,201
+   [menu_crop] text='' desc='Crop' Button click=True @1017,201
+   [] text='' desc='' View click=False @540,1306
+   [ucrop_frame] text='' desc='' FrameLayout click=False @540,1127
+   [ucrop] text='' desc='' FrameLayout click=False @540,1127
+   [image_view_crop] text='' desc='' ImageView click=False @540,1127
+   [view_overlay] text='' desc='' View click=False @540,1127
+   [image_view_logo] text='' desc='' ImageView click=False @539,1127
+   [wrapper_controls] text='' desc='' FrameLayout click=False @540,2064
+   [layout_scale_wheel] text='' desc='' RelativeLayout click=False @540,2064
+   [text_view_scale] text='110%' desc='' TextView click=False @540,2029
+   [scale_scroll_wheel] text='' desc='' View click=False @540,2100
+   [] text='' desc='' ImageView click=False @540,2144
+   [wrapper_states] text='' desc='' LinearLayout click=False @540,2242
+   [state_scale] text='' desc='' FrameLayout click=True @270,2242
+   [image_view_state_scale] text='' desc='' ImageView click=False @269,2242
+   [state_rotate] text='' desc='' FrameLayout click=True @810,2242
+   [image_view_state_rotate] text='' desc='' ImageView click=False @809,2242
+   [statusBarBackground] text='' desc='' View click=False @540,64
+   crop confirm found by rid=menu_crop @1017,201
+-- 59_fa_main_banner
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [activity_main] text='' desc='' RelativeLayout click=False @540,1168
+   [FL_main_header] text='' desc='' FrameLayout click=False @540,197
+   [IV_main_banner] text='' desc='' ImageView click=False @540,197
+   [] text='' desc='' View click=False @540,197
+   [LL_main_profile] text='' desc='' LinearLayout click=True @540,197
+   [] text='' desc='' LinearLayout click=False @278,288
+   [IV_main_profile_picture] text='' desc='' ImageView click=False @110,288
+   [] text='' desc='' LinearLayout click=False @363,288
+   [TV_main_profile_username] text='Taki' desc='' TextView click=False @262,265
+   [TV_main_profile_count] text='2 diaries · 67 entries' desc='' TextView click=False @363,325
+   [LL_main_today_wrap] text='' desc='' LinearLayout click=False @540,490
+   [LL_main_today] text='' desc='' LinearLayout click=True @540,506
+   [TV_main_today_title] text='A day like today' desc='' TextView click=False @540,480
+   [TV_main_today_subtitle] text='2 entries written on this day in other years' desc='' TextView click=False @540,537
+   [profile_shadow] text='' desc='' View click=False @540,400
+   [RecyclerView_topic] text='' desc='' GridView click=False @540,1409
+   [RL_topic_view] text='' desc='緊急時以外かけちゃダメ！, 1' FrameLayout click=False @280,809
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @280,809
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @213,754
+   [IV_topic_icon] text='' desc='' ImageView click=False @212,749
+   [V_topic_tape] text='' desc='' View click=False @207,650
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,667
+   [LL_topic_label] text='' desc='' LinearLayout click=False @270,935
+   [TV_topic_title] text='緊急時以外かけちゃダメ！' desc='' TextView click=False @253,935
+   [TV_topic_count] text='1' desc='' TextView click=False @421,934
+   [V_topic_band] text='' desc='' View click=False @475,809
+   [RL_topic_view] text='' desc='DIARY, 67' FrameLayout click=False @799,809
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @799,809
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @732,754
+   [IV_topic_cover] text='' desc='' ImageView click=False @732,749
+   [V_topic_tape] text='' desc='' View click=False @726,650
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @935,667
+   [TV_topic_folder_badge] text='📁 1' desc='' TextView click=False @931,752
+   [LL_topic_label] text='' desc='' LinearLayout click=False @789,939
+   [TV_topic_title] text='DIARY' desc='' TextView click=False @763,939
+   [TV_topic_count] text='67' desc='' TextView click=False @931,938
+   [V_topic_band] text='' desc='' View click=False @994,809
+   [RL_topic_view] text='' desc='禁止事項 Ver.5, 6' FrameLayout click=False @280,1224
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @280,1224
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @213,1169
+   [IV_topic_icon] text='' desc='' ImageView click=False @212,1164
+   [V_topic_tape] text='' desc='' View click=False @207,1065
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,1082
+   [LL_topic_label] text='' desc='' LinearLayout click=False @270,1350
+   [TV_topic_title] text='禁止事項 Ver.5' desc='' TextView click=False @253,1350
+   [TV_topic_count] text='6' desc='' TextView click=False @421,1349
+   [V_topic_band] text='' desc='' View click=False @475,1224
+   [RL_topic_view] text='' desc='ゼッタイ禁止, 5' FrameLayout click=False @799,1224
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @799,1224
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @732,1169
+   [IV_topic_icon] text='' desc='' ImageView click=False @732,1164
+   [V_topic_tape] text='' desc='' View click=False @726,1065
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @935,1082
+   [LL_topic_label] text='' desc='' LinearLayout click=False @789,1350
+   [TV_topic_title] text='ゼッタイ禁止' desc='' TextView click=False @772,1350
+   [TV_topic_count] text='5' desc='' TextView click=False @940,1349
+   [V_topic_band] text='' desc='' View click=False @994,1224
+   [search_shadow] text='' desc='' View click=False @540,2228
+   [RL_main_bottom_bar] text='' desc='' RelativeLayout click=False @540,2284
+   [EDT_main_topic_search] text='' desc='' EditText click=True @495,2284
+   [IV_main_setting] text='' desc='' ImageView click=True @1022,2284
+   APP ALIVE (pid 12047) after 'banner'
+   folders: diary dirs:
+total 32
+drwxrws--- 4 u0_a192 ext_data_rw 4096 2026-11-25 02:19 .
+drwxrws--- 7 u0_a192 ext_data_rw 4096 2026-11-25 02:22 ..
+drwxrws--- 7 u0_a192 ext_data_rw 4096 2026-11-25 02:24 3
+drwxrws--- 3 u0_a192 ext_data_rw 4096 2026-11-25 02:21 5
+
+NOT FOUND: None android:id/button1 None
+-- 60_fa_diary_banner
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [] text='' desc='' RelativeLayout click=False @540,1168
+   [LL_diary_topbar_content] text='' desc='' LinearLayout click=False @540,196
+   [SG_diary_topbar] text='' desc='' RadioGroup click=False @540,265
+   [But_diary_topbar_entries] text='Entries' desc='' RadioButton click=True @270,265
+   [But_diary_topbar_calendar] text='Calendar' desc='' RadioButton click=True @539,265
+   [But_diary_topbar_diary] text='Diary' desc='' RadioButton click=True @808,265
+   [TV_diary_topbar_title] text='DIARY' desc='' TextView click=False @539,357
+   [RV_diary_subtopics] text='' desc='' RecyclerView click=False @540,546
+   [] text='' desc='Otro diario, 0' FrameLayout click=False @194,543
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @194,546
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @149,506
+   [IV_topic_icon] text='' desc='' ImageView click=False @149,503
+   [] text='' desc='' View click=False @149,440
+   [LL_topic_label] text='' desc='' LinearLayout click=False @187,631
+   [TV_topic_title] text='Otro diario' desc='' TextView click=False @174,632
+   [TV_topic_count] text='0' desc='' TextView click=False @287,632
+   [] text='' desc='' View click=False @323,546
+   [toolbar_shadow] text='' desc='' View click=False @540,399
+   [ViewPager_diary_content] text='' desc='' ViewPager click=False @540,1518
+   [RL_entries_content] text='' desc='' RelativeLayout click=False @540,1518
+   [FastScroller_entries] text='' desc='' View click=False @540,1465
+   [RecyclerView_entries] text='' desc='' RecyclerView click=False @540,1465
+   [] text='' desc='' LinearLayout click=True @540,875
+   [TV_entries_item_header] text='November' desc='' TextView click=False @540,758
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,928
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,926
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,926
+   [SDV_entries_item_thumbnail] text='' desc='' ImageView click=False @133,926
+   [] text='' desc='' LinearLayout click=False @545,926
+   [TV_entries_item_time] text='November 25' desc='' TextView click=False @384,894
+   [TV_entries_item_title] text='Prueba negrita' desc='' TextView click=False @545,953
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,926
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,867
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,867
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,867
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,976
+   [] text='' desc='' LinearLayout click=True @540,1169
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,1162
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,1160
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,1160
+   [SDV_entries_item_thumbnail] text='' desc='' ImageView click=False @133,1160
+   [] text='' desc='' LinearLayout click=False @545,1160
+   [TV_entries_item_time] text='November 24' desc='' TextView click=False @384,1128
+   [TV_entries_item_title] text='Foto del dia 1' desc='' TextView click=False @545,1187
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,1160
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,1101
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,1101
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,1101
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,1210
+   [] text='' desc='' LinearLayout click=True @540,1403
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,1396
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,1394
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,1394
+   [SDV_entries_item_thumbnail] text='' desc='' ImageView click=False @133,1394
+   [] text='' desc='' LinearLayout click=False @545,1394
+   [TV_entries_item_time] text='November 23   playa' desc='' TextView click=False @441,1362
+   [TV_entries_item_title] text='Foto del dia 2' desc='' TextView click=False @545,1421
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,1394
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,1335
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,1335
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,1335
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,1444
+   [] text='' desc='' LinearLayout click=True @540,1637
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,1630
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,1628
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,1628
+   [SDV_entries_item_thumbnail] text='' desc='' ImageView click=False @133,1628
+   [] text='' desc='' LinearLayout click=False @545,1628
+   [TV_entries_item_time] text='November 21' desc='' TextView click=False @384,1596
+   [TV_entries_item_title] text='Foto del dia 3' desc='' TextView click=False @545,1655
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,1628
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,1569
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,1569
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,1569
+   [IV_entries_item_attachment] text='' desc='' ImageView click=False @970,1678
+   [] text='' desc='' LinearLayout click=True @540,1930
+   [TV_entries_item_header] text='October' desc='' TextView click=False @539,1813
+   [RL_entries_item_content] text='' desc='' RelativeLayout click=False @540,1983
+   [LL_entries_item_day] text='' desc='' FrameLayout click=False @133,1981
+   [IV_entries_item_thumbnail_placeholder] text='' desc='' ImageView click=False @133,1981
+   [] text='' desc='' LinearLayout click=False @545,1981
+   [TV_entries_item_time] text='October 4' desc='' TextView click=False @353,1949
+   [TV_entries_item_title] text='Nota de prueba 60' desc='' TextView click=False @545,2008
+   [LL_entries_item_icon] text='' desc='' RelativeLayout click=False @933,1981
+   [LL_entries_item_status] text='' desc='' LinearLayout click=False @949,1922
+   [IV_entries_item_weather] text='' desc='' ImageView click=False @920,1922
+   [IV_entries_item_bookmark] text='' desc='' ImageView click=False @978,1922
+   [] text='' desc='' LinearLayout click=True @540,2169
+   [TV_entries_item_header] text='September' desc='' TextView click=False @539,2166
+   [entries_edit_bar_shadow] text='' desc='' View click=False @540,2228
+   [RL_entries_edit_bar] text='' desc='' RelativeLayout click=False @540,2284
+   [IV_entries_menu] text='' desc='' ImageView click=False @57,2284
+   [IV_entries_edit] text='' desc='' ImageView click=True @186,2284
+   [IV_entries_photo] text='' desc='' ImageView click=True @315,2284
+   [TV_entries_tag] text='#' desc='' TextView click=True @629,2284
+   [TV_entries_count] text='67 Entries' desc='' TextView click=False @950,2284
+   APP ALIVE (pid 12047) after 'diary with banner'
+NOT FOUND: None android:id/button1 None
+NOT FOUND: None android:id/button1 None
+-- 61_fa_inside_dialog
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [] text='' desc='' LinearLayout click=False @540,1232
+   [] text='' desc='' FrameLayout click=False @540,1232
+   [action_bar_root] text='' desc='' FrameLayout click=False @540,1232
+   [content] text='' desc='' FrameLayout click=False @540,1232
+   [parentPanel] text='' desc='' LinearLayoutCompat click=False @540,1232
+   [topPanel] text='' desc='' LinearLayout click=False @540,1087
+   [title_template] text='' desc='' LinearLayout click=False @540,1077
+   [alertTitle] text='Categories inside:' desc='' TextView click=False @540,1100
+   [titleDividerNoCustom] text='' desc='' View click=False @540,1146
+   [contentPanel] text='' desc='' FrameLayout click=False @540,1220
+   [select_dialog_listview] text='' desc='' ListView click=False @540,1220
+   [text1] text='Otro diario' desc='' TextView click=False @540,1220
+   [buttonPanel] text='' desc='' ScrollView click=False @540,1365
+   [] text='' desc='' LinearLayout click=False @540,1365
+   [button2] text='CANCEL' desc='' Button click=True @877,1365
+-- 62_fa_inside_menu
+   [] text='' desc='' FrameLayout click=False @781,1090
+   [] text='' desc='' FrameLayout click=False @781,1090
+   [] text='' desc='' ListView click=False @781,1090
+   [] text='' desc='' LinearLayout click=False @781,775
+   [content] text='' desc='' LinearLayout click=False @781,775
+   [] text='' desc='' RelativeLayout click=False @781,774
+   [title] text='Edit' desc='' TextView click=False @781,774
+   [] text='' desc='' LinearLayout click=False @781,901
+   [content] text='' desc='' LinearLayout click=False @781,901
+   [] text='' desc='' RelativeLayout click=False @781,900
+   [title] text='Move to another category…' desc='' TextView click=False @781,900
+   [] text='' desc='' LinearLayout click=False @781,1027
+   [content] text='' desc='' LinearLayout click=False @781,1027
+   [] text='' desc='' RelativeLayout click=False @781,1026
+   [title] text='Take out to the main screen' desc='' TextView click=False @781,1026
+   [] text='' desc='' LinearLayout click=False @781,1153
+   [content] text='' desc='' LinearLayout click=False @781,1153
+   [] text='' desc='' RelativeLayout click=False @781,1152
+   [title] text='Choose cover photo…' desc='' TextView click=False @781,1152
+   [] text='' desc='' LinearLayout click=False @781,1279
+   [content] text='' desc='' LinearLayout click=False @781,1279
+   [] text='' desc='' RelativeLayout click=False @781,1278
+   [title] text='Choose banner…' desc='' TextView click=False @781,1278
+   [] text='' desc='' LinearLayout click=False @781,1405
+   [content] text='' desc='' LinearLayout click=False @781,1405
+   [] text='' desc='' RelativeLayout click=False @781,1404
+   [title] text='Delete' desc='' TextView click=False @781,1404
+-- 63_fa_main_out
+   [] text='' desc='' FrameLayout click=False @540,1200
+   [] text='' desc='' LinearLayout click=False @540,1168
+   [] text='' desc='' FrameLayout click=False @540,1168
+   [action_bar_root] text='' desc='' LinearLayout click=False @540,1168
+   [content] text='' desc='' FrameLayout click=False @540,1168
+   [activity_main] text='' desc='' RelativeLayout click=False @540,1168
+   [FL_main_header] text='' desc='' FrameLayout click=False @540,197
+   [IV_main_banner] text='' desc='' ImageView click=False @540,197
+   [] text='' desc='' View click=False @540,197
+   [LL_main_profile] text='' desc='' LinearLayout click=True @540,197
+   [] text='' desc='' LinearLayout click=False @278,288
+   [IV_main_profile_picture] text='' desc='' ImageView click=False @110,288
+   [] text='' desc='' LinearLayout click=False @363,288
+   [TV_main_profile_username] text='Taki' desc='' TextView click=False @262,265
+   [TV_main_profile_count] text='2 diaries · 67 entries' desc='' TextView click=False @363,325
+   [LL_main_today_wrap] text='' desc='' LinearLayout click=False @540,490
+   [LL_main_today] text='' desc='' LinearLayout click=True @540,506
+   [TV_main_today_title] text='A day like today' desc='' TextView click=False @540,480
+   [TV_main_today_subtitle] text='2 entries written on this day in other years' desc='' TextView click=False @540,537
+   [profile_shadow] text='' desc='' View click=False @540,400
+   [RecyclerView_topic] text='' desc='' GridView click=False @540,1409
+   [RL_topic_view] text='' desc='緊急時以外かけちゃダメ！, 1' FrameLayout click=False @280,809
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @280,809
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @213,754
+   [IV_topic_icon] text='' desc='' ImageView click=False @212,749
+   [V_topic_tape] text='' desc='' View click=False @207,650
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,667
+   [LL_topic_label] text='' desc='' LinearLayout click=False @270,935
+   [TV_topic_title] text='緊急時以外かけちゃダメ！' desc='' TextView click=False @253,935
+   [TV_topic_count] text='1' desc='' TextView click=False @421,934
+   [V_topic_band] text='' desc='' View click=False @475,809
+   [RL_topic_view] text='' desc='DIARY, 67' FrameLayout click=False @799,809
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @799,809
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @732,754
+   [IV_topic_cover] text='' desc='' ImageView click=False @732,749
+   [V_topic_tape] text='' desc='' View click=False @726,650
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @935,667
+   [LL_topic_label] text='' desc='' LinearLayout click=False @789,939
+   [TV_topic_title] text='DIARY' desc='' TextView click=False @763,939
+   [TV_topic_count] text='67' desc='' TextView click=False @931,938
+   [V_topic_band] text='' desc='' View click=False @994,809
+   [RL_topic_view] text='' desc='禁止事項 Ver.5, 6' FrameLayout click=False @280,1224
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @280,1224
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @213,1169
+   [IV_topic_icon] text='' desc='' ImageView click=False @212,1164
+   [V_topic_tape] text='' desc='' View click=False @207,1065
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,1082
+   [LL_topic_label] text='' desc='' LinearLayout click=False @270,1350
+   [TV_topic_title] text='禁止事項 Ver.5' desc='' TextView click=False @253,1350
+   [TV_topic_count] text='6' desc='' TextView click=False @421,1349
+   [V_topic_band] text='' desc='' View click=False @475,1224
+   [RL_topic_view] text='' desc='ゼッタイ禁止, 5' FrameLayout click=False @799,1224
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @799,1224
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @732,1169
+   [IV_topic_icon] text='' desc='' ImageView click=False @732,1164
+   [V_topic_tape] text='' desc='' View click=False @726,1065
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @935,1082
+   [LL_topic_label] text='' desc='' LinearLayout click=False @789,1350
+   [TV_topic_title] text='ゼッタイ禁止' desc='' TextView click=False @772,1350
+   [TV_topic_count] text='5' desc='' TextView click=False @940,1349
+   [V_topic_band] text='' desc='' View click=False @994,1224
+   [RL_topic_view] text='' desc='Otro diario, 0' FrameLayout click=False @280,1639
+   [FL_topic_notebook] text='' desc='' FrameLayout click=True @280,1639
+   [FL_topic_photo] text='' desc='' FrameLayout click=False @213,1584
+   [IV_topic_icon] text='' desc='' ImageView click=False @213,1579
+   [V_topic_tape] text='' desc='' View click=False @207,1480
+   [IV_topic_menu] text='' desc='Edit or delete' ImageView click=True @416,1497
+   [LL_topic_label] text='' desc='' LinearLayout click=False @270,1769
+   [TV_topic_title] text='Otro diario' desc='' TextView click=False @253,1769
+   [TV_topic_count] text='0' desc='' TextView click=False @421,1768
+   [V_topic_band] text='' desc='' View click=False @475,1639
+   [search_shadow] text='' desc='' View click=False @540,2228
+   [RL_main_bottom_bar] text='' desc='' RelativeLayout click=False @540,2284
+   [EDT_main_topic_search] text='' desc='' EditText click=True @495,2284
+   [IV_main_setting] text='' desc='' ImageView click=True @1022,2284
+   folders: Otro diario back on main = True
+== (skipped) esoteric theme
+== done

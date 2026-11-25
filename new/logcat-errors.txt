@@ -1,0 +1,300 @@
+11-25 02:19:20.098 E/AppOps  (  547): 	at android.os.Binder.withCleanCallingIdentity(Binder.java:436)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative.reportSvStatus(GnssNative.java:1066)
+11-25 02:19:20.098 E/IPCThreadState(  547): Binder transaction failure: 987230/29201/-28
+11-25 02:19:20.098 E/JavaBinder(  547): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 232)
+11-25 02:19:20.098 E/AppOps  (  547): Could not forward noteOp of 108 to com.google.android.gms/10126(network_location_provider)
+11-25 02:19:20.098 E/AppOps  (  547): android.os.DeadObjectException: Transaction failed on small parcel; remote process probably died, but this could also be caused by running out of binder buffer space
+11-25 02:19:20.098 E/AppOps  (  547): 	at android.os.BinderProxy.transactNative(Native Method)
+11-25 02:19:20.098 E/AppOps  (  547): 	at android.os.BinderProxy.transact(BinderProxy.java:584)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.internal.app.IAppOpsAsyncNotedCallback$Stub$Proxy.opNoted(IAppOpsAsyncNotedCallback.java:118)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.lambda$collectAsyncNotedOp$3(AppOpsService.java:2898)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.$r8$lambda$j7JuBmeFuvKV9Ixgv9xHNEaV-DA(AppOpsService.java:0)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService$$ExternalSyntheticLambda14.accept(R8$$SyntheticClass:0)
+11-25 02:19:20.098 E/AppOps  (  547): 	at android.os.RemoteCallbackList.broadcast(RemoteCallbackList.java:333)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.collectAsyncNotedOp(AppOpsService.java:2896)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.noteOperationUnchecked(AppOpsService.java:2714)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.noteOperationImpl(AppOpsService.java:2617)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.-$$Nest$mnoteOperationImpl(AppOpsService.java:0)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService$CheckOpsDelegateDispatcher.$r8$lambda$-zO2p3wazaltMFolMcvKOcU7eN4(AppOpsService.java:0)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService$CheckOpsDelegateDispatcher$$ExternalSyntheticLambda3.apply(R8$$SyntheticClass:0)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.policy.AppOpsPolicy.noteOperation(AppOpsPolicy.java:235)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService$CheckOpsDelegateDispatcher.noteOperation(AppOpsService.java:6434)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.noteOperation(AppOpsService.java:2598)
+11-25 02:19:20.098 E/AppOps  (  547): 	at android.app.AppOpsManager.noteOpNoThrow(AppOpsManager.java:8420)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.location.injector.SystemAppOpsHelper.noteOpNoThrow(SystemAppOpsHelper.java:131)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.location.gnss.GnssStatusProvider.lambda$onReportSvStatus$2(GnssStatusProvider.java:161)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.location.gnss.GnssStatusProvider.$r8$lambda$bVLjJowpD_c4AguJpiz2DzQNnyY(GnssStatusProvider.java:0)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.location.gnss.GnssStatusProvider$$ExternalSyntheticLambda3.apply(R8$$SyntheticClass:0)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.location.listeners.ListenerMultiplexer.deliverToListeners(ListenerMultiplexer.java:599)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.location.gnss.GnssStatusProvider.onReportSvStatus(GnssStatusProvider.java:160)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative.lambda$reportSvStatus$2(GnssNative.java:1070)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative.$r8$lambda$cr9qihzlW6jEpUxoEJIvOMBxpdo(GnssNative.java:0)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative$$ExternalSyntheticLambda19.runOrThrow(R8$$SyntheticClass:0)
+11-25 02:19:20.098 E/AppOps  (  547): 	at android.os.Binder.withCleanCallingIdentity(Binder.java:436)
+11-25 02:19:20.098 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative.reportSvStatus(GnssNative.java:1066)
+11-25 02:19:20.099 E/IPCThreadState(  547): Binder transaction failure: 987237/29201/-28
+11-25 02:19:20.099 E/JavaBinder(  547): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 232)
+11-25 02:19:20.099 E/AppOps  (  547): Could not forward noteOp of 108 to com.google.android.gms/10126(fused_location_provider)
+11-25 02:19:20.099 E/AppOps  (  547): android.os.DeadObjectException: Transaction failed on small parcel; remote process probably died, but this could also be caused by running out of binder buffer space
+11-25 02:19:20.099 E/AppOps  (  547): 	at android.os.BinderProxy.transactNative(Native Method)
+11-25 02:19:20.099 E/AppOps  (  547): 	at android.os.BinderProxy.transact(BinderProxy.java:584)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.internal.app.IAppOpsAsyncNotedCallback$Stub$Proxy.opNoted(IAppOpsAsyncNotedCallback.java:118)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.lambda$collectAsyncNotedOp$3(AppOpsService.java:2898)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.$r8$lambda$j7JuBmeFuvKV9Ixgv9xHNEaV-DA(AppOpsService.java:0)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService$$ExternalSyntheticLambda14.accept(R8$$SyntheticClass:0)
+11-25 02:19:20.099 E/AppOps  (  547): 	at android.os.RemoteCallbackList.broadcast(RemoteCallbackList.java:333)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.collectAsyncNotedOp(AppOpsService.java:2896)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.noteOperationUnchecked(AppOpsService.java:2714)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.noteOperationImpl(AppOpsService.java:2617)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.-$$Nest$mnoteOperationImpl(AppOpsService.java:0)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService$CheckOpsDelegateDispatcher.$r8$lambda$-zO2p3wazaltMFolMcvKOcU7eN4(AppOpsService.java:0)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService$CheckOpsDelegateDispatcher$$ExternalSyntheticLambda3.apply(R8$$SyntheticClass:0)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.policy.AppOpsPolicy.noteOperation(AppOpsPolicy.java:235)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService$CheckOpsDelegateDispatcher.noteOperation(AppOpsService.java:6434)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.noteOperation(AppOpsService.java:2598)
+11-25 02:19:20.099 E/AppOps  (  547): 	at android.app.AppOpsManager.noteOpNoThrow(AppOpsManager.java:8420)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.location.injector.SystemAppOpsHelper.noteOpNoThrow(SystemAppOpsHelper.java:131)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.location.gnss.GnssStatusProvider.lambda$onReportSvStatus$2(GnssStatusProvider.java:161)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.location.gnss.GnssStatusProvider.$r8$lambda$bVLjJowpD_c4AguJpiz2DzQNnyY(GnssStatusProvider.java:0)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.location.gnss.GnssStatusProvider$$ExternalSyntheticLambda3.apply(R8$$SyntheticClass:0)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.location.listeners.ListenerMultiplexer.deliverToListeners(ListenerMultiplexer.java:599)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.location.gnss.GnssStatusProvider.onReportSvStatus(GnssStatusProvider.java:160)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative.lambda$reportSvStatus$2(GnssNative.java:1070)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative.$r8$lambda$cr9qihzlW6jEpUxoEJIvOMBxpdo(GnssNative.java:0)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative$$ExternalSyntheticLambda19.runOrThrow(R8$$SyntheticClass:0)
+11-25 02:19:20.099 E/AppOps  (  547): 	at android.os.Binder.withCleanCallingIdentity(Binder.java:436)
+11-25 02:19:20.099 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative.reportSvStatus(GnssNative.java:1066)
+11-25 02:19:20.099 E/IPCThreadState(  547): Binder transaction failure: 987242/29201/-28
+11-25 02:19:20.099 E/JavaBinder(  547): !!! FAILED BINDER TRANSACTION !!!  (parcel size = 232)
+11-25 02:19:20.100 E/AppOps  (  547): Could not forward noteOp of 108 to com.google.android.gms/10126(network_location_provider)
+11-25 02:19:20.100 E/AppOps  (  547): android.os.DeadObjectException: Transaction failed on small parcel; remote process probably died, but this could also be caused by running out of binder buffer space
+11-25 02:19:20.100 E/AppOps  (  547): 	at android.os.BinderProxy.transactNative(Native Method)
+11-25 02:19:20.100 E/AppOps  (  547): 	at android.os.BinderProxy.transact(BinderProxy.java:584)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.internal.app.IAppOpsAsyncNotedCallback$Stub$Proxy.opNoted(IAppOpsAsyncNotedCallback.java:118)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.lambda$collectAsyncNotedOp$3(AppOpsService.java:2898)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.$r8$lambda$j7JuBmeFuvKV9Ixgv9xHNEaV-DA(AppOpsService.java:0)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService$$ExternalSyntheticLambda14.accept(R8$$SyntheticClass:0)
+11-25 02:19:20.100 E/AppOps  (  547): 	at android.os.RemoteCallbackList.broadcast(RemoteCallbackList.java:333)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.collectAsyncNotedOp(AppOpsService.java:2896)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.noteOperationUnchecked(AppOpsService.java:2714)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.noteOperationImpl(AppOpsService.java:2617)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.-$$Nest$mnoteOperationImpl(AppOpsService.java:0)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService$CheckOpsDelegateDispatcher.$r8$lambda$-zO2p3wazaltMFolMcvKOcU7eN4(AppOpsService.java:0)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService$CheckOpsDelegateDispatcher$$ExternalSyntheticLambda3.apply(R8$$SyntheticClass:0)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.policy.AppOpsPolicy.noteOperation(AppOpsPolicy.java:235)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService$CheckOpsDelegateDispatcher.noteOperation(AppOpsService.java:6434)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.appop.AppOpsService.noteOperation(AppOpsService.java:2598)
+11-25 02:19:20.100 E/AppOps  (  547): 	at android.app.AppOpsManager.noteOpNoThrow(AppOpsManager.java:8420)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.location.injector.SystemAppOpsHelper.noteOpNoThrow(SystemAppOpsHelper.java:131)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.location.gnss.GnssStatusProvider.lambda$onReportSvStatus$2(GnssStatusProvider.java:161)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.location.gnss.GnssStatusProvider.$r8$lambda$bVLjJowpD_c4AguJpiz2DzQNnyY(GnssStatusProvider.java:0)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.location.gnss.GnssStatusProvider$$ExternalSyntheticLambda3.apply(R8$$SyntheticClass:0)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.location.listeners.ListenerMultiplexer.deliverToListeners(ListenerMultiplexer.java:599)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.location.gnss.GnssStatusProvider.onReportSvStatus(GnssStatusProvider.java:160)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative.lambda$reportSvStatus$2(GnssNative.java:1070)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative.$r8$lambda$cr9qihzlW6jEpUxoEJIvOMBxpdo(GnssNative.java:0)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative$$ExternalSyntheticLambda19.runOrThrow(R8$$SyntheticClass:0)
+11-25 02:19:20.100 E/AppOps  (  547): 	at android.os.Binder.withCleanCallingIdentity(Binder.java:436)
+11-25 02:19:20.100 E/AppOps  (  547): 	at com.android.server.location.gnss.hal.GnssNative.reportSvStatus(GnssNative.java:1066)
+11-25 02:19:32.844 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:19:32.844 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:19:32.844 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:19:40.560 E/BpTransactionCompletedListener(  423): Failed to transact (-32)
+11-25 02:19:44.435 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:19:45.566 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:19:45.693 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:19:49.000 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:19:55.779 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:19:55.779 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:19:55.779 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:19:58.497 E/FrameTracker(11488): force finish cuj, time out: J<IME_INSETS_ANIMATION::1@0@com.kiminonawa.mydiary.fotos>
+11-25 02:19:58.616 E/FrameTracker(11488): force finish cuj, time out: J<IME_INSETS_ANIMATION::0@0@com.kiminonawa.mydiary.fotos>
+11-25 02:20:06.223 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:20:06.223 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:20:06.223 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:20:06.225 E/Transition(  547): Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+11-25 02:20:06.872 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:20:06.924 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:20:09.226 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:20:18.828 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:20:18.828 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:20:18.828 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:20:39.321 E/BpTransactionCompletedListener(  423): Failed to transact (-32)
+11-25 02:20:42.306 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:20:42.397 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:20:43.532 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:20:47.351 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:20:50.063 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:20:50.063 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:20:50.064 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:20:55.279 E/FrameTracker(12047): force finish cuj, time out: J<IME_INSETS_ANIMATION::1@0@com.kiminonawa.mydiary.fotos>
+11-25 02:20:55.338 E/FrameTracker(12047): force finish cuj, time out: J<IME_INSETS_ANIMATION::0@0@com.kiminonawa.mydiary.fotos>
+11-25 02:21:05.110 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:21:05.110 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:21:05.110 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:21:12.037 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:21:12.037 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:21:12.037 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:21:19.684 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:21:19.684 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:21:19.688 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:21:31.375 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:21:31.375 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:21:31.375 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:21:31.377 E/Transition(  547): Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+11-25 02:21:32.039 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:21:32.146 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:21:34.378 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:21:44.029 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:21:44.029 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:21:44.029 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:21:54.112 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:21:54.112 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:21:54.113 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:21:54.114 E/Transition(  547): Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+11-25 02:21:54.580 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:21:54.728 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:21:57.115 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:22:07.403 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:22:07.403 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:22:07.403 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:22:07.603 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:22:07.718 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:22:10.875 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:22:12.356 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:22:12.356 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:22:12.356 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:22:18.025 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:22:18.025 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:22:18.025 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:22:18.217 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:22:18.354 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:22:21.434 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:22:24.941 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:22:24.941 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:22:24.941 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:22:31.672 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:22:31.673 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:22:31.673 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:22:31.674 E/Transition(  547): Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+11-25 02:22:31.744 E/.intentresolver(13047): Not starting debugger since process cannot load the jdwp agent.
+11-25 02:22:31.832 E/ChooserActions(13047): android.intent.action.GET_CONTENT is not supported.
+11-25 02:22:31.905 E/ule:PhotoPicker(13079): Not starting debugger since process cannot load the jdwp agent.
+11-25 02:22:45.278 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:22:45.278 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:22:45.278 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:22:55.856 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:22:55.856 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:22:55.856 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:22:55.885 E/Transition(  547): Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+11-25 02:22:56.240 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:22:56.470 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:22:58.886 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:23:05.749 E/GnssPsdsDownloader(  547): No Long-Term PSDS servers were specified in the GnssConfiguration
+11-25 02:23:15.430 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:23:15.430 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:23:15.430 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:23:15.794 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:23:16.048 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:23:19.207 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:23:27.207 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:23:27.207 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:23:27.207 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:23:31.493 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:23:31.493 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:23:31.493 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:23:31.498 E/Transition(  547): Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+11-25 02:23:31.542 E/ChooserActions(13047): android.intent.action.GET_CONTENT is not supported.
+11-25 02:23:45.112 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:23:45.112 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:23:45.113 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:23:55.697 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:23:55.697 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:23:55.697 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:23:55.738 E/Transition(  547): Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+11-25 02:23:56.057 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:23:56.185 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:23:58.739 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:24:15.279 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:24:15.279 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:24:15.279 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:24:15.756 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:24:15.798 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:24:18.883 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:24:25.006 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:24:25.006 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:24:25.006 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:24:25.009 E/Transition(  547): Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+11-25 02:24:25.559 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:24:25.608 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:24:28.009 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:24:38.162 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:24:38.162 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:24:38.162 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:24:38.313 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:24:38.510 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:24:41.023 E/IPCThreadState(  547): Binder transaction failure: 1109284/29189/-3
+11-25 02:24:41.381 E/BpTransactionCompletedListener(  423): Failed to transact (-32)
+11-25 02:24:41.446 E/constellation(11044): [api_verify_phone_operation] Failed to generate Client Signature
+11-25 02:24:41.446 E/constellation(11044): acwp: Stored private key deleted
+11-25 02:24:41.446 E/constellation(11044): 	at acos.e(:com.google.android.gms@231818047@23.18.18 (190800-535401451):4)
+11-25 02:24:41.446 E/constellation(11044): 	at acos.d(:com.google.android.gms@231818047@23.18.18 (190800-535401451):1)
+11-25 02:24:41.446 E/constellation(11044): 	at acoa.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):22)
+11-25 02:24:41.446 E/constellation(11044): 	at acoa.f(:com.google.android.gms@231818047@23.18.18 (190800-535401451):12)
+11-25 02:24:41.446 E/constellation(11044): 	at avsy.eo(:com.google.android.gms@231818047@23.18.18 (190800-535401451):1)
+11-25 02:24:41.446 E/constellation(11044): 	at avtf.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):14)
+11-25 02:24:41.446 E/constellation(11044): 	at dfhf.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+11-25 02:24:41.446 E/constellation(11044): 	at aced.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):6)
+11-25 02:24:41.446 E/constellation(11044): 	at aced.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):7)
+11-25 02:24:41.446 E/constellation(11044): 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+11-25 02:24:41.446 E/constellation(11044): 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+11-25 02:24:41.446 E/constellation(11044): 	at acjn.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+11-25 02:24:41.446 E/constellation(11044): 	at java.lang.Thread.run(Thread.java:1012)
+11-25 02:24:42.632 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:24:44.289 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:24:44.388 E/OpenGLRenderer(  897): Unable to match the desired swap behavior.
+11-25 02:24:47.685 E/TaskPersister(  547): File error accessing recents directory (directory doesn't exist?).
+11-25 02:24:52.167 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:24:52.167 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:24:52.167 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:24:57.094 E/FrameTracker(14093): force finish cuj, time out: J<IME_INSETS_ANIMATION::1@0@com.kiminonawa.mydiary.fotos>
+11-25 02:24:57.153 E/FrameTracker(14093): force finish cuj, time out: J<IME_INSETS_ANIMATION::0@0@com.kiminonawa.mydiary.fotos>
+11-25 02:25:04.629 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:25:04.629 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:25:04.629 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:25:04.986 E/A       ( 1903): onError
+11-25 02:25:04.986 E/A       ( 1903): com.google.android.apps.gsa.shared.speech.a.m: errorCode: 65561, engine: 2
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.staticplugins.dc.a.e.a(PG:3)
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.s3.n.hh(PG:1)
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.cd.g.a.f.e(PG:2)
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:22)
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.speech.k.a.g.ks(PG:6)
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.s3.o.e(PG:14)
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.s3.p.run(PG:1)
+11-25 02:25:04.986 E/A       ( 1903): 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:487)
+11-25 02:25:04.986 E/A       ( 1903): 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.shared.util.c.a.e.run(PG:2)
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+11-25 02:25:04.986 E/A       ( 1903): 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+11-25 02:25:04.986 E/A       ( 1903): 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+11-25 02:25:04.986 E/A       ( 1903): 	at java.lang.Thread.run(Thread.java:1012)
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.shared.util.c.a.l.run(PG:5)
+11-25 02:25:04.986 E/A       ( 1903): Caused by: com.google.android.apps.gsa.shared.speech.a.o: errorCode: 65586, engine: 2
+11-25 02:25:04.986 E/A       ( 1903): 	... 15 more
+11-25 02:25:04.986 E/A       ( 1903): Caused by: com.google.android.apps.gsa.shared.speech.a.k: errorCode: 401, engine: 2
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.assistant.shared.n.h.a(PG:5)
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.s3.producers.j.hE(PG:2)
+11-25 02:25:04.986 E/A       ( 1903): 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:16)
+11-25 02:25:04.986 E/A       ( 1903): 	... 12 more
+11-25 02:25:05.002 E/d.configupdater(14372): Not starting debugger since process cannot load the jdwp agent.
+11-25 02:25:07.790 E/WifiStaIfaceAidlImpl(  547): installApfPacketFilter failed with service-specific exception: android.os.ServiceSpecificException:  (code 4)
+11-25 02:25:09.065 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:25:09.065 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:25:09.065 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:25:16.702 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:25:16.702 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:25:16.702 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
+11-25 02:25:23.413 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:181 pcm_prepare failed for nChannels=2 sampleRateHz=48000 period_count=4 period_size=544 isOut=1 with cannot prepare channel: I/O error (-1)
+11-25 02:25:23.413 E/android.hardware.audio@7.1-impl.ranchu(  363): pcmOpen:184 failure: nullptr
+11-25 02:25:23.413 E/android.hardware.audio@7.1-impl.ranchu(  363): create:239 failure: nullptr
