@@ -58,8 +58,8 @@ public class NotebookDrawable extends Drawable {
         if (linen != null && linenDensity == density) {
             return linen;
         }
-        int period = Math.max(2, Math.round(3 * density));
-        int thread = Math.max(1, Math.round(density));
+        int period = Math.max(2, Math.round(2.5f * density));
+        int thread = Math.max(1, Math.round(density * 0.6f));
         int size = period * 24;
         int[] pixels = new int[size * size];
         Random random = new Random(7);
@@ -68,10 +68,12 @@ public class NotebookDrawable extends Drawable {
             for (int x = 0; x < size; x++) {
                 boolean down = (x % period) < thread;
                 //The grain: a bit darker here and there
-                float black = random.nextFloat() * 0.09f;
-                float white = across ? 0.07f : 0f;
+                float black = random.nextFloat() * 0.10f;
+                float white = across ? 0.05f : 0f;
                 if (down) {
+                    //The threads down: darker, with a little light so they are seen on black notebooks too
                     black += 0.10f;
+                    white = Math.max(white, 0.03f);
                 }
                 //Mix: white over (black over the cover)
                 float a = black + white * (1 - black);
